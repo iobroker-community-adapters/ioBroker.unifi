@@ -7,17 +7,6 @@
 <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
 
 
-<!-- optional: use jqGrid
-<link rel="stylesheet" type="text/css" href="../../lib/css/jqGrid/ui.jqgrid-4.5.4.css"/>
-<script type="text/javascript" src="../../lib/js/jqGrid/jquery.jqGrid-4.5.4.min.js"></script>
-<script type="text/javascript" src="../../lib/js/jqGrid/i18n/grid.locale-all.js"></script>
--->
-
-<!-- optional: use multiselect
-<link rel="stylesheet" type="text/css" href="../../lib/css/jquery.multiselect-1.13.css"/>
-<script type="text/javascript" src="../../lib/js/jquery.multiselect-1.13.min.js"></script>
--->
-
 <!-- these two file always have to be included -->
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
@@ -29,13 +18,19 @@
 
     // Dictionary (systemDictionary is global variable from adapter-settings.js)
     systemDictionary = {
-        "unifi adapter settings": {"de": "Beispiel", "ru": "Пример"},
-        "test1":                    {"en": "Test 1", "de": "Test 1", "ru": "Тест 1"},
-        "test2":                    {"en": "Test 2", "de": "Test 2", "ru": "Тест 2"},
-        "on save adapter restarts with new config immediately": {
-            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
-            "ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
-        }
+        "page_title": {"en": "UniFi Adapter Settings", "de": "UniFi Adapter Einstellungen", "ru": "NUT Adapater Settings"},
+        "controller_ip":  {"en": "UniFi Controller IP/Hostname", "de": "IP/Hostname des UniFi Controller", "ru": "UniFi Controller IP/Hostname"},
+        "controller_port": {"en": "UniFi Controller Port", "de": "Port des UniFi-Controller", "ru": "UniFi Controller Port"},
+        "update_interval":  {"en": "Update Interval (s)", "de": "Aktualisierungsintervall (s)", "ru": "Update Interval (s)"},
+        "controller_ip_info": {"en": "IP address of UniFi Controller",
+                               "de": "IP Adresse des UniFi Controller",
+                               "ru": "IP address of UniFi Controller"},
+        "controller_port_info": {"en": "Port of UniFi Controller (default: 8443)",
+                                 "de": "Port des UniFi Controller (Standard: 8443)",
+                                 "ru": "Port of UniFi Controller (default: 8443)"},
+        "update_interval_info": {"en": "Interval in seconds to check for updates",
+                                 "de": "Aktualisierungsintervall in Sekunden",
+                                 "ru": "Interval in seconds to check for updates"}
     };
 
     // the function loadSettings has to exist ...
@@ -77,14 +72,22 @@
 
     <table><tr>
         <td><img src="unifi.png"/></td>
-        <td><h3 class="translate">unifi adapter settings</h3></td>
+        <td><h3 class="translate">page_title</h3></td>
     </tr></table>
-    <p>
-        <span class="translate">test1</span> <input class="value" id="test1"/><br>
-        <span class="translate">test2</span> <input class="value" id="test2"/><br>
+    <p style="padding-left: 12px">
+        <label for="controller_ip" class="translate">controller_ip</label> <input class="value" type="text" id="controller_ip" size="15"/><br/>
+        <label for="controller_port" class="translate">controller_port</label> <input class="value" type="text" id="controller_port" size="6"/><br/>
+        <label for="update_interval" class="translate">update_interval</label> <input class="value" t
+        ype="text" id="update_interval" size="20"/>s<br/>
     </p>
+    <h3 class="translate">controller_ip</h3>
+    <p class="translate">controller_ip_info</p>
 
-    <p class="translate">on save adapter restarts with new config immediately</p>
+    <h3 class="translate">controller_port</h3>
+    <p class="translate">controller_port_info</p>
+
+    <h3 class="translate">update_interval</h3>
+    <p class="translate">update_interval_info</p>
 
 </div>
 
