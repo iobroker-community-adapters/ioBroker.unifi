@@ -1,13 +1,8 @@
 {
     "common": {
         "name":                     "unifi",
-        "version": "0.1.0",
+        "version": "0.0.1",
 	    "news": {
-			"0.5.0": {
-			  "en": "beta version",
-			  "de": "Betaversion",
-			  "ru": "Бета версия"
-			},
 			"0.0.1": {
 			  "en": "initial adapter",
 			  "de": "Initiale Version",
@@ -16,9 +11,9 @@
 		},
         "title":                    "Javascript/Node.js based unifi adapter",
         "desc":                     {
-				 "en": "ioBroker unifi Adapter",
-				 "de": "ioBroker Unifi Adapter",
-				 "ru": "ioBroker Unifi драйвер как образец"
+				 "en": "UniFi Adapter",
+				 "de": "UniFi Adapter",
+				 "ru": "UniFi драйвер как образец"
 		},
         "platform":                 "Javascript/Node.js",
         "mode":                     "daemon",
@@ -28,7 +23,7 @@
 		"keywords":                 ["unifi" ],
         "readme":                   "https://github.com/jens-maus/ioBroker.unifi/blob/master/README.md",
 		"loglevel":                 "info",
-        "type":                     "common adapters"
+        "type":                     "hardware"
     },
     "native": {
         "test1": true,
