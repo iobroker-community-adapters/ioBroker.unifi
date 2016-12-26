@@ -1,9 +1,9 @@
 ![Logo](admin/unifi.png)
 # ioBroker.unifi
-=================
 
 [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
+
 [![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
 
 This ioBroker adapater allows to control and monitor [UniFi devices](http://www.ubnt.com/) devices, such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
