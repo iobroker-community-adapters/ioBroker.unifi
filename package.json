@@ -1,0 +1,46 @@
+{
+  "name": "iobroker.unifi",
+  "version": "0.1.0",
+  "description": "ioBroker unifi Adapter",
+  "author": {
+    "name": "Jens Maus",
+    "email": "mail@jens-maus.de"
+  },
+  "contributors": [
+    {
+      "name": "Jens Maus",
+      "email": "mail@jens-maus.de"
+    }
+  ],
+  "homepage": "https://github.com/jens-maus/ioBroker.unifi",
+  "license": "MIT",
+  "keywords": [
+    "ioBroker",
+    "unifi",
+    "Smart Home",
+    "home automation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jens-maus/ioBroker.unifi"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+      "grunt": "^0.4.5",
+      "grunt-replace": "^0.9.3",
+      "grunt-contrib-jshint": "^0.11.2",
+      "grunt-jscs": "^2.0.0",
+      "grunt-http": "^1.6.0",
+      "mocha": "^2.3.4",
+      "chai": "^3.4.1"
+  },
+  "main": "main.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha"
+  },
+  "bugs": {
+    "url": "https://github.com/jens-maus/ioBroker.unifi/issues"
+  },
+  "readmeFilename": "README.md"
+}
