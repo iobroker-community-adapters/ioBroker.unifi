@@ -1,3 +1,5 @@
+THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
+
 ![Logo](admin/unifi.png)
 # ioBroker.unifi
 
@@ -8,12 +10,16 @@
 
 This ioBroker adapater allows to control and monitor [UniFi devices](http://www.ubnt.com/) devices, such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
-THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
-
 ## Changelog
 
-### 0.1.0
-  (jens-maus) initial checkin
+### 0.0.1
+  (jens-maus) initial checkin of non-working development version
+
+## References
+This adapter uses functionality/Know-How gathered from different third-party projects:
+
+* [UniFi-API-browser](https://github.com/malle-pietje/UniFi-API-browser)
+* [unifi_sh_api](https://dl.ubnt.com/unifi/5.3.8/unifi_sh_api)
 
 ## License
 The MIT License (MIT)
