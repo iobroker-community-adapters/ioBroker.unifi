@@ -126,7 +126,7 @@ function updateUniFiData() {
 
   adapter.log.info('Starting UniFi-Controller query');
 
-  var update_interval = parseInt(adapater.config.update_interval, 10) || 60;
+  var update_interval = parseInt(adapter.config.update_interval, 10) || 60;
 
   adapter.log.info('update_interval = ' + update_interval);
 
