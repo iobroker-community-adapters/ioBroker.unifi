@@ -24,7 +24,7 @@ This adapter uses functionality/Know-How gathered from different third-party pro
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2016 Jens Maus &lt;mail@jens-maus.de&gt;
+Copyright (c) 2016-2017 Jens Maus &lt;mail@jens-maus.de&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
