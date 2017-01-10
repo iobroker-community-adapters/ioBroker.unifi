@@ -1,35 +1,41 @@
 {
     "common": {
-        "name":                     "unifi",
+        "name":    "unifi",
         "version": "0.0.1",
-	    "news": {
-			"0.0.1": {
-			  "en": "initial adapter",
-			  "de": "Initiale Version",
-			  "ru": "Первоначальный адаптер"
-			}
-		},
-        "title":                    "Javascript/Node.js based unifi adapter",
-        "desc":                     {
-				 "en": "UniFi Adapter",
-				 "de": "UniFi Adapter",
-				 "ru": "UniFi драйвер как образец"
-		},
-        "platform":                 "Javascript/Node.js",
-        "mode":                     "daemon",
-        "icon":                     "unifi.png",
-        "enabled":                  true,
-		"extIcon":                  "https://raw.githubusercontent.com/jens-maus/ioBroker.unifi/master/admin/unifi.png",
-		"keywords":                 ["unifi" ],
-        "readme":                   "https://github.com/jens-maus/ioBroker.unifi/blob/master/README.md",
-		"loglevel":                 "info",
-        "type":                     "hardware"
+        "news": {
+            "0.0.1": {
+              "en": "initial adapter",
+              "de": "Initiale Version",
+              "ru": "Первоначальный адаптер"
+            }
+        },
+        "title": "UniFi Adapter",
+        "desc": {
+            "en": "UniFi Adapter",
+            "de": "UniFi Adapter",
+            "ru": "UniFi драйвер как образец"
+        },
+        "platform":   "Javascript/Node.js",
+        "mode":       "daemon",
+        "icon":       "unifi.png",
+        "enabled":    false,
+        "messagebox": true,
+        "subscribe":  "messagebox",
+        "extIcon":    "https://raw.githubusercontent.com/jens-maus/ioBroker.unifi/master/admin/unifi.png",
+        "keywords":   [ "unifi", "wifi" ],
+        "readme":     "https://github.com/jens-maus/ioBroker.unifi/blob/master/README.md",
+        "license":    "MIT",
+        "npmLibs":    [],
+        "loglevel":   "info",
+        "type":       "hardware"
     },
     "native": {
-        "test1": true,
-        "test2": 42
+        "controller_ip": "127.0.0.1",
+        "controller_port": "8443",
+        "controller_login": "admin",
+        "controller_password": "",
+        "update_interval": 300
     },
-    "objects": [
-
-    ]
+    "objects": [],
+    "instanceObjects": []
 }

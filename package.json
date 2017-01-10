@@ -18,7 +18,8 @@
     "ioBroker",
     "unifi",
     "Smart Home",
-    "home automation"
+    "home automation",
+    "wifi"
   ],
   "repository": {
     "type": "git",
