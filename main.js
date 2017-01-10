@@ -130,5 +130,5 @@ function updateUniFiData() {
 
   adapter.log.info('update_interval = ' + update_interval);
 
-	queryTimeout = setTimeout, update_interval * 1000);
+	queryTimeout = setTimeout(updateUniFiData, update_interval * 1000);
 }
