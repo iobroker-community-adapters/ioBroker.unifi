@@ -9,12 +9,8 @@
               "ru": "Первоначальный адаптер"
             }
         },
-        "title": "UniFi Adapter",
-        "desc": {
-            "en": "UniFi Adapter",
-            "de": "UniFi Adapter",
-            "ru": "UniFi драйвер как образец"
-        },
+        "title":      "UniFi Adapter",
+        "desc":       "Adapter for UniFi-WiFi-Controller",
         "platform":   "Javascript/Node.js",
         "mode":       "daemon",
         "icon":       "unifi.png",
@@ -32,9 +28,9 @@
     "native": {
         "controller_ip": "127.0.0.1",
         "controller_port": "8443",
-        "controller_login": "admin",
+        "controller_username": "admin",
         "controller_password": "",
-        "update_interval": 300
+        "update_interval": 60
     },
     "objects": [],
     "instanceObjects": []

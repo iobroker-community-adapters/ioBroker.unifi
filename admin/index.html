@@ -19,18 +19,26 @@
     // Dictionary (systemDictionary is global variable from adapter-settings.js)
     systemDictionary = {
         "page_title": {"en": "UniFi Adapter Settings", "de": "UniFi Adapter Einstellungen", "ru": "NUT Adapater Settings"},
-        "controller_ip":  {"en": "UniFi Controller IP/Hostname", "de": "IP/Hostname des UniFi Controller", "ru": "UniFi Controller IP/Hostname"},
-        "controller_port": {"en": "UniFi Controller Port", "de": "Port des UniFi-Controller", "ru": "UniFi Controller Port"},
-        "update_interval":  {"en": "Update Interval (s)", "de": "Aktualisierungsintervall (s)", "ru": "Update Interval (s)"},
-        "controller_ip_info": {"en": "IP address of UniFi Controller",
-                               "de": "IP Adresse des UniFi Controller",
-                               "ru": "IP address of UniFi Controller"},
-        "controller_port_info": {"en": "Port of UniFi Controller (default: 8443)",
-                                 "de": "Port des UniFi Controller (Standard: 8443)",
-                                 "ru": "Port of UniFi Controller (default: 8443)"},
-        "update_interval_info": {"en": "Interval in seconds to check for updates",
-                                 "de": "Aktualisierungsintervall in Sekunden",
-                                 "ru": "Interval in seconds to check for updates"}
+        "controller_ip":  {"en": "UniFi-Controller IP/Hostname:", "de": "IP/Hostname des UniFi-Controller:", "ru": "UniFi-Controller IP/Hostname:"},
+        "controller_port": {"en": "UniFi-Controller Port:", "de": "Port des UniFi-Controller:", "ru": "UniFi-Controller Port:"},
+        "controller_username": {"en": "UniFi-Controller Username:", "de": "Nutzername für UniFi-Controller:", "ru": "UniFi-Controller Username:"},
+        "controller_password": {"en": "UniFi-Controller Password:", "de": "Passwort für UniFi-Controller:", "ru": "UniFi-Controller Password:"},
+        "update_interval":  {"en": "Update Interval:", "de": "Aktualisierungsintervall:", "ru": "Update Interval:"},
+        "controller_ip_info": {"en": "IP address of UniFi-Controller (default: 127.0.0.1)",
+                               "de": "IP Adresse des UniFi-Controller (Standard: 127.0.0.1)",
+                               "ru": "IP address of UniFi Controller (default: 127.0.0.1)"},
+        "controller_port_info": {"en": "Port of UniFi-Controller (default: 8443)",
+                                 "de": "Port des UniFi-Controller (Standard: 8443)",
+                                 "ru": "Port of UniFi-Controller (default: 8443)"},
+        "controller_username_info": {"en": "Username of UniFi-Controller (default: admin)",
+                                     "de": "Nutzername für UniFi-Controller (Standard: admin)",
+                                     "ru": "Username of UniFi-Controller (default: admin)"},
+        "controller_password_info": {"en": "Password of UniFi-Controller",
+                                     "de": "Passwort für UniFi-Controller",
+                                     "ru": "Password of UniFi-Controller"},
+        "update_interval_info": {"en": "Interval in seconds to check for updates (default: 60 sec)",
+                                 "de": "Aktualisierungsintervall in Sekunden (Standard: 60 Sek)",
+                                 "ru": "Interval in seconds to check for updates (default: 60 sec)"}
     };
 
     // the function loadSettings has to exist ...
@@ -75,16 +83,23 @@
         <td><h3 class="translate">page_title</h3></td>
     </tr></table>
     <p style="padding-left: 12px">
-        <label for="controller_ip" class="translate">controller_ip</label> <input class="value" type="text" id="controller_ip" size="15"/><br/>
-        <label for="controller_port" class="translate">controller_port</label> <input class="value" type="text" id="controller_port" size="6"/><br/>
-        <label for="update_interval" class="translate">update_interval</label> <input class="value" t
-        ype="text" id="update_interval" size="20"/>s<br/>
+        <label for="controller_ip" class="translate">controller_ip</label>&nbsp;<input class="value" type="text" id="controller_ip" size="15"/><br/>
+        <label for="controller_port" class="translate">controller_port</label>&nbsp;<input class="value" type="text" id="controller_port" size="6"/><br/>
+        <label for="controller_username" class="translate">controller_username</label>&nbsp;<input class="value" type="text" id="controller_username" size="15"/><br/>
+        <label for="controller_password" class="translate">controller_password</label>&nbsp;<input class="value" type="password" id="controller_password" size="15"/><br/>
+        <label for="update_interval" class="translate">update_interval</label>&nbsp; <input class="value" type="text" id="update_interval" size="20"/>&nbsp;s<br/>
     </p>
     <h3 class="translate">controller_ip</h3>
     <p class="translate">controller_ip_info</p>
 
     <h3 class="translate">controller_port</h3>
     <p class="translate">controller_port_info</p>
+
+    <h3 class="translate">controller_username</h3>
+    <p class="translate">controller_username_info</p>
+
+    <h3 class="translate">controller_password</h3>
+    <p class="translate">controller_password_info</p>
 
     <h3 class="translate">update_interval</h3>
     <p class="translate">update_interval_info</p>
