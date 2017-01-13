@@ -48,14 +48,14 @@
             // example: select elements with id=key and class=value and insert value
             if ($('#' + key + '.value').attr('type') == 'checkbox') {
                 $('#' + key + '.value').prop('checked', settings[key]).change(function () {
-					onChange();
-				});
+          onChange();
+        });
             } else {
                 $('#' + key + '.value').val(settings[key]).change(function () {
-					onChange();
-				}).keyup(function () {
-					$(this).trigger('change');
-				});
+          onChange();
+        }).keyup(function () {
+          $(this).trigger('change');
+        });
             }
         }
         // Signal to admin, that no changes yet

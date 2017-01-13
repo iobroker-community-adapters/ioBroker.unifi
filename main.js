@@ -57,7 +57,7 @@ adapter.on('stateChange', function (id, state) {
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
 adapter.on('message', function (obj) {
-	processMessage(obj);
+  processMessage(obj);
 
 });
 
@@ -84,26 +84,26 @@ function main() {
 }
 
 function processMessage(obj) {
-	if(!obj)
-		return;
+  if(!obj)
+    return;
 
   adapter.log.info('Message received = ' + JSON.stringify(message));
 
-	var updateUniFi = false;
-	if(typeof obj == 'object' && obj.message) {
+  var updateUniFi = false;
+  if(typeof obj == 'object' && obj.message) {
     if(obj.command == 'notify') {
-			adapter.log.info('got notify');
+      adapter.log.info('got notify');
     }
-		else
-			updateUniFi = true;
+    else
+      updateUniFi = true;
   }
 
-	if(updateUniFi) {
-		if(queryTimeout)
-			clearTimeout(queryTimeout);
+  if(updateUniFi) {
+    if(queryTimeout)
+      clearTimeout(queryTimeout);
 
-		updateUniFiData();
-	}
+    updateUniFiData();
+  }
 }
 
 var async = require('async');
