@@ -1,7 +1,6 @@
 THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
 
-![Logo](admin/unifi.png)
-# ioBroker.unifi
+![Logo](admin/unifi.png) # ioBroker.unifi
 
 [![Build Status](https://travis-ci.org/jens-maus/ioBroker.unifi.svg?branch=master)](https://travis-ci.org/jens-maus/ioBroker.unifi)
 [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
