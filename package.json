@@ -19,7 +19,10 @@
     "type": "git",
     "url": "git+https://github.com/jens-maus/ioBroker.unifi.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "request": "^2.69.0",
+    "async": "^0.9.0"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-replace": "^0.9.3",
