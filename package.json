@@ -2,15 +2,9 @@
   "name": "iobroker.unifi",
   "version": "0.0.1",
   "description": "UniFi Adapter for ioBroker",
-  "author": {
-    "name": "Jens Maus",
-    "email": "mail@jens-maus.de"
-  },
+  "author": "Jens Maus <mail@jens-maus.de>",
   "contributors": [
-    {
-      "name": "Jens Maus",
-      "email": "mail@jens-maus.de"
-    }
+    "Jens Maus <mail@jens-maus.de>"
   ],
   "homepage": "https://github.com/jens-maus/ioBroker.unifi",
   "license": "MIT",
@@ -42,5 +36,8 @@
   "bugs": {
     "url": "https://github.com/jens-maus/ioBroker.unifi/issues"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "directories": {
+    "test": "test"
+  }
 }
