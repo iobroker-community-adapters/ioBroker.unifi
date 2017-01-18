@@ -156,6 +156,12 @@ function updateUniFiData() {
 
   adapter.log.info('here we go');
   controller.login(controller_username, controller_password, function(err) {
+    if(err)
+    {
+      adapter.log.info('ERROR: ' + err);
+      return;
+    }
+
     adapter.log.info('login successfull');
 
     controller.getSitesStats(function(err, sites) {
