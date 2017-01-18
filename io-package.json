@@ -10,7 +10,7 @@
             }
         },
         "title":      "UniFi Adapter",
-        "desc":       "Adapter for UniFi-WiFi-Controller",
+        "desc":       "Communicates with a UniFi-Controller",
         "platform":   "Javascript/Node.js",
         "mode":       "daemon",
         "icon":       "unifi.png",
@@ -18,7 +18,7 @@
         "messagebox": true,
         "subscribe":  "messagebox",
         "extIcon":    "https://raw.githubusercontent.com/jens-maus/ioBroker.unifi/master/admin/unifi.png",
-        "keywords":   [ "unifi", "wifi" ],
+        "keywords":   [ "unifi", "wifi", "network" ],
         "readme":     "https://github.com/jens-maus/ioBroker.unifi/blob/master/README.md",
         "license":    "MIT",
         "npmLibs":    [],

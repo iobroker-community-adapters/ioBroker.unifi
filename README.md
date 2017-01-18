@@ -8,7 +8,7 @@ THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
 
 [![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
 
-This ioBroker adapater allows to control and monitor [UniFi devices](http://www.ubnt.com/) devices, such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
+This ioBroker adapter allows to control and monitor [UniFi devices](http://www.ubnt.com/) devices, such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
 ## Changelog
 
