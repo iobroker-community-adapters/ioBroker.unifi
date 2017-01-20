@@ -1,12 +1,15 @@
 {
     "common": {
         "name":    "unifi",
-        "version": "0.0.1",
+        "version": "0.1.0",
         "news": {
+            "0.1.0": {
+              "en": "first beta version",
+              "de": "Erste Betaversion"
+            },
             "0.0.1": {
               "en": "initial adapter",
-              "de": "Initiale Version",
-              "ru": "Первоначальный адаптер"
+              "de": "Initiale Version"
             }
         },
         "title":      "UniFi Adapter",

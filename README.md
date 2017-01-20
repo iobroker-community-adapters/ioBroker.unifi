@@ -1,6 +1,7 @@
-THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
+THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY BETA STATE (NOT STABLE!)
 
-![Logo](admin/unifi.png) # ioBroker.unifi
+![Logo](admin/unifi.png)
+# ioBroker.unifi
 
 [![Build Status](https://travis-ci.org/jens-maus/ioBroker.unifi.svg?branch=master)](https://travis-ci.org/jens-maus/ioBroker.unifi)
 [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
@@ -10,9 +11,12 @@ THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY ALPHA STATE (NON-WORKING!)
 
 [![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
 
-This ioBroker adapter allows to control and monitor [UniFi devices](http://www.ubnt.com/) devices, such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
+This ioBroker adapter allows to control and monitor [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
 ## Changelog
+
+### 0.1.0
+  (jens-maus) implemented a first basically working version which can retrieve status information from a UniFi controller.
 
 ### 0.0.1
   (jens-maus) initial checkin of non-working development version

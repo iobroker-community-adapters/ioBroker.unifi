@@ -46,13 +46,11 @@ adapter.on('objectChange', function (id, obj) {
 
 // is called if a subscribed state changes
 adapter.on('stateChange', function (id, state) {
-    // Warning, state can be null if it was deleted
+  // you can use the ack flag to detect if it is status (true) or command (false)
+  // Warning, state can be null if it was deleted
+  if(state && state.ack === false) {
     adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
-
-    // you can use the ack flag to detect if it is status (true) or command (false)
-    if (state && !state.ack) {
-        adapter.log.info('ack is not set!');
-    }
+  }
 });
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
@@ -136,6 +134,258 @@ function processRequests(requestList) {
   });
 }
 
+/**
+ * Helper functions to parse our JSON-based result data in
+ * a recursive/traversal fashion.
+ */
+function traverse(x, level, mindepth, maxdepth, cb, depth)
+{
+  if(typeof(depth) === 'undefined')
+    depth = 0;
+
+  depth++;
+  if(typeof(maxdepth) !== 'undefined' && maxdepth != 0 && depth > maxdepth)
+    return;
+
+  if(Array.isArray(x))
+    traverseArray(x, level, mindepth, maxdepth, cb, depth);
+  else if((typeof(x) === 'object') && (x !== null))
+    traverseObject(x, level, mindepth, maxdepth, cb, depth);
+  else if(mindepth <= depth && cb(level, x, depth) === false)
+    return;
+}
+
+function traverseArray(arr, level, mindepth, maxdepth, cb, depth)
+{
+  if(mindepth <= depth && cb(level, arr, depth) === false)
+    return;
+
+  arr.every(function(x, i)
+  {
+    if((typeof(x) === 'object'))
+      traverse(x, level, mindepth, maxdepth, cb, depth);
+    else
+      return false;
+
+    return true;
+  });
+}
+
+function traverseObject(obj, level, mindepth, maxdepth, cb, depth)
+{
+  if(mindepth <= depth && cb(level, obj, depth) === false)
+    return;
+
+  for(var key in obj)
+  {
+    if(obj.hasOwnProperty(key))
+      traverse(obj[key], level + '.' + key, mindepth, maxdepth, cb, depth);
+  }
+}
+
+/**
+ * Function to organize setState() calls that we are first checking if
+ * the value is really changed and only then actually call setState()
+ * to let others listen for changes
+ */
+var setStateArray = [];
+function processStateChanges(stateArray, callback) {
+  if(!stateArray || stateArray.length === 0)
+  {
+    if(typeof(callback) === 'function')
+      callback();
+
+    // clear the array
+    setStateArray = [];
+  }
+  else
+  {
+    var newState = setStateArray.shift();
+    adapter.getState(newState.name, function(err, oldState) {
+      if(oldState === null || newState.val != oldState.val)
+      {
+        adapter.log.info('changing state ' + newState.name + ' : ' + newState.val);
+        adapter.setState(newState.name, {ack: true, val: newState.val}, function() {
+          setTimeout(processStateChanges, 0, setStateArray, callback);
+        });
+      }
+      else
+        setTimeout(processStateChanges, 0, setStateArray, callback);
+    });
+  }
+}
+
+/**
+ * Function to create a state and set its value
+ * only if it hasn't been set to this value before
+ */
+function createState(name, value, desc) {
+
+  if(typeof(desc) === 'undefined')
+    desc = name;
+
+  if(Array.isArray(value))
+    value = value.toString();
+
+  adapter.setObjectNotExists(name, {
+    type: 'state',
+    common: { name: desc,
+              type: typeof(value),
+              read: true,
+              write: false },
+    native: { id: name }
+  });
+
+  if(typeof(value) !== 'undefined')
+    setStateArray.push({name: name, val: value});
+}
+
+/**
+ * Function to create a channel
+ */
+function createChannel(name, desc) {
+
+  if(typeof(desc) === 'undefined')
+    desc = name;
+
+  adapter.setObjectNotExists(name, {
+    type: 'channel',
+    common: { name: desc },
+    native: {}
+  });
+}
+
+/**
+ * Function that receives the site info as a JSON data array
+ * and parses through it to create all channels+states
+ */
+function processSiteInfo(sites) {
+
+  // lets store some site information
+  for(var i=0; i < sites.length; i++)
+  {
+    var siteName = sites[i].name;
+
+    // traverse the json with depth 0..2 only
+    traverse(sites[i], sites[i].name, 0, 2, function(name, value, depth)
+    {
+      //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+      if(typeof(value) === 'object')
+      {
+        if(depth == 1)
+          createChannel(name, 'Site ' + value.desc);
+        else // depth == 2
+        {
+          // continue the traversal of the object with depth 2
+          traverse(value, name, 2, 2, function(name, value, depth)
+          {
+            //adapter.log.info('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+            createChannel(name);
+
+            // walk through all sub values on a flat level starting with the
+            // subsystem tree.
+            traverse(value, name + '.' + value.subsystem, 0, 0, function(name, value, depth)
+            {
+              //adapter.log.info('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+              if(typeof(value) === 'object')
+                createChannel(name, 'Subsystem ' + value.subsystem);
+              else
+                createState(name, value);
+            });
+          });
+        }
+      }
+      else
+        createState(name, value);
+    });
+  }
+}
+
+/**
+ * Function that receives the client device info as a JSON data array
+ * and parses through it to create all channels+states
+ */
+function processClientDeviceInfo(sites, clientDevices) {
+
+  // lets store some site information
+  for(var i=0; i < sites.length; i++)
+  {
+    var siteName = sites[i].name;
+
+    // traverse the json with depth 3..4 only
+    traverse(clientDevices, sites[i].name + '.devices', 3, 3, function(name, value, depth)
+    {
+      //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+      if(typeof(value) === 'object')
+      {
+        // continue the traversal of the object with depth 2
+        traverse(value, name + '.' + value.mac, 1, 0, function(name, value, depth)
+        {
+          //adapter.log.info('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+          if(depth == 1)
+            createChannel(name, typeof(value.hostname) !== 'undefined' ? value.hostname : '');
+          else
+            createState(name, value);
+        });
+      }
+      else
+        createState(name, value);
+    });
+  }
+}
+
+/**
+ * Function that receives the site sysinfo as a JSON data array
+ * and parses through it to create all channels+states
+ */
+function processSiteSysInfo(sites, sysinfo) {
+
+  adapter.log.info("processSiteSysInfo");
+
+  // lets store some site information
+  for(var i=0; i < sysinfo.length; i++)
+  {
+    //adapter.log.info(JSON.stringify(sysinfo[i]));
+
+    // traverse the json with depth 0..2 only
+    traverse(sysinfo[i], sites[i].name + '.sysinfo', 2, 4, function(name, value, depth)
+    {
+      //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' array: ' + Array.isArray(value));
+
+      if(typeof(value) === 'object')
+      {
+        if(depth == 2)
+          createChannel(name, 'Site Sysinfo');
+        else if(depth == 3)
+          createChannel(name);
+        else
+        {
+          if(typeof(value.key) !== 'undefined')
+          {
+            // continue the traversal of the object with depth 2
+            traverse(value, name + '.' + value.key, 1, 2, function(name, value, depth)
+            {
+              //adapter.log.info('_(' + depth + '): ' + name + ' = ' + value + ' type2: ' + typeof(value) + ' array: ' + Array.isArray(value));
+
+              if(Array.isArray(value) === false && typeof(value) === 'object')
+                createChannel(name, value.name);
+              else
+                createState(name, value);
+            });
+          }
+          else
+            createState(name, value);
+        }
+      }
+      else
+        createState(name, value);
+    });
+  }
+}
+
 function updateUniFiData() {
 
   adapter.log.info('Starting UniFi-Controller query');
@@ -154,30 +404,50 @@ function updateUniFiData() {
 
   var controller = new unifi.Controller(controller_ip, controller_port);
 
-  adapter.log.info('here we go');
+  //////////////////////////////
+  // LOGIN
   controller.login(controller_username, controller_password, function(err) {
+
     if(err)
     {
       adapter.log.info('ERROR: ' + err);
       return;
     }
 
-    adapter.log.info('login successfull');
-
+    //////////////////////////////
+    // GET SITE STATS
     controller.getSitesStats(function(err, sites) {
       adapter.log.info('getSitesStats: ' + sites[0].name);
-      adapter.log.info(JSON.stringify(sites));
+      //adapter.log.info(JSON.stringify(sites));
 
+      processSiteInfo(sites);
+
+      //////////////////////////////
+      // GET SITE SYSINFO
       controller.getSiteSysinfo(sites[0].name, function(err, sysinfo) {
-        adapter.log.info('getSiteSysinfo: ' + sysinfo[0].length);
-        //adapter.log.info(JSON.stringify(data));
+        adapter.log.info('getSiteSysinfo: ' + sysinfo.length);
+        //adapter.log.info(JSON.stringify(sysinfo));
 
+        processSiteSysInfo(sites, sysinfo);
+
+        //////////////////////////////
+        // GET CLIENT DEVICES
         controller.getClientDevices(sites[0].name, function(err, client_data) {
           adapter.log.info('getClientDevices: ' + client_data[0].length);
           //adapter.log.info(JSON.stringify(client_data));
 
+          processClientDeviceInfo(sites, client_data);
+
+          //////////////////////////////
+          // FINALIZE
+
+          // finalize, logout and finish
           controller.logout();
 
+          // process all schedule state changes
+          processStateChanges(setStateArray);
+
+          // schedule a new execution of updateUniFiData in X seconds
           queryTimeout = setTimeout(updateUniFiData, update_interval * 1000);
         });
       });
