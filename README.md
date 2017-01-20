@@ -5,6 +5,7 @@ THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY BETA STATE (NOT STABLE!)
 
 [![Build Status](https://travis-ci.org/jens-maus/ioBroker.unifi.svg?branch=master)](https://travis-ci.org/jens-maus/ioBroker.unifi)
 [![Code Climate](https://codeclimate.com/github/jens-maus/ioBroker.unifi/badges/gpa.svg)](https://codeclimate.com/github/jens-maus/ioBroker.unifi)
+[![bitHound Score](https://www.bithound.io/github/jens-maus/ioBroker.unifi/badges/score.svg)](https://www.bithound.io/github/jens-maus/ioBroker.unifi)
 [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
 [![Github Issues](http://githubbadges.herokuapp.com/jens-maus/ioBroker.unifi/issues.svg)](https://github.com/jens-maus/ioBroker.unifi/issues)
