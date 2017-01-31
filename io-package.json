@@ -1,8 +1,12 @@
 {
     "common": {
         "name":    "unifi",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "news": {
+            "0.2.0": {
+              "en": "second beta version using node-unifi",
+              "de": "Zweite Betaversion die node-unifi nutzt"
+            },
             "0.1.0": {
               "en": "first beta version",
               "de": "Erste Betaversion"

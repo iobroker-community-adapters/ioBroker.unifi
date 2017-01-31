@@ -108,6 +108,7 @@ function processMessage(obj) {
  * Function to process a bunch of HTTP requests sequentially
  * using 'request' and 'async'
  */
+/*
 function processRequests(requestList) {
   async.eachSeries(requestList, function(item, cb) {
     if(item.json) {
@@ -133,6 +134,7 @@ function processRequests(requestList) {
     adapter.log.info('DONE: ' + JSON.stringify(err));
   });
 }
+*/
 
 /**
  * Helper functions to parse our JSON-based result data in
@@ -400,7 +402,7 @@ function updateUniFiData() {
   adapter.log.info('controller = ' + controller_ip + ':' + controller_port);
 
   // get unifi class
-  var unifi = require(__dirname + '/lib/unifi');
+  var unifi = require('node-unifi');
 
   var controller = new unifi.Controller(controller_ip, controller_port);
 
