@@ -1,19 +1,19 @@
 {
     "common": {
         "name":    "unifi",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "news": {
+            "0.2.1": {
+              "en": "minor code fixes"
+            },
             "0.2.0": {
-              "en": "second beta version using node-unifi",
-              "de": "Zweite Betaversion die node-unifi nutzt"
+              "en": "second beta version using node-unifi"
             },
             "0.1.0": {
-              "en": "first beta version",
-              "de": "Erste Betaversion"
+              "en": "first beta version"
             },
             "0.0.1": {
-              "en": "initial adapter",
-              "de": "Initiale Version"
+              "en": "initial adapter"
             }
         },
         "title":      "UniFi Adapter",

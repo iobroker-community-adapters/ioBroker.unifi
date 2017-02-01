@@ -85,7 +85,7 @@ function processMessage(obj) {
   if(!obj)
     return;
 
-  adapter.log.info('Message received = ' + JSON.stringify(message));
+  adapter.log.info('Message received = ' + JSON.stringify(obj.message));
 
   var updateUniFi = false;
   if(typeof obj == 'object' && obj.message) {
@@ -146,7 +146,7 @@ function traverse(x, level, mindepth, maxdepth, cb, depth)
     depth = 0;
 
   depth++;
-  if(typeof(maxdepth) !== 'undefined' && maxdepth != 0 && depth > maxdepth)
+  if(typeof(maxdepth) !== 'undefined' && maxdepth !== 0 && depth > maxdepth)
     return;
 
   if(Array.isArray(x))
