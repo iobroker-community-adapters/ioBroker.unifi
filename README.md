@@ -1,5 +1,3 @@
-THIS ADAPTER IS WORK-IN-PROGRESS AND HAS EARLY BETA STATE (NOT STABLE!)
-
 ![Logo](admin/unifi.png)
 # ioBroker.unifi
 
@@ -17,6 +15,9 @@ This ioBroker adapter allows to control and monitor [UniFi devices](http://www.u
 
 ## ChangeLog
 
+### 0.2.0
+  (jens-maus) moved `lib/unifi.js` to dedicated node-unifi nodejs class and added it as a dependency.
+
 ### 0.1.0
   (jens-maus) implemented a first basically working version which can retrieve status information from a UniFi controller.
 
@@ -24,10 +25,9 @@ This ioBroker adapter allows to control and monitor [UniFi devices](http://www.u
   (jens-maus) initial checkin of non-working development version
 
 ## References
-This adapter uses functionality/Know-How gathered from different third-party projects:
+This adapter uses functionality from the following third-party nodejs modules:
 
-* [UniFi-API-browser](https://github.com/malle-pietje/UniFi-API-browser)
-* [unifi_sh_api](https://dl.ubnt.com/unifi/5.3.8/unifi_sh_api)
+* [node-unifi](https://github.com/jens-maus/node-unifi)
 
 ## License
 The MIT License (MIT)

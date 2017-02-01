@@ -20,7 +20,7 @@
     "url": "git+https://github.com/jens-maus/ioBroker.unifi.git"
   },
   "dependencies": {
-    "node-unifi": "^1.0.0"
+    "node-unifi": "^1.0.1"
   },
   "devDependencies": {
     "grunt": "^0.4.5",
