@@ -1,6 +1,6 @@
 {
   "name": "iobroker.unifi",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "UniFi Adapter for ioBroker",
   "author": "Jens Maus <mail@jens-maus.de>",
   "contributors": [
@@ -20,7 +20,7 @@
     "url": "git+https://github.com/jens-maus/ioBroker.unifi.git"
   },
   "dependencies": {
-    "node-unifi": "^1.0.1"
+    "node-unifi": "^1.0.2"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

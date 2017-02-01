@@ -15,6 +15,9 @@ This ioBroker adapter allows to control and monitor [UniFi devices](http://www.u
 
 ## ChangeLog
 
+### 0.3.0
+  (jens-maus) added access device data query and moved the client devices to the 'clients' subtree instead
+
 ### 0.2.1
   (jens-maus) minor fixes
 

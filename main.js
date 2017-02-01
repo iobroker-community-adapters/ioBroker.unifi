@@ -206,7 +206,7 @@ function processStateChanges(stateArray, callback) {
     adapter.getState(newState.name, function(err, oldState) {
       if(oldState === null || newState.val != oldState.val)
       {
-        adapter.log.info('changing state ' + newState.name + ' : ' + newState.val);
+        //adapter.log.info('changing state ' + newState.name + ' : ' + newState.val);
         adapter.setState(newState.name, {ack: true, val: newState.val}, function() {
           setTimeout(processStateChanges, 0, setStateArray, callback);
         });
@@ -316,7 +316,7 @@ function processClientDeviceInfo(sites, clientDevices) {
     var siteName = sites[i].name;
 
     // traverse the json with depth 3..4 only
-    traverse(clientDevices, sites[i].name + '.devices', 3, 3, function(name, value, depth)
+    traverse(clientDevices[i], sites[i].name + '.clients', 2, 2, function(name, value, depth)
     {
       //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
 
@@ -340,18 +340,73 @@ function processClientDeviceInfo(sites, clientDevices) {
 }
 
 /**
+ * Function that receives the access device info as a JSON data array
+ * and parses through it to create all channels+states
+ */
+function processAccessDeviceInfo(sites, accessDevices) {
+
+  // lets store some site information
+  for(var i=0; i < sites.length; i++)
+  {
+    var siteName = sites[i].name;
+
+    // traverse the json with depth 3..4 only
+    traverse(accessDevices[i], sites[i].name + '.devices', 2, 2, function(name, value, depth)
+    {
+      //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+      if(typeof(value) === 'object' && value !== null)
+      {
+        // continue the traversal of the object with depth 2
+        traverse(value, name + '.' + value.mac, 1, 2, function(name, value, depth)
+        {
+          //adapter.log.info('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+          if(depth === 1)
+            createChannel(name, value.model + ' - ' + value.serial);
+          else if(typeof(value) === 'object' && value !== null)
+          {
+            traverse(value, name, 1, 2, function(name, value, depth)
+            {
+              //adapter.log.info('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' is_null: ' + (value === null));
+
+              if(depth === 1)
+                createChannel(name, name);
+              else if(typeof(value) === 'object' && value !== null)
+              {
+                traverse(value, name + '.' + value.name, 1, 0, function(name, value, depth)
+                {
+                  //adapter.log.info('___(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+                  if(depth === 1)
+                    createChannel(name, name);
+                  else
+                    createState(name, value);
+                });
+              }
+              else
+                createState(name, value);
+            });
+          }
+          else
+            createState(name, value);
+        });
+      }
+      else
+        createState(name, value);
+    });
+  }
+}
+
+/**
  * Function that receives the site sysinfo as a JSON data array
  * and parses through it to create all channels+states
  */
 function processSiteSysInfo(sites, sysinfo) {
 
-  adapter.log.info("processSiteSysInfo");
-
   // lets store some site information
   for(var i=0; i < sysinfo.length; i++)
   {
-    //adapter.log.info(JSON.stringify(sysinfo[i]));
-
     // traverse the json with depth 0..2 only
     traverse(sysinfo[i], sites[i].name + '.sysinfo', 2, 4, function(name, value, depth)
     {
@@ -441,16 +496,25 @@ function updateUniFiData() {
           processClientDeviceInfo(sites, client_data);
 
           //////////////////////////////
-          // FINALIZE
+          // GET ACCESS DEVICES
+          controller.getAccessDevices(sites[0].name, function(err, devices_data) {
+            adapter.log.info('getAccessDevices: ' + devices_data[0].length);
+            //adapter.log.info(JSON.stringify(devices_data));
 
-          // finalize, logout and finish
-          controller.logout();
+            processAccessDeviceInfo(sites, devices_data);
 
-          // process all schedule state changes
-          processStateChanges(setStateArray);
+            //////////////////////////////
+            // FINALIZE
 
-          // schedule a new execution of updateUniFiData in X seconds
-          queryTimeout = setTimeout(updateUniFiData, update_interval * 1000);
+            // finalize, logout and finish
+            controller.logout();
+
+            // process all schedule state changes
+            processStateChanges(setStateArray);
+
+            // schedule a new execution of updateUniFiData in X seconds
+            queryTimeout = setTimeout(updateUniFiData, update_interval * 1000);
+          });
         });
       });
     });

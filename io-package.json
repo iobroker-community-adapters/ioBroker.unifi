@@ -1,8 +1,11 @@
 {
     "common": {
         "name":    "unifi",
-        "version": "0.2.1",
+        "version": "0.3.0",
         "news": {
+            "0.3.0": {
+              "en": "added access device data query"
+            },
             "0.2.1": {
               "en": "minor code fixes"
             },
