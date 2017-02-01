@@ -261,15 +261,13 @@ function createChannel(name, desc) {
  * Function that receives the site info as a JSON data array
  * and parses through it to create all channels+states
  */
-function processSiteInfo(sites) {
+function processSiteInfo(site_data) {
 
   // lets store some site information
-  for(var i=0; i < sites.length; i++)
+  for(var i=0; i < site_data.length; i++)
   {
-    var siteName = sites[i].name;
-
     // traverse the json with depth 0..2 only
-    traverse(sites[i], sites[i].name, 0, 2, function(name, value, depth)
+    traverse(site_data[i], site_data[i].name, 0, 2, function(name, value, depth)
     {
       //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
 
@@ -313,10 +311,8 @@ function processClientDeviceInfo(sites, clientDevices) {
   // lets store some site information
   for(var i=0; i < sites.length; i++)
   {
-    var siteName = sites[i].name;
-
     // traverse the json with depth 3..4 only
-    traverse(clientDevices[i], sites[i].name + '.clients', 2, 2, function(name, value, depth)
+    traverse(clientDevices[i], sites[i] + '.clients', 2, 2, function(name, value, depth)
     {
       //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
 
@@ -348,10 +344,8 @@ function processAccessDeviceInfo(sites, accessDevices) {
   // lets store some site information
   for(var i=0; i < sites.length; i++)
   {
-    var siteName = sites[i].name;
-
     // traverse the json with depth 3..4 only
-    traverse(accessDevices[i], sites[i].name + '.devices', 2, 2, function(name, value, depth)
+    traverse(accessDevices[i], sites[i] + '.devices', 2, 2, function(name, value, depth)
     {
       //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
 
@@ -408,7 +402,7 @@ function processSiteSysInfo(sites, sysinfo) {
   for(var i=0; i < sysinfo.length; i++)
   {
     // traverse the json with depth 0..2 only
-    traverse(sysinfo[i], sites[i].name + '.sysinfo', 2, 4, function(name, value, depth)
+    traverse(sysinfo[i], sites[i] + '.sysinfo', 2, 4, function(name, value, depth)
     {
       //adapter.log.info('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' array: ' + Array.isArray(value));
 
@@ -473,15 +467,17 @@ function updateUniFiData() {
 
     //////////////////////////////
     // GET SITE STATS
-    controller.getSitesStats(function(err, sites) {
-      adapter.log.info('getSitesStats: ' + sites[0].name);
-      //adapter.log.info(JSON.stringify(sites));
+    controller.getSitesStats(function(err, site_data) {
+      var sites = site_data.map(function(s) { return s.name; });
 
-      processSiteInfo(sites);
+      adapter.log.info('getSitesStats: ' + sites);
+      //adapter.log.info(JSON.stringify(site_data));
+
+      processSiteInfo(site_data);
 
       //////////////////////////////
       // GET SITE SYSINFO
-      controller.getSiteSysinfo(sites[0].name, function(err, sysinfo) {
+      controller.getSiteSysinfo(sites, function(err, sysinfo) {
         adapter.log.info('getSiteSysinfo: ' + sysinfo.length);
         //adapter.log.info(JSON.stringify(sysinfo));
 
@@ -489,7 +485,7 @@ function updateUniFiData() {
 
         //////////////////////////////
         // GET CLIENT DEVICES
-        controller.getClientDevices(sites[0].name, function(err, client_data) {
+        controller.getClientDevices(sites, function(err, client_data) {
           adapter.log.info('getClientDevices: ' + client_data[0].length);
           //adapter.log.info(JSON.stringify(client_data));
 
@@ -497,7 +493,7 @@ function updateUniFiData() {
 
           //////////////////////////////
           // GET ACCESS DEVICES
-          controller.getAccessDevices(sites[0].name, function(err, devices_data) {
+          controller.getAccessDevices(sites, function(err, devices_data) {
             adapter.log.info('getAccessDevices: ' + devices_data[0].length);
             //adapter.log.info(JSON.stringify(devices_data));
 
