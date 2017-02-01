@@ -15,6 +15,9 @@ This ioBroker adapter allows to control and monitor [UniFi devices](http://www.u
 
 ## ChangeLog
 
+### 0.2.1
+  (jens-maus) minor fixes
+
 ### 0.2.0
   (jens-maus) moved `lib/unifi.js` to dedicated node-unifi nodejs class and added it as a dependency.
 
