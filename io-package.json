@@ -33,7 +33,7 @@
         "license":    "MIT",
         "npmLibs":    [],
         "loglevel":   "info",
-        "type":       "hardware"
+        "type":       "network"
     },
     "native": {
         "controller_ip": "127.0.0.1",
