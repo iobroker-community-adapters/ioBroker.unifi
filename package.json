@@ -6,7 +6,7 @@
   "contributors": [
     "Jens Maus <mail@jens-maus.de>"
   ],
-  "homepage": "https://github.com/jens-maus/ioBroker.unifi",
+  "homepage": "https://github.com/iobroker-community-adapters/ioBroker.unifi",
   "license": "MIT",
   "keywords": [
     "ioBroker",
@@ -17,7 +17,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jens-maus/ioBroker.unifi.git"
+    "url": "git+https://github.com/iobroker-community-adapters/ioBroker.unifi.git"
   },
   "dependencies": {
     "node-unifi": "^1.0.2",
@@ -37,7 +37,7 @@
     "test": "node node_modules/mocha/bin/mocha --exit"
   },
   "bugs": {
-    "url": "https://github.com/jens-maus/ioBroker.unifi/issues"
+    "url": "https://github.com/iobroker-community-adapters/ioBroker.unifi/issues"
   },
   "readmeFilename": "README.md",
   "directories": {
