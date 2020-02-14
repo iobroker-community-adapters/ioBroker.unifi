@@ -21,15 +21,15 @@
   },
   "dependencies": {
     "node-unifi": "^1.0.2",
-    "@iobroker/adapter-core": "^1.0.3"
+    "@iobroker/adapter-core": "^2.2.1"
   },
   "devDependencies": {
     "grunt": "^1.0.1",
     "grunt-replace": "^1.0.1",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-jshint": "^2.1.0",
     "grunt-jscs": "^3.0.1",
     "grunt-http": "^2.2.0",
-    "mocha": "^6.0.2",
+    "mocha": "^7.0.1",
     "chai": "^4.2.0"
   },
   "main": "main.js",
