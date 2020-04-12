@@ -64,16 +64,16 @@
         "zh-cn": "第一个测试版"
       },
       "0.0.1": {
-        "en": "initial adapter",
-        "de": "",
-        "ru": "",
-        "pt": "",
-        "nl": "",
-        "fr": "",
-        "it": "",
-        "es": "",
-        "pl": "",
-        "zh-cn": ""
+        "en": "initial version",
+        "de": "erste Version",
+        "ru": "Первоначальная версия",
+        "pt": "versão inicial",
+        "nl": "oorspronkelijke versie",
+        "fr": "version initiale",
+        "it": "versione iniziale",
+        "es": "versión inicial",
+        "pl": "początkowa wersja",
+        "zh-cn": "初始版本"
       }
     },
     "title": "UniFi",
