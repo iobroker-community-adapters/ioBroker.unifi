@@ -120,7 +120,7 @@ class Unifi extends utils.Adapter {
      * the responses afterwards
      */
     async updateUnifiData() {
-        this.log.info('Update started');
+        this.log.debug('Update started');
 
         // Load configuration
         const update_interval = parseInt(this.config.update_interval, 10) || 60;
@@ -157,7 +157,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         const sites = data.map(function (s) { return s.name; });
     
-                        this.log.info('getSitesStats: ' + sites);
+                        this.log.debug('getSitesStats: ' + sites);
                         //this.log.debug(JSON.stringify(data));
     
                         processSiteInfo(data);
@@ -218,7 +218,7 @@ class Unifi extends utils.Adapter {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.info('getSiteSysinfo: ' + data.length);
+                        this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
     
                         processSiteSysInfo(sites, data);
@@ -280,7 +280,7 @@ class Unifi extends utils.Adapter {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.info('getClientDevices: ' + data[0].length);
+                        this.log.debug('getClientDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
     
                         processClientDeviceInfo(sites, data);
@@ -332,7 +332,7 @@ class Unifi extends utils.Adapter {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.info('getAccessDevices: ' + data[0].length);
+                        this.log.debug('getAccessDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
     
                         processAccessDeviceInfo(sites, data);
@@ -497,14 +497,14 @@ class Unifi extends utils.Adapter {
         /********************
          * LET'S GO
          *******************/
-        this.log.info('controller = ' + controller_ip + ':' + controller_port);
-        this.log.info('update_interval = ' + update_interval);
+        this.log.debug('controller = ' + controller_ip + ':' + controller_port);
+        this.log.debug('update_interval = ' + update_interval);
 
         const controller = new unifi.Controller(controller_ip, controller_port);
 
         login(controller_username, controller_password)
             .then(async () => {
-                this.log.info('Login successful');
+                this.log.debug('Login successful');
 
                 const sites = await getSitesStats();
                 await getSiteSysinfo(sites);
