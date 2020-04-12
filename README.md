@@ -1,8 +1,7 @@
 ![Logo](admin/unifi.png)
 # ioBroker.unifi
 
-[![Build Status](https://travis-ci.org/iobroker-community-adapters/ioBroker.unifi.svg?branch=master)](https://travis-ci.org/iobroker-community-adapters/ioBroker.unifi)
-![Number of Installations](http://iobroker.live/badges/unifi-installed.svg) ![Number of Installations](http://iobroker.live/badges/unifi-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)[![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
+[![Build Status](https://travis-ci.org/iobroker-community-adapters/ioBroker.unifi.svg?branch=master)](https://travis-ci.org/iobroker-community-adapters/ioBroker.unifi) ![Number of Installations](http://iobroker.live/badges/unifi-installed.svg) ![Number of Installations](http://iobroker.live/badges/unifi-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi) [![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
 
 [![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
 
