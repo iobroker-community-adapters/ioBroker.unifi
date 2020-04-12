@@ -400,6 +400,58 @@ class Unifi extends utils.Adapter {
             }
         };
 
+         /**
+         * Function to fetch network configuration
+         * @param {Object} sites 
+         */
+        const getNetworkConf = async (sites) => {
+            return new Promise((resolve, reject) => {
+                controller.getNetworkConf(sites, (err, data) => {
+                    if (err) {
+                        reject(new Error(err));
+                    } else {
+                        this.log.debug('getNetworkConf: ' + data[0].length);
+                        //this.log.debug(JSON.stringify(data));
+    
+                        processNetworkConf(sites, data);
+    
+                        resolve(data);
+                    }                
+                });
+            });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * and parses through it to create all channels+states
+         * @param {Object} sites 
+         * @param {Object} clientDevices 
+         */
+        const processNetworkConf = (sites, clientDevices) => {
+            // lets store some site information
+            for (let i = 0; i < sites.length; i++) {
+                // traverse the json with depth 3..4 only
+                traverse(clientDevices[i], sites[i] + '.networks', 2, 2, function (name, value, depth) {
+                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+                    if (typeof (value) === 'object') {
+                        // continue the traversal of the object with depth 2
+                        traverse(value, name + '.' + value.name, 1, 0, function (name, value, depth) {
+                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+
+                            if (Array.isArray(value) === false && typeof (value) === 'object') {
+                                this.localCreateChannel(name, value.name);
+                            } else {
+                                this.localCreateState(name, value);
+                            }
+                        }.bind(this));
+                    } else {
+                        this.localCreateState(name, value);
+                    }
+                }.bind(this));
+            }
+        };
+
         /**
          * Helper functions to parse our JSON-based result data in
          * a recursive/traversal fashion.
@@ -516,6 +568,7 @@ class Unifi extends utils.Adapter {
                 await getSiteSysinfo(sites);
                 await getClientDevices(sites);
                 await getAccessDevices(sites);
+                await getNetworkConf(sites);
 
                 // finalize, logout and finish
                 controller.logout();
