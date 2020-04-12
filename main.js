@@ -166,7 +166,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSitesStats: ' + sites);
                         //this.log.debug(JSON.stringify(data));
     
-                        processSiteInfo(data);
+                        processSiteInfoLegacy(data);
     
                         resolve(sites);
                     }
@@ -179,7 +179,7 @@ class Unifi extends utils.Adapter {
         * and parses through it to create all channels+states
         * @param {Object} siteInfo 
         */
-        const processSiteInfo = (siteInfo) => {
+        const processSiteInfoLegacy = (siteInfo) => {
             // lets store some site information
             for (let i = 0; i < siteInfo.length; i++) {
                 // traverse the json with depth 0..2 only
@@ -227,7 +227,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
     
-                        processSiteSysInfo(sites, data);
+                        processSiteSysInfoLegacy(sites, data);
     
                         resolve(data);
                     }                
@@ -241,7 +241,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} siteSysinfo 
          */
-        const processSiteSysInfo = (sites, siteSysinfo) => {
+        const processSiteSysInfoLegacy = (sites, siteSysinfo) => {
             // lets store some site information
             for (let i = 0; i < siteSysinfo.length; i++) {
                 // traverse the json with depth 0..2 only
@@ -289,7 +289,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getClientDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
     
-                        processClientDeviceInfo(sites, data);
+                        processClientDeviceInfoLegacy(sites, data);
     
                         resolve(data);
                     }                
@@ -303,7 +303,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} clientDevices 
          */
-        const processClientDeviceInfo = (sites, clientDevices) => {
+        const processClientDeviceInfoLegacy = (sites, clientDevices) => {
             // lets store some site information
             for (let i = 0; i < sites.length; i++) {
                 // traverse the json with depth 3..4 only
@@ -341,7 +341,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getAccessDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
     
-                        processAccessDeviceInfo(sites, data);
+                        processAccessDeviceInfoLegacy(sites, data);
     
                         resolve(data);
                     }                
@@ -355,7 +355,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} accessDevices 
          */
-        const processAccessDeviceInfo = (sites, accessDevices) => {
+        const processAccessDeviceInfoLegacy = (sites, accessDevices) => {
             // lets store some site information
             for (let i = 0; i < sites.length; i++) {
                 // traverse the json with depth 3..4 only
@@ -400,7 +400,7 @@ class Unifi extends utils.Adapter {
             }
         };
 
-         /**
+        /**
          * Function to fetch network configuration
          * @param {Object} sites 
          */
@@ -413,7 +413,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getNetworkConf: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
     
-                        processNetworkConf(sites, data);
+                        processNetworkConfLegacy(sites, data);
     
                         resolve(data);
                     }                
@@ -427,7 +427,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} clientDevices 
          */
-        const processNetworkConf = (sites, clientDevices) => {
+        const processNetworkConfLegacy = (sites, clientDevices) => {
             // lets store some site information
             for (let i = 0; i < sites.length; i++) {
                 // traverse the json with depth 3..4 only
