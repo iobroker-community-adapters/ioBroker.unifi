@@ -1,47 +1,135 @@
 {
-    "common": {
-        "name":    "unifi",
-        "version": "0.3.1",
-        "news": {
-            "0.3.0": {
-              "en": "added access device data query"
-            },
-            "0.2.1": {
-              "en": "minor code fixes"
-            },
-            "0.2.0": {
-              "en": "second beta version using node-unifi"
-            },
-            "0.1.0": {
-              "en": "first beta version"
-            },
-            "0.0.1": {
-              "en": "initial adapter"
-            }
-        },
-        "title":      "UniFi Adapter",
-        "desc":       "Communicates with a UniFi-Controller",
-        "platform":   "Javascript/Node.js",
-        "mode":       "daemon",
-        "icon":       "unifi.png",
-        "enabled":    false,
-        "messagebox": true,
-        "subscribe":  "messagebox",
-        "extIcon":    "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
-        "keywords":   [ "unifi", "wifi", "network" ],
-        "readme":     "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
-        "license":    "MIT",
-        "npmLibs":    [],
-        "loglevel":   "info",
-        "type":       "network"
+  "common": {
+    "name": "unifi",
+    "version": "0.3.1",
+    "news": {
+      "0.3.1": {
+        "en": "added support for multi-site environments",
+        "de": "Unterstützung von Multi-Site Umgebungen hinzugefügt",
+        "ru": "добавлена поддержка мультисайтовых сред",
+        "pt": "suporte adicionado para ambientes de vários sites",
+        "nl": "toegevoegde ondersteuning voor multi-site omgevingen",
+        "fr": "prise en charge supplémentaire des environnements multisites",
+        "it": "aggiunto supporto per ambienti multi-sito",
+        "es": "Soporte agregado para entornos multi-sitio.",
+        "pl": "dodano obsługę środowisk z wieloma witrynami",
+        "zh-cn": "增加了对多站点环境的支持"
+      },
+      "0.3.0": {
+        "en": "added access device data query",
+        "de": "Datenabfrage für Access Points hinzugefügt",
+        "ru": "добавлен запрос данных устройства доступа",
+        "pt": "consulta de dados do dispositivo de acesso adicionada",
+        "nl": "gegevensquery voor toegangsapparaat toegevoegd",
+        "fr": "ajout d'une requête de données sur le périphérique d'accès",
+        "it": "aggiunta query sui dati del dispositivo di accesso",
+        "es": "consulta de datos de dispositivo de acceso agregado",
+        "pl": "dodano zapytanie o dane urządzenia dostępowego",
+        "zh-cn": "添加访问设备数据查询"
+      },
+      "0.2.1": {
+        "en": "minor code fixes",
+        "de": "kleinere Codekorrekturen",
+        "ru": "мелкие исправления кода",
+        "pt": "pequenas correções de código",
+        "nl": "kleine codefixes",
+        "fr": "corrections de code mineures",
+        "it": "correzioni di codice minori",
+        "es": "correcciones de código menores",
+        "pl": "drobne poprawki kodu",
+        "zh-cn": "次要代码修复"
+      },
+      "0.2.0": {
+        "en": "second beta version using node-unifi",
+        "de": "zweite Beta-Version mit node-unifi",
+        "ru": "вторая бета-версия с использованием node-unifi",
+        "pt": "segunda versão beta usando node-unifi",
+        "nl": "tweede bètaversie met node-unifi",
+        "fr": "deuxième version bêta utilisant node-unifi",
+        "it": "seconda versione beta usando node-unifi",
+        "es": "segunda versión beta usando node-unifi",
+        "pl": "druga wersja beta za pomocą node-unifi",
+        "zh-cn": "使用node-unifi的第二个beta版本"
+      },
+      "0.1.0": {
+        "en": "first beta version",
+        "de": "erste Beta-Version",
+        "ru": "первая бета-версия",
+        "pt": "primeira versão beta",
+        "nl": "eerste bètaversie",
+        "fr": "première version bêta",
+        "it": "prima versione beta",
+        "es": "primera versión beta",
+        "pl": "pierwsza wersja beta",
+        "zh-cn": "第一个测试版"
+      },
+      "0.0.1": {
+        "en": "initial version",
+        "de": "erste Version",
+        "ru": "Первоначальная версия",
+        "pt": "versão inicial",
+        "nl": "oorspronkelijke versie",
+        "fr": "version initiale",
+        "it": "versione iniziale",
+        "es": "versión inicial",
+        "pl": "początkowa wersja",
+        "zh-cn": "初始版本"
+      }
     },
-    "native": {
-        "controller_ip": "127.0.0.1",
-        "controller_port": "8443",
-        "controller_username": "admin",
-        "controller_password": "",
-        "update_interval": 60
+    "title": "UniFi",
+    "titleLang": {
+      "en": "UniFi",
+      "de": "UniFi",
+      "ru": "UniFi",
+      "pt": "UniFi",
+      "nl": "UniFi",
+      "fr": "UniFi",
+      "it": "UniFi",
+      "es": "UniFi",
+      "pl": "UniFi",
+      "zh-cn": "UniFi"
     },
-    "objects": [],
-    "instanceObjects": []
+    "desc": {
+      "en": "Communicates with a UniFi-Controller",
+      "de": "Kommuniziert mit einem UniFi-Controller",
+      "ru": "Общается с UniFi-контроллером",
+      "pt": "Comunica-se com um controlador UniFi",
+      "nl": "Communiceert met een UniFi-controller",
+      "fr": "Communique avec un contrôleur UniFi",
+      "it": "Comunica con un controller UniFi",
+      "es": "Se comunica con un controlador UniFi",
+      "pl": "Komunikuje się z kontrolerem UniFi",
+      "zh-cn": "与UniFi控制器通信"
+    },
+    "authors": [
+      "braindead1 <os.braindead1@gmail.com>",
+      "Jens Maus <mail@jens-maus.de>"
+    ],
+    "keywords": [
+      "unifi",
+      "wifi",
+      "network"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "mode": "daemon",
+    "icon": "unifi.png",
+    "enabled": false,
+    "messagebox": true,
+    "subscribe": "messagebox",
+    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
+    "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
+    "npmLibs": [],
+    "loglevel": "info",
+    "type": "network"
+  },
+  "native": {
+    "controller_ip": "127.0.0.1",
+    "controller_port": "8443",
+    "controller_username": "admin",
+    "controller_password": "",
+    "update_interval": 60
+  },
+  "objects": [],
+  "instanceObjects": []
 }

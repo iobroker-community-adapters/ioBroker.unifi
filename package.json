@@ -2,8 +2,9 @@
   "name": "iobroker.unifi",
   "version": "0.3.1",
   "description": "UniFi Adapter for ioBroker",
-  "author": "Jens Maus <mail@jens-maus.de>",
+  "author": "braindead1 <os.braindead1@gmail.com>",
   "contributors": [
+    "braindead1 <os.braindead1@gmail.com",
     "Jens Maus <mail@jens-maus.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.unifi",
