@@ -69,6 +69,9 @@ class Unifi extends utils.Adapter {
             desc = name;
         }
 
+        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+        name = name.replace(FORBIDDEN_CHARS, '_');
+
         this.setObjectNotExists(name, {
             type: 'channel',
             common: {
@@ -93,6 +96,9 @@ class Unifi extends utils.Adapter {
         if (Array.isArray(value)) {
             value = value.toString();
         }
+
+        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+        name = name.replace(FORBIDDEN_CHARS, '_');
 
         this.setObjectNotExists(name, {
             type: 'state',
