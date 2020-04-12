@@ -64,16 +64,16 @@
         "zh-cn": "第一个测试版"
       },
       "0.0.1": {
-        "en": "initial version",
-        "de": "erste Version",
-        "ru": "Первоначальная версия",
-        "pt": "versão inicial",
-        "nl": "oorspronkelijke versie",
-        "fr": "version initiale",
-        "it": "versione iniziale",
-        "es": "versión inicial",
-        "pl": "początkowa wersja",
-        "zh-cn": "初始版本"
+        "en": "initial adapter",
+        "de": "",
+        "ru": "",
+        "pt": "",
+        "nl": "",
+        "fr": "",
+        "it": "",
+        "es": "",
+        "pl": "",
+        "zh-cn": ""
       }
     },
     "title": "UniFi",
@@ -102,8 +102,8 @@
       "zh-cn": "与UniFi控制器通信"
     },
     "authors": [
-      "braindead1 <os.braindead1@gmail.com>",
-      "Jens Maus <mail@jens-maus.de>"
+      "Jens Maus <mail@jens-maus.de>",
+      "braindead1 <os.braindead1@gmail.com>"
     ],
     "keywords": [
       "unifi",
@@ -112,16 +112,22 @@
     ],
     "license": "MIT",
     "platform": "Javascript/Node.js",
-    "mode": "daemon",
+    "main": "main.js",
     "icon": "unifi.png",
     "enabled": false,
-    "messagebox": true,
-    "subscribe": "messagebox",
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
-    "npmLibs": [],
     "loglevel": "info",
-    "type": "network"
+    "mode": "daemon",
+    "type": "network",
+    "compact": true,
+    "materialize": true,
+    "supportCustoms": true,
+    "dependencies": [
+      {
+        "js-controller": ">=1.4.2"
+      }
+    ]
   },
   "native": {
     "controller_ip": "127.0.0.1",

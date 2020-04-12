@@ -1,2 +1,16 @@
-/.idea
-/node_modules
+.git
+.idea
+*.code-workspace
+node_modules
+nbproject
+
+# npm package files
+iobroker.*.tgz
+
+Thumbs.db
+
+# i18n intermediate files
+admin/i18n/flat.txt
+admin/i18n/*/flat.txt
+
+package-lock.json

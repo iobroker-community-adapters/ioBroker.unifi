@@ -1,0 +1,78 @@
+<html>
+
+<head>
+
+    <!-- Load ioBroker scripts and styles-->
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../../lib/js/selectID.js"></script>
+
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+    <!-- Load our own files -->
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script type="text/javascript" src="words.js"></script>
+    <script type="text/javascript" src="index_m.js"></script>
+
+    <style>
+        .sub-title {
+            margin-top: 0.5rem!important;
+            margin-bottom: 0.5rem!important;
+            padding: 0.5rem;
+            background: #64b5f6;
+            color: white;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="m adapter-container">
+        <div class="row">
+            <!-- Forms are the standard way to receive user inputted data. Learn more http://materializecss.com/forms.html-->
+            <div class="row">
+                <div class="input-field col s6">
+                    <img src="unifi.png" class="logo">
+                </div>
+            </div>
+            <div class="translate sub-title">Network settings</div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="text" id="controller_ip" placeholder="127.0.0.1" maxlength="15" class="value" />
+                    <label for="controller_ip" class="translate">IP address</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="text" id="controller_port" placeholder="8443" maxlength="4" class="value" />
+                    <label for="controller_port" class="translate">Port</label>
+                </div>
+            </div>
+            <div class="translate sub-title">Login</div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="text" id="controller_username" placeholder="Admin" class="value" />
+                    <label for="controller_username" class="translate">Username</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <input type="password" id="controller_password" placeholder="Password" class="value" />
+                    <label for="controller_password" class="translate">Password</label>
+                </div>
+            </div>
+            <div class="translate sub-title">Update interval</div>
+            <div class="row">
+                <div class="input-field col s12 m6">
+                    <input type="number" id="update_interval" min="0" class="value" />
+                    <label for="update_interval" class="translate">Update interval</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
