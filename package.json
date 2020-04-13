@@ -1,6 +1,6 @@
 {
   "name": "iobroker.unifi",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "UniFi Adapter for ioBroker",
   "author": "Jens Maus <mail@jens-maus.de>",
   "contributors": [
