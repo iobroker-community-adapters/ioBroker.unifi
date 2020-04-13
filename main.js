@@ -227,7 +227,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
     
-                        processSiteSysInfoLegacy(sites, data);
+                        processSiteSysinfoLegacy(sites, data);
     
                         resolve(data);
                     }                
@@ -241,7 +241,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} siteSysinfo 
          */
-        const processSiteSysInfoLegacy = (sites, siteSysinfo) => {
+        const processSiteSysinfoLegacy = (sites, siteSysinfo) => {
             // lets store some site information
             for (let i = 0; i < siteSysinfo.length; i++) {
                 // traverse the json with depth 0..2 only
