@@ -9,7 +9,7 @@
 [![Github Issues](http://githubbadges.herokuapp.com/iobroker-community-adapters/ioBroker.unifi/issues.svg)](https://github.com/iobroker-community-adapters/ioBroker.unifi/issues)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=RAQSDY9YNZVCL)
 
-[![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
+[![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/) [![Greenkeeper badge](https://badges.greenkeeper.io/iobroker-community-adapters/ioBroker.unifi.svg)](https://greenkeeper.io/)
 
 This ioBroker adapter allows to control and monitor [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
