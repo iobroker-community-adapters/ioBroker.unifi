@@ -9,6 +9,9 @@ This ioBroker adapter allows controlling and monitoring of [UniFi devices](http:
 
 ## Changelog
 
+### 0.4.1 (2020-04-16)
+* (braindead1) Enhanced refactoring
+
 ### 0.4.0 (2020-04-16)
 * (bluefox) Refactoring
   
