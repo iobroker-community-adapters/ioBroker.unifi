@@ -1,6 +1,6 @@
 {
   "name": "iobroker.unifi",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "UniFi Adapter for ioBroker",
   "author": "Jens Maus <mail@jens-maus.de>",
   "contributors": [
@@ -20,17 +20,14 @@
     "url": "git+https://github.com/iobroker-community-adapters/ioBroker.unifi.git"
   },
   "dependencies": {
-    "node-unifi": "^1.0.2",
-    "@iobroker/adapter-core": "^2.2.1"
+    "node-unifi": "^1.2.2",
+    "@iobroker/adapter-core": "^2.3.0"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-replace": "^1.0.1",
-    "grunt-contrib-jshint": "^2.1.0",
-    "grunt-jscs": "^3.0.1",
-    "grunt-http": "^2.2.0",
-    "mocha": "^7.0.1",
-    "chai": "^4.2.0"
+    "gulp": "^4.0.2",
+    "mocha": "^7.0.0",
+    "chai": "^4.2.0",
+    "@iobroker/testing": "^1.2.5"
   },
   "main": "main.js",
   "scripts": {

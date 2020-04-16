@@ -1,5 +1,5 @@
 <html>
-
+<head>
 <!-- these 4 files always have to be included -->
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
 <script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
@@ -11,51 +11,25 @@
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
-
+<script type="text/javascript" src="words.js"></script>
 
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
-
-    // Dictionary (systemDictionary is global variable from adapter-settings.js)
-    systemDictionary = {
-        "page_title": {"en": "UniFi Adapter Settings", "de": "UniFi Adapter Einstellungen", "ru": "Настройки адаптера Unifi"},
-        "controller_ip":  {"en": "UniFi-Controller IP/Hostname:", "de": "IP/Hostname des UniFi-Controller:", "ru": "Адрес IP/Имя хоста:"},
-        "controller_port": {"en": "UniFi-Controller Port:", "de": "Port des UniFi-Controller:", "ru": "Порт:"},
-        "controller_username": {"en": "UniFi-Controller Username:", "de": "Nutzername für UniFi-Controller:", "ru": "Имя пользователя:"},
-        "controller_password": {"en": "UniFi-Controller Password:", "de": "Passwort für UniFi-Controller:", "ru": "Пароль:"},
-        "update_interval":  {"en": "Update Interval:", "de": "Aktualisierungsintervall:", "ru": "Интервал обновления:"},
-        "controller_ip_info": {"en": "IP address of UniFi-Controller (default: 127.0.0.1)",
-                               "de": "IP Adresse des UniFi-Controller (Standard: 127.0.0.1)",
-                               "ru": "Адрес IP или имя хоста контроллера UniFi (по умолчанию: 127.0.0.1)"},
-        "controller_port_info": {"en": "Port of UniFi-Controller (default: 8443)",
-                                 "de": "Port des UniFi-Controller (Standard: 8443)",
-                                 "ru": "Порт контроллера UniFi (по умолчанию: 8443)"},
-        "controller_username_info": {"en": "Username of UniFi-Controller (default: admin)",
-                                     "de": "Nutzername für UniFi-Controller (Standard: admin)",
-                                     "ru": "Имя пользователя на контроллере UniFi (по умолчанию: admin)"},
-        "controller_password_info": {"en": "Password of UniFi-Controller",
-                                     "de": "Passwort für UniFi-Controller",
-                                     "ru": "Пароль пользователя на контроллере UniFi"},
-        "update_interval_info": {"en": "Interval in seconds to check for updates (default: 60 sec)",
-                                 "de": "Aktualisierungsintervall in Sekunden (Standard: 60 Sek)",
-                                 "ru": "Интервал обновления данных с контроллера в секундах (по умолчанию: 60 сек)"}
-    };
-
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
         // example: select elements with id=key and class=value and insert value
         for (var key in settings) {
             // example: select elements with id=key and class=value and insert value
-            if ($('#' + key + '.value').attr('type') == 'checkbox') {
-                $('#' + key + '.value').prop('checked', settings[key]).change(function () {
-          onChange();
-        });
+            if ($('#' + key + '.value').attr('type') === 'checkbox') {
+                $('#' + key + '.value').prop('checked', settings[key]).on('change', function () {
+                    onChange();
+                });
             } else {
-                $('#' + key + '.value').val(settings[key]).change(function () {
-          onChange();
-        }).keyup(function () {
-          $(this).trigger('change');
-        });
+                $('#' + key + '.value').val(settings[key]).on('change', function () {
+                    onChange();
+                }).keyup(function () {
+                    $(this).trigger('change');
+                });
             }
         }
         // Signal to admin, that no changes yet
@@ -74,20 +48,35 @@
         callback(obj);
     }
 </script>
-
+</head>
+<body>
 <!-- you have to put your config page in a div with id adapter-container -->
 <div id="adapter-container">
 
-    <table><tr>
-        <td><img src="unifi.png"/></td>
-        <td><h3 class="translate">page_title</h3></td>
-    </tr></table>
+    <table>
+        <tr>
+            <td><img src="unifi.png" alt="logo"/></td>
+            <td><h3 class="translate">page_title</h3></td>
+        </tr>
+    </table>
     <p style="padding-left: 12px">
-        <label for="controller_ip" class="translate">controller_ip</label>&nbsp;<input class="value" type="text" id="controller_ip" size="15"/><br/>
-        <label for="controller_port" class="translate">controller_port</label>&nbsp;<input class="value" type="text" id="controller_port" size="6"/><br/>
-        <label for="controller_username" class="translate">controller_username</label>&nbsp;<input class="value" type="text" id="controller_username" size="15"/><br/>
-        <label for="controller_password" class="translate">controller_password</label>&nbsp;<input class="value" type="password" id="controller_password" size="15"/><br/>
-        <label for="update_interval" class="translate">update_interval</label>&nbsp; <input class="value" type="text" id="update_interval" size="20"/>&nbsp;s<br/>
+        <label for="controller_ip" class="translate">controller_ip</label>&nbsp;<input class="value" type="text"
+                                                                                       id="controller_ip"
+                                                                                       size="15"/><br/>
+        <label for="controller_port" class="translate">controller_port</label>&nbsp;<input class="value" type="text"
+                                                                                           id="controller_port"
+                                                                                           size="6"/><br/>
+        <label for="controller_username" class="translate">controller_username</label>&nbsp;<input class="value"
+                                                                                                   type="text"
+                                                                                                   id="controller_username"
+                                                                                                   size="15"/><br/>
+        <label for="controller_password" class="translate">controller_password</label>&nbsp;<input class="value"
+                                                                                                   type="password"
+                                                                                                   id="controller_password"
+                                                                                                   size="15"/><br/>
+        <label for="update_interval" class="translate">update_interval</label>&nbsp; <input class="value" type="text"
+                                                                                            id="update_interval"
+                                                                                            size="20"/>&nbsp;s<br/>
     </p>
     <h3 class="translate">controller_ip</h3>
     <p class="translate">controller_ip_info</p>
@@ -105,5 +94,5 @@
     <p class="translate">update_interval_info</p>
 
 </div>
-
+</body>
 </html>

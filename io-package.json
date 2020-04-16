@@ -1,8 +1,20 @@
 {
     "common": {
         "name":    "unifi",
-        "version": "0.3.1",
+        "version": "0.4.0",
         "news": {
+            "0.4.0": {
+                "en": "Refactoring",
+                "de": "Refactoring",
+                "ru": "Рефакторинг",
+                "pt": "Reestruturação",
+                "nl": "Refactoring",
+                "fr": "Refactoring",
+                "it": "refactoring",
+                "es": "Refactorización",
+                "pl": "Refaktoryzacja",
+                "zh-cn": "重构"
+            },
             "0.3.0": {
               "en": "added access device data query"
             },
@@ -19,8 +31,19 @@
               "en": "initial adapter"
             }
         },
-        "title":      "UniFi Adapter",
-        "desc":       "Communicates with a UniFi-Controller",
+        "title":      "UniFi-Controller",
+        "desc":       {
+            "en": "Communicates with a UniFi-Controller",
+            "de": "Kommuniziert mit einem UniFi-Controller",
+            "ru": "Общается с UniFi-контроллером",
+            "pt": "Comunica-se com um controlador UniFi",
+            "nl": "Communiceert met een UniFi-controller",
+            "fr": "Communique avec un contrôleur UniFi",
+            "it": "Comunica con un controller UniFi",
+            "es": "Se comunica con un controlador UniFi",
+            "pl": "Komunikuje się z kontrolerem UniFi",
+            "zh-cn": "与UniFi控制器通信"
+        },
         "platform":   "Javascript/Node.js",
         "mode":       "daemon",
         "icon":       "unifi.png",
@@ -28,12 +51,14 @@
         "messagebox": true,
         "subscribe":  "messagebox",
         "extIcon":    "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
-        "keywords":   [ "unifi", "wifi", "network" ],
+        "keywords":   ["unifi", "wifi", "network"],
         "readme":     "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
         "license":    "MIT",
         "npmLibs":    [],
         "loglevel":   "info",
-        "type":       "network"
+        "type":       "network",
+        "materialize": true,
+        "compact":    true
     },
     "native": {
         "controller_ip": "127.0.0.1",
