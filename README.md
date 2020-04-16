@@ -11,7 +11,7 @@
 
 [![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/) [![Greenkeeper badge](https://badges.greenkeeper.io/iobroker-community-adapters/ioBroker.unifi.svg)](https://greenkeeper.io/)
 
-This ioBroker adapter allows to control and monitor [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
+This ioBroker adapter allows controlling and monitoring of [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
 ## ChangeLog
 
