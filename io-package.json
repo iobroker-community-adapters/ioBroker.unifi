@@ -32,6 +32,9 @@
             }
         },
         "title":      "UniFi-Controller",
+        "authors": [
+            "Jens Maus <mail@jens-maus.de>"
+        ],
         "desc":       {
             "en": "Communicates with a UniFi-Controller",
             "de": "Kommuniziert mit einem UniFi-Controller",
