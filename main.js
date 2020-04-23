@@ -789,12 +789,15 @@ class Unifi extends utils.Adapter {
                 // process all schedule state changes
                 processStateChanges(this.setStateArray);
 
-                this.log.info('Update done');
+                await this.setStateAsync('info.connection', { ack: true, val: true });
+                this.log.info('Update done');                
 
                 return Promise.resolve(true);
             })
-            .catch((err) => {
+            .catch(async (err) => {
+                await this.setStateAsync('info.connection', { ack: true, val: false });
                 this.log.error(err.name + ': ' + err.message);
+
                 return;
             });
 
