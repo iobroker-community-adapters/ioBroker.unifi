@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "node-unifi": "^1.2.2",
-    "@iobroker/adapter-core": "^2.3.0"
+    "@iobroker/adapter-core": "^2.3.0",
+    "json-logic-js": "^1.2.2"
   },
   "devDependencies": {
     "@iobroker/testing": "^2.0.0",

@@ -1,0 +1,255 @@
+{
+    "devices": {
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices"
+            ]
+        }
+    },
+    "devices.device": {
+        "type": "device",
+        "common": {},
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                }
+            ]
+        },
+        "common_name": {
+            "or": [
+                {
+                    "var": "name"
+                },
+                {
+                    "var": "ip"
+                }
+            ]
+        }
+    },
+    "devices.device.general_temperature": {
+        "type": "state",
+        "common": {
+            "name": "General temperature",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".general_temperature"
+            ]
+        },
+        "item_value": "general_temperature"
+    },
+    "devices.device.ip": {
+        "type": "state",
+        "common": {
+            "name": "IP address",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".ip"
+            ]
+        },
+        "item_value": "ip"
+    },
+    "devices.device.mac": {
+        "type": "state",
+        "common": {
+            "name": "MAC address",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".mac"
+            ]
+        },
+        "item_value": "mac"
+    },    
+    "devices.device.model": {
+        "type": "state",
+        "common": {
+            "name": "Model",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".model"
+            ]
+        },
+        "item_value": "model"
+    },
+    "devices.device.name": {
+        "type": "state",
+        "common": {
+            "name": "Name",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".name"
+            ]
+        },
+        "item_value": "name"
+    },
+    "devices.device.satisfaction": {
+        "type": "state",
+        "common": {
+            "name": "Satisfaction",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".satisfaction"
+            ]
+        },
+        "item_value": "satisfaction"
+    },    
+    "devices.device.type": {
+        "type": "state",
+        "common": {
+            "name": "Type",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".type"
+            ]
+        },
+        "item_value": "type"
+    },
+    "devices.device.upgradable": {
+        "type": "state",
+        "common": {
+            "name": "Upgradable",
+            "type": "boolean",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".upgradable"
+            ]
+        },
+        "item_value": "upgradable"
+    },
+    "devices.device.uptime": {
+        "type": "state",
+        "common": {
+            "name": "Uptime",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".uptime"
+            ]
+        },
+        "item_value": "uptime"
+    },
+    "devices.device.version": {
+        "type": "state",
+        "common": {
+            "name": "Version",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "devices.",
+                {
+                    "var": "mac"
+                },
+                ".version"
+            ]
+        },
+        "item_value": "version"
+    }
+}

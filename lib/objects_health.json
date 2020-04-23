@@ -1,0 +1,414 @@
+{
+    "health": {
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "item_name": {
+            "cat": [
+                "health"
+            ]
+        }
+    },
+    "health.subsystem": {
+        "type": "device",
+        "common": {},
+        "native": {},
+        "item_name": {
+            "cat": [
+                "health.",
+                {
+                    "var": "subsystem"
+                }
+            ]
+        },
+        "common_name": "subsystem"
+    },
+    "health.subsytem.lan_ip": {
+        "type": "state",
+        "common": {
+            "name": "LAN IP",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "lan_ip"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".lan_ip"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "lan_ip"
+    },
+    "health.subsytem.latency": {
+        "type": "state",
+        "common": {
+            "name": "Latency",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "latency"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".latency"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "latency"
+    },
+    "health.subsytem.num_guest": {
+        "type": "state",
+        "common": {
+            "name": "Number of guests",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "num_guest"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".num_guest"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "num_guest"
+    },
+    "health.subsytem.num_iot": {
+        "type": "state",
+        "common": {
+            "name": "Number of IOT",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "num_iot"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".num_iot"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "num_iot"
+    },
+    "health.subsytem.num_user": {
+        "type": "state",
+        "common": {
+            "name": "Number of users",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "num_user"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".num_user"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "num_user"
+    },
+    "health.subsytem.status": {
+        "type": "state",
+        "common": {
+            "name": "Status",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "cat": [
+                "health.",
+                {
+                    "var": "subsystem"
+                },
+                ".status"
+            ]
+        },
+        "item_value": "status"
+    },    
+    "health.subsystem.speedtest": {
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "speedtest_status"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".speedtest"
+                    ]
+                },
+                null
+            ]
+        }
+    },
+    "health.subsytem.speedtest.lastrun": {
+        "type": "state",
+        "common": {
+            "name": "Speedtest lastrun",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "speedtest_lastrun"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".speedtest.lastrun"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "speedtest_lastrun"
+    },
+    "health.subsytem.speedtest.ping": {
+        "type": "state",
+        "common": {
+            "name": "Speedtest ping",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "speedtest_ping"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".speedtest.ping"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "speedtest_ping"
+    },
+    "health.subsytem.speedtest.status": {
+        "type": "state",
+        "common": {
+            "name": "Speedtest status",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "speedtest_status"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".speedtest.status"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "speedtest_status"
+    },
+    "health.subsytem.uptime": {
+        "type": "state",
+        "common": {
+            "name": "Uptime",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "uptime"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".uptime"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "uptime"
+    },
+    "health.subsytem.wan_ip": {
+        "type": "state",
+        "common": {
+            "name": "WAN IP",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "wan_ip"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "health.",
+                        {
+                            "var": "subsystem"
+                        },
+                        ".wan_ip"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "wan_ip"
+    }
+}

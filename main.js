@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here
 const unifi = require('node-unifi');
+const jsonLogic = require('./lib/json_logic.js');
 
 class Unifi extends utils.Adapter {
 
@@ -135,6 +136,8 @@ class Unifi extends utils.Adapter {
         const controller_username = this.config.controller_username || 'admin';
         const controller_password = this.config.controller_password || '';
 
+        const run_legacy = false;
+
         /**
          * Function to log into the UniFi controller
          * @param {string} controller_username 
@@ -166,12 +169,39 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSitesStats: ' + sites);
                         //this.log.debug(JSON.stringify(data));
 
-                        processSiteInfoLegacy(data);
+                        if (run_legacy) {
+                            processSiteInfoLegacy(data);
+                        } else {
+                            processSiteInfo(sites, data);
+                        }
 
                         resolve(sites);
                     }
                 });
             });
+        };
+
+        /**
+         * Function that receives the site info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} siteInfos 
+         */
+        const processSiteInfo = async (sites, siteInfos) => {
+            const objects = require('./lib/objects_health.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteInfo = siteInfos[x];
+
+                this.log.debug(site);
+                //this.log.debug(JSON.stringify(siteInfos[i]));
+
+                for (let y = 0; y < siteInfo.health.length; y++) {
+                    const subsystem = siteInfo.health[y];
+
+                    await updateObjects(site, objects, subsystem);
+                }
+            }
         };
 
         /**
@@ -227,12 +257,39 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processSiteSysinfoLegacy(sites, data);
+                        if (run_legacy) {
+                            processSiteSysinfoLegacy(sites, data);
+                        } else {
+                            processSiteSysinfo(sites, data);
+                        }
 
                         resolve(data);
                     }
                 });
             });
+        };
+
+        /**
+         * Function that receives the site sysinfo as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} siteSysinfo 
+         */
+        const processSiteSysinfo = async (sites, siteSysinfo) => {
+            const objects = require('./lib/objects_sitesysinfo.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const info = siteSysinfo[x];
+
+                this.log.debug(site);
+                //this.log.debug(JSON.stringify(siteSysinfo[i]));
+
+                for (let y = 0; y < info.length; y++) {
+                    const data = info[y];
+
+                    await updateObjects(site, objects, data);
+                }
+            }
         };
 
         /**
@@ -289,12 +346,39 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getClientDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processClientDeviceInfoLegacy(sites, data);
+                        if (run_legacy) {
+                            processClientDeviceInfoLegacy(sites, data);
+                        } else {
+                            processClientDeviceInfo(sites, data);
+                        }
 
                         resolve(data);
                     }
                 });
             });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} clientDevices 
+         */
+        const processClientDeviceInfo = async (sites, clientDevices) => {
+            const objects = require('./lib/objects_client.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const devices = clientDevices[x];
+
+                this.log.debug(site);
+                //this.log.debug(JSON.stringify(clientDevices[i]));
+
+                for (let y = 0; y < devices.length; y++) {
+                    const device = devices[y];
+
+                    await updateObjects(site, objects, device);
+                }
+            }
         };
 
         /**
@@ -341,12 +425,39 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getAccessDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processAccessDeviceInfoLegacy(sites, data);
+                        if (run_legacy) {
+                            processAccessDeviceInfoLegacy(sites, data);
+                        } else {
+                            processAccessDeviceInfo(sites, data);
+                        }
 
                         resolve(data);
                     }
                 });
             });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} clientDevices 
+         */
+        const processAccessDeviceInfo = async (sites, accessDevices) => {
+            const objects = require('./lib/objects_device.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const devices = accessDevices[x];
+
+                this.log.debug(site);
+                //this.log.debug(JSON.stringify(clientDevices[i]));
+
+                for (let y = 0; y < devices.length; y++) {
+                    const device = devices[y];
+
+                    await updateObjects(site, objects, device);
+                }
+            }
         };
 
         /**
@@ -413,12 +524,39 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getNetworkConf: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processNetworkConfLegacy(sites, data);
+                        if (run_legacy) {
+                            processNetworkConfLegacy(sites, data);
+                        } else {
+                            processNetworkConf(sites, data);
+                        }
 
                         resolve(data);
                     }
                 });
             });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} clientDevices 
+         */
+        const processNetworkConf = async (sites, clientDevices) => {
+            const objects = require('./lib/objects_network.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const networks = clientDevices[x];
+
+                this.log.debug(site);
+                //this.log.debug(JSON.stringify(clientDevices[i]));
+
+                for (let y = 0; y < networks.length; y++) {
+                    const data = networks[y];
+
+                    await updateObjects(site, objects, data);
+                }
+            }
         };
 
         /**
@@ -548,6 +686,81 @@ class Unifi extends utils.Adapter {
                 }
 
                 this.setStateArray = [];
+            }
+        };
+
+        /**
+         * Update objects
+         * @param {*} site 
+         * @param {*} objects 
+         * @param {*} data 
+         */
+        const updateObjects = async (site, objects, data) => {
+            for (const key in objects) {
+                let rule;
+
+                // Process item name
+                const itemName = objects[key].item_name;
+
+                rule = itemName;
+                if (typeof (itemName) === 'string') {
+                    rule = { 'var': [itemName] };
+                }
+
+                let name = jsonLogic.apply(
+                    rule,
+                    data
+                );
+
+                if (name != undefined) {
+                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                    name = site + '.' + name.replace(FORBIDDEN_CHARS, '_');
+
+                    const common = objects[key].common || {};
+
+                    if (objects[key].common_name) {
+                        // Process common name
+                        const commonName = objects[key].common_name;
+
+                        rule = commonName;
+                        if (typeof (commonName) === 'string') {
+                            rule = { 'var': [commonName] };
+                        }
+
+                        common.name = jsonLogic.apply(
+                            rule,
+                            data
+                        );
+                    }
+
+                    await this.extendObjectAsync(name, {
+                        type: objects[key].type,
+                        common: common,
+                        native: objects[key].native
+                    });
+
+                    if (objects[key].item_value) {
+                        // Process item value
+                        const itemValue = objects[key].item_value;
+
+                        rule = itemValue;
+                        if (typeof (itemValue) === 'string') {
+                            rule = { 'var': [itemValue] };
+                        }
+
+                        const val = jsonLogic.apply(
+                            rule,
+                            data
+                        );
+
+                        // Update state if value changed
+                        const oldState = await this.getStateAsync(name);
+
+                        if (oldState === null || oldState.val != val) {
+                            await this.setStateAsync(name, { ack: true, val: val });
+                        }
+                    }
+                }
             }
         };
 
