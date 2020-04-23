@@ -8,6 +8,8 @@
 This ioBroker adapter allows controlling and monitoring of [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
 ## Changelog
+### 0.4.2 (2020-04-23)
+* (braindead1) subsystem issue fixed
 
 ### 0.4.1 (2020-04-16)
 * (braindead1) Enhanced refactoring
