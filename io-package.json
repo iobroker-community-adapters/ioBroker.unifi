@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.4.1",
+        "version": "0.4.2",
         "news": {
+            "0.4.2": {
+                "en": "fixed subsystem issue",
+                "de": "Subsystem Issue behoben",
+                "ru": "исправлена ошибка подсистемы",
+                "pt": "problema fixo do subsistema",
+                "nl": "opgelost subsysteem probleem",
+                "fr": "problème de sous-système fixe",
+                "it": "risolto problema del sottosistema",
+                "es": "problema solucionado del subsistema",
+                "pl": "naprawiono problem z podsystemem",
+                "zh-cn": "固定子系统问题"
+            },
             "0.4.1": {
                 "en": "Enhanced refactoring",
                 "de": "Erweitertes Refactoring",
@@ -50,54 +62,6 @@
                 "es": "consulta de datos de dispositivo de acceso agregado",
                 "pl": "dodano zapytanie o dane urządzenia dostępowego",
                 "zh-cn": "添加访问设备数据查询"
-            },
-            "0.2.1": {
-                "en": "minor code fixes",
-                "de": "kleinere Codekorrekturen",
-                "ru": "мелкие исправления кода",
-                "pt": "pequenas correções de código",
-                "nl": "kleine codefixes",
-                "fr": "corrections de code mineures",
-                "it": "correzioni di codice minori",
-                "es": "correcciones de código menores",
-                "pl": "drobne poprawki kodu",
-                "zh-cn": "次要代码修复"
-            },
-            "0.2.0": {
-                "en": "second beta version using node-unifi",
-                "de": "zweite Beta-Version mit node-unifi",
-                "ru": "вторая бета-версия с использованием node-unifi",
-                "pt": "segunda versão beta usando node-unifi",
-                "nl": "tweede bètaversie met node-unifi",
-                "fr": "deuxième version bêta utilisant node-unifi",
-                "it": "seconda versione beta usando node-unifi",
-                "es": "segunda versión beta usando node-unifi",
-                "pl": "druga wersja beta za pomocą node-unifi",
-                "zh-cn": "使用node-unifi的第二个beta版本"
-            },
-            "0.1.0": {
-                "en": "first beta version",
-                "de": "erste Beta-Version",
-                "ru": "первая бета-версия",
-                "pt": "primeira versão beta",
-                "nl": "eerste bètaversie",
-                "fr": "première version bêta",
-                "it": "prima versione beta",
-                "es": "primera versión beta",
-                "pl": "pierwsza wersja beta",
-                "zh-cn": "第一个测试版"
-            },
-            "0.0.1": {
-                "en": "initial version",
-                "de": "erste Version",
-                "ru": "Первоначальная версия",
-                "pt": "versão inicial",
-                "nl": "oorspronkelijke versie",
-                "fr": "version initiale",
-                "it": "versione iniziale",
-                "es": "versión inicial",
-                "pl": "początkowa wersja",
-                "zh-cn": "初始版本"
             }
         },
         "title": "UniFi",
