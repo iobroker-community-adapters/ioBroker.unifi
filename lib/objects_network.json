@@ -159,10 +159,10 @@
         },
         "item_value": "dhcpd_start"
     },
-    "networks.name.dhcpd_end": {
+    "networks.name.dhcpd_stop": {
         "type": "state",
         "common": {
-            "name": "DHCP end",
+            "name": "DHCP stop",
             "type": "string",
             "role": "state",
             "read": true,
@@ -175,7 +175,7 @@
                 {
                     "notNull": [
                         {
-                            "var": "dhcpd_end"
+                            "var": "dhcpd_stop"
                         }
                     ]
                 },
@@ -185,13 +185,13 @@
                         {
                             "var": "name"
                         },
-                        ".dhcpd_end"
+                        ".dhcpd_stop"
                     ]
                 },
                 null
             ]
         },
-        "item_value": "dhcpd_end"
+        "item_value": "dhcpd_stop"
     },
     "networks.name.enabled": {
         "type": "state",
@@ -227,7 +227,7 @@
         },
         "item_value": "enabled"
     },
-    "networks.name.ip_subnect": {
+    "networks.name.ip_subnet": {
         "type": "state",
         "common": {
             "name": "IP subnet",
@@ -243,7 +243,7 @@
                 {
                     "notNull": [
                         {
-                            "var": "ip_subnect"
+                            "var": "ip_subnet"
                         }
                     ]
                 },
@@ -253,13 +253,13 @@
                         {
                             "var": "name"
                         },
-                        ".ip_subnect"
+                        ".ip_subnet"
                     ]
                 },
                 null
             ]
         },
-        "item_value": "ip_subnect"
+        "item_value": "ip_subnet"
     },
     "networks.name.name": {
         "type": "state",

@@ -31,9 +31,46 @@
                 },
                 {
                     "var": "ip"
+                },
+                {
+                    "var": "mac"
                 }
             ]
         }
+    },
+    "clients.client.ap_mac": {
+        "type": "state",
+        "common": {
+            "name": "Access Point MAC address",
+            "type": "string",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
+        "native": {},
+        "item_name": {
+            "if": [
+                {
+                    "notNull": [
+                        {
+                            "var": "ap_mac"
+                        }
+                    ]
+                },
+                {
+                    "cat": [
+                        "clients.",
+                        {
+                            "var": "mac"
+                        },
+                        ".ap_mac"
+                    ]
+                },
+                null
+            ]
+        },
+        "item_value": "ap_mac"
     },
     "clients.client.first_seen": {
         "type": "state",
@@ -292,12 +329,24 @@
         },
         "native": {},
         "item_name": {
-            "cat": [
-                "clients.",
+            "if": [
                 {
-                    "var": "mac"
+                    "notNull": [
+                        {
+                            "var": "rssi"
+                        }
+                    ]
                 },
-                ".rssi"
+                {
+                    "cat": [
+                        "clients.",
+                        {
+                            "var": "mac"
+                        },
+                        ".rssi"
+                    ]
+                },
+                null
             ]
         },
         "item_value": "rssi"

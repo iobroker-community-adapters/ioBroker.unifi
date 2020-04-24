@@ -44,12 +44,24 @@
         },
         "native": {},
         "item_name": {
-            "cat": [
-                "devices.",
+            "if": [
                 {
-                    "var": "mac"
+                    "notNull": [
+                        {
+                            "var": "general_temperature"
+                        }
+                    ]
                 },
-                ".general_temperature"
+                {
+                    "cat": [
+                        "devices.",
+                        {
+                            "var": "mac"
+                        },
+                        ".general_temperature"
+                    ]
+                },
+                null
             ]
         },
         "item_value": "general_temperature"
@@ -97,7 +109,7 @@
             ]
         },
         "item_value": "mac"
-    },    
+    },
     "devices.device.model": {
         "type": "state",
         "common": {
@@ -154,16 +166,28 @@
         },
         "native": {},
         "item_name": {
-            "cat": [
-                "devices.",
+            "if": [
                 {
-                    "var": "mac"
+                    "notNull": [
+                        {
+                            "var": "satisfaction"
+                        }
+                    ]
                 },
-                ".satisfaction"
+                {
+                    "cat": [
+                        "devices.",
+                        {
+                            "var": "mac"
+                        },
+                        ".satisfaction"
+                    ]
+                },
+                null
             ]
         },
         "item_value": "satisfaction"
-    },    
+    },
     "devices.device.type": {
         "type": "state",
         "common": {
