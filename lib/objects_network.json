@@ -99,6 +99,7 @@
             "role": "state",
             "read": true,
             "write": false,
+            "unit": "s",
             "desc": ""
         },
         "native": {},

@@ -65,6 +65,7 @@
             "role": "state",
             "read": true,
             "write": false,
+            "unit": "ms",
             "desc": ""
         },
         "native": {},
@@ -273,7 +274,13 @@
                 null
             ]
         },
-        "item_value": "speedtest_lastrun"
+        "item_value": {
+            "secondsToDateTime": [
+                {
+                    "var": "speedtest_lastrun"
+                }
+            ]
+        }
     },
     "health.subsytem.speedtest.ping": {
         "type": "state",
@@ -283,6 +290,7 @@
             "role": "state",
             "read": true,
             "write": false,
+            "unit": "ms",
             "desc": ""
         },
         "native": {},
@@ -351,6 +359,7 @@
             "role": "state",
             "read": true,
             "write": false,
+            "unit": "s",
             "desc": ""
         },
         "native": {},
