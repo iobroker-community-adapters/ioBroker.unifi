@@ -191,8 +191,7 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const siteInfo = siteInfos[x];
-
-                this.log.debug(site);
+                
                 //this.log.debug(JSON.stringify(siteInfos[i]));
 
                 for (let y = 0; y < siteInfo.health.length; y++) {
@@ -279,8 +278,7 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const info = siteSysinfo[x];
-
-                this.log.debug(site);
+                
                 //this.log.debug(JSON.stringify(siteSysinfo[i]));
 
                 for (let y = 0; y < info.length; y++) {
@@ -369,7 +367,6 @@ class Unifi extends utils.Adapter {
                 const site = sites[x];
                 const devices = clientDevices[x];
 
-                this.log.debug(site);
                 //this.log.debug(JSON.stringify(clientDevices[i]));
 
                 for (let y = 0; y < devices.length; y++) {
@@ -447,8 +444,7 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const devices = accessDevices[x];
-
-                this.log.debug(site);
+                
                 //this.log.debug(JSON.stringify(clientDevices[i]));
 
                 for (let y = 0; y < devices.length; y++) {
@@ -546,8 +542,7 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const networks = clientDevices[x];
-
-                this.log.debug(site);
+                
                 //this.log.debug(JSON.stringify(clientDevices[i]));
 
                 for (let y = 0; y < networks.length; y++) {
