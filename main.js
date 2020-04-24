@@ -130,21 +130,21 @@ class Unifi extends utils.Adapter {
         this.log.debug('Update started');
 
         // Load configuration
-        const update_interval = parseInt(this.config.update_interval, 10) || 60;
-        const controller_ip = this.config.controller_ip || '127.0.0.1';
-        const controller_port = this.config.controller_port || 8443;
-        const controller_username = this.config.controller_username || 'admin';
-        const controller_password = this.config.controller_password || '';
-        const run_legacy = this.config.update_mode === 'legacy' ? true : false;
+        const updateInterval = parseInt(this.config.updateInterval, 10) || 60;
+        const controllerIp = this.config.controllerIp || '127.0.0.1';
+        const controllerPort = this.config.controllerPort || 8443;
+        const controllerUsername = this.config.controllerUsername || 'admin';
+        const controllerPassword = this.config.controllerPassword || '';
+        const run_legacy = this.config.updateMode === 'legacy' ? true : false;
 
         /**
          * Function to log into the UniFi controller
-         * @param {string} controller_username 
-         * @param {string} controller_password 
+         * @param {string} controllerUsername 
+         * @param {string} controllerPassword 
          */
-        const login = async (controller_username, controller_password) => {
+        const login = async (controllerUsername, controllerPassword) => {
             return new Promise((resolve, reject) => {
-                controller.login(controller_username, controller_password, (err) => {
+                controller.login(controllerUsername, controllerPassword, (err) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
@@ -767,12 +767,12 @@ class Unifi extends utils.Adapter {
         /********************
          * LET'S GO
          *******************/
-        this.log.debug('controller = ' + controller_ip + ':' + controller_port);
-        this.log.debug('update_interval = ' + update_interval);
+        this.log.debug('controller = ' + controllerIp + ':' + controllerPort);
+        this.log.debug('updateInterval = ' + updateInterval);
 
-        const controller = new unifi.Controller(controller_ip, controller_port);
+        const controller = new unifi.Controller(controllerIp, controllerPort);
 
-        login(controller_username, controller_password)
+        login(controllerUsername, controllerPassword)
             .then(async () => {
                 this.log.debug('Login successful');
 
@@ -803,7 +803,7 @@ class Unifi extends utils.Adapter {
         // schedule a new execution of updateUnifiData in X seconds
         this.queryTimeout = setTimeout(function () {
             this.updateUnifiData();
-        }.bind(this), update_interval * 1000);
+        }.bind(this), updateInterval * 1000);
     }
 }
 

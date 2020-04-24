@@ -130,12 +130,12 @@
         ]
     },
     "native": {
-        "controller_ip": "127.0.0.1",
-        "controller_port": "8443",
-        "controller_username": "admin",
-        "controller_password": "",
-        "update_interval": 60,
-        "update_mode": "advanced"
+        "controllerIp": "127.0.0.1",
+        "controllerPort": "8443",
+        "controllerUsername": "admin",
+        "controllerPassword": "",
+        "updateInterval": 60,
+        "updateMode": "advanced"
     },
     "objects": [],
     "instanceObjects": [
