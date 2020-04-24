@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.4.2",
+        "version": "0.4.3",
         "news": {
+            "0.4.3": {
+                "en": "fixed configuration issue",
+                "de": "Konfigurationsproblem behoben",
+                "ru": "исправлена ошибка конфигурации",
+                "pt": "problema de configuração corrigido",
+                "nl": "opgelost configuratieprobleem",
+                "fr": "problème de configuration fixe",
+                "it": "risolto problema di configurazione",
+                "es": "problema de configuración fijo",
+                "pl": "naprawiony problem z konfiguracją",
+                "zh-cn": "固定配置问题"
+            },
             "0.4.2": {
                 "en": "fixed subsystem issue",
                 "de": "Subsystem Issue behoben",
