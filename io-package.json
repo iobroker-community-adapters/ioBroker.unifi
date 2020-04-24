@@ -134,7 +134,8 @@
         "controller_port": "8443",
         "controller_username": "admin",
         "controller_password": "",
-        "update_interval": 60
+        "update_interval": 60,
+        "update_mode": "advanced"
     },
     "objects": [],
     "instanceObjects": [

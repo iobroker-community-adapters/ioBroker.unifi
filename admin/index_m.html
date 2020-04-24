@@ -23,8 +23,8 @@
 
     <style>
         .sub-title {
-            margin-top: 0.5rem!important;
-            margin-bottom: 0.5rem!important;
+            margin-top: 0.5rem !important;
+            margin-bottom: 0.5rem !important;
             padding: 0.5rem;
             background: #64b5f6;
             color: white;
@@ -64,11 +64,18 @@
                     <label for="controller_password" class="translate">Password</label>
                 </div>
             </div>
-            <div class="translate sub-title">Update interval</div>
+            <div class="translate sub-title">Update</div>
             <div class="row">
                 <div class="input-field col s12 m6">
                     <input type="number" id="update_interval" min="0" class="value" />
                     <label for="update_interval" class="translate">Update interval</label>
+                </div>
+                <div class="input-field col s12 m6">
+                    <select id="update_mode" class="value">
+                        <option value="advanced">Advanced</option>
+                        <option value="legacy">Legacy</option>
+                    </select>
+                    <label for="update_mode" class="translate">Update mode</label>
                 </div>
             </div>
         </div>

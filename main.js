@@ -135,8 +135,7 @@ class Unifi extends utils.Adapter {
         const controller_port = this.config.controller_port || 8443;
         const controller_username = this.config.controller_username || 'admin';
         const controller_password = this.config.controller_password || '';
-
-        const run_legacy = false;
+        const run_legacy = this.config.update_mode === 'legacy' ? true : false;
 
         /**
          * Function to log into the UniFi controller
