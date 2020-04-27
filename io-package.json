@@ -136,7 +136,16 @@
         "controllerUsername": "admin",
         "controllerPassword": "",
         "updateInterval": 60,
-        "updateMode": "advanced"
+        "updateMode": "advanced",
+        "updateClients": true,
+        "updateDevices": true,
+        "updateHealth": true,
+        "updateNetworks": true,
+        "updateSysinfo": true,
+        "blacklistedClients": [],
+        "blacklistedDevices": [],
+        "blacklistedHealth": [],
+        "blacklistedNetworks": []
     },
     "objects": [],
     "instanceObjects": [
