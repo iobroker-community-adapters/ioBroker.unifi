@@ -39,7 +39,7 @@
                 {
                     "notNull": [
                         {
-                            "var": "dhcpdd_dns_enabled"
+                            "var": "dhcpd_dns_enabled"
                         }
                     ]
                 },
