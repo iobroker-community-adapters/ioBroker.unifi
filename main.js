@@ -141,6 +141,7 @@ class Unifi extends utils.Adapter {
         const updateHealth = this.config.updateHealth;
         const updateNetworks = this.config.updateNetworks;
         const updateSysinfo = this.config.updateSysinfo;
+        const updateVouchers = this.config.updateVouchers;
         const blacklistedClients = this.config.blacklistedClients || {};
         const blacklistedDevices = this.config.blacklistedDevices || {};
         const blacklistedHealth = this.config.blacklistedHealth || {};
@@ -617,6 +618,53 @@ class Unifi extends utils.Adapter {
         };
 
         /**
+         * Function to fetch access devices
+         * @param {Object} sites 
+         */
+        const getVouchers = async (sites) => {
+            return new Promise((resolve, reject) => {
+                controller.getVouchers(sites, (err, data) => {
+                    if (err) {
+                        reject(new Error(err));
+                    } else {
+                        this.log.debug('getVouchers: ' + data[0].length);
+                        //this.log.debug(JSON.stringify(data));
+
+                        if (updateVouchers) {
+                            if (run_legacy === false) {
+                                processVouchers(sites, data);
+                            }
+                        }
+
+                        resolve(data);
+                    }
+                });
+            });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} data 
+         */
+        const processVouchers = async (sites, data) => {
+            const objects = require('./lib/objects_voucher.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const vouchers = data[x];
+
+                //this.log.debug(JSON.stringify(vouchers[i]));
+
+                for (let y = 0; y < vouchers.length; y++) {
+                    const voucher = vouchers[y];
+
+                    await updateObjects(site, objects, voucher);
+                }
+            }
+        };
+
+        /**
          * Helper functions to parse our JSON-based result data in
          * a recursive/traversal fashion.
          * @param {*} x 
@@ -813,6 +861,7 @@ class Unifi extends utils.Adapter {
                 await getClientDevices(sites);
                 await getAccessDevices(sites);
                 await getNetworkConf(sites);
+                await getVouchers(sites);
 
                 // finalize, logout and finish
                 controller.logout();

@@ -142,6 +142,7 @@
         "updateHealth": true,
         "updateNetworks": true,
         "updateSysinfo": true,
+        "updateVouchers": true,
         "blacklistedClients": [],
         "blacklistedDevices": [],
         "blacklistedHealth": [],
