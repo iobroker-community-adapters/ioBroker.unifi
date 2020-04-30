@@ -204,6 +204,18 @@ class Unifi extends utils.Adapter {
                 const site = sites[x];
                 const siteData = data[x];
 
+                // Process blacklist
+                if (Object.prototype.hasOwnProperty.call(siteData, 'health')) {
+                    this.log.debug('gefunden');
+
+                    siteData.health.forEach((item, index, object) => {
+                        if (blacklistedHealth.includes(item.subsystem) === true) {        
+                            this.log.debug('gefunden 2');                
+                            object.splice(index, 1);
+                        }
+                    });                        
+                }            
+
                 await applyJsonLogic(siteData, objects, site);
             }
         };
@@ -369,7 +381,17 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
+                const siteData = data[x];                
+
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedClients.includes(item.mac) === true ||
+                        blacklistedClients.includes(item.ip) === true ||
+                        blacklistedClients.includes(item.name) === true ||
+                        blacklistedClients.includes(item.hostname) === true) {                        
+                        object.splice(index, 1);
+                    }
+                });
 
                 await applyJsonLogic(siteData, objects, site);
             }
@@ -444,6 +466,15 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const siteData = data[x];
+
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedDevices.includes(item.mac) === true ||
+                        blacklistedDevices.includes(item.ip) === true ||
+                        blacklistedDevices.includes(item.name) === true) {                        
+                        object.splice(index, 1);
+                    }
+                });
 
                 await applyJsonLogic(siteData, objects, site);
             }
@@ -538,6 +569,13 @@ class Unifi extends utils.Adapter {
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
                 const siteData = data[x];
+
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedNetworks.includes(item.name) === true) {                        
+                        object.splice(index, 1);
+                    }
+                });
 
                 await applyJsonLogic(siteData, objects, site);
             }
