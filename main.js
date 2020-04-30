@@ -359,9 +359,9 @@ class Unifi extends utils.Adapter {
 
                         if (updateClients) {
                             if (run_legacy) {
-                                processClientDeviceInfoLegacy(sites, data);
+                                processClientDevicesLegacy(sites, data);
                             } else {
-                                processClientDeviceInfo(sites, data);
+                                processClientDevices(sites, data);
                             }
                         }
 
@@ -376,7 +376,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processClientDeviceInfo = async (sites, data) => {
+        const processClientDevices = async (sites, data) => {
             const objects = require('./lib/objects_getClientDevices.json');
 
             for (let x = 0; x < sites.length; x++) {
@@ -403,7 +403,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} clientDevices 
          */
-        const processClientDeviceInfoLegacy = (sites, clientDevices) => {
+        const processClientDevicesLegacy = (sites, clientDevices) => {
             // lets store some site information
             for (let i = 0; i < sites.length; i++) {
                 // traverse the json with depth 3..4 only
@@ -443,9 +443,9 @@ class Unifi extends utils.Adapter {
 
                         if (updateDevices) {
                             if (run_legacy) {
-                                processAccessDeviceInfoLegacy(sites, data);
+                                processAccessDevicesLegacy(sites, data);
                             } else {
-                                processAccessDeviceInfo(sites, data);
+                                processAccessDevices(sites, data);
                             }
                         }
 
@@ -460,7 +460,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processAccessDeviceInfo = async (sites, data) => {
+        const processAccessDevices = async (sites, data) => {
             const objects = require('./lib/objects_getAccessDevices.json');
 
             for (let x = 0; x < sites.length; x++) {
@@ -486,7 +486,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} sites 
          * @param {Object} accessDevices 
          */
-        const processAccessDeviceInfoLegacy = (sites, accessDevices) => {
+        const processAccessDevicesLegacy = (sites, accessDevices) => {
             // lets store some site information
             for (let i = 0; i < sites.length; i++) {
                 // traverse the json with depth 3..4 only
