@@ -23,7 +23,8 @@
   "dependencies": {
     "node-unifi": "^1.2.2",
     "@iobroker/adapter-core": "^2.3.0",
-    "json-logic-js": "^1.2.2"
+    "json-logic-js": "^1.2.2",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@iobroker/testing": "^2.0.0",
@@ -52,10 +53,13 @@
     "test:unit": "mocha test/unit --exit",
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:js && npm run test:package",
-    "lint": "eslint"
+    "lint": "eslint",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "bugs": {
     "url": "https://github.com/iobroker-community-adapters/ioBroker.unifi/issues"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "snyk": true
 }
