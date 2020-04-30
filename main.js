@@ -10,6 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here
 const unifi = require('node-unifi');
+const jsonLogic = require('./lib/json_logic.js');
 
 class Unifi extends utils.Adapter {
 
@@ -26,8 +27,6 @@ class Unifi extends utils.Adapter {
 
         // define a timeout variable so that we can check the controller in regular intervals
         this.queryTimeout;
-
-        this.setStateArray = [];
     }
 
     /**
@@ -60,68 +59,6 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to create a channel
-     * @param {*} name 
-     * @param {*} desc 
-     */
-    localCreateChannel(name, desc) {
-        if (typeof (desc) === 'undefined') {
-            desc = name;
-        }
-
-        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-        name = name.replace(FORBIDDEN_CHARS, '_');
-
-        this.setObjectNotExists(name, {
-            type: 'channel',
-            common: {
-                name: desc
-            },
-            native: {}
-        });
-    }
-
-    /**
-     * Function to create a state and set its value
-     * only if it hasn't been set to this value before
-     * @param {*} name 
-     * @param {*} value 
-     * @param {*} desc 
-     */
-    localCreateState(name, value, desc) {
-        if (typeof (desc) === 'undefined') {
-            desc = name;
-        }
-
-        if (Array.isArray(value)) {
-            value = value.toString();
-        }
-
-        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-        name = name.replace(FORBIDDEN_CHARS, '_');
-
-        this.setObjectNotExists(name, {
-            type: 'state',
-            common: {
-                name: desc,
-                type: typeof (value),
-                read: true,
-                write: false
-            },
-            native: {
-                id: name
-            }
-        });
-
-        if (typeof (value) !== 'undefined') {
-            this.setStateArray.push({
-                name: name,
-                val: value
-            });
-        }
-    }
-
-    /**
      * Function that takes care of the API calls and processes
      * the responses afterwards
      */
@@ -129,20 +66,30 @@ class Unifi extends utils.Adapter {
         this.log.debug('Update started');
 
         // Load configuration
-        const update_interval = parseInt(this.config.update_interval, 10) || 60;
-        const controller_ip = this.config.controller_ip || '127.0.0.1';
-        const controller_port = this.config.controller_port || 8443;
-        const controller_username = this.config.controller_username || 'admin';
-        const controller_password = this.config.controller_password || '';
+        const updateInterval = parseInt(this.config.updateInterval, 10) || 60;
+        const controllerIp = this.config.controllerIp || '127.0.0.1';
+        const controllerPort = this.config.controllerPort || 8443;
+        const controllerUsername = this.config.controllerUsername || 'admin';
+        const controllerPassword = this.config.controllerPassword || '';
+        const updateClients = this.config.updateClients;
+        const updateDevices = this.config.updateDevices;
+        const updateHealth = this.config.updateHealth;
+        const updateNetworks = this.config.updateNetworks;
+        const updateSysinfo = this.config.updateSysinfo;
+        const updateVouchers = this.config.updateVouchers;
+        const blacklistedClients = this.config.blacklistedClients || {};
+        const blacklistedDevices = this.config.blacklistedDevices || {};
+        const blacklistedHealth = this.config.blacklistedHealth || {};
+        const blacklistedNetworks = this.config.blacklistedNetworks || {};
 
         /**
          * Function to log into the UniFi controller
-         * @param {string} controller_username 
-         * @param {string} controller_password 
+         * @param {string} controllerUsername 
+         * @param {string} controllerPassword 
          */
-        const login = async (controller_username, controller_password) => {
+        const login = async (controllerUsername, controllerPassword) => {
             return new Promise((resolve, reject) => {
-                controller.login(controller_username, controller_password, (err) => {
+                controller.login(controllerUsername, controllerPassword, (err) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
@@ -166,7 +113,9 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSitesStats: ' + sites);
                         //this.log.debug(JSON.stringify(data));
 
-                        processSiteInfoLegacy(data);
+                        if (updateHealth) {
+                            processSitesStats(sites, data);
+                        }
 
                         resolve(sites);
                     }
@@ -175,42 +124,30 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-        * Function that receives the site info as a JSON data array
-        * and parses through it to create all channels+states
-        * @param {Object} siteInfo 
-        */
-        const processSiteInfoLegacy = (siteInfo) => {
-            // lets store some site information
-            for (let i = 0; i < siteInfo.length; i++) {
-                // traverse the json with depth 0..2 only
-                traverse(siteInfo[i], siteInfo[i].name, 0, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+         * Function that receives the site info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} data 
+         */
+        const processSitesStats = async (sites, data) => {
+            const objects = require('./lib/objects_getSitesStats.json');
 
-                    if (typeof (value) === 'object' && value !== null) {
-                        if (depth == 1) {
-                            this.localCreateChannel(name, 'Site ' + value.desc);
-                        } else {
-                            // continue the traversal of the object with depth 2
-                            traverse(value, name, 2, 2, function (name, value, depth) {
-                                //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-                                this.localCreateChannel(name);
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
 
-                                // walk through all sub values on a flat level starting with the
-                                // subsystem tree.
-                                traverse(value, name + '.' + value.subsystem, 0, 0, function (name, value, depth) {
-                                    //this.log.debug('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-                                    if (typeof (value) === 'object' && value !== null) {
-                                        this.localCreateChannel(name, 'Subsystem ' + value.subsystem);
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                }.bind(this));
-                            }.bind(this));
+                // Process blacklist
+                if (Object.prototype.hasOwnProperty.call(siteData, 'health')) {
+                    this.log.debug('gefunden');
+
+                    siteData.health.forEach((item, index, object) => {
+                        if (blacklistedHealth.includes(item.subsystem) === true) {        
+                            this.log.debug('gefunden 2');                
+                            object.splice(index, 1);
                         }
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
+                    });                        
+                }            
+
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -227,7 +164,9 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processSiteSysinfoLegacy(sites, data);
+                        if (updateSysinfo) {
+                            processSiteSysinfo(sites, data);
+                        }
 
                         resolve(data);
                     }
@@ -237,42 +176,17 @@ class Unifi extends utils.Adapter {
 
         /**
          * Function that receives the site sysinfo as a JSON data array
-         * and parses through it to create all channels+states
          * @param {Object} sites 
-         * @param {Object} siteSysinfo 
+         * @param {Object} data 
          */
-        const processSiteSysinfoLegacy = (sites, siteSysinfo) => {
-            // lets store some site information
-            for (let i = 0; i < siteSysinfo.length; i++) {
-                // traverse the json with depth 0..2 only
-                traverse(siteSysinfo[i], sites[i] + '.sysinfo', 2, 4, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' array: ' + Array.isArray(value));
+        const processSiteSysinfo = async (sites, data) => {
+            const objects = require('./lib/objects_getSiteSysinfo.json');
 
-                    if (typeof (value) === 'object' && value !== null) {
-                        if (depth == 2) {
-                            this.localCreateChannel(name, 'Site Sysinfo');
-                        } else if (depth == 3) {
-                            this.localCreateChannel(name);
-                        } else {
-                            if (typeof (value.key) !== 'undefined') {
-                                // continue the traversal of the object with depth 2
-                                traverse(value, name + '.' + value.key, 1, 2, function (name, value, depth) {
-                                    //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type2: ' + typeof(value) + ' array: ' + Array.isArray(value));
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
 
-                                    if (Array.isArray(value) === false && typeof (value) === 'object' && value !== null) {
-                                        this.localCreateChannel(name, value.name);
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                });
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -289,7 +203,9 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getClientDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processClientDeviceInfoLegacy(sites, data);
+                        if (updateClients) {
+                            processClientDevices(sites, data);
+                        }
 
                         resolve(data);
                     }
@@ -299,32 +215,27 @@ class Unifi extends utils.Adapter {
 
         /**
          * Function that receives the client device info as a JSON data array
-         * and parses through it to create all channels+states
          * @param {Object} sites 
-         * @param {Object} clientDevices 
+         * @param {Object} data 
          */
-        const processClientDeviceInfoLegacy = (sites, clientDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(clientDevices[i], sites[i] + '.clients', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+        const processClientDevices = async (sites, data) => {
+            const objects = require('./lib/objects_getClientDevices.json');
 
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.mac, 1, 0, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];                
 
-                            if (depth == 1) {
-                                this.localCreateChannel(name, typeof (value.hostname) !== 'undefined' ? value.hostname : '');
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
-                    } else {
-                        this.localCreateState(name, value);
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedClients.includes(item.mac) === true ||
+                        blacklistedClients.includes(item.ip) === true ||
+                        blacklistedClients.includes(item.name) === true ||
+                        blacklistedClients.includes(item.hostname) === true) {                        
+                        object.splice(index, 1);
                     }
-                }.bind(this));
+                });
+
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -341,7 +252,9 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getAccessDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processAccessDeviceInfoLegacy(sites, data);
+                        if (updateDevices) {
+                            processAccessDevices(sites, data);
+                        }
 
                         resolve(data);
                     }
@@ -350,53 +263,27 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the access device info as a JSON data array
-         * and parses through it to create all channels+states
+         * Function that receives the client device info as a JSON data array
          * @param {Object} sites 
-         * @param {Object} accessDevices 
+         * @param {Object} data 
          */
-        const processAccessDeviceInfoLegacy = (sites, accessDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(accessDevices[i], sites[i] + '.devices', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+        const processAccessDevices = async (sites, data) => {
+            const objects = require('./lib/objects_getAccessDevices.json');
 
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.mac, 1, 2, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
 
-                            if (depth === 1) {
-                                this.localCreateChannel(name, value.model + ' - ' + value.serial);
-                            } else if (typeof (value) === 'object' && value !== null) {
-                                traverse(value, name, 1, 2, function (name, value, depth) {
-                                    //this.log.debug('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' is_null: ' + (value === null));
-
-                                    if (depth === 1) {
-                                        this.localCreateChannel(name, name);
-                                    } else if (typeof (value) === 'object' && value !== null) {
-                                        traverse(value, name + '.' + value.name, 1, 0, function (name, value, depth) {
-                                            //this.log.debug('___(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                                            if (depth === 1) {
-                                                this.localCreateChannel(name, name);
-                                            } else {
-                                                this.localCreateState(name, value);
-                                            }
-                                        }.bind(this));
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
-                    } else {
-                        this.localCreateState(name, value);
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedDevices.includes(item.mac) === true ||
+                        blacklistedDevices.includes(item.ip) === true ||
+                        blacklistedDevices.includes(item.name) === true) {                        
+                        object.splice(index, 1);
                     }
-                }.bind(this));
+                });
+
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -413,7 +300,9 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getNetworkConf: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        processNetworkConfLegacy(sites, data);
+                        if (updateNetworks) {
+                            processNetworkConf(sites, data);
+                        }
 
                         resolve(data);
                     }
@@ -423,144 +312,215 @@ class Unifi extends utils.Adapter {
 
         /**
          * Function that receives the client device info as a JSON data array
-         * and parses through it to create all channels+states
          * @param {Object} sites 
-         * @param {Object} clientDevices 
+         * @param {Object} data 
          */
-        const processNetworkConfLegacy = (sites, clientDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(clientDevices[i], sites[i] + '.networks', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+        const processNetworkConf = async (sites, data) => {
+            const objects = require('./lib/objects_getNetworkConf.json');
 
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.name, 1, 0, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
 
-                            if (Array.isArray(value) === false && typeof (value) === 'object' && value !== null) {
-                                this.localCreateChannel(name, value.name);
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (blacklistedNetworks.includes(item.name) === true) {                        
+                        object.splice(index, 1);
+                    }
+                });
+
+                await applyJsonLogic(siteData, objects, site);
+            }
+        };
+
+        /**
+         * Function to fetch access devices
+         * @param {Object} sites 
+         */
+        const getVouchers = async (sites) => {
+            return new Promise((resolve, reject) => {
+                controller.getVouchers(sites, (err, data) => {
+                    if (err) {
+                        reject(new Error(err));
                     } else {
-                        this.localCreateState(name, value);
+                        this.log.debug('getVouchers: ' + data[0].length);
+                        //this.log.debug(JSON.stringify(data));
+
+                        if (updateVouchers) {
+                            processVouchers(sites, data);
+                        }
+
+                        resolve(data);
                     }
-                }.bind(this));
+                });
+            });
+        };
+
+        /**
+         * Function that receives the client device info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} data 
+         */
+        const processVouchers = async (sites, data) => {
+            const objects = require('./lib/objects_getVouchers.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
+
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
         /**
-         * Helper functions to parse our JSON-based result data in
-         * a recursive/traversal fashion.
-         * @param {*} x 
-         * @param {*} level
-         * @param {*} mindepth
-         * @param {*} maxdepth
-         * @param {*} callback
-         * @param {*} depth
+         * Function to apply JSON logic to API responses
+         * @param {*} data 
+         * @param {*} objects 
+         * @param {*} objectTree 
          */
-        const traverse = (x, level, mindepth, maxdepth, callback, depth) => {
-            if (typeof (depth) === 'undefined') {
-                depth = 0;
-            }
+        const applyJsonLogic = async (data, objects, objectTree = '') => {
+            for (const key in objects) {
+                const obj = {
+                    '_id': null,
+                    'type': null,
+                    'common': {},
+                    'native': {}
+                };
 
-            depth++;
-            if (typeof (maxdepth) !== 'undefined' && maxdepth !== 0 && depth > maxdepth) {
-                return;
-            }
-
-            if (Array.isArray(x)) {
-                traverseArray(x, level, mindepth, maxdepth, callback, depth);
-            } else if ((typeof (x) === 'object') && (x !== null)) {
-                traverseObject(x, level, mindepth, maxdepth, callback, depth);
-            } else if (mindepth <= depth && callback(level, x, depth) === false) {
-                return;
-            }
-        };
-
-        /**
-         * 
-         * @param {*} arr 
-         * @param {*} level 
-         * @param {*} mindepth 
-         * @param {*} maxdepth 
-         * @param {*} callback 
-         * @param {*} depth 
-         */
-        const traverseArray = (arr, level, mindepth, maxdepth, callback, depth) => {
-            if (mindepth <= depth && callback(level, arr, depth) === false) {
-                return;
-            }
-
-            arr.every(function (x) {
-                if ((typeof (x) === 'object')) {
-                    traverse(x, level, mindepth, maxdepth, callback, depth);
+                // Process object id
+                if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
+                    obj._id = objects[key]._id;
                 } else {
-                    return false;
+                    obj._id = await applyRule(objects[key].logic._id, data);
                 }
 
-                return true;
-            }.bind(this));
-        };
+                if (obj._id !== null) {
+                    if (objectTree !== '') {
+                        obj._id = objectTree + '.' + obj._id;
+                    }
 
-        /**
-         * 
-         * @param {*} obj 
-         * @param {*} level 
-         * @param {*} mindepth 
-         * @param {*} maxdepth 
-         * @param {*} callback 
-         * @param {*} depth 
-         */
-        const traverseObject = (obj, level, mindepth, maxdepth, callback, depth) => {
-            if (mindepth <= depth && callback(level, obj, depth) === false) {
-                return;
-            }
+                    // Process type
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
+                        obj.type = objects[key].type;
+                    } else {
+                        obj.type = await applyRule(objects[key].logic.type, data);
+                    }
 
-            for (const key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    traverse(obj[key], level + '.' + key, mindepth, maxdepth, callback, depth);
-                }
-            }
-        };
+                    // Process common
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
+                        obj.common = objects[key].common;
+                    }
 
-        /**
-         * Function to organize setState() calls that we are first checking if
-         * the value is really changed and only then actually call setState()
-         * to let others listen for changes
-         * @param {*} stateArray
-         */
-        const processStateChanges = async (stateArray) => {
-            if (!stateArray || stateArray.length === 0) {
-                // clear the array
-                this.setStateArray = [];
-            } else {
-                for (const newState of this.setStateArray) {
-                    const oldState = await this.getStateAsync(newState.name);
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
+                        const common = objects[key].logic.common;
 
-                    if (oldState === null || newState.val != oldState.val) {
-                        //this.log.debug('changing state ' + newState.name + ' : ' + newState.val);
-                        await this.setStateAsync(newState.name, { ack: true, val: newState.val });
+                        for (const commonKey in common) {
+                            obj.common[commonKey] = await applyRule(common[commonKey], data);
+                        }
+                    }
+
+                    // Process native
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
+                        obj.native = objects[key].native;
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
+                        const native = objects[key].logic.native;
+
+                        for (const nativeKey in native) {
+                            obj.native[nativeKey] = await applyRule(native[nativeKey], data);
+                        }
+                    }
+
+                    // Process value
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
+                        obj.value = objects[key].value;
+                    } else {
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
+                            obj.value = await applyRule(objects[key].logic.value, data);
+                        }
+                    }
+
+                    // Cleanup _id
+                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
+                    tempId = tempId.toLowerCase();
+                    obj._id = tempId;
+
+                    //this.log.debug(JSON.stringify(obj));
+
+                    await this.extendObjectAsync(obj._id, {
+                        type: obj.type,
+                        common: JSON.parse(JSON.stringify(obj.common)),
+                        native: JSON.parse(JSON.stringify(obj.native))
+                    });
+
+                    // Update state if value changed
+                    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
+                        const oldState = await this.getStateAsync(obj._id);
+
+                        if (oldState === null || oldState.val != obj.value) {
+                            await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                        }
                     }
                 }
 
-                this.setStateArray = [];
+                // Process has_many
+                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
+                    const hasKey = objects[key].logic.has_key;
+                    const has = objects[key].logic.has;
+
+                    if (Object.prototype.hasOwnProperty.call(data, hasKey)) {
+                        if (Array.isArray(data[hasKey])) {
+                            data[hasKey].forEach(async element => {
+                                await applyJsonLogic(element, has, obj._id);
+                            });
+                        } else {
+                            await applyJsonLogic(data[hasKey], has, obj._id);
+                        }
+                    } else {
+                        data.forEach(async element => {
+                            await applyJsonLogic(element, has, obj._id);
+                        });
+                    }
+                }
             }
         };
 
+        /**
+         * Function to apply a JSON logic rule to data
+         * @param {*} rule 
+         * @param {*} data 
+         */
+        const applyRule = async (rule, data) => {
+            let _rule;
+
+            if (typeof (rule) === 'string') {
+                _rule = { 'var': [rule] };
+            } else {
+                _rule = rule;
+            }
+
+            return jsonLogic.apply(
+                _rule,
+                data
+            );
+        };
 
         /********************
          * LET'S GO
          *******************/
-        this.log.debug('controller = ' + controller_ip + ':' + controller_port);
-        this.log.debug('update_interval = ' + update_interval);
+        this.log.debug('controller = ' + controllerIp + ':' + controllerPort);
+        this.log.debug('updateInterval = ' + updateInterval);
 
-        const controller = new unifi.Controller(controller_ip, controller_port);
+        this.log.debug('Blacklisted clients: ' + JSON.stringify(blacklistedClients));
+        this.log.debug('Blacklisted devices: ' + JSON.stringify(blacklistedDevices));
+        this.log.debug('Blacklisted health: ' + JSON.stringify(blacklistedHealth));
+        this.log.debug('Blacklisted networks: ' + JSON.stringify(blacklistedNetworks));
 
-        login(controller_username, controller_password)
+        const controller = new unifi.Controller(controllerIp, controllerPort);
+
+        login(controllerUsername, controllerPassword)
             .then(async () => {
                 this.log.debug('Login successful');
 
@@ -569,26 +529,27 @@ class Unifi extends utils.Adapter {
                 await getClientDevices(sites);
                 await getAccessDevices(sites);
                 await getNetworkConf(sites);
+                await getVouchers(sites);
 
                 // finalize, logout and finish
                 controller.logout();
 
-                // process all schedule state changes
-                processStateChanges(this.setStateArray);
-
+                await this.setStateAsync('info.connection', { ack: true, val: true });
                 this.log.info('Update done');
 
                 return Promise.resolve(true);
             })
-            .catch((err) => {
+            .catch(async (err) => {
+                await this.setStateAsync('info.connection', { ack: true, val: false });
                 this.log.error(err.name + ': ' + err.message);
+
                 return;
             });
 
         // schedule a new execution of updateUnifiData in X seconds
         this.queryTimeout = setTimeout(function () {
             this.updateUnifiData();
-        }.bind(this), update_interval * 1000);
+        }.bind(this), updateInterval * 1000);
     }
 }
 

@@ -115,6 +115,7 @@
         "main": "main.js",
         "icon": "unifi.png",
         "enabled": false,
+        "localLink": "https://%controllerIp%:%controllerPort%",
         "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
         "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
         "loglevel": "info",
@@ -130,12 +131,44 @@
         ]
     },
     "native": {
-        "controller_ip": "127.0.0.1",
-        "controller_port": "8443",
-        "controller_username": "admin",
-        "controller_password": "",
-        "update_interval": 60
+        "controllerIp": "127.0.0.1",
+        "controllerPort": "8443",
+        "controllerUsername": "admin",
+        "controllerPassword": "",
+        "updateInterval": 60,
+        "updateClients": true,
+        "updateDevices": true,
+        "updateHealth": true,
+        "updateNetworks": true,
+        "updateSysinfo": true,
+        "updateVouchers": true,
+        "blacklistedClients": [],
+        "blacklistedDevices": [],
+        "blacklistedHealth": [],
+        "blacklistedNetworks": []
     },
     "objects": [],
-    "instanceObjects": []
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Connected to UniFi controller",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

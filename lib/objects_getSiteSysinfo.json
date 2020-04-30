@@ -1,0 +1,108 @@
+{
+    "sysinfo": {
+        "_id": "sysinfo",
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "logic": {
+            "has": {
+                "sysinfo.hostname": {
+                    "_id": "hostname",
+                    "type": "state",
+                    "common": {
+                        "name": "Hostname",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "hostname"
+                    }
+                },
+                "sysinfo.name": {
+                    "_id": "name",
+                    "type": "state",
+                    "common": {
+                        "name": "Name",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "name"
+                    }
+                },
+                "sysinfo.previous_version": {
+                    "_id": "previous_version",
+                    "type": "state",
+                    "common": {
+                        "name": "Previous version",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "previous_version"
+                    }
+                },
+                "sysinfo.update_available": {
+                    "_id": "update_available",
+                    "type": "state",
+                    "common": {
+                        "name": "Update available",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "update_available"
+                    }
+                },
+                "sysinfo.update_downloaded": {
+                    "_id": "update_downloaded",
+                    "type": "state",
+                    "common": {
+                        "name": "Update downloaded",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "update_downloaded"
+                    }
+                },
+                "sysinfo.version": {
+                    "_id": "version",
+                    "type": "state",
+                    "common": {
+                        "name": "Version",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "value": "version"
+                    }
+                }
+            }
+        }
+    }
+}
