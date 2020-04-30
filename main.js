@@ -441,6 +441,12 @@ class Unifi extends utils.Adapter {
                         }
                     }
 
+                    // Cleanup _id
+                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
+                    tempId = tempId.toLowerCase();
+                    obj._id = tempId;
+
                     //this.log.debug(JSON.stringify(obj));
 
                     await this.extendObjectAsync(obj._id, {
