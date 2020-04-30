@@ -1,0 +1,295 @@
+{
+    "devices": {
+        "_id": "devices",
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "logic": {
+            "has": {
+                "devices.device": {
+                    "type": "device",
+                    "common": {},
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": {
+                                "or": [
+                                    {
+                                        "var": "name"
+                                    },
+                                    {
+                                        "var": "ip"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "devices.device.general_temperature": {
+                    "type": "state",
+                    "common": {
+                        "name": "General temperature",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "°C",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "if": [
+                                {
+                                    "notNull": [
+                                        {
+                                            "var": "general_temperature"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "cat": [
+                                        {
+                                            "var": "mac"
+                                        },
+                                        ".general_temperature"
+                                    ]
+                                },
+                                null
+                            ]
+                        },
+                        "value": "general_temperature"
+                    }
+                },
+                "devices.device.ip": {
+                    "type": "state",
+                    "common": {
+                        "name": "IP address",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".ip"
+                            ]
+                        },
+                        "value": "ip"
+                    }
+                },
+                "devices.device.mac": {
+                    "type": "state",
+                    "common": {
+                        "name": "MAC address",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".mac"
+                            ]
+                        },
+                        "value": "mac"
+                    }
+                },
+                "devices.device.model": {
+                    "type": "state",
+                    "common": {
+                        "name": "Model",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".model"
+                            ]
+                        },
+                        "value": "model"
+                    }
+                },
+                "devices.device.name": {
+                    "type": "state",
+                    "common": {
+                        "name": "Name",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".name"
+                            ]
+                        },
+                        "value": "name"
+                    }
+                },
+                "devices.device.satisfaction": {
+                    "type": "state",
+                    "common": {
+                        "name": "Satisfaction",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "%",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "if": [
+                                {
+                                    "notNull": [
+                                        {
+                                            "var": "satisfaction"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "cat": [
+                                        {
+                                            "var": "mac"
+                                        },
+                                        ".satisfaction"
+                                    ]
+                                },
+                                null
+                            ]
+                        },
+                        "value": "satisfaction"
+                    }
+                },
+                "devices.device.type": {
+                    "type": "state",
+                    "common": {
+                        "name": "Type",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".type"
+                            ]
+                        },
+                        "value": "type"
+                    }
+                },
+                "devices.device.upgradable": {
+                    "type": "state",
+                    "common": {
+                        "name": "Upgradable",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".upgradable"
+                            ]
+                        },
+                        "value": "upgradable"
+                    }
+                },
+                "devices.device.uptime": {
+                    "type": "state",
+                    "common": {
+                        "name": "Uptime",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "s",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".uptime"
+                            ]
+                        },
+                        "value": "uptime"
+                    }
+                },
+                "devices.device.version": {
+                    "type": "state",
+                    "common": {
+                        "name": "Version",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".version"
+                            ]
+                        },
+                        "value": "version"
+                    }
+                }
+            }
+        }
+    }
+}

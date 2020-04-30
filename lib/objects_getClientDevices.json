@@ -1,0 +1,405 @@
+{
+    "clients": {
+        "_id": "clients",
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "logic": {
+            "has": {
+                "clients.client": {
+                    "type": "device",
+                    "common": {},
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": {
+                                "or": [
+                                    {
+                                        "var": "name"
+                                    },
+                                    {
+                                        "var": "hostname"
+                                    },
+                                    {
+                                        "var": "ip"
+                                    },
+                                    {
+                                        "var": "mac"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "clients.client.ap_mac": {
+                    "type": "state",
+                    "common": {
+                        "name": "Access Point MAC address",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "if": [
+                                {
+                                    "notNull": [
+                                        {
+                                            "var": "ap_mac"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "cat": [
+                                        {
+                                            "var": "mac"
+                                        },
+                                        ".ap_mac"
+                                    ]
+                                },
+                                null
+                            ]
+                        },
+                        "value": "ap_mac"
+                    }
+                },
+                "clients.client.first_seen": {
+                    "type": "state",
+                    "common": {
+                        "name": "First seen",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".first_seen"
+                            ]
+                        },
+                        "value": {
+                            "secondsToDateTime": [
+                                {
+                                    "var": "first_seen"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "clients.client.hostname": {
+                    "type": "state",
+                    "common": {
+                        "name": "Hostname",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".hostname"
+                            ]
+                        },
+                        "value": "hostname"
+                    }
+                },
+                "clients.client.ip": {
+                    "type": "state",
+                    "common": {
+                        "name": "IP address",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".ip"
+                            ]
+                        },
+                        "value": "ip"
+                    }
+                },
+                "clients.client.is_guest": {
+                    "type": "state",
+                    "common": {
+                        "name": "Is guest",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".is_guest"
+                            ]
+                        },
+                        "value": "is_guest"
+                    }
+                },
+                "clients.client.is_wired": {
+                    "type": "state",
+                    "common": {
+                        "name": "Is wired",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".is_wired"
+                            ]
+                        },
+                        "value": "is_wired"
+                    }
+                },
+                "clients.client.last_seen": {
+                    "type": "state",
+                    "common": {
+                        "name": "Last seen",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".last_seen"
+                            ]
+                        },
+                        "value": {
+                            "secondsToDateTime": [
+                                {
+                                    "var": "last_seen"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "clients.client.mac": {
+                    "type": "state",
+                    "common": {
+                        "name": "MAC address",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".mac"
+                            ]
+                        },
+                        "value": "mac"
+                    }
+                },
+                "clients.client.name": {
+                    "type": "state",
+                    "common": {
+                        "name": "Name",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".name"
+                            ]
+                        },
+                        "value": "name"
+                    }
+                },
+                "clients.client.network": {
+                    "type": "state",
+                    "common": {
+                        "name": "Network",
+                        "type": "string",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".network"
+                            ]
+                        },
+                        "value": "network"
+                    }
+                },
+                "clients.client.noted": {
+                    "type": "state",
+                    "common": {
+                        "name": "Noted",
+                        "type": "boolean",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".noted"
+                            ]
+                        },
+                        "value": "noted"
+                    }
+                },
+                "clients.client.rssi": {
+                    "type": "state",
+                    "common": {
+                        "name": "RSSI",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "dBm",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "if": [
+                                {
+                                    "notNull": [
+                                        {
+                                            "var": "rssi"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "cat": [
+                                        {
+                                            "var": "mac"
+                                        },
+                                        ".rssi"
+                                    ]
+                                },
+                                null
+                            ]
+                        },
+                        "value": "rssi"
+                    }
+                },
+                "clients.client.satisfaction": {
+                    "type": "state",
+                    "common": {
+                        "name": "Satisfaction",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "%",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".satisfaction"
+                            ]
+                        },
+                        "value": "satisfaction"
+                    }
+                },
+                "clients.client.uptime": {
+                    "type": "state",
+                    "common": {
+                        "name": "Uptime",
+                        "type": "number",
+                        "role": "state",
+                        "read": true,
+                        "write": false,
+                        "unit": "s",
+                        "desc": ""
+                    },
+                    "native": {},
+                    "logic": {
+                        "_id": {
+                            "cat": [
+                                {
+                                    "var": "mac"
+                                },
+                                ".uptime"
+                            ]
+                        },
+                        "value": "uptime"
+                    }
+                }
+            }
+        }
+    }
+}

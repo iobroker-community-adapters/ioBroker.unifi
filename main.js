@@ -180,9 +180,9 @@ class Unifi extends utils.Adapter {
 
                         if (updateHealth) {
                             if (run_legacy) {
-                                processSiteInfoLegacy(data);
+                                processSitesStatsLegacy(data);
                             } else {
-                                processSiteInfo(sites, data);
+                                processSitesStats(sites, data);
                             }
                         }
 
@@ -195,24 +195,16 @@ class Unifi extends utils.Adapter {
         /**
          * Function that receives the site info as a JSON data array
          * @param {Object} sites 
-         * @param {Object} siteInfos 
+         * @param {Object} data 
          */
-        const processSiteInfo = async (sites, siteInfos) => {
-            const objects = require('./lib/objects_health.json');
+        const processSitesStats = async (sites, data) => {
+            const objects = require('./lib/objects_getSitesStats.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteInfo = siteInfos[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(siteInfos[i]));
-
-                for (let y = 0; y < siteInfo.health.length; y++) {
-                    const subsystem = siteInfo.health[y];
-
-                    if (blacklistedHealth.includes(subsystem.subsystem) === false) {
-                        await updateObjects(site, objects, subsystem);
-                    }
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -221,7 +213,7 @@ class Unifi extends utils.Adapter {
         * and parses through it to create all channels+states
         * @param {Object} siteInfo 
         */
-        const processSiteInfoLegacy = (siteInfo) => {
+        const processSitesStatsLegacy = (siteInfo) => {
             // lets store some site information
             for (let i = 0; i < siteInfo.length; i++) {
                 // traverse the json with depth 0..2 only
@@ -286,22 +278,16 @@ class Unifi extends utils.Adapter {
         /**
          * Function that receives the site sysinfo as a JSON data array
          * @param {Object} sites 
-         * @param {Object} siteSysinfo 
+         * @param {Object} data 
          */
-        const processSiteSysinfo = async (sites, siteSysinfo) => {
-            const objects = require('./lib/objects_sitesysinfo.json');
+        const processSiteSysinfo = async (sites, data) => {
+            const objects = require('./lib/objects_getSiteSysinfo.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const info = siteSysinfo[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(siteSysinfo[i]));
-
-                for (let y = 0; y < info.length; y++) {
-                    const data = info[y];
-
-                    await updateObjects(site, objects, data);
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -376,27 +362,16 @@ class Unifi extends utils.Adapter {
         /**
          * Function that receives the client device info as a JSON data array
          * @param {Object} sites 
-         * @param {Object} clientDevices 
+         * @param {Object} data 
          */
-        const processClientDeviceInfo = async (sites, clientDevices) => {
-            const objects = require('./lib/objects_client.json');
+        const processClientDeviceInfo = async (sites, data) => {
+            const objects = require('./lib/objects_getClientDevices.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const devices = clientDevices[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(clientDevices[i]));
-
-                for (let y = 0; y < devices.length; y++) {
-                    const device = devices[y];
-
-                    if (blacklistedClients.includes(device.mac) === false &&
-                        blacklistedClients.includes(device.ip) === false &&
-                        blacklistedClients.includes(device.name) === false &&
-                        blacklistedClients.includes(device.hostname) === false) {
-                        await updateObjects(site, objects, device);
-                    }
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -461,26 +436,16 @@ class Unifi extends utils.Adapter {
         /**
          * Function that receives the client device info as a JSON data array
          * @param {Object} sites 
-         * @param {Object} clientDevices 
+         * @param {Object} data 
          */
-        const processAccessDeviceInfo = async (sites, accessDevices) => {
-            const objects = require('./lib/objects_device.json');
+        const processAccessDeviceInfo = async (sites, data) => {
+            const objects = require('./lib/objects_getAccessDevices.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const devices = accessDevices[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(clientDevices[i]));
-
-                for (let y = 0; y < devices.length; y++) {
-                    const device = devices[y];
-
-                    if (blacklistedDevices.includes(device.mac) === false &&
-                        blacklistedDevices.includes(device.ip) === false &&
-                        blacklistedDevices.includes(device.name) === false) {
-                        await updateObjects(site, objects, device);
-                    }
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -565,24 +530,16 @@ class Unifi extends utils.Adapter {
         /**
          * Function that receives the client device info as a JSON data array
          * @param {Object} sites 
-         * @param {Object} clientDevices 
+         * @param {Object} data 
          */
-        const processNetworkConf = async (sites, clientDevices) => {
-            const objects = require('./lib/objects_network.json');
+        const processNetworkConf = async (sites, data) => {
+            const objects = require('./lib/objects_getNetworkConf.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const networks = clientDevices[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(clientDevices[i]));
-
-                for (let y = 0; y < networks.length; y++) {
-                    const data = networks[y];
-
-                    if (blacklistedNetworks.includes(data.name) === false) {
-                        await updateObjects(site, objects, data);
-                    }
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -648,19 +605,13 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processVouchers = async (sites, data) => {
-            const objects = require('./lib/objects_voucher.json');
+            const objects = require('./lib/objects_getVouchers.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const vouchers = data[x];
+                const siteData = data[x];
 
-                //this.log.debug(JSON.stringify(vouchers[i]));
-
-                for (let y = 0; y < vouchers.length; y++) {
-                    const voucher = vouchers[y];
-
-                    await updateObjects(site, objects, voucher);
-                }
+                await applyJsonLogic(siteData, objects, site);
             }
         };
 
@@ -764,80 +715,133 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Update objects
-         * @param {*} site 
-         * @param {*} objects 
+         * Function to apply JSON logic to API responses
          * @param {*} data 
+         * @param {*} objects 
+         * @param {*} objectTree 
          */
-        const updateObjects = async (site, objects, data) => {
+        const applyJsonLogic = async (data, objects, objectTree = '') => {
             for (const key in objects) {
-                let rule;
+                const obj = {
+                    '_id': null,
+                    'type': null,
+                    'common': {},
+                    'native': {}
+                };
 
-                // Process item name
-                const itemName = objects[key].item_name;
-
-                rule = itemName;
-                if (typeof (itemName) === 'string') {
-                    rule = { 'var': [itemName] };
+                // Process object id
+                if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
+                    obj._id = objects[key]._id;
+                } else {
+                    obj._id = await applyRule(objects[key].logic._id, data);
                 }
 
-                let name = jsonLogic.apply(
-                    rule,
-                    data
-                );
-
-                if (name != undefined) {
-                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-                    name = site + '.' + name.replace(FORBIDDEN_CHARS, '_');
-
-                    const common = objects[key].common || {};
-
-                    if (objects[key].common_name) {
-                        // Process common name
-                        const commonName = objects[key].common_name;
-
-                        rule = commonName;
-                        if (typeof (commonName) === 'string') {
-                            rule = { 'var': [commonName] };
-                        }
-
-                        common.name = jsonLogic.apply(
-                            rule,
-                            data
-                        );
+                if (obj._id !== null) {
+                    if (objectTree !== '') {
+                        obj._id = objectTree + '.' + obj._id;
                     }
 
-                    await this.extendObjectAsync(name, {
-                        type: objects[key].type,
-                        common: common,
-                        native: objects[key].native
+                    // Process type
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
+                        obj.type = objects[key].type;
+                    } else {
+                        obj.type = await applyRule(objects[key].logic.type, data);
+                    }
+
+                    // Process common
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
+                        obj.common = objects[key].common;
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
+                        const common = objects[key].logic.common;
+
+                        for (const commonKey in common) {
+                            obj.common[commonKey] = await applyRule(common[commonKey], data);
+                        }
+                    }
+
+                    // Process native
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
+                        obj.native = objects[key].native;
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
+                        const native = objects[key].logic.native;
+
+                        for (const nativeKey in native) {
+                            obj.native[nativeKey] = await applyRule(native[nativeKey], data);
+                        }
+                    }
+
+                    // Process value
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
+                        obj.value = objects[key].value;
+                    } else {
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
+                            obj.value = await applyRule(objects[key].logic.value, data);
+                        }
+                    }
+
+                    //this.log.debug(JSON.stringify(obj));
+
+                    await this.extendObjectAsync(obj._id, {
+                        type: obj.type,
+                        common: JSON.parse(JSON.stringify(obj.common)),
+                        native: JSON.parse(JSON.stringify(obj.native))
                     });
 
-                    if (objects[key].item_value) {
-                        // Process item value
-                        const itemValue = objects[key].item_value;
+                    // Update state if value changed
+                    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
+                        const oldState = await this.getStateAsync(obj._id);
 
-                        rule = itemValue;
-                        if (typeof (itemValue) === 'string') {
-                            rule = { 'var': [itemValue] };
+                        if (oldState === null || oldState.val != obj.value) {
+                            await this.setStateAsync(obj._id, { ack: true, val: obj.value });
                         }
+                    }
+                }
 
-                        const val = jsonLogic.apply(
-                            rule,
-                            data
-                        );
+                // Process has_many
+                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
+                    const hasKey = objects[key].logic.has_key;
+                    const has = objects[key].logic.has;
 
-                        // Update state if value changed
-                        const oldState = await this.getStateAsync(name);
-
-                        if (oldState === null || oldState.val != val) {
-                            await this.setStateAsync(name, { ack: true, val: val });
+                    if (Object.prototype.hasOwnProperty.call(data, hasKey)) {
+                        if (Array.isArray(data[hasKey])) {
+                            data[hasKey].forEach(async element => {
+                                await applyJsonLogic(element, has, obj._id);
+                            });
+                        } else {
+                            await applyJsonLogic(data[hasKey], has, obj._id);
                         }
+                    } else {
+                        data.forEach(async element => {
+                            await applyJsonLogic(element, has, obj._id);
+                        });
                     }
                 }
             }
         };
 
+        /**
+         * Function to apply a JSON logic rule to data
+         * @param {*} rule 
+         * @param {*} data 
+         */
+        const applyRule = async (rule, data) => {
+            let _rule;
+
+            if (typeof (rule) === 'string') {
+                _rule = { 'var': [rule] };
+            } else {
+                _rule = rule;
+            }
+
+            return jsonLogic.apply(
+                _rule,
+                data
+            );
+        };
 
         /********************
          * LET'S GO
