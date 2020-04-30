@@ -136,7 +136,6 @@
         "controllerUsername": "admin",
         "controllerPassword": "",
         "updateInterval": 60,
-        "updateMode": "advanced",
         "updateClients": true,
         "updateDevices": true,
         "updateHealth": true,

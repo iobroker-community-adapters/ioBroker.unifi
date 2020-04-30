@@ -27,8 +27,6 @@ class Unifi extends utils.Adapter {
 
         // define a timeout variable so that we can check the controller in regular intervals
         this.queryTimeout;
-
-        this.setStateArray = [];
     }
 
     /**
@@ -61,68 +59,6 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to create a channel
-     * @param {*} name 
-     * @param {*} desc 
-     */
-    localCreateChannel(name, desc) {
-        if (typeof (desc) === 'undefined') {
-            desc = name;
-        }
-
-        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-        name = name.replace(FORBIDDEN_CHARS, '_');
-
-        this.setObjectNotExists(name, {
-            type: 'channel',
-            common: {
-                name: desc
-            },
-            native: {}
-        });
-    }
-
-    /**
-     * Function to create a state and set its value
-     * only if it hasn't been set to this value before
-     * @param {*} name 
-     * @param {*} value 
-     * @param {*} desc 
-     */
-    localCreateState(name, value, desc) {
-        if (typeof (desc) === 'undefined') {
-            desc = name;
-        }
-
-        if (Array.isArray(value)) {
-            value = value.toString();
-        }
-
-        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-        name = name.replace(FORBIDDEN_CHARS, '_');
-
-        this.setObjectNotExists(name, {
-            type: 'state',
-            common: {
-                name: desc,
-                type: typeof (value),
-                read: true,
-                write: false
-            },
-            native: {
-                id: name
-            }
-        });
-
-        if (typeof (value) !== 'undefined') {
-            this.setStateArray.push({
-                name: name,
-                val: value
-            });
-        }
-    }
-
-    /**
      * Function that takes care of the API calls and processes
      * the responses afterwards
      */
@@ -135,7 +71,6 @@ class Unifi extends utils.Adapter {
         const controllerPort = this.config.controllerPort || 8443;
         const controllerUsername = this.config.controllerUsername || 'admin';
         const controllerPassword = this.config.controllerPassword || '';
-        const run_legacy = this.config.updateMode === 'legacy' ? true : false;
         const updateClients = this.config.updateClients;
         const updateDevices = this.config.updateDevices;
         const updateHealth = this.config.updateHealth;
@@ -179,11 +114,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateHealth) {
-                            if (run_legacy) {
-                                processSitesStatsLegacy(data);
-                            } else {
-                                processSitesStats(sites, data);
-                            }
+                            processSitesStats(sites, data);
                         }
 
                         resolve(sites);
@@ -221,46 +152,6 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-        * Function that receives the site info as a JSON data array
-        * and parses through it to create all channels+states
-        * @param {Object} siteInfo 
-        */
-        const processSitesStatsLegacy = (siteInfo) => {
-            // lets store some site information
-            for (let i = 0; i < siteInfo.length; i++) {
-                // traverse the json with depth 0..2 only
-                traverse(siteInfo[i], siteInfo[i].name, 0, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                    if (typeof (value) === 'object' && value !== null) {
-                        if (depth == 1) {
-                            this.localCreateChannel(name, 'Site ' + value.desc);
-                        } else {
-                            // continue the traversal of the object with depth 2
-                            traverse(value, name, 2, 2, function (name, value, depth) {
-                                //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-                                this.localCreateChannel(name);
-
-                                // walk through all sub values on a flat level starting with the
-                                // subsystem tree.
-                                traverse(value, name + '.' + value.subsystem, 0, 0, function (name, value, depth) {
-                                    //this.log.debug('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-                                    if (typeof (value) === 'object' && value !== null) {
-                                        this.localCreateChannel(name, 'Subsystem ' + value.subsystem);
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                }.bind(this));
-                            }.bind(this));
-                        }
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
-            }
-        };
-
-        /**
          * Function to fetch site sysinfo
          * @param {Object} sites 
          */
@@ -274,11 +165,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateSysinfo) {
-                            if (run_legacy) {
-                                processSiteSysinfoLegacy(sites, data);
-                            } else {
-                                processSiteSysinfo(sites, data);
-                            }
+                            processSiteSysinfo(sites, data);
                         }
 
                         resolve(data);
@@ -304,47 +191,6 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the site sysinfo as a JSON data array
-         * and parses through it to create all channels+states
-         * @param {Object} sites 
-         * @param {Object} siteSysinfo 
-         */
-        const processSiteSysinfoLegacy = (sites, siteSysinfo) => {
-            // lets store some site information
-            for (let i = 0; i < siteSysinfo.length; i++) {
-                // traverse the json with depth 0..2 only
-                traverse(siteSysinfo[i], sites[i] + '.sysinfo', 2, 4, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' array: ' + Array.isArray(value));
-
-                    if (typeof (value) === 'object' && value !== null) {
-                        if (depth == 2) {
-                            this.localCreateChannel(name, 'Site Sysinfo');
-                        } else if (depth == 3) {
-                            this.localCreateChannel(name);
-                        } else {
-                            if (typeof (value.key) !== 'undefined') {
-                                // continue the traversal of the object with depth 2
-                                traverse(value, name + '.' + value.key, 1, 2, function (name, value, depth) {
-                                    //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type2: ' + typeof(value) + ' array: ' + Array.isArray(value));
-
-                                    if (Array.isArray(value) === false && typeof (value) === 'object' && value !== null) {
-                                        this.localCreateChannel(name, value.name);
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                });
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
-            }
-        };
-
-        /**
          * Function to fetch devices
          * @param {Object} sites 
          */
@@ -358,11 +204,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateClients) {
-                            if (run_legacy) {
-                                processClientDevicesLegacy(sites, data);
-                            } else {
-                                processClientDevices(sites, data);
-                            }
+                            processClientDevices(sites, data);
                         }
 
                         resolve(data);
@@ -398,37 +240,6 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
-         * and parses through it to create all channels+states
-         * @param {Object} sites 
-         * @param {Object} clientDevices 
-         */
-        const processClientDevicesLegacy = (sites, clientDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(clientDevices[i], sites[i] + '.clients', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.mac, 1, 0, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                            if (depth == 1) {
-                                this.localCreateChannel(name, typeof (value.hostname) !== 'undefined' ? value.hostname : '');
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
-            }
-        };
-
-        /**
          * Function to fetch access devices
          * @param {Object} sites 
          */
@@ -442,11 +253,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateDevices) {
-                            if (run_legacy) {
-                                processAccessDevicesLegacy(sites, data);
-                            } else {
-                                processAccessDevices(sites, data);
-                            }
+                            processAccessDevices(sites, data);
                         }
 
                         resolve(data);
@@ -481,57 +288,6 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the access device info as a JSON data array
-         * and parses through it to create all channels+states
-         * @param {Object} sites 
-         * @param {Object} accessDevices 
-         */
-        const processAccessDevicesLegacy = (sites, accessDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(accessDevices[i], sites[i] + '.devices', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.mac, 1, 2, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                            if (depth === 1) {
-                                this.localCreateChannel(name, value.model + ' - ' + value.serial);
-                            } else if (typeof (value) === 'object' && value !== null) {
-                                traverse(value, name, 1, 2, function (name, value, depth) {
-                                    //this.log.debug('__(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value) + ' is_null: ' + (value === null));
-
-                                    if (depth === 1) {
-                                        this.localCreateChannel(name, name);
-                                    } else if (typeof (value) === 'object' && value !== null) {
-                                        traverse(value, name + '.' + value.name, 1, 0, function (name, value, depth) {
-                                            //this.log.debug('___(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                                            if (depth === 1) {
-                                                this.localCreateChannel(name, name);
-                                            } else {
-                                                this.localCreateState(name, value);
-                                            }
-                                        }.bind(this));
-                                    } else {
-                                        this.localCreateState(name, value);
-                                    }
-                                }.bind(this));
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
-            }
-        };
-
-        /**
          * Function to fetch network configuration
          * @param {Object} sites 
          */
@@ -545,11 +301,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateNetworks) {
-                            if (run_legacy) {
-                                processNetworkConfLegacy(sites, data);
-                            } else {
-                                processNetworkConf(sites, data);
-                            }
+                            processNetworkConf(sites, data);
                         }
 
                         resolve(data);
@@ -582,37 +334,6 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
-         * and parses through it to create all channels+states
-         * @param {Object} sites 
-         * @param {Object} clientDevices 
-         */
-        const processNetworkConfLegacy = (sites, clientDevices) => {
-            // lets store some site information
-            for (let i = 0; i < sites.length; i++) {
-                // traverse the json with depth 3..4 only
-                traverse(clientDevices[i], sites[i] + '.networks', 2, 2, function (name, value, depth) {
-                    //this.log.debug('(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                    if (typeof (value) === 'object' && value !== null) {
-                        // continue the traversal of the object with depth 2
-                        traverse(value, name + '.' + value.name, 1, 0, function (name, value, depth) {
-                            //this.log.debug('_(' + depth + '): ' + name + ' = ' + value + ' type: ' + typeof(value));
-
-                            if (Array.isArray(value) === false && typeof (value) === 'object' && value !== null) {
-                                this.localCreateChannel(name, value.name);
-                            } else {
-                                this.localCreateState(name, value);
-                            }
-                        }.bind(this));
-                    } else {
-                        this.localCreateState(name, value);
-                    }
-                }.bind(this));
-            }
-        };
-
-        /**
          * Function to fetch access devices
          * @param {Object} sites 
          */
@@ -626,9 +347,7 @@ class Unifi extends utils.Adapter {
                         //this.log.debug(JSON.stringify(data));
 
                         if (updateVouchers) {
-                            if (run_legacy === false) {
-                                processVouchers(sites, data);
-                            }
+                            processVouchers(sites, data);
                         }
 
                         resolve(data);
@@ -650,105 +369,6 @@ class Unifi extends utils.Adapter {
                 const siteData = data[x];
 
                 await applyJsonLogic(siteData, objects, site);
-            }
-        };
-
-        /**
-         * Helper functions to parse our JSON-based result data in
-         * a recursive/traversal fashion.
-         * @param {*} x 
-         * @param {*} level
-         * @param {*} mindepth
-         * @param {*} maxdepth
-         * @param {*} callback
-         * @param {*} depth
-         */
-        const traverse = (x, level, mindepth, maxdepth, callback, depth) => {
-            if (typeof (depth) === 'undefined') {
-                depth = 0;
-            }
-
-            depth++;
-            if (typeof (maxdepth) !== 'undefined' && maxdepth !== 0 && depth > maxdepth) {
-                return;
-            }
-
-            if (Array.isArray(x)) {
-                traverseArray(x, level, mindepth, maxdepth, callback, depth);
-            } else if ((typeof (x) === 'object') && (x !== null)) {
-                traverseObject(x, level, mindepth, maxdepth, callback, depth);
-            } else if (mindepth <= depth && callback(level, x, depth) === false) {
-                return;
-            }
-        };
-
-        /**
-         * 
-         * @param {*} arr 
-         * @param {*} level 
-         * @param {*} mindepth 
-         * @param {*} maxdepth 
-         * @param {*} callback 
-         * @param {*} depth 
-         */
-        const traverseArray = (arr, level, mindepth, maxdepth, callback, depth) => {
-            if (mindepth <= depth && callback(level, arr, depth) === false) {
-                return;
-            }
-
-            arr.every(function (x) {
-                if ((typeof (x) === 'object')) {
-                    traverse(x, level, mindepth, maxdepth, callback, depth);
-                } else {
-                    return false;
-                }
-
-                return true;
-            }.bind(this));
-        };
-
-        /**
-         * 
-         * @param {*} obj 
-         * @param {*} level 
-         * @param {*} mindepth 
-         * @param {*} maxdepth 
-         * @param {*} callback 
-         * @param {*} depth 
-         */
-        const traverseObject = (obj, level, mindepth, maxdepth, callback, depth) => {
-            if (mindepth <= depth && callback(level, obj, depth) === false) {
-                return;
-            }
-
-            for (const key in obj) {
-                if (Object.prototype.hasOwnProperty.call(obj, key)) {
-                    traverse(obj[key], level + '.' + key, mindepth, maxdepth, callback, depth);
-                }
-            }
-        };
-
-        /**
-         * Function to organize setState() calls that we are first checking if
-         * the value is really changed and only then actually call setState()
-         * to let others listen for changes
-         * @param {*} stateArray
-         */
-        const processStateChanges = async (stateArray) => {
-            if (!stateArray || stateArray.length === 0) {
-                // clear the array
-                this.setStateArray = [];
-            } else {
-                for (const newState of this.setStateArray) {
-                    const oldState = await this.getStateAsync(newState.name);
-
-                    if (oldState === null || newState.val != oldState.val) {
-                        //this.log.debug('changing state ' + newState.name + ' : ' + newState.val);
-                        await this.setStateAsync(newState.name, { ack: true, val: newState.val });
-                    }
-                }
-
-                this.setStateArray = [];
             }
         };
 
@@ -907,9 +527,6 @@ class Unifi extends utils.Adapter {
 
                 // finalize, logout and finish
                 controller.logout();
-
-                // process all schedule state changes
-                processStateChanges(this.setStateArray);
 
                 await this.setStateAsync('info.connection', { ack: true, val: true });
                 this.log.info('Update done');
