@@ -9,6 +9,10 @@ This ioBroker adapter allows controlling and monitoring of [UniFi devices](http:
 
 ## Changelog
 ### __WORK IN PROGRESS__
+* (braindead1) Implemented configuration of updates
+* (braindead1) Improved JsonLogic
+* (braindead1) Removed legacy code
+* (braindead1) Implemented Sentry
 
 ### 0.4.3 (2020-04-24)
 * (braindead1) fixed configuration issue
