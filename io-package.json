@@ -115,6 +115,11 @@
         "main": "main.js",
         "icon": "unifi.png",
         "enabled": false,
+        "plugins": {
+            "sentry": {
+                "dsn": "https://19160d9f5a71442098ebaa42ef3284c7@sentry.iobroker.net/59"
+            }
+        },
         "localLink": "https://%controllerIp%:%controllerPort%",
         "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
         "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",

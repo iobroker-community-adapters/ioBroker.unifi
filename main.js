@@ -100,8 +100,23 @@ class Unifi extends utils.Adapter {
         for (let i = 0; i < value.length; ++i) {
             result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
         }
-        
+
         return result;
+    }
+
+    /**
+     * Function to handle error messages
+     * @param {Object} err 
+     */
+    async errorHandling(err) {
+        this.log.error(err.name + ': ' + err.message);
+
+        if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+            const sentryInstance = this.getPluginInstance('sentry');
+            if (sentryInstance) {
+                sentryInstance.getSentryObject().captureException(err);
+            }
+        }
     }
 
     /**
@@ -573,7 +588,8 @@ class Unifi extends utils.Adapter {
             })
             .catch(async (err) => {
                 await this.setStateAsync('info.connection', { ack: true, val: false });
-                this.log.error(err.name + ': ' + err.message);
+
+                this.errorHandling(err);
 
                 return;
             });
