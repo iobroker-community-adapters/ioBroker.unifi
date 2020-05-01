@@ -27,6 +27,7 @@
     "snyk": "^1.316.1"
   },
   "devDependencies": {
+    "@alcalzone/release-script": "^1.2.0",
     "@iobroker/testing": "^2.0.0",
     "@types/chai": "^4.2.7",
     "@types/chai-as-promised": "^7.1.2",
@@ -55,7 +56,8 @@
     "test": "npm run test:js && npm run test:package",
     "lint": "eslint",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "prepare": "npm run snyk-protect",
+    "release": "release-script"
   },
   "bugs": {
     "url": "https://github.com/iobroker-community-adapters/ioBroker.unifi/issues"
