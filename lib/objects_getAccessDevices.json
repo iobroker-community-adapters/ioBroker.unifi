@@ -318,6 +318,166 @@
                                     "value": "satisfaction"
                                 }
                             },
+                            "devices.device.speedtest-status": {
+                                "_id": "speedtest",
+                                "type": "channel",
+                                "common": {},
+                                "native": {},
+                                "logic": {
+                                    "has_key": "speedtest-status",
+                                    "has": {
+                                        "devices.device.speedtest-status.latency": {
+                                            "_id": "latency",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Latency",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "latency"
+                                            }
+                                        },
+                                        "devices.device.speedtest-status.rundate": {
+                                            "_id": "rundate",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Run date",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": {
+                                                    "secondsToDateTime": [
+                                                        {
+                                                            "var": "rundate"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "devices.device.speedtest-status.runtime": {
+                                            "_id": "runtime",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Run time",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "s",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "runtime"
+                                            }
+                                        },
+                                        "devices.device.speedtest-status.xput_download": {
+                                            "_id": "xput_download",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Download",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Mbps",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "xput_download"
+                                            }
+                                        },
+                                        "devices.device.speedtest-status.xput_upload": {
+                                            "_id": "xput_upload",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Upload",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Mbps",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "xput_upload"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "devices.device.sys_stats": {
+                                "_id": "sys_stats",
+                                "type": "channel",
+                                "common": {},
+                                "native": {},
+                                "logic": {
+                                    "has_key": "sys_stats",
+                                    "has": {
+                                        "devices.device.sys_stats.loadavg_1": {
+                                            "_id": "loadavg_1",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Load average 1m",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "loadavg_1"
+                                            }
+                                        },
+                                        "devices.device.sys_stats.loadavg_5": {
+                                            "_id": "loadavg_5",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Load average 5m",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "loadavg_5"
+                                            }
+                                        },
+                                        "devices.device.sys_stats.loadavg_15": {
+                                            "_id": "loadavg_15",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Load average 15m",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "loadavg_15"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "devices.device.type": {
                                 "_id": "type",
                                 "type": "state",
