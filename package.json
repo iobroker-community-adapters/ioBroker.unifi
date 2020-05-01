@@ -2,10 +2,10 @@
   "name": "iobroker.unifi",
   "version": "0.4.3",
   "description": "UniFi Adapter for ioBroker",
-  "author": "Jens Maus <mail@jens-maus.de>",
+  "author": "braindead1 <os.braindead1@gmail.com>",
   "contributors": [
-    "Jens Maus <mail@jens-maus.de>",
-    "braindead1 <os.braindead1@gmail.com>"
+    "braindead1 <os.braindead1@gmail.com>",
+    "Jens Maus <mail@jens-maus.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.unifi",
   "license": "MIT",

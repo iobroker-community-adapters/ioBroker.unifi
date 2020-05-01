@@ -102,8 +102,8 @@
             "zh-cn": "与UniFi控制器通信"
         },
         "authors": [
-            "Jens Maus <mail@jens-maus.de>",
-            "braindead1 <os.braindead1@gmail.com>"
+            "braindead1 <os.braindead1@gmail.com>",
+            "Jens Maus <mail@jens-maus.de>"
         ],
         "keywords": [
             "unifi",
