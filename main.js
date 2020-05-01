@@ -140,12 +140,12 @@ class Unifi extends utils.Adapter {
                     this.log.debug('gefunden');
 
                     siteData.health.forEach((item, index, object) => {
-                        if (blacklistedHealth.includes(item.subsystem) === true) {        
-                            this.log.debug('gefunden 2');                
+                        if (blacklistedHealth.includes(item.subsystem) === true) {
+                            this.log.debug('gefunden 2');
                             object.splice(index, 1);
                         }
-                    });                        
-                }            
+                    });
+                }
 
                 await applyJsonLogic(siteData, objects, site);
             }
@@ -223,14 +223,14 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];                
+                const siteData = data[x];
 
                 // Process blacklist
                 siteData.forEach((item, index, object) => {
                     if (blacklistedClients.includes(item.mac) === true ||
                         blacklistedClients.includes(item.ip) === true ||
                         blacklistedClients.includes(item.name) === true ||
-                        blacklistedClients.includes(item.hostname) === true) {                        
+                        blacklistedClients.includes(item.hostname) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -278,7 +278,7 @@ class Unifi extends utils.Adapter {
                 siteData.forEach((item, index, object) => {
                     if (blacklistedDevices.includes(item.mac) === true ||
                         blacklistedDevices.includes(item.ip) === true ||
-                        blacklistedDevices.includes(item.name) === true) {                        
+                        blacklistedDevices.includes(item.name) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -324,7 +324,7 @@ class Unifi extends utils.Adapter {
 
                 // Process blacklist
                 siteData.forEach((item, index, object) => {
-                    if (blacklistedNetworks.includes(item.name) === true) {                        
+                    if (blacklistedNetworks.includes(item.name) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -463,25 +463,28 @@ class Unifi extends utils.Adapter {
                             await this.setStateAsync(obj._id, { ack: true, val: obj.value });
                         }
                     }
-                }
 
-                // Process has_many
-                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
-                    const hasKey = objects[key].logic.has_key;
-                    const has = objects[key].logic.has;
+                    // Process has
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
+                        const hasKey = objects[key].logic.has_key;
+                        const has = objects[key].logic.has;
 
-                    if (Object.prototype.hasOwnProperty.call(data, hasKey)) {
-                        if (Array.isArray(data[hasKey])) {
-                            data[hasKey].forEach(async element => {
-                                await applyJsonLogic(element, has, obj._id);
-                            });
-                        } else {
-                            await applyJsonLogic(data[hasKey], has, obj._id);
+                        if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
+                            let tempData;
+                            if (hasKey === '_self') {
+                                tempData = data;
+                            } else {
+                                tempData = data[hasKey];
+                            }
+
+                            if (Array.isArray(tempData)) {
+                                tempData.forEach(async element => {
+                                    await applyJsonLogic(element, has, obj._id);
+                                });
+                            } else {
+                                await applyJsonLogic(tempData, has, obj._id);
+                            }
                         }
-                    } else {
-                        data.forEach(async element => {
-                            await applyJsonLogic(element, has, obj._id);
-                        });
                     }
                 }
             }

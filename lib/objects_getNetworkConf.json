@@ -5,6 +5,7 @@
         "common": {},
         "native": {},
         "logic": {
+            "has_key": "_self",
             "has": {
                 "networks.network": {
                     "type": "device",
@@ -14,498 +15,347 @@
                         "_id": "name",
                         "common": {
                             "name": "name"
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "networks.network.dhcpd_dns_enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "DHCP DNS enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "dhcpd_dns_enabled"
+                                            },
+                                            "dhcpd_dns_enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "dhcpd_dns_enabled"
+                                }
+                            },
+                            "networks.network.dhcpd_enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "DHCP enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "dhcpd_enabled"
+                                            },
+                                            "dhcpd_enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "dhcpd_enabled"
+                                }
+                            },
+                            "networks.network.dhcpd_leasetime": {
+                                "type": "state",
+                                "common": {
+                                    "name": "DHCP leasetime",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "dhcpd_leasetime"
+                                            },
+                                            "dhcpd_leasetime",
+                                            null
+                                        ]
+                                    },
+                                    "value": "dhcpd_leasetime"
+                                }
+                            },
+                            "networks.network.dhcpd_start": {
+                                "type": "state",
+                                "common": {
+                                    "name": "DHCP start",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "dhcpd_start"
+                                            },
+                                            "dhcpd_start",
+                                            null
+                                        ]
+                                    },
+                                    "value": "dhcpd_start"
+                                }
+                            },
+                            "networks.network.dhcpd_stop": {
+                                "type": "state",
+                                "common": {
+                                    "name": "DHCP stop",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "dhcpd_stop"
+                                            },
+                                            "dhcpd_stop",
+                                            null
+                                        ]
+                                    },
+                                    "value": "dhcpd_stop"
+                                }
+                            },
+                            "networks.network.enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "enabled"
+                                            },
+                                            "enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "enabled"
+                                }
+                            },
+                            "networks.network.ip_subnet": {
+                                "type": "state",
+                                "common": {
+                                    "name": "IP subnet",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "ip_subnet"
+                                            },
+                                            "ip_subnet",
+                                            null
+                                        ]
+                                    },
+                                    "value": "ip_subnet"
+                                }
+                            },
+                            "networks.network.name": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Name",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "name"
+                                            },
+                                            "name",
+                                            null
+                                        ]
+                                    },
+                                    "value": "name"
+                                }
+                            },
+                            "networks.network.networkgroup": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Network group",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "networkgroup"
+                                            },
+                                            "networkgroup",
+                                            null
+                                        ]
+                                    },
+                                    "value": "networkgroup"
+                                }
+                            },
+                            "networks.network.purpose": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Purpose",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "purpose"
+                                            },
+                                            "purpose",
+                                            null
+                                        ]
+                                    },
+                                    "value": "purpose"
+                                }
+                            },
+                            "networks.network.vlan": {
+                                "type": "state",
+                                "common": {
+                                    "name": "VLAN",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vlan"
+                                            },
+                                            "vlan",
+                                            null
+                                        ]
+                                    },
+                                    "value": "vlan"
+                                }
+                            },
+                            "networks.network.vlan_enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "VLAN enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vlan_enabled"
+                                            },
+                                            "vlan_enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "vlan_enabled"
+                                }
+                            },
+                            "networks.network.vpn_type": {
+                                "type": "state",
+                                "common": {
+                                    "name": "VPN type",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vpn_type"
+                                            },
+                                            "vpn_type",
+                                            null
+                                        ]
+                                    },
+                                    "value": "vpn_type"
+                                }
+                            },
+                            "networks.network.wan_ip": {
+                                "type": "state",
+                                "common": {
+                                    "name": "WAN IP",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wan_ip"
+                                            },
+                                            "wan_ip",
+                                            null
+                                        ]
+                                    },
+                                    "value": "wan_ip"
+                                }
+                            }
                         }
-                    }
-                },
-                "networks.network.dhcpd_dns_enabled": {
-                    "type": "state",
-                    "common": {
-                        "name": "DHCP DNS enabled",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "dhcpd_dns_enabled"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".dhcpd_dns_enabled"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "dhcpd_dns_enabled"
-                    }
-                },
-                "networks.network.dhcpd_enabled": {
-                    "type": "state",
-                    "common": {
-                        "name": "DHCP enabled",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "dhcpd_enabled"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".dhcpd_enabled"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "dhcpd_enabled"
-                    }
-                },
-                "networks.network.dhcpd_leasetime": {
-                    "type": "state",
-                    "common": {
-                        "name": "DHCP leasetime",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "s",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "dhcpd_leasetime"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".dhcpd_leasetime"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "dhcpd_leasetime"
-                    }
-                },
-                "networks.network.dhcpd_start": {
-                    "type": "state",
-                    "common": {
-                        "name": "DHCP start",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "dhcpd_start"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".dhcpd_start"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "dhcpd_start"
-                    }
-                },
-                "networks.network.dhcpd_stop": {
-                    "type": "state",
-                    "common": {
-                        "name": "DHCP stop",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "dhcpd_stop"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".dhcpd_stop"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "dhcpd_stop"
-                    }
-                },
-                "networks.network.enabled": {
-                    "type": "state",
-                    "common": {
-                        "name": "Enabled",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "enabled"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".enabled"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "enabled"
-                    }
-                },
-                "networks.network.ip_subnet": {
-                    "type": "state",
-                    "common": {
-                        "name": "IP subnet",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "ip_subnet"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".ip_subnet"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "ip_subnet"
-                    }
-                },
-                "networks.network.name": {
-                    "type": "state",
-                    "common": {
-                        "name": "Name",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "name"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".name"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "name"
-                    }
-                },
-                "networks.network.networkgroup": {
-                    "type": "state",
-                    "common": {
-                        "name": "Network group",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "networkgroup"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".networkgroup"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "networkgroup"
-                    }
-                },
-                "networks.network.purpose": {
-                    "type": "state",
-                    "common": {
-                        "name": "Purpose",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "purpose"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".purpose"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "purpose"
-                    }
-                },
-                "networks.network.vlan": {
-                    "type": "state",
-                    "common": {
-                        "name": "VLAN",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "vlan"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".vlan"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "vlan"
-                    }
-                },
-                "networks.network.vlan_enabled": {
-                    "type": "state",
-                    "common": {
-                        "name": "VLAN enabled",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "vlan_enabled"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".vlan_enabled"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "vlan_enabled"
-                    }
-                },
-                "networks.network.vpn_type": {
-                    "type": "state",
-                    "common": {
-                        "name": "VPN type",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "vpn_type"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".vpn_type"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "vpn_type"
-                    }
-                },
-                "networks.network.wan_ip": {
-                    "type": "state",
-                    "common": {
-                        "name": "WAN IP",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "wan_ip"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "name"
-                                        },
-                                        ".wan_ip"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "wan_ip"
                     }
                 }
             }

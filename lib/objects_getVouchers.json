@@ -5,6 +5,7 @@
         "common": {},
         "native": {},
         "logic": {
+            "has_key": "_self",
             "has": {
                 "vouchers.voucher": {
                     "type": "device",
@@ -14,283 +15,204 @@
                         "_id": "code",
                         "common": {
                             "name": "code"
-                        }
-                    }
-                },
-                "vouchers.voucher.code": {
-                    "type": "state",
-                    "common": {
-                        "name": "Code",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".code"
-                            ]
                         },
-                        "value": "code"
-                    }
-                },
-                "vouchers.voucher.create_time": {
-                    "type": "state",
-                    "common": {
-                        "name": "Create time",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
+                        "has_key": "_self",
+                        "has": {
+                            "vouchers.voucher.code": {
+                                "_id": "code",
+                                "type": "state",
+                                "common": {
+                                    "name": "Code",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
                                 },
-                                ".create_time"
-                            ]
-                        },
-                        "value": {
-                            "secondsToDateTime": [
-                                {
-                                    "var": "create_time"
+                                "native": {},
+                                "logic": {
+                                    "value": "code"
                                 }
-                            ]
+                            },
+                            "vouchers.voucher.create_time": {
+                                "_id": "create_time",
+                                "type": "state",
+                                "common": {
+                                    "name": "Create time",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": {
+                                        "secondsToDateTime": [
+                                            {
+                                                "var": "create_time"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "vouchers.voucher.duration": {
+                                "_id": "duration",
+                                "type": "state",
+                                "common": {
+                                    "name": "Duration",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "m",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "duration"
+                                }
+                            },
+                            "vouchers.voucher.note": {
+                                "_id": "note",
+                                "type": "state",
+                                "common": {
+                                    "name": "Note",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "note"
+                                }
+                            },
+                            "vouchers.voucher.qos_overwrite": {
+                                "_id": "qos_overwrite",
+                                "type": "state",
+                                "common": {
+                                    "name": "QOS overwrite",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "qos_overwrite"
+                                }
+                            },
+                            "vouchers.voucher.qos_rate_max_down": {
+                                "type": "state",
+                                "common": {
+                                    "name": "QOS max download",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Kbps",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "qos_rate_max_down"
+                                            },
+                                            "qos_rate_max_down",
+                                            null
+                                        ]
+                                    },
+                                    "value": "qos_rate_max_down"
+                                }
+                            },
+                            "vouchers.voucher.qos_rate_max_up": {
+                                "type": "state",
+                                "common": {
+                                    "name": "QOS max upload",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Kbps",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "qos_rate_max_up"
+                                            },
+                                            "qos_rate_max_up",
+                                            null
+                                        ]
+                                    },
+                                    "value": "qos_rate_max_up"
+                                }
+                            },
+                            "vouchers.voucher.qos_usage_quota": {
+                                "type": "state",
+                                "common": {
+                                    "name": "QOS usage quota",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "MB",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "qos_usage_quota"
+                                            },
+                                            "qos_usage_quota",
+                                            null
+                                        ]
+                                    },
+                                    "value": "qos_usage_quota"
+                                }
+                            },
+                            "vouchers.voucher.quota": {
+                                "_id": "quota",
+                                "type": "state",
+                                "common": {
+                                    "name": "Quota",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "quota"
+                                }
+                            },
+                            "vouchers.voucher.used": {
+                                "_id": "used",
+                                "type": "state",
+                                "common": {
+                                    "name": "Used",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "used"
+                                }
+                            }
                         }
-                    }
-                },
-                "vouchers.voucher.duration": {
-                    "type": "state",
-                    "common": {
-                        "name": "Duration",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "m",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".duration"
-                            ]
-                        },
-                        "value": "duration"
-                    }
-                },
-                "vouchers.voucher.note": {
-                    "type": "state",
-                    "common": {
-                        "name": "Note",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".note"
-                            ]
-                        },
-                        "value": "note"
-                    }
-                },
-                "vouchers.voucher.qos_overwrite": {
-                    "type": "state",
-                    "common": {
-                        "name": "QOS overwrite",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".qos_overwrite"
-                            ]
-                        },
-                        "value": "qos_overwrite"
-                    }
-                },
-                "vouchers.voucher.qos_rate_max_down": {
-                    "type": "state",
-                    "common": {
-                        "name": "QOS max download",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "Kbps",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "qos_rate_max_down"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "code"
-                                        },
-                                        ".qos_rate_max_down"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "qos_rate_max_down"
-                    }
-                },
-                "vouchers.voucher.qos_rate_max_up": {
-                    "type": "state",
-                    "common": {
-                        "name": "QOS max upload",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "Kbps",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "qos_rate_max_up"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "code"
-                                        },
-                                        ".qos_rate_max_up"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "qos_rate_max_up"
-                    }
-                },
-                "vouchers.voucher.qos_usage_quota": {
-                    "type": "state",
-                    "common": {
-                        "name": "QOS usage quota",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "MB",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "qos_usage_quota"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "code"
-                                        },
-                                        ".qos_usage_quota"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "qos_usage_quota"
-                    }
-                },
-                "vouchers.voucher.quota": {
-                    "type": "state",
-                    "common": {
-                        "name": "Quota",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".quota"
-                            ]
-                        },
-                        "value": "quota"
-                    }
-                },
-                "vouchers.voucher.used": {
-                    "type": "state",
-                    "common": {
-                        "name": "Used",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "code"
-                                },
-                                ".used"
-                            ]
-                        },
-                        "value": "used"
                     }
                 }
             }

@@ -5,6 +5,7 @@
         "common": {},
         "native": {},
         "logic": {
+            "has_key": "_self",
             "has": {
                 "sysinfo.hostname": {
                     "_id": "hostname",

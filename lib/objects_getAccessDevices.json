@@ -5,6 +5,7 @@
         "common": {},
         "native": {},
         "logic": {
+            "has_key": "_self",
             "has": {
                 "devices.device": {
                     "type": "device",
@@ -29,222 +30,84 @@
                                     }
                                 ]
                             }
-                        }
-                    }
-                },
-                "devices.device.general_temperature": {
-                    "type": "state",
-                    "common": {
-                        "name": "General temperature",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "°C",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "general_temperature"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "mac"
-                                        },
-                                        ".general_temperature"
-                                    ]
-                                },
-                                null
-                            ]
                         },
-                        "value": "general_temperature"
-                    }
-                },
-                "devices.device.ip": {
-                    "type": "state",
-                    "common": {
-                        "name": "IP address",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".ip"
-                            ]
-                        },
-                        "value": "ip"
-                    }
-                },
-                "devices.device.mac": {
-                    "type": "state",
-                    "common": {
-                        "name": "MAC address",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".mac"
-                            ]
-                        },
-                        "value": "mac"
-                    }
-                },
-                "devices.device.model": {
-                    "type": "state",
-                    "common": {
-                        "name": "Model",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".model"
-                            ]
-                        },
-                        "value": "model"
-                    }
-                },
-                "devices.device.name": {
-                    "type": "state",
-                    "common": {
-                        "name": "Name",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".name"
-                            ]
-                        },
-                        "value": "name"
-                    }
-                },
-                "devices.device.port_table": {
-                    "type": "channel",
-                    "common": {},
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".port_table"
-                            ]
-                        },
-                        "has_key": "port_table",
+                        "has_key": "_self",
                         "has": {
-                            "devices.device.port_table.port": {
-                                "type": "channel",
-                                "common": {},
-                                "native": {},
-                                "logic": {
-                                    "_id": "name",
-                                    "common": {
-                                        "name": "name"
-                                    }
-                                }
-                            },
-                            "devices.device.port_table.port.enable": {
+                            "devices.device.general_temperature": {
                                 "type": "state",
                                 "common": {
-                                    "name": "Enable",
-                                    "type": "boolean",
+                                    "name": "General temperature",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
+                                    "unit": "°C",
                                     "desc": ""
                                 },
                                 "native": {},
                                 "logic": {
                                     "_id": {
-                                        "cat": [
+                                        "ifNotNull": [
                                             {
-                                                "var": "name"
+                                                "var": "general_temperature"
                                             },
-                                            ".enable"
-                                        ]
-                                    },
-                                    "value": "enable"
-                                }
-                            },
-                            "devices.device.port_table.port.is_uplink": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is uplink",
-                                    "type": "boolean",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "if": [
-                                            {
-                                                "notNull": [
-                                                    {
-                                                        "var": "is_uplink"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "cat": [
-                                                    {
-                                                        "var": "name"
-                                                    },
-                                                    ".is_uplink"
-                                                ]
-                                            },
+                                            "general_temperature",
                                             null
                                         ]
                                     },
-                                    "value": "is_uplink"
+                                    "value": "general_temperature"
                                 }
                             },
-                            "devices.device.port_table.port.name": {
+                            "devices.device.ip": {
+                                "_id": "ip",
+                                "type": "state",
+                                "common": {
+                                    "name": "IP address",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "ip"
+                                }
+                            },
+                            "devices.device.mac": {
+                                "_id": "mac",
+                                "type": "state",
+                                "common": {
+                                    "name": "MAC address",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "mac"
+                                }
+                            },
+                            "devices.device.model": {
+                                "_id": "model",
+                                "type": "state",
+                                "common": {
+                                    "name": "Model",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "model"
+                                }
+                            },
+                            "devices.device.name": {
+                                "_id": "name",
                                 "type": "state",
                                 "common": {
                                     "name": "Name",
@@ -256,92 +119,185 @@
                                 },
                                 "native": {},
                                 "logic": {
-                                    "_id": {
-                                        "cat": [
-                                            {
-                                                "var": "name"
-                                            },
-                                            ".name"
-                                        ]
-                                    },
                                     "value": "name"
                                 }
                             },
-                            "devices.device.port_table.port.port_idx": {
-                                "type": "state",
-                                "common": {
-                                    "name": "ID",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
+                            "devices.device.port_table": {
+                                "_id": "port_table",
+                                "type": "channel",
+                                "common": {},
                                 "native": {},
                                 "logic": {
-                                    "_id": {
-                                        "if": [
-                                            {
-                                                "notNull": [
-                                                    {
-                                                        "var": "port_idx"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "cat": [
-                                                    {
-                                                        "var": "name"
+                                    "has_key": "port_table",
+                                    "has": {
+                                        "devices.device.port_table.port": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {},
+                                            "logic": {
+                                                "_id": "name",
+                                                "common": {
+                                                    "name": "name"
+                                                },
+                                                "has_key": "_self",
+                                                "has": {
+                                                    "devices.device.port_table.port.enable": {
+                                                        "_id": "enable",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "value": "enable"
+                                                        }
                                                     },
-                                                    ".port_idx"
-                                                ]
-                                            },
-                                            null
-                                        ]
-                                    },
-                                    "value": "port_idx"
+                                                    "devices.device.port_table.port.is_uplink": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Is uplink",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "is_uplink"
+                                                                    },
+                                                                    "is_uplink",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "is_uplink"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.name": {
+                                                        "_id": "name",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Name",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "value": "name"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.port_idx": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "ID",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_idx"
+                                                                    },
+                                                                    "port_idx",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_idx"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.port_poe": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_poe"
+                                                                    },
+                                                                    "port_poe",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_poe"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.satisfaction": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Satisfaction",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "satisfaction"
+                                                                    },
+                                                                    "satisfaction",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "satisfaction"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.speed": {
+                                                        "_id": "speed",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Speed",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "mbps",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {},
+                                                        "logic": {
+                                                            "value": "speed"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             },
-                            "devices.device.port_table.port.port_poe": {
-                                "type": "state",
-                                "common": {
-                                    "name": "POE",
-                                    "type": "boolean",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "if": [
-                                            {
-                                                "notNull": [
-                                                    {
-                                                        "var": "port_poe"
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "cat": [
-                                                    {
-                                                        "var": "name"
-                                                    },
-                                                    ".port_poe"
-                                                ]
-                                            },
-                                            null
-                                        ]
-                                    },
-                                    "value": "port_poe"
-                                }
-                            },
-                            "devices.device.port_table.port.satisfaction": {
+                            "devices.device.satisfaction": {
                                 "type": "state",
                                 "common": {
                                     "name": "Satisfaction",
-                                    "type": "string",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
@@ -351,182 +307,83 @@
                                 "native": {},
                                 "logic": {
                                     "_id": {
-                                        "if": [
+                                        "ifNotNull": [
                                             {
-                                                "notNull": [
-                                                    {
-                                                        "var": "satisfaction"
-                                                    }
-                                                ]
+                                                "var": "satisfaction"
                                             },
-                                            {
-                                                "cat": [
-                                                    {
-                                                        "var": "name"
-                                                    },
-                                                    ".satisfaction"
-                                                ]
-                                            },
+                                            "satisfaction",
                                             null
                                         ]
                                     },
                                     "value": "satisfaction"
                                 }
                             },
-                            "devices.device.port_table.port.speed": {
+                            "devices.device.type": {
+                                "_id": "type",
                                 "type": "state",
                                 "common": {
-                                    "name": "Speed",
+                                    "name": "Type",
                                     "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
-                                    "unit": "mbps",
                                     "desc": ""
                                 },
                                 "native": {},
                                 "logic": {
-                                    "_id": {
-                                        "cat": [
-                                            {
-                                                "var": "name"
-                                            },
-                                            ".speed"
-                                        ]
-                                    },
-                                    "value": "speed"
+                                    "value": "type"
+                                }
+                            },
+                            "devices.device.upgradable": {
+                                "_id": "upgradable",
+                                "type": "state",
+                                "common": {
+                                    "name": "Upgradable",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "upgradable"
+                                }
+                            },
+                            "devices.device.uptime": {
+                                "_id": "uptime",
+                                "type": "state",
+                                "common": {
+                                    "name": "Uptime",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "uptime"
+                                }
+                            },
+                            "devices.device.version": {
+                                "_id": "version",
+                                "type": "state",
+                                "common": {
+                                    "name": "Version",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "version"
                                 }
                             }
                         }
-                    }
-                },
-                "devices.device.satisfaction": {
-                    "type": "state",
-                    "common": {
-                        "name": "Satisfaction",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "%",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "satisfaction"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "mac"
-                                        },
-                                        ".satisfaction"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "satisfaction"
-                    }
-                },
-                "devices.device.type": {
-                    "type": "state",
-                    "common": {
-                        "name": "Type",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".type"
-                            ]
-                        },
-                        "value": "type"
-                    }
-                },
-                "devices.device.upgradable": {
-                    "type": "state",
-                    "common": {
-                        "name": "Upgradable",
-                        "type": "boolean",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".upgradable"
-                            ]
-                        },
-                        "value": "upgradable"
-                    }
-                },
-                "devices.device.uptime": {
-                    "type": "state",
-                    "common": {
-                        "name": "Uptime",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "s",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".uptime"
-                            ]
-                        },
-                        "value": "uptime"
-                    }
-                },
-                "devices.device.version": {
-                    "type": "state",
-                    "common": {
-                        "name": "Version",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "mac"
-                                },
-                                ".version"
-                            ]
-                        },
-                        "value": "version"
                     }
                 }
             }

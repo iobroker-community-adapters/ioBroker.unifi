@@ -15,439 +15,286 @@
                         "_id": "subsystem",
                         "common": {
                             "name": "subsystem"
-                        }
-                    }
-                },
-                "health.subsytem.lan_ip": {
-                    "type": "state",
-                    "common": {
-                        "name": "LAN IP",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "lan_ip"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".lan_ip"
-                                    ]
-                                },
-                                null
-                            ]
                         },
-                        "value": "lan_ip"
-                    }
-                },
-                "health.subsytem.latency": {
-                    "type": "state",
-                    "common": {
-                        "name": "Latency",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "ms",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "latency"
-                                        }
-                                    ]
+                        "has_key": "_self",
+                        "has": {
+                            "health.subsytem.lan_ip": {
+                                "type": "state",
+                                "common": {
+                                    "name": "LAN IP",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
                                 },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".latency"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "latency"
-                    }
-                },
-                "health.subsytem.num_guest": {
-                    "type": "state",
-                    "common": {
-                        "name": "Number of guests",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "num_guest"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".num_guest"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "num_guest"
-                    }
-                },
-                "health.subsytem.num_iot": {
-                    "type": "state",
-                    "common": {
-                        "name": "Number of IOT",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "num_iot"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".num_iot"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "num_iot"
-                    }
-                },
-                "health.subsytem.num_user": {
-                    "type": "state",
-                    "common": {
-                        "name": "Number of users",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "num_user"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".num_user"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "num_user"
-                    }
-                },
-                "health.subsytem.status": {
-                    "type": "state",
-                    "common": {
-                        "name": "Status",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "subsystem"
-                                },
-                                ".status"
-                            ]
-                        },
-                        "value": "status"
-                    }
-                },
-                "health.subsytem.subsystem": {
-                    "type": "state",
-                    "common": {
-                        "name": "Subsystem",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "cat": [
-                                {
-                                    "var": "subsystem"
-                                },
-                                ".subsystem"
-                            ]
-                        },
-                        "value": "subsystem"
-                    }
-                },
-                "health.subsystem.speedtest": {
-                    "type": "channel",
-                    "common": {},
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "speedtest_status"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".speedtest"
-                                    ]
-                                },
-                                null
-                            ]
-                        }
-                    }
-                },
-                "health.subsytem.speedtest.lastrun": {
-                    "type": "state",
-                    "common": {
-                        "name": "Speedtest lastrun",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "speedtest_lastrun"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".speedtest.lastrun"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": {
-                            "secondsToDateTime": [
-                                {
-                                    "var": "speedtest_lastrun"
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "lan_ip"
+                                            },
+                                            "lan_ip",
+                                            null
+                                        ]
+                                    },
+                                    "value": "lan_ip"
                                 }
-                            ]
+                            },
+                            "health.subsytem.latency": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Latency",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "ms",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "latency"
+                                            },
+                                            "latency",
+                                            null
+                                        ]
+                                    },
+                                    "value": "latency"
+                                }
+                            },
+                            "health.subsytem.num_guest": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of guests",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "num_guest"
+                                            },
+                                            "num_guest",
+                                            null
+                                        ]
+                                    },
+                                    "value": "num_guest"
+                                }
+                            },
+                            "health.subsytem.num_iot": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of IOT",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "num_iot"
+                                            },
+                                            "num_iot",
+                                            null
+                                        ]
+                                    },
+                                    "value": "num_iot"
+                                }
+                            },
+                            "health.subsytem.num_user": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of users",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "num_user"
+                                            },
+                                            "num_user",
+                                            null
+                                        ]
+                                    },
+                                    "value": "num_user"
+                                }
+                            },
+                            "health.subsytem.status": {
+                                "_id": "status",
+                                "type": "state",
+                                "common": {
+                                    "name": "Status",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "status"
+                                }
+                            },
+                            "health.subsytem.subsystem": {
+                                "_id": "subsystem",
+                                "type": "state",
+                                "common": {
+                                    "name": "Subsystem",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "subsystem"
+                                }
+                            },
+                            "health.subsystem.speedtest": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "speedtest_status"
+                                            },
+                                            "speedtest",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "_self",
+                                    "has": {
+                                        "health.subsytem.speedtest.lastrun": {
+                                            "_id": "lastrun",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest lastrun",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": {
+                                                    "secondsToDateTime": [
+                                                        {
+                                                            "var": "speedtest_lastrun"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "health.subsytem.speedtest.ping": {
+                                            "_id": "ping",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest ping",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "speedtest_ping"
+                                            }
+                                        },
+                                        "health.subsytem.speedtest.status": {
+                                            "_id": "status",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest status",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "speedtest_status"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "health.subsytem.uptime": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Uptime",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "uptime"
+                                            },
+                                            "uptime",
+                                            null
+                                        ]
+                                    },
+                                    "value": "uptime"
+                                }
+                            },
+                            "health.subsytem.wan_ip": {
+                                "type": "state",
+                                "common": {
+                                    "name": "WAN IP",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wan_ip"
+                                            },
+                                            "wan_ip",
+                                            null
+                                        ]
+                                    },
+                                    "value": "wan_ip"
+                                }
+                            }
                         }
-                    }
-                },
-                "health.subsytem.speedtest.ping": {
-                    "type": "state",
-                    "common": {
-                        "name": "Speedtest ping",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "ms",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "speedtest_ping"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".speedtest.ping"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "speedtest_ping"
-                    }
-                },
-                "health.subsytem.speedtest.status": {
-                    "type": "state",
-                    "common": {
-                        "name": "Speedtest status",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "speedtest_status"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".speedtest.status"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "speedtest_status"
-                    }
-                },
-                "health.subsytem.uptime": {
-                    "type": "state",
-                    "common": {
-                        "name": "Uptime",
-                        "type": "number",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "unit": "s",
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "uptime"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".uptime"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "uptime"
-                    }
-                },
-                "health.subsytem.wan_ip": {
-                    "type": "state",
-                    "common": {
-                        "name": "WAN IP",
-                        "type": "string",
-                        "role": "state",
-                        "read": true,
-                        "write": false,
-                        "desc": ""
-                    },
-                    "native": {},
-                    "logic": {
-                        "_id": {
-                            "if": [
-                                {
-                                    "notNull": [
-                                        {
-                                            "var": "wan_ip"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "cat": [
-                                        {
-                                            "var": "subsystem"
-                                        },
-                                        ".wan_ip"
-                                    ]
-                                },
-                                null
-                            ]
-                        },
-                        "value": "wan_ip"
                     }
                 }
             }
