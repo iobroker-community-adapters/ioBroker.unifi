@@ -56,7 +56,7 @@ class Unifi extends utils.Adapter {
 
         this.log.debug(typeof(settings.controllerIp) + ' - ' + settings.controllerIp);
 
-        if (settings.controllerIp === '' && settings.controllerUsername !== '' && settings.controllerPassword !== '') {
+        if (settings.controllerIp !== '' && settings.controllerUsername !== '' && settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
                 if (obj && obj.native && obj.native.secret) {
                     //noinspection JSUnresolvedVariable
