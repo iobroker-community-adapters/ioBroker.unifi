@@ -148,9 +148,9 @@
         ]
     },
     "native": {
-        "controllerIp": "127.0.0.1",
+        "controllerIp": "",
         "controllerPort": "8443",
-        "controllerUsername": "admin",
+        "controllerUsername": "",
         "controllerPassword": "",
         "updateInterval": 60,
         "updateClients": true,

@@ -40,9 +40,9 @@ class Unifi extends utils.Adapter {
 
         // Load configuration
         settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
-        settings.controllerIp = this.config.controllerIp || '127.0.0.1';
-        settings.controllerPort = this.config.controllerPort || 8443;
-        settings.controllerUsername = this.config.controllerUsername || 'admin';
+        settings.controllerIp = this.config.controllerIp;
+        settings.controllerPort = this.config.controllerPort;
+        settings.controllerUsername = this.config.controllerUsername;
         settings.updateClients = this.config.updateClients;
         settings.updateDevices = this.config.updateDevices;
         settings.updateHealth = this.config.updateHealth;
@@ -54,7 +54,9 @@ class Unifi extends utils.Adapter {
         settings.blacklistedHealth = this.config.blacklistedHealth || {};
         settings.blacklistedNetworks = this.config.blacklistedNetworks || {};
 
-        if (settings.user !== '' && settings.Password !== '') {
+        this.log.debug(typeof(settings.controllerIp) + ' - ' + settings.controllerIp);
+
+        if (settings.controllerIp === '' && settings.controllerUsername !== '' && settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
                 if (obj && obj.native && obj.native.secret) {
                     //noinspection JSUnresolvedVariable
@@ -67,7 +69,9 @@ class Unifi extends utils.Adapter {
                 this.updateUnifiData();
             });
         } else {
-            this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
+            this.log.error('Adapter deactivated due to missing configuration.');
+
+            await this.setStateAsync('info.connection', { ack: true, val: false });
             this.setForeignState('system.this.' + this.namespace + '.alive', false);
         }
     }
