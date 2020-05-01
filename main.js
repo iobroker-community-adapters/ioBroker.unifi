@@ -54,8 +54,6 @@ class Unifi extends utils.Adapter {
         settings.blacklistedHealth = this.config.blacklistedHealth || {};
         settings.blacklistedNetworks = this.config.blacklistedNetworks || {};
 
-        this.log.debug(typeof(settings.controllerIp) + ' - ' + settings.controllerIp);
-
         if (settings.controllerIp !== '' && settings.controllerUsername !== '' && settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
                 if (obj && obj.native && obj.native.secret) {
@@ -72,7 +70,7 @@ class Unifi extends utils.Adapter {
             this.log.error('Adapter deactivated due to missing configuration.');
 
             await this.setStateAsync('info.connection', { ack: true, val: false });
-            this.setForeignState('system.this.' + this.namespace + '.alive', false);
+            this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
         }
     }
 
