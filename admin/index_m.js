@@ -1,43 +1,27 @@
 /**
- * Is called by the admin adapter when the settings page loads
- * @param {*} settings 
- * @param {*} onChange 
+ * Encryption
  */
-function load(settings, onChange) {
-    console.log('Loading settings');
+let secret;
 
-    // example: select elements with id=key and class=value and insert value
-    if (!settings) return;
-    $('.value').each(function () {
-        const $key = $(this);
-        const id = $key.attr('id');
-        if ($key.attr('type') === 'checkbox') {
-            // do not call onChange direct, because onChange could expect some arguments
-            $key.prop('checked', settings[id])
-                .on('change', () => onChange())
-            ;
-        } else {
-            // do not call onChange direct, because onChange could expect some arguments
-            $key.val(settings[id])
-                .on('change', () => onChange())
-                .on('keyup', () => onChange())
-            ;
-        }
-    });
-
-    list2chips('.blacklistedClients', settings.blacklistedClients || [], onChange);
-    list2chips('.blacklistedDevices', settings.blacklistedDevices || [], onChange);
-    list2chips('.blacklistedNetworks', settings.blacklistedNetworks || [], onChange);
-    list2chips('.blacklistedHealth', settings.blacklistedHealth || [], onChange);
-
-    onChange(false);
-
-    // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
-    if (M) M.updateTextFields();
-
-    console.log('Loading settings done');
+function encrypt(key, value) {
+    let result = '';
+    for (let i = 0; i < value.length; ++i) {
+        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+    }
+    return result;
 }
 
+function decrypt(key, value) {
+    let result = '';
+    for (let i = 0; i < value.length; ++i) {
+        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+    }
+    return result;
+}
+
+/**
+ * Chips
+ */
 function list2chips(selector, list, onChange) {
     const data = [];
 
@@ -72,6 +56,65 @@ function chips2list(selector) {
 }
 
 /**
+ * the function loadSettings has to exist ...
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+function loadHelper(settings, onChange) {
+    // example: select elements with id=key and class=value and insert value
+    if (!settings) return;
+    if (settings.electricityPollingInterval === undefined) settings.electricityPollingInterval = 20;
+
+    $('.value').each(function () {
+        const $key = $(this);
+        const id = $key.attr('id');
+        if (id === 'controllerPassword') {
+            settings[id] = decrypt(secret, settings[id]);
+        }
+
+        if ($key.attr('type') === 'checkbox') {
+            // do not call onChange direct, because onChange could expect some arguments
+            $key.prop('checked', settings[id]).change(function () {
+                onChange();
+            });
+        } else {
+            // do not call onChange direct, because onChange could expect some arguments
+            $key.val(settings[id]).change(function () {
+                onChange();
+            }).keyup(function () {
+                onChange();
+            });
+        }
+    });
+    onChange(false);
+    M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
+
+    list2chips('.blacklistedClients', settings.blacklistedClients || [], onChange);
+    list2chips('.blacklistedDevices', settings.blacklistedDevices || [], onChange);
+    list2chips('.blacklistedNetworks', settings.blacklistedNetworks || [], onChange);
+    list2chips('.blacklistedHealth', settings.blacklistedHealth || [], onChange);
+}
+
+
+/**
+ * Is called by the admin adapter when the settings page loads
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+function load(settings, onChange) {
+    console.log('Loading settings');
+
+    socket.emit('getObject', 'system.config', function (err, obj) {
+        secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
+        loadHelper(settings, onChange);
+    });
+
+    onChange(false);
+
+    console.log('Loading settings done');
+}
+
+/**
  * Is called by the admin adapter when the user presses the save button
  * @param {*} callback 
  */
@@ -80,10 +123,16 @@ function save(callback) {
     const obj = {};
     $('.value').each(function () {
         const $this = $(this);
+        const id = $this.attr('id');
+
         if ($this.attr('type') === 'checkbox') {
-            obj[$this.attr('id')] = $this.prop('checked');
+            obj[id] = $this.prop('checked');
         } else {
-            obj[$this.attr('id')] = $this.val();
+            let value = $this.val();
+            if (id === 'controllerPassword') {
+                value = encrypt(secret, value);
+            }
+            obj[id] = value;
         }
     });
 

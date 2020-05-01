@@ -12,6 +12,9 @@ const utils = require('@iobroker/adapter-core');
 const unifi = require('node-unifi');
 const jsonLogic = require('./lib/json_logic.js');
 
+const settings = {};
+let queryTimeout;
+
 class Unifi extends utils.Adapter {
 
     /**
@@ -24,9 +27,6 @@ class Unifi extends utils.Adapter {
         });
         this.on('ready', this.onReady.bind(this));
         this.on('unload', this.onUnload.bind(this));
-
-        // define a timeout variable so that we can check the controller in regular intervals
-        this.queryTimeout;
     }
 
     /**
@@ -38,7 +38,38 @@ class Unifi extends utils.Adapter {
 
         this.log.info('Unifi adapter is ready');
 
-        this.updateUnifiData();
+        // Load configuration
+        settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
+        settings.controllerIp = this.config.controllerIp || '127.0.0.1';
+        settings.controllerPort = this.config.controllerPort || 8443;
+        settings.controllerUsername = this.config.controllerUsername || 'admin';
+        settings.updateClients = this.config.updateClients;
+        settings.updateDevices = this.config.updateDevices;
+        settings.updateHealth = this.config.updateHealth;
+        settings.updateNetworks = this.config.updateNetworks;
+        settings.updateSysinfo = this.config.updateSysinfo;
+        settings.updateVouchers = this.config.updateVouchers;
+        settings.blacklistedClients = this.config.blacklistedClients || {};
+        settings.blacklistedDevices = this.config.blacklistedDevices || {};
+        settings.blacklistedHealth = this.config.blacklistedHealth || {};
+        settings.blacklistedNetworks = this.config.blacklistedNetworks || {};
+
+        if (settings.user !== '' && settings.Password !== '') {
+            this.getForeignObject('system.config', async (err, obj) => {
+                if (obj && obj.native && obj.native.secret) {
+                    //noinspection JSUnresolvedVariable
+                    settings.controllerPassword = await this.decrypt(obj.native.secret, this.config.controllerPassword);
+                } else {
+                    //noinspection JSUnresolvedVariable
+                    settings.controllerPassword = await this.decrypt('Zgfr56gFe87jJOM', this.config.controllerPassword);
+                }
+
+                this.updateUnifiData();
+            });
+        } else {
+            this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
+            this.setForeignState('system.this.' + this.namespace + '.alive', false);
+        }
     }
 
     /**
@@ -47,8 +78,8 @@ class Unifi extends utils.Adapter {
      */
     onUnload(callback) {
         try {
-            if (this.queryTimeout) {
-                clearTimeout(this.queryTimeout);
+            if (queryTimeout) {
+                clearTimeout(queryTimeout);
             }
 
             this.log.info('cleaned everything up...');
@@ -59,28 +90,26 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Function to decrypt passwords
+     * @param {*} key 
+     * @param {*} value 
+     */
+    decrypt(key, value) {
+        let result = '';
+
+        for (let i = 0; i < value.length; ++i) {
+            result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+        }
+        
+        return result;
+    }
+
+    /**
      * Function that takes care of the API calls and processes
      * the responses afterwards
      */
     async updateUnifiData() {
         this.log.debug('Update started');
-
-        // Load configuration
-        const updateInterval = parseInt(this.config.updateInterval, 10) || 60;
-        const controllerIp = this.config.controllerIp || '127.0.0.1';
-        const controllerPort = this.config.controllerPort || 8443;
-        const controllerUsername = this.config.controllerUsername || 'admin';
-        const controllerPassword = this.config.controllerPassword || '';
-        const updateClients = this.config.updateClients;
-        const updateDevices = this.config.updateDevices;
-        const updateHealth = this.config.updateHealth;
-        const updateNetworks = this.config.updateNetworks;
-        const updateSysinfo = this.config.updateSysinfo;
-        const updateVouchers = this.config.updateVouchers;
-        const blacklistedClients = this.config.blacklistedClients || {};
-        const blacklistedDevices = this.config.blacklistedDevices || {};
-        const blacklistedHealth = this.config.blacklistedHealth || {};
-        const blacklistedNetworks = this.config.blacklistedNetworks || {};
 
         /**
          * Function to log into the UniFi controller
@@ -113,7 +142,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSitesStats: ' + sites);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateHealth) {
+                        if (settings.updateHealth === true) {
                             processSitesStats(sites, data);
                         }
 
@@ -140,7 +169,7 @@ class Unifi extends utils.Adapter {
                     this.log.debug('gefunden');
 
                     siteData.health.forEach((item, index, object) => {
-                        if (blacklistedHealth.includes(item.subsystem) === true) {
+                        if (settings.blacklistedHealth.includes(item.subsystem) === true) {
                             this.log.debug('gefunden 2');
                             object.splice(index, 1);
                         }
@@ -164,7 +193,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getSiteSysinfo: ' + data.length);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateSysinfo) {
+                        if (settings.updateSysinfo === true) {
                             processSiteSysinfo(sites, data);
                         }
 
@@ -203,7 +232,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getClientDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateClients) {
+                        if (settings.updateClients === true) {
                             processClientDevices(sites, data);
                         }
 
@@ -227,10 +256,10 @@ class Unifi extends utils.Adapter {
 
                 // Process blacklist
                 siteData.forEach((item, index, object) => {
-                    if (blacklistedClients.includes(item.mac) === true ||
-                        blacklistedClients.includes(item.ip) === true ||
-                        blacklistedClients.includes(item.name) === true ||
-                        blacklistedClients.includes(item.hostname) === true) {
+                    if (settings.blacklistedClients.includes(item.mac) === true ||
+                        settings.blacklistedClients.includes(item.ip) === true ||
+                        settings.blacklistedClients.includes(item.name) === true ||
+                        settings.blacklistedClients.includes(item.hostname) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -252,7 +281,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getAccessDevices: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateDevices) {
+                        if (settings.updateDevices === true) {
                             processAccessDevices(sites, data);
                         }
 
@@ -276,9 +305,9 @@ class Unifi extends utils.Adapter {
 
                 // Process blacklist
                 siteData.forEach((item, index, object) => {
-                    if (blacklistedDevices.includes(item.mac) === true ||
-                        blacklistedDevices.includes(item.ip) === true ||
-                        blacklistedDevices.includes(item.name) === true) {
+                    if (settings.blacklistedDevices.includes(item.mac) === true ||
+                        settings.blacklistedDevices.includes(item.ip) === true ||
+                        settings.blacklistedDevices.includes(item.name) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -300,7 +329,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getNetworkConf: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateNetworks) {
+                        if (settings.updateNetworks === true) {
                             processNetworkConf(sites, data);
                         }
 
@@ -324,7 +353,7 @@ class Unifi extends utils.Adapter {
 
                 // Process blacklist
                 siteData.forEach((item, index, object) => {
-                    if (blacklistedNetworks.includes(item.name) === true) {
+                    if (settings.blacklistedNetworks.includes(item.name) === true) {
                         object.splice(index, 1);
                     }
                 });
@@ -346,7 +375,7 @@ class Unifi extends utils.Adapter {
                         this.log.debug('getVouchers: ' + data[0].length);
                         //this.log.debug(JSON.stringify(data));
 
-                        if (updateVouchers) {
+                        if (settings.updateVouchers === true) {
                             processVouchers(sites, data);
                         }
 
@@ -513,17 +542,17 @@ class Unifi extends utils.Adapter {
         /********************
          * LET'S GO
          *******************/
-        this.log.debug('controller = ' + controllerIp + ':' + controllerPort);
-        this.log.debug('updateInterval = ' + updateInterval);
+        this.log.debug('controller = ' + settings.controllerIp + ':' + settings.controllerPort);
+        this.log.debug('updateInterval = ' + settings.updateInterval);
 
-        this.log.debug('Blacklisted clients: ' + JSON.stringify(blacklistedClients));
-        this.log.debug('Blacklisted devices: ' + JSON.stringify(blacklistedDevices));
-        this.log.debug('Blacklisted health: ' + JSON.stringify(blacklistedHealth));
-        this.log.debug('Blacklisted networks: ' + JSON.stringify(blacklistedNetworks));
+        this.log.debug('Blacklisted clients: ' + JSON.stringify(settings.blacklistedClients));
+        this.log.debug('Blacklisted devices: ' + JSON.stringify(settings.blacklistedDevices));
+        this.log.debug('Blacklisted health: ' + JSON.stringify(settings.blacklistedHealth));
+        this.log.debug('Blacklisted networks: ' + JSON.stringify(settings.blacklistedNetworks));
 
-        const controller = new unifi.Controller(controllerIp, controllerPort);
+        const controller = new unifi.Controller(settings.controllerIp, settings.controllerPort);
 
-        login(controllerUsername, controllerPassword)
+        login(settings.controllerUsername, settings.controllerPassword)
             .then(async () => {
                 this.log.debug('Login successful');
 
@@ -550,9 +579,9 @@ class Unifi extends utils.Adapter {
             });
 
         // schedule a new execution of updateUnifiData in X seconds
-        this.queryTimeout = setTimeout(function () {
+        queryTimeout = setTimeout(function () {
             this.updateUnifiData();
-        }.bind(this), updateInterval * 1000);
+        }.bind(this), settings.updateInterval);
     }
 }
 
