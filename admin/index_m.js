@@ -91,9 +91,9 @@ function loadHelper(settings, onChange) {
 
     list2chips('.blacklistedClients', settings.blacklistedClients || [], onChange);
     list2chips('.blacklistedDevices', settings.blacklistedDevices || [], onChange);
+    list2chips('.blacklistedWlans', settings.blacklistedWlans || [], onChange);
     list2chips('.blacklistedNetworks', settings.blacklistedNetworks || [], onChange);
     list2chips('.blacklistedHealth', settings.blacklistedHealth || [], onChange);
-    list2chips('.blacklistedWlans', settings.blacklistedWlans || [], onChange);
 }
 
 
@@ -139,9 +139,9 @@ function save(callback) {
 
     obj.blacklistedClients = chips2list('.blacklistedClients');
     obj.blacklistedDevices = chips2list('.blacklistedDevices');
+    obj.blacklistedWlans = chips2list('.blacklistedWlans');
     obj.blacklistedNetworks = chips2list('.blacklistedNetworks');
     obj.blacklistedHealth = chips2list('.blacklistedHealth');
-    obj.blacklistedWlans = chips2list('.blacklistedWlans');
 
     callback(obj);
 }

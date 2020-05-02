@@ -96,6 +96,12 @@
             </div>
             <div class="row">
                 <div class="input-field col s12 blacklist_title">
+					<input type="checkbox" id="updateSysinfo" class="value" />
+                    <label for="updateSysinfo" class="translate">Update system information</label>
+                </div>
+                <div class="col separator"></div>
+                
+                <div class="input-field col s12 blacklist_title">
 					<input type="checkbox" id="updateClients" class="value" />
                     <label for="updateClients" class="translate">Update clients</label>
 				</div>
@@ -116,13 +122,14 @@
 				<div class="col separator"></div>                
                 
                 <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateHealth" class="value" />
-                    <label for="updateHealth" class="translate">Update health</label>
+					<input type="checkbox" id="updateWlans" class="value" />
+                    <label for="updateWlans" class="translate">Update WLANs</label>
 				</div>
-				<div class="col s12 blacklist_container" id="container_health">
+				<div class="col s12 blacklist_container" id="container_networks">
                     <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedHealth"></div>
-                </div><div class="col separator"></div>
+                    <div class="chips blacklistedWlans"></div>
+                </div>
+                <div class="col separator"></div>
                 
                 <div class="input-field col s12 blacklist_title">
 					<input type="checkbox" id="updateNetworks" class="value" />
@@ -135,20 +142,13 @@
                 <div class="col separator"></div>
 
                 <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateWlans" class="value" />
-                    <label for="updateWlans" class="translate">Update WLANs</label>
+					<input type="checkbox" id="updateHealth" class="value" />
+                    <label for="updateHealth" class="translate">Update health</label>
 				</div>
-				<div class="col s12 blacklist_container" id="container_networks">
+				<div class="col s12 blacklist_container" id="container_health">
                     <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedWlans"></div>
-                </div>
-                <div class="col separator"></div>
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateSysinfo" class="value" />
-                    <label for="updateSysinfo" class="translate">Update system information</label>
-                </div>
-                <div class="col separator"></div>
+                    <div class="chips blacklistedHealth"></div>
+                </div><div class="col separator"></div>
                 
                 <div class="input-field col s12 blacklist_title">
 					<input type="checkbox" id="updateVouchers" class="value" />
