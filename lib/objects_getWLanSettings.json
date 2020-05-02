@@ -1,0 +1,131 @@
+{
+    "wlans": {
+        "_id": "wlans",
+        "type": "channel",
+        "common": {},
+        "native": {},
+        "logic": {
+            "has_key": "_self",
+            "has": {
+                "wlans.wlan": {
+                    "type": "device",
+                    "common": {},
+                    "native": {},
+                    "logic": {
+                        "_id": "name",
+                        "common": {
+                            "name": "name"
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "wlans.wlan.enabled": {
+                                "_id": "enabled",
+                                "type": "state",
+                                "common": {
+                                    "name": "Enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "enabled"
+                                }
+                            },
+                            "wlans.wlan.name": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Name",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "name"
+                                            },
+                                            "name",
+                                            null
+                                        ]
+                                    },
+                                    "value": "name"
+                                }
+                            },
+                            "wlans.wlan.security": {
+                                "_id": "security",
+                                "type": "state",
+                                "common": {
+                                    "name": "Security",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "value": "security"
+                                }
+                            },
+                            "wlans.wlan.vlan": {
+                                "type": "state",
+                                "common": {
+                                    "name": "VLAN",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vlan"
+                                            },
+                                            "vlan",
+                                            null
+                                        ]
+                                    },
+                                    "value": "vlan"
+                                }
+                            },
+                            "wlans.wlan.vlan_enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "VLAN enabled",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vlan_enabled"
+                                            },
+                                            "vlan_enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "vlan_enabled"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -49,10 +49,12 @@ class Unifi extends utils.Adapter {
         settings.updateNetworks = this.config.updateNetworks;
         settings.updateSysinfo = this.config.updateSysinfo;
         settings.updateVouchers = this.config.updateVouchers;
+        settings.updateWlans = this.config.updateWlans;
         settings.blacklistedClients = this.config.blacklistedClients || {};
         settings.blacklistedDevices = this.config.blacklistedDevices || {};
         settings.blacklistedHealth = this.config.blacklistedHealth || {};
         settings.blacklistedNetworks = this.config.blacklistedNetworks || {};
+        settings.blacklistedWlans = this.config.blacklistedWlans || {};
 
         if (settings.controllerIp !== '' && settings.controllerUsername !== '' && settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
@@ -419,6 +421,52 @@ class Unifi extends utils.Adapter {
         };
 
         /**
+         * Function to fetch WLAN configuration
+         * @param {Object} sites 
+         */
+        const getWLanSettings = async (sites) => {
+            return new Promise((resolve, reject) => {
+                controller.getWLanSettings(sites, (err, data) => {
+                    if (err) {
+                        reject(new Error(err));
+                    } else {
+                        this.log.debug('getWLanSettings: ' + data[0].length);
+                        //this.log.debug(JSON.stringify(data));
+
+                        if (settings.updateWlans === true) {
+                            processWLanSettings(sites, data);
+                        }
+
+                        resolve(data);
+                    }
+                });
+            });
+        };
+
+        /**
+         * Function that receives the WLAN info as a JSON data array
+         * @param {Object} sites 
+         * @param {Object} data 
+         */
+        const processWLanSettings = async (sites, data) => {
+            const objects = require('./lib/objects_getWLanSettings.json');
+
+            for (let x = 0; x < sites.length; x++) {
+                const site = sites[x];
+                const siteData = data[x];
+
+                // Process blacklist
+                siteData.forEach((item, index, object) => {
+                    if (settings.blacklistedWlans.includes(item.name) === true) {
+                        object.splice(index, 1);
+                    }
+                });
+
+                await applyJsonLogic(siteData, objects, site);
+            }
+        };
+
+        /**
          * Function to apply JSON logic to API responses
          * @param {*} data 
          * @param {*} objects 
@@ -579,6 +627,7 @@ class Unifi extends utils.Adapter {
                 await getAccessDevices(sites);
                 await getNetworkConf(sites);
                 await getVouchers(sites);
+                await getWLanSettings(sites);
 
                 // finalize, logout and finish
                 controller.logout();

@@ -159,10 +159,12 @@
         "updateNetworks": true,
         "updateSysinfo": true,
         "updateVouchers": true,
+        "updateWlans": true,
         "blacklistedClients": [],
         "blacklistedDevices": [],
         "blacklistedHealth": [],
-        "blacklistedNetworks": []
+        "blacklistedNetworks": [],
+        "blacklistedWlans": []
     },
     "objects": [],
     "instanceObjects": [
