@@ -148,9 +148,9 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch site stats
+         * Function to fetch sites
          */
-        const getSitesStats = async () => {
+        const getSites = async () => {
             return new Promise((resolve, reject) => {
                 controller.getSitesStats((err, data) => {
                     if (err) {
@@ -158,11 +158,10 @@ class Unifi extends utils.Adapter {
                     } else {
                         const sites = data.map(function (s) { return s.name; });
 
-                        this.log.debug('getSitesStats: ' + sites);
-                        //this.log.debug(JSON.stringify(data));
+                        this.log.debug('getSites: ' + sites);
 
                         if (settings.updateHealth === true) {
-                            processSitesStats(sites, data);
+                            processSites(sites, data);
                         }
 
                         resolve(sites);
@@ -172,12 +171,12 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the site info as a JSON data array
+         * Function that receives the sites as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processSitesStats = async (sites, data) => {
-            const objects = require('./lib/objects_getSitesStats.json');
+        const processSites = async (sites, data) => {
+            const objects = require('./lib/objects_getSites.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
@@ -185,11 +184,8 @@ class Unifi extends utils.Adapter {
 
                 // Process blacklist
                 if (Object.prototype.hasOwnProperty.call(siteData, 'health')) {
-                    this.log.debug('gefunden');
-
                     siteData.health.forEach((item, index, object) => {
                         if (settings.blacklistedHealth.includes(item.subsystem) === true) {
-                            this.log.debug('gefunden 2');
                             object.splice(index, 1);
                         }
                     });
@@ -210,7 +206,6 @@ class Unifi extends utils.Adapter {
                         reject(new Error(err));
                     } else {
                         this.log.debug('getSiteSysinfo: ' + data.length);
-                        //this.log.debug(JSON.stringify(data));
 
                         if (settings.updateSysinfo === true) {
                             processSiteSysinfo(sites, data);
@@ -239,20 +234,19 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch devices
+         * Function to fetch clients
          * @param {Object} sites 
          */
-        const getClientDevices = async (sites) => {
+        const getClients = async (sites) => {
             return new Promise((resolve, reject) => {
                 controller.getClientDevices(sites, (err, data) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.debug('getClientDevices: ' + data[0].length);
-                        //this.log.debug(JSON.stringify(data));
+                        this.log.debug('getClients: ' + data[0].length);
 
                         if (settings.updateClients === true) {
-                            processClientDevices(sites, data);
+                            processClients(sites, data);
                         }
 
                         resolve(data);
@@ -262,12 +256,12 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
+         * Function that receives the clients as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processClientDevices = async (sites, data) => {
-            const objects = require('./lib/objects_getClientDevices.json');
+        const processClients = async (sites, data) => {
+            const objects = require('./lib/objects_getClients.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
@@ -288,20 +282,19 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch access devices
+         * Function to fetch devices
          * @param {Object} sites 
          */
-        const getAccessDevices = async (sites) => {
+        const getDevices = async (sites) => {
             return new Promise((resolve, reject) => {
                 controller.getAccessDevices(sites, (err, data) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.debug('getAccessDevices: ' + data[0].length);
-                        //this.log.debug(JSON.stringify(data));
+                        this.log.debug('getDevices: ' + data[0].length);
 
                         if (settings.updateDevices === true) {
-                            processAccessDevices(sites, data);
+                            processDevices(sites, data);
                         }
 
                         resolve(data);
@@ -311,12 +304,12 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
+         * Function that receives the devices as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processAccessDevices = async (sites, data) => {
-            const objects = require('./lib/objects_getAccessDevices.json');
+        const processDevices = async (sites, data) => {
+            const objects = require('./lib/objects_getDevices.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
@@ -336,20 +329,19 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch network configuration
+         * Function to fetch networks
          * @param {Object} sites 
          */
-        const getNetworkConf = async (sites) => {
+        const getNetworks = async (sites) => {
             return new Promise((resolve, reject) => {
                 controller.getNetworkConf(sites, (err, data) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.debug('getNetworkConf: ' + data[0].length);
-                        //this.log.debug(JSON.stringify(data));
+                        this.log.debug('getNetworks: ' + data[0].length);
 
                         if (settings.updateNetworks === true) {
-                            processNetworkConf(sites, data);
+                            processNetworks(sites, data);
                         }
 
                         resolve(data);
@@ -359,12 +351,12 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
+         * Function that receives the networks as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processNetworkConf = async (sites, data) => {
-            const objects = require('./lib/objects_getNetworkConf.json');
+        const processNetworks = async (sites, data) => {
+            const objects = require('./lib/objects_getNetworks.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
@@ -382,7 +374,7 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch access devices
+         * Function to fetch vouchers
          * @param {Object} sites 
          */
         const getVouchers = async (sites) => {
@@ -392,7 +384,6 @@ class Unifi extends utils.Adapter {
                         reject(new Error(err));
                     } else {
                         this.log.debug('getVouchers: ' + data[0].length);
-                        //this.log.debug(JSON.stringify(data));
 
                         if (settings.updateVouchers === true) {
                             processVouchers(sites, data);
@@ -405,7 +396,7 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the client device info as a JSON data array
+         * Function that receives the vouchers as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
@@ -421,20 +412,19 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function to fetch WLAN configuration
+         * Function to fetch WLANs
          * @param {Object} sites 
          */
-        const getWLanSettings = async (sites) => {
+        const getWlans = async (sites) => {
             return new Promise((resolve, reject) => {
                 controller.getWLanSettings(sites, (err, data) => {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        this.log.debug('getWLanSettings: ' + data[0].length);
-                        //this.log.debug(JSON.stringify(data));
+                        this.log.debug('getWlans: ' + data[0].length);
 
                         if (settings.updateWlans === true) {
-                            processWLanSettings(sites, data);
+                            processWlans(sites, data);
                         }
 
                         resolve(data);
@@ -444,12 +434,12 @@ class Unifi extends utils.Adapter {
         };
 
         /**
-         * Function that receives the WLAN info as a JSON data array
+         * Function that receives the WLANs as a JSON data array
          * @param {Object} sites 
          * @param {Object} data 
          */
-        const processWLanSettings = async (sites, data) => {
-            const objects = require('./lib/objects_getWLanSettings.json');
+        const processWlans = async (sites, data) => {
+            const objects = require('./lib/objects_getWlans.json');
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
@@ -614,6 +604,7 @@ class Unifi extends utils.Adapter {
         this.log.debug('Blacklisted devices: ' + JSON.stringify(settings.blacklistedDevices));
         this.log.debug('Blacklisted health: ' + JSON.stringify(settings.blacklistedHealth));
         this.log.debug('Blacklisted networks: ' + JSON.stringify(settings.blacklistedNetworks));
+        this.log.debug('Blacklisted WLANs: ' + JSON.stringify(settings.blacklistedWlans));
 
         const controller = new unifi.Controller(settings.controllerIp, settings.controllerPort);
 
@@ -621,13 +612,13 @@ class Unifi extends utils.Adapter {
             .then(async () => {
                 this.log.debug('Login successful');
 
-                const sites = await getSitesStats();
+                const sites = await getSites();
                 await getSiteSysinfo(sites);
-                await getClientDevices(sites);
-                await getAccessDevices(sites);
-                await getNetworkConf(sites);
+                await getClients(sites);
+                await getDevices(sites);
+                await getNetworks(sites);
                 await getVouchers(sites);
-                await getWLanSettings(sites);
+                await getWlans(sites);
 
                 // finalize, logout and finish
                 controller.logout();
