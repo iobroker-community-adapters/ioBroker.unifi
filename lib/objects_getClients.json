@@ -456,6 +456,30 @@
                                     "value": "network"
                                 }
                             },
+                            "clients.client.note": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Note",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "note"
+                                            },
+                                            "note",
+                                            null
+                                        ]
+                                    },
+                                    "value": "note"
+                                }
+                            },
                             "clients.client.noted": {
                                 "_id": "noted",
                                 "type": "state",
@@ -497,6 +521,31 @@
                                     "value": "rssi"
                                 }
                             },
+                            "clients.client.rx_bytes": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes"
+                                            },
+                                            "rx_bytes",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes"
+                                }
+                            },
                             "clients.client.satisfaction": {
                                 "_id": "satisfaction",
                                 "type": "state",
@@ -514,6 +563,104 @@
                                     "value": "satisfaction"
                                 }
                             },
+                            "clients.client.signal": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Signal",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "dBm",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "signal"
+                                            },
+                                            "signal",
+                                            null
+                                        ]
+                                    },
+                                    "value": "signal"
+                                }
+                            },
+                            "clients.client.sw_mac": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Switch MAC address",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "sw_mac"
+                                            },
+                                            "sw_mac",
+                                            null
+                                        ]
+                                    },
+                                    "value": "sw_mac"
+                                }
+                            },
+                            "clients.client.sw_port": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Switch port",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "sw_port"
+                                            },
+                                            "sw_port",
+                                            null
+                                        ]
+                                    },
+                                    "value": "sw_port"
+                                }
+                            },
+                            "clients.client.tx_bytes": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "tx_bytes"
+                                            },
+                                            "tx_bytes",
+                                            null
+                                        ]
+                                    },
+                                    "value": "tx_bytes"
+                                }
+                            },
                             "clients.client.uptime": {
                                 "_id": "uptime",
                                 "type": "state",
@@ -529,6 +676,56 @@
                                 "native": {},
                                 "logic": {
                                     "value": "uptime"
+                                }
+                            },
+                            "clients.client.wired-rx_bytes": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Wired RX",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wired-rx_bytes"
+                                            },
+                                            "wired-rx_bytes",
+                                            null
+                                        ]
+                                    },
+                                    "value": "wired-rx_bytes"
+                                }
+                            },
+                            "clients.client.wired-tx_bytes": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Wired TX",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wired-tx_bytes"
+                                            },
+                                            "wired-tx_bytes",
+                                            null
+                                        ]
+                                    },
+                                    "value": "wired-tx_bytes"
                                 }
                             }
                         }
