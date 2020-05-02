@@ -180,15 +180,17 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
+                let siteData;
 
                 // Process blacklist
-                if (Object.prototype.hasOwnProperty.call(siteData, 'health')) {
-                    siteData.health.forEach((item, index, object) => {
-                        if (settings.blacklistedHealth.includes(item.subsystem) === true) {
-                            object.splice(index, 1);
+                if (Object.prototype.hasOwnProperty.call(data[x], 'health')) {
+                    siteData = data[x].health.filter(function (item) {
+                        if (settings.blacklistedHealth.includes(item.subsystem) !== true) {
+                            return item;
                         }
                     });
+                } else {
+                    siteData = data[x];
                 }
 
                 await applyJsonLogic(siteData, objects, site);
@@ -265,15 +267,14 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
 
                 // Process blacklist
-                siteData.forEach((item, index, object) => {
-                    if (settings.blacklistedClients.includes(item.mac) === true ||
-                        settings.blacklistedClients.includes(item.ip) === true ||
-                        settings.blacklistedClients.includes(item.name) === true ||
-                        settings.blacklistedClients.includes(item.hostname) === true) {
-                        object.splice(index, 1);
+                const siteData = data[x].filter(function (item) {
+                    if (settings.blacklistedClients.includes(item.mac) !== true &&
+                        settings.blacklistedClients.includes(item.ip) !== true &&
+                        settings.blacklistedClients.includes(item.name) !== true &&
+                        settings.blacklistedClients.includes(item.hostname) !== true) {
+                        return item;
                     }
                 });
 
@@ -313,14 +314,13 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
 
                 // Process blacklist
-                siteData.forEach((item, index, object) => {
-                    if (settings.blacklistedDevices.includes(item.mac) === true ||
-                        settings.blacklistedDevices.includes(item.ip) === true ||
-                        settings.blacklistedDevices.includes(item.name) === true) {
-                        object.splice(index, 1);
+                const siteData = data[x].filter(function (item) {
+                    if (settings.blacklistedDevices.includes(item.mac) !== true &&
+                        settings.blacklistedDevices.includes(item.ip) !== true &&
+                        settings.blacklistedDevices.includes(item.name) !== true) {
+                        return item;
                     }
                 });
 
@@ -360,12 +360,11 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
 
                 // Process blacklist
-                siteData.forEach((item, index, object) => {
-                    if (settings.blacklistedNetworks.includes(item.name) === true) {
-                        object.splice(index, 1);
+                const siteData = data[x].filter(function (item) {
+                    if (settings.blacklistedNetworks.includes(item.name) !== true) {
+                        return item;
                     }
                 });
 
@@ -443,12 +442,11 @@ class Unifi extends utils.Adapter {
 
             for (let x = 0; x < sites.length; x++) {
                 const site = sites[x];
-                const siteData = data[x];
 
                 // Process blacklist
-                siteData.forEach((item, index, object) => {
-                    if (settings.blacklistedWlans.includes(item.name) === true) {
-                        object.splice(index, 1);
+                const siteData = data[x].filter(function (item) {
+                    if (settings.blacklistedWlans.includes(item.name) !== true) {
+                        return item;
                     }
                 });
 
