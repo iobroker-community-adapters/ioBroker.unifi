@@ -66,6 +66,17 @@ class Unifi extends utils.Adapter {
                     settings.controllerPassword = await this.decrypt('Zgfr56gFe87jJOM', this.config.controllerPassword);
                 }
 
+                // Send some log messages
+                this.log.debug('controller = ' + settings.controllerIp + ':' + settings.controllerPort);
+                this.log.debug('updateInterval = ' + settings.updateInterval / 1000);
+
+                this.log.debug('Blacklisted clients: ' + JSON.stringify(settings.blacklistedClients));
+                this.log.debug('Blacklisted devices: ' + JSON.stringify(settings.blacklistedDevices));
+                this.log.debug('Blacklisted health: ' + JSON.stringify(settings.blacklistedHealth));
+                this.log.debug('Blacklisted networks: ' + JSON.stringify(settings.blacklistedNetworks));
+                this.log.debug('Blacklisted WLANs: ' + JSON.stringify(settings.blacklistedWlans));
+
+                // Start main function
                 this.updateUnifiData();
             });
         } else {
@@ -156,7 +167,7 @@ class Unifi extends utils.Adapter {
                     if (err) {
                         reject(new Error(err));
                     } else {
-                        const sites = data.map(function (s) { return s.name; });
+                        const sites = data.map((s) => { return s.name; });
 
                         this.log.debug('getSites: ' + sites);
 
@@ -178,17 +189,20 @@ class Unifi extends utils.Adapter {
         const processSites = async (sites, data) => {
             const objects = require('./lib/objects_getSites.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
                 let siteData;
 
                 // Process blacklist
                 if (Object.prototype.hasOwnProperty.call(data[x], 'health')) {
-                    siteData = data[x].health.filter(function (item) {
+                    const health = data[x].health.filter((item) => {
                         if (settings.blacklistedHealth.includes(item.subsystem) !== true) {
                             return item;
                         }
                     });
+
+                    siteData = data[x];
+                    siteData.health = health;
                 } else {
                     siteData = data[x];
                 }
@@ -209,9 +223,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getSiteSysinfo: ' + data.length);
 
-                        if (settings.updateSysinfo === true) {
-                            processSiteSysinfo(sites, data);
-                        }
+                        processSiteSysinfo(sites, data);
 
                         resolve(data);
                     }
@@ -227,8 +239,8 @@ class Unifi extends utils.Adapter {
         const processSiteSysinfo = async (sites, data) => {
             const objects = require('./lib/objects_getSiteSysinfo.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
                 const siteData = data[x];
 
                 await applyJsonLogic(siteData, objects, site);
@@ -247,9 +259,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getClients: ' + data[0].length);
 
-                        if (settings.updateClients === true) {
-                            processClients(sites, data);
-                        }
+                        processClients(sites, data);
 
                         resolve(data);
                     }
@@ -265,11 +275,11 @@ class Unifi extends utils.Adapter {
         const processClients = async (sites, data) => {
             const objects = require('./lib/objects_getClients.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
 
                 // Process blacklist
-                const siteData = data[x].filter(function (item) {
+                const siteData = data[x].filter((item) => {
                     if (settings.blacklistedClients.includes(item.mac) !== true &&
                         settings.blacklistedClients.includes(item.ip) !== true &&
                         settings.blacklistedClients.includes(item.name) !== true &&
@@ -294,9 +304,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getDevices: ' + data[0].length);
 
-                        if (settings.updateDevices === true) {
-                            processDevices(sites, data);
-                        }
+                        processDevices(sites, data);
 
                         resolve(data);
                     }
@@ -312,11 +320,11 @@ class Unifi extends utils.Adapter {
         const processDevices = async (sites, data) => {
             const objects = require('./lib/objects_getDevices.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
 
                 // Process blacklist
-                const siteData = data[x].filter(function (item) {
+                const siteData = data[x].filter((item) => {
                     if (settings.blacklistedDevices.includes(item.mac) !== true &&
                         settings.blacklistedDevices.includes(item.ip) !== true &&
                         settings.blacklistedDevices.includes(item.name) !== true) {
@@ -340,9 +348,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getNetworks: ' + data[0].length);
 
-                        if (settings.updateNetworks === true) {
-                            processNetworks(sites, data);
-                        }
+                        processNetworks(sites, data);
 
                         resolve(data);
                     }
@@ -358,11 +364,11 @@ class Unifi extends utils.Adapter {
         const processNetworks = async (sites, data) => {
             const objects = require('./lib/objects_getNetworks.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
 
                 // Process blacklist
-                const siteData = data[x].filter(function (item) {
+                const siteData = data[x].filter((item) => {
                     if (settings.blacklistedNetworks.includes(item.name) !== true) {
                         return item;
                     }
@@ -384,9 +390,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getVouchers: ' + data[0].length);
 
-                        if (settings.updateVouchers === true) {
-                            processVouchers(sites, data);
-                        }
+                        processVouchers(sites, data);
 
                         resolve(data);
                     }
@@ -402,8 +406,8 @@ class Unifi extends utils.Adapter {
         const processVouchers = async (sites, data) => {
             const objects = require('./lib/objects_getVouchers.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
                 const siteData = data[x];
 
                 await applyJsonLogic(siteData, objects, site);
@@ -422,9 +426,7 @@ class Unifi extends utils.Adapter {
                     } else {
                         this.log.debug('getWlans: ' + data[0].length);
 
-                        if (settings.updateWlans === true) {
-                            processWlans(sites, data);
-                        }
+                        processWlans(sites, data);
 
                         resolve(data);
                     }
@@ -440,11 +442,11 @@ class Unifi extends utils.Adapter {
         const processWlans = async (sites, data) => {
             const objects = require('./lib/objects_getWlans.json');
 
-            for (let x = 0; x < sites.length; x++) {
-                const site = sites[x];
+            for (const site of sites) {
+                const x = sites.indexOf(site);
 
                 // Process blacklist
-                const siteData = data[x].filter(function (item) {
+                const siteData = data[x].filter((item) => {
                     if (settings.blacklistedWlans.includes(item.name) !== true) {
                         return item;
                     }
@@ -595,15 +597,6 @@ class Unifi extends utils.Adapter {
         /********************
          * LET'S GO
          *******************/
-        this.log.debug('controller = ' + settings.controllerIp + ':' + settings.controllerPort);
-        this.log.debug('updateInterval = ' + settings.updateInterval);
-
-        this.log.debug('Blacklisted clients: ' + JSON.stringify(settings.blacklistedClients));
-        this.log.debug('Blacklisted devices: ' + JSON.stringify(settings.blacklistedDevices));
-        this.log.debug('Blacklisted health: ' + JSON.stringify(settings.blacklistedHealth));
-        this.log.debug('Blacklisted networks: ' + JSON.stringify(settings.blacklistedNetworks));
-        this.log.debug('Blacklisted WLANs: ' + JSON.stringify(settings.blacklistedWlans));
-
         const controller = new unifi.Controller(settings.controllerIp, settings.controllerPort);
 
         login(settings.controllerUsername, settings.controllerPassword)
@@ -611,12 +604,30 @@ class Unifi extends utils.Adapter {
                 this.log.debug('Login successful');
 
                 const sites = await getSites();
-                await getSiteSysinfo(sites);
-                await getClients(sites);
-                await getDevices(sites);
-                await getNetworks(sites);
-                await getVouchers(sites);
-                await getWlans(sites);
+
+                if (settings.updateSysinfo === true) {
+                    await getSiteSysinfo(sites);
+                }
+
+                if (settings.updateClients === true) {
+                    await getClients(sites);
+                }
+
+                if (settings.updateDevices === true) {
+                    await getDevices(sites);
+                }
+
+                if (settings.updateNetworks === true) {
+                    await getNetworks(sites);
+                }
+
+                if (settings.updateVouchers === true) {
+                    await getVouchers(sites);
+                }
+
+                if (settings.updateWlans === true) {
+                    await getWlans(sites);
+                }
 
                 // finalize, logout and finish
                 controller.logout();
@@ -635,9 +646,9 @@ class Unifi extends utils.Adapter {
             });
 
         // schedule a new execution of updateUnifiData in X seconds
-        queryTimeout = setTimeout(function () {
+        queryTimeout = setTimeout(() => {
             this.updateUnifiData();
-        }.bind(this), settings.updateInterval);
+        }, settings.updateInterval);
     }
 }
 
