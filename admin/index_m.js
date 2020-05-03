@@ -114,9 +114,26 @@ async function load(settings, onChange) {
     //     console.log(JSON.stringify(json)); // this will show the info it in firebug console
     // });
 
-    let obj = await getUnifiObjects('Clients');
+    try {
+        let obj = await getUnifiObjects('Devices');
+        console.log(obj);
 
-    console.log(obj);
+        let tree = { title: 'devices', key: 'devices', folder: true, expanded: true, children: [] };
+        await objectToTree(obj["devices"].logic.has["devices.device"].logic.has, tree);
+
+
+
+        $("#tree").fancytree({
+            checkbox: true,
+            selectMode: 3,
+            activeVisible: true,
+            source: [
+                tree
+            ],
+        });
+    } catch (err) {
+        console.error(`error: ${err.message}, stack: ${err.stack}`);
+    }
 
     onChange(false);
 
@@ -154,10 +171,25 @@ function save(callback) {
     callback(obj);
 }
 
+async function objectToTree(obj, tree) {
+    console.log('hier');
+    for (const [key, value] of Object.entries(obj)) {
+
+        if (value && value.type === 'state') {
+            let id = key.replace('devices.device.','');
+            tree.children.push({title: value.common.name, id: id})
+        }
+        console.log(key + ': ' + value.type);
+        if (value && value.logic && value.logic.has_key && value.logic.has_key === '_self' && value.logic.has) {
+            await objectToTree(value.logic.has);
+        }
+    }
+}
+
 //#region Funktionen
 async function getUnifiObjects(lib) {
     return new Promise((resolve, reject) => {
-        $.getJSON(`./lib/objects_get${lib}.json`, function(json) {
+        $.getJSON(`./lib/objects_get${lib}.json`, function (json) {
             if (json) {
                 resolve(json);
             } else {

@@ -3,8 +3,9 @@
 <head>
 
     <!-- Load ioBroker scripts and styles-->
-    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />    
     <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+    <link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css"/>
 
     <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
@@ -12,7 +13,8 @@
     <script type="text/javascript" src="../../lib/js/materialize.js"></script>
     <script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../../lib/js/selectID.js"></script>
-
+    <script type="text/javascript" src="../../lib/js/jquery.fancytree-all.min.js"></script>
+    
     <script type="text/javascript" src="../../js/translate.js"></script>
     <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
@@ -52,6 +54,11 @@
         .separator{
 			height: 6px !important;
 		}
+
+        ul.fancytree-container ul {
+            padding: 0 0 0 16px !important;
+            margin: 0;
+        }
     </style>
 
 </head>
@@ -93,6 +100,9 @@
                     <input type="number" id="updateInterval" min="0" class="value" />
                     <label for="updateInterval" class="translate">Update interval</label>
                 </div>
+            </div>
+            <div class="row">
+                <div id="tree"></div>
             </div>
             <div class="row">
                 <div class="input-field col s12 blacklist_title">
