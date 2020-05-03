@@ -149,14 +149,19 @@ function save(callback) {
 }
 
 async function createTreeViews(settings) {
-
     for (const key of Object.keys(settings.whitelist)) {
         try {
             // get json data from file
-            let obj = await getUnifiObjects(key);
+            const obj = await getUnifiObjects(key);
 
             // convert json to tree object
-            let tree = { title: key, key: key, folder: true, expanded: true, children: [] };
+            const tree = {
+                title: key,
+                key: key,
+                folder: true,
+                expanded: true,
+                children: []
+            };
             await convertJsonToTreeObject(key, obj[key].logic.has, tree, settings);
 
             $(`#tree_${key}`).fancytree({
@@ -182,25 +187,35 @@ async function createTreeViews(settings) {
 async function convertJsonToTreeObject(name, obj, tree, settings) {
     for (const [key, value] of Object.entries(obj)) {
         try {
+            const id = key.replace(`${name}.`, '');
+            const title = id; //value.common.name || id; //TODO: use value.common.name for title?
+
             if (value && value.type === 'state') {
-                let id = key.replace(`${name}.`, '');
-
-                //TODO: use value.common.name for title
-                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
-                    tree.children.push({ title: id, id: id, selected: true })
-                } else {
-                    tree.children.push({ title: id, id: id })
-                }
                 
+                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
+                    tree.children.push({
+                        title: title,
+                        id: id,
+                        selected: true
+                    });
+                } else {
+                    tree.children.push({
+                        title: title,
+                        id: id
+                    });
+                }
             } else if (value && value.type === 'channel' || value.type === 'device') {
-                let id = key.replace(`${name}.`, '');
-
-                //TODO: use was besseres für name;
-                let subtree = { title: id, key: id, folder: true, expanded: true, children: [] }
+                const subtree = { 
+                    title: title, 
+                    key: id, 
+                    folder: true, 
+                    expanded: true, 
+                    children: [] 
+                };
 
                 await convertJsonToTreeObject(name, value.logic.has, subtree, settings);
 
-                tree.children.push(subtree)
+                tree.children.push(subtree);
             }
         } catch (err) {
             console.error(`[convertJsonToTreeObject] error: ${err.message}, stack: ${err.stack}`);
