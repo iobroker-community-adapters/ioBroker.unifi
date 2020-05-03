@@ -10,7 +10,7 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here
 const unifi = require('node-unifi');
-const jsonLogic = require('./lib/json_logic.js');
+const jsonLogic = require('./admin/lib/json_logic.js');
 
 const settings = {};
 let queryTimeout;
@@ -187,7 +187,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processSites = async (sites, data) => {
-            const objects = require('./lib/objects_getSites.json');
+            const objects = require('./admin/lib/objects_getSites.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -237,7 +237,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processSiteSysinfo = async (sites, data) => {
-            const objects = require('./lib/objects_getSiteSysinfo.json');
+            const objects = require('./admin/lib/objects_getSiteSysinfo.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -273,7 +273,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processClients = async (sites, data) => {
-            const objects = require('./lib/objects_getClients.json');
+            const objects = require('./admin/lib/objects_getClients.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -318,7 +318,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processDevices = async (sites, data) => {
-            const objects = require('./lib/objects_getDevices.json');
+            const objects = require('./admin/lib/objects_getDevices.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -362,7 +362,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processNetworks = async (sites, data) => {
-            const objects = require('./lib/objects_getNetworks.json');
+            const objects = require('./admin/lib/objects_getNetworks.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -404,7 +404,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processVouchers = async (sites, data) => {
-            const objects = require('./lib/objects_getVouchers.json');
+            const objects = require('./admin/lib/objects_getVouchers.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);
@@ -440,7 +440,7 @@ class Unifi extends utils.Adapter {
          * @param {Object} data 
          */
         const processWlans = async (sites, data) => {
-            const objects = require('./lib/objects_getWlans.json');
+            const objects = require('./admin/lib/objects_getWlans.json');
 
             for (const site of sites) {
                 const x = sites.indexOf(site);

@@ -102,13 +102,21 @@ function loadHelper(settings, onChange) {
  * @param {*} settings 
  * @param {*} onChange 
  */
-function load(settings, onChange) {
+async function load(settings, onChange) {
     console.log('Loading settings');
 
     socket.emit('getObject', 'system.config', function (err, obj) {
         secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
         loadHelper(settings, onChange);
     });
+
+    // $.getJSON("./lib/objects_getClients.json", function(json) {
+    //     console.log(JSON.stringify(json)); // this will show the info it in firebug console
+    // });
+
+    let obj = await getUnifiObjects('Clients');
+
+    console.log(obj);
 
     onChange(false);
 
@@ -145,3 +153,17 @@ function save(callback) {
 
     callback(obj);
 }
+
+//#region Funktionen
+async function getUnifiObjects(lib) {
+    return new Promise((resolve, reject) => {
+        $.getJSON(`./lib/objects_get${lib}.json`, function(json) {
+            if (json) {
+                resolve(json);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+//#endregion
