@@ -58,7 +58,7 @@
                                     "value": "general_temperature"
                                 }
                             },
-                            "clients.client.guest-num_sta": {
+                            "devices.device.guest-num_sta": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of guests",
@@ -146,7 +146,7 @@
                                     "value": "name"
                                 }
                             },
-                            "clients.client.num_guest": {
+                            "devices.device.num_guest": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of guests",
@@ -170,7 +170,7 @@
                                     "value": "num_guest"
                                 }
                             },
-                            "clients.client.num_sta": {
+                            "devices.device.num_sta": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of users",
@@ -415,7 +415,7 @@
                                     }
                                 }
                             },
-                            "clients.client.rx_bytes": {
+                            "devices.device.rx_bytes": {
                                 "type": "state",
                                 "common": {
                                     "name": "RX",
@@ -719,7 +719,7 @@
                                     "value": "type"
                                 }
                             },
-                            "clients.client.tx_bytes": {
+                            "devices.device.tx_bytes": {
                                 "type": "state",
                                 "common": {
                                     "name": "TX",
