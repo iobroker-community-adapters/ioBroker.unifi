@@ -102,13 +102,15 @@ function loadHelper(settings, onChange) {
  * @param {*} settings 
  * @param {*} onChange 
  */
-function load(settings, onChange) {
+async function load(settings, onChange) {
     console.log('Loading settings');
 
     socket.emit('getObject', 'system.config', function (err, obj) {
         secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
         loadHelper(settings, onChange);
     });
+
+    await createTreeViews(settings);
 
     onChange(false);
 
@@ -145,3 +147,77 @@ function save(callback) {
 
     callback(obj);
 }
+
+async function createTreeViews(settings) {
+
+    for (const key of Object.keys(settings.whitelist)) {
+        try {
+            // get json data from file
+            let obj = await getUnifiObjects(key);
+
+            // convert json to tree object
+            let tree = { title: key, key: key, folder: true, expanded: true, children: [] };
+            await convertJsonToTreeObject(key, obj[key].logic.has, tree, settings);
+
+            $(`#tree_${key}`).fancytree({
+                checkbox: true,
+                selectMode: 3,
+                activeVisible: true,
+                // icon: function (event, data) {
+                //     if (data.node.isFolder()) {
+                //         return "unifi.png";
+                //     }
+                // },
+                source: [
+                    tree
+                ],
+            });
+
+        } catch (err) {
+            console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
+        }
+    }
+}
+
+async function convertJsonToTreeObject(name, obj, tree, settings) {
+    for (const [key, value] of Object.entries(obj)) {
+        try {
+            if (value && value.type === 'state') {
+                let id = key.replace(`${name}.`, '');
+
+                //TODO: use value.common.name for title
+                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
+                    tree.children.push({ title: id, id: id, selected: true })
+                } else {
+                    tree.children.push({ title: id, id: id })
+                }
+                
+            } else if (value && value.type === 'channel' || value.type === 'device') {
+                let id = key.replace(`${name}.`, '');
+
+                //TODO: use was besseres für name;
+                let subtree = { title: id, key: id, folder: true, expanded: true, children: [] }
+
+                await convertJsonToTreeObject(name, value.logic.has, subtree, settings);
+
+                tree.children.push(subtree)
+            }
+        } catch (err) {
+            console.error(`[convertJsonToTreeObject] error: ${err.message}, stack: ${err.stack}`);
+        }
+    }
+}
+
+//#region Funktionen
+async function getUnifiObjects(lib) {
+    return new Promise((resolve, reject) => {
+        $.getJSON(`./lib/objects_${lib}.json`, function (json) {
+            if (json) {
+                resolve(json);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+//#endregion
