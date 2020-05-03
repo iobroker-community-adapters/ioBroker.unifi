@@ -3,9 +3,9 @@
 <head>
 
     <!-- Load ioBroker scripts and styles-->
-    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />    
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css" />
     <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
-    <link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/fancytree/ui.fancytree.min.css" />
 
     <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
@@ -14,7 +14,7 @@
     <script type="text/javascript" src="../../lib/js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../../lib/js/selectID.js"></script>
     <script type="text/javascript" src="../../lib/js/jquery.fancytree-all.min.js"></script>
-    
+
     <script type="text/javascript" src="../../js/translate.js"></script>
     <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
@@ -34,29 +34,38 @@
 
         .blacklist_title {
             background: #fafafa;
-			color: #0d86e7;
-			padding: 12px 12px 6px 12px !important;
-			margin-top: 0px !important;
-			margin-bottom: 0px !important;
-			border: #9e9e9e 3px;
-			border-style: solid;
-			border-width: 1px;
+            color: #0d86e7;
+            padding: 12px 12px 6px 12px !important;
+            margin-top: 0px !important;
+            margin-bottom: 0px !important;
+            border: #9e9e9e 3px;
+            border-style: solid;
+            border-width: 1px;
         }
 
         .blacklist_container {
-			border-style: solid;
-			border-width: 0 1px 1px 1px;
-			border-color: #9e9e9e;
-			padding-top: 6px !important;
+            border-style: solid;
+            border-width: 0 1px 1px 1px;
+            border-color: #9e9e9e;
+            padding-top: 6px !important;
             padding-bottom: 0px !important;
-		}
+        }
 
-        .separator{
-			height: 6px !important;
-		}
+        .separator {
+            height: 6px !important;
+        }
+
+        .fancytree-container {
+            background: #efefef !important;
+            border-style: none !important;
+        }
+
+        /* .fancytree-folder{
+            background: #64b5f6 !important;
+        } */
 
         ul.fancytree-container ul {
-            padding: 0 0 0 16px !important;
+            padding: 0 0 0 18px !important;
             margin: 0;
         }
     </style>
@@ -66,107 +75,159 @@
 <body>
     <div class="m adapter-container">
         <div class="row">
-            <!-- Forms are the standard way to receive user inputted data. Learn more http://materializecss.com/forms.html-->
-            <div class="row">
-                <div class="input-field col s6">
-                    <img src="unifi.png" class="logo">
-                </div>
+            <div class="col s12">
+                <ul class="tabs" style="height: auto;">
+                    <li class="tab col s6 l3"><a href="#tab_general" class="translate active">general</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_sysinfo" class="translate">sysinfo</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_clients" class="translate">clients</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_devices" class="translate">devices</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_wlans" class="translate">wlans</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_networks" class="translate">networks</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_health" class="translate">health</a></li>
+                    <li class="tab col s6 l3"><a href="#tab_vouchers" class="translate">vouchers</a></li>
+                </ul>
             </div>
-            <div class="translate sub-title">Network settings</div>
-            <div class="row">
-                <div class="input-field col s12 m6">
-                    <input type="text" id="controllerIp" placeholder="127.0.0.1" class="value" />
-                    <label for="controllerIp" class="translate">IP address</label>
-                </div>
-                <div class="input-field col s12 m6">
-                    <input type="text" id="controllerPort" placeholder="8443" class="value" />
-                    <label for="controllerPort" class="translate">Port</label>
-                </div>
-            </div>
-            <div class="translate sub-title">Login</div>
-            <div class="row">
-                <div class="input-field col s12 m6">
-                    <input type="text" id="controllerUsername" placeholder="Admin" class="value" />
-                    <label for="controllerUsername" class="translate">Username</label>
-                </div>
-                <div class="input-field col s12 m6">
-                    <input type="password" id="controllerPassword" placeholder="Password" class="value" />
-                    <label for="controllerPassword" class="translate">Password</label>
-                </div>
-            </div>
-            <div class="translate sub-title">Update</div>
-            <div class="row">
-                <div class="input-field col s12 m6">
-                    <input type="number" id="updateInterval" min="0" class="value" />
-                    <label for="updateInterval" class="translate">Update interval</label>
-                </div>
-            </div>
-            <div class="row">
-                <div id="tree"></div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateSysinfo" class="value" />
-                    <label for="updateSysinfo" class="translate">Update system information</label>
-                </div>
-                <div class="col separator"></div>
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateClients" class="value" />
-                    <label for="updateClients" class="translate">Update clients</label>
-				</div>
-				<div class="col s12 blacklist_container" id="container_clients">
-                    <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedClients"></div>
-                </div>
-				<div class="col separator"></div>
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateDevices" class="value" />
-                    <label for="updateDevices" class="translate">Update devices</label>
-				</div>
-				<div class="col s12 blacklist_container" id="container_devices">
-                    <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedDevices"></div>
-                </div>
-				<div class="col separator"></div>                
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateWlans" class="value" />
-                    <label for="updateWlans" class="translate">Update WLANs</label>
-				</div>
-				<div class="col s12 blacklist_container" id="container_networks">
-                    <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedWlans"></div>
-                </div>
-                <div class="col separator"></div>
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateNetworks" class="value" />
-                    <label for="updateNetworks" class="translate">Update networks</label>
-				</div>
-				<div class="col s12 blacklist_container" id="container_networks">
-                    <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedNetworks"></div>
-                </div>
-                <div class="col separator"></div>
+            <div id="tab_general" class="col s12 page">
+                <div class="col s12">
+                    <div class="row">
+                        <!-- Forms are the standard way to receive user inputted data. Learn more http://materializecss.com/forms.html-->
+                        <div class="row">
+                            <div class="input-field col s6">
+                                <img src="unifi.png" class="logo">
+                            </div>
+                        </div>
+                        <div class="translate sub-title">Network settings</div>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="text" id="controllerIp" placeholder="127.0.0.1" class="value" />
+                                <label for="controllerIp" class="translate">IP address</label>
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <input type="text" id="controllerPort" placeholder="8443" class="value" />
+                                <label for="controllerPort" class="translate">Port</label>
+                            </div>
+                        </div>
+                        <div class="translate sub-title">Login</div>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="text" id="controllerUsername" placeholder="Admin" class="value" />
+                                <label for="controllerUsername" class="translate">Username</label>
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <input type="password" id="controllerPassword" placeholder="Password" class="value" />
+                                <label for="controllerPassword" class="translate">Password</label>
+                            </div>
+                        </div>
+                        <div class="translate sub-title">Update</div>
+                        <div class="row">
+                            <div class="input-field col s12 m6">
+                                <input type="number" id="updateInterval" min="0" class="value" />
+                                <label for="updateInterval" class="translate">Update interval</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateSysinfo" class="value" />
+                                <label for="updateSysinfo" class="translate">Update system information</label>
+                            </div>
+                            <div class="col separator"></div>
 
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateHealth" class="value" />
-                    <label for="updateHealth" class="translate">Update health</label>
-				</div>
-				<div class="col s12 blacklist_container" id="container_health">
-                    <label class="translate">Blacklist</label>
-                    <div class="chips blacklistedHealth"></div>
-                </div><div class="col separator"></div>
-                
-                <div class="input-field col s12 blacklist_title">
-					<input type="checkbox" id="updateVouchers" class="value" />
-                    <label for="updateVouchers" class="translate">Update vouchers</label>
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateClients" class="value" />
+                                <label for="updateClients" class="translate">Update clients</label>
+                            </div>
+                            <div class="col s12 blacklist_container" id="container_clients">
+                                <label class="translate">Blacklist</label>
+                                <div class="chips blacklistedClients"></div>
+                            </div>
+                            <div class="col separator"></div>
+
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateDevices" class="value" />
+                                <label for="updateDevices" class="translate">Update devices</label>
+                            </div>
+                            <div class="col s12 blacklist_container" id="container_devices">
+                                <label class="translate">Blacklist</label>
+                                <div class="chips blacklistedDevices"></div>
+                            </div>
+                            <div class="col separator"></div>
+
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateWlans" class="value" />
+                                <label for="updateWlans" class="translate">Update WLANs</label>
+                            </div>
+                            <div class="col s12 blacklist_container" id="container_networks">
+                                <label class="translate">Blacklist</label>
+                                <div class="chips blacklistedWlans"></div>
+                            </div>
+                            <div class="col separator"></div>
+
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateNetworks" class="value" />
+                                <label for="updateNetworks" class="translate">Update networks</label>
+                            </div>
+                            <div class="col s12 blacklist_container" id="container_networks">
+                                <label class="translate">Blacklist</label>
+                                <div class="chips blacklistedNetworks"></div>
+                            </div>
+                            <div class="col separator"></div>
+
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateHealth" class="value" />
+                                <label for="updateHealth" class="translate">Update health</label>
+                            </div>
+                            <div class="col s12 blacklist_container" id="container_health">
+                                <label class="translate">Blacklist</label>
+                                <div class="chips blacklistedHealth"></div>
+                            </div>
+                            <div class="col separator"></div>
+
+                            <div class="input-field col s12 blacklist_title">
+                                <input type="checkbox" id="updateVouchers" class="value" />
+                                <label for="updateVouchers" class="translate">Update vouchers</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab_sysinfo" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_sysinfo"></div>
+                </div>
+            </div>
+            <div id="tab_clients" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_clients"></div>
+                </div>
+            </div>
+            <div id="tab_devices" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_devices"></div>
+                </div>
+            </div>
+            <div id="tab_wlans" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_wlans"></div>
+                </div>
+            </div>
+            <div id="tab_networks" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_networks"></div>
+                </div>
+            </div>
+            <div id="tab_health" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_health"></div>
+                </div>
+            </div>
+            <div id="tab_vouchers" class="col s12 page">
+                <div class="row">
+                    <div class="col s12 treeContainer" id="tree_vouchers"></div>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 
 </html>

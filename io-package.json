@@ -164,7 +164,16 @@
         "blacklistedDevices": [],
         "blacklistedHealth": [],
         "blacklistedNetworks": [],
-        "blacklistedWlans": []
+        "blacklistedWlans": [],
+        "whitelist": {
+            "sysinfo": [],
+            "clients": [],
+            "devices": [],
+            "wlans": [],
+            "networks": [],
+            "health": [],
+            "vouchers": []
+        }
     },
     "objects": [],
     "instanceObjects": [
