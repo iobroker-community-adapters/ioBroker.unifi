@@ -396,11 +396,12 @@
                                                         "_id": "cu_total",
                                                         "type": "state",
                                                         "common": {
-                                                            "name": "Total CU",
+                                                            "name": "Total channel utilization",
                                                             "type": "number",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
+                                                            "unit": "%",
                                                             "desc": ""
                                                         },
                                                         "native": {},
@@ -836,6 +837,7 @@
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
+                                                            "unit": "%",
                                                             "desc": ""
                                                         },
                                                         "native": {},
