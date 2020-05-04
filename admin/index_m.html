@@ -66,10 +66,6 @@
             font-family: "Segoe UI", Tahoma, Arial, "Courier New" !important;
         }
 
-        /* .fancytree-folder .fancytree-title {
-            font-weight: bold;
-        } */
-
         .fancytree-title {
             background: #efefef !important;
             height: 24px;
@@ -121,6 +117,20 @@
         .fancytree-node.fancytree-folder > span.fancytree-icon {
             background-position: 0 0;
             background-image: url("./img/folder.png");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-folder > span.fancytree-expander {
+            background-position: 0 0;
+            background-image: url("./img/menu_right.svg");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-expanded.fancytree-folder > span.fancytree-expander {
+            background-position: 0 0;
+            background-image: url("./img/menu_down.svg");
             width: 24px;
             height: 24px;
         }
