@@ -110,7 +110,7 @@ async function load(settings, onChange) {
         loadHelper(settings, onChange);
     });
 
-    await createTreeViews(settings);
+    await createTreeViews(settings, onChange);
 
     onChange(false);
 
@@ -145,10 +145,25 @@ function save(callback) {
     obj.blacklistedNetworks = chips2list('.blacklistedNetworks');
     obj.blacklistedHealth = chips2list('.blacklistedHealth');
 
+    obj.whitelist = {};
+    $("[id*=tree_]").each(function () {
+        // store selected nodes of tree
+        let settingsName = $(this).attr('id').replace('tree_', '');
+
+        var selected = $.ui.fancytree.getTree(`#tree_${settingsName}`).getSelectedNodes();
+        var selectedIds = $.map(selected, function (node) {
+            return node.data.id;
+        });
+
+        obj.whitelist[settingsName] = selectedIds
+    });
+
     callback(obj);
 }
 
-async function createTreeViews(settings) {
+
+//#region Functions
+async function createTreeViews(settings, onChange) {
 
     for (const key of Object.keys(settings.whitelist)) {
         try {
@@ -171,8 +186,10 @@ async function createTreeViews(settings) {
                 source: [
                     tree
                 ],
+                select: function (event, data) {
+                    onChange();
+                }
             });
-
         } catch (err) {
             console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
         }
@@ -191,7 +208,7 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
                 } else {
                     tree.children.push({ title: id, id: id })
                 }
-                
+
             } else if (value && value.type === 'channel' || value.type === 'device') {
                 let id = key.replace(`${name}.`, '');
 
@@ -208,7 +225,6 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
     }
 }
 
-//#region Funktionen
 async function getUnifiObjects(lib) {
     return new Promise((resolve, reject) => {
         $.getJSON(`./lib/objects_${lib}.json`, function (json) {
