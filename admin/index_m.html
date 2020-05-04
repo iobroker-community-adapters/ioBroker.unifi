@@ -54,17 +54,31 @@
             height: 6px !important;
         }
 
+        .treeContainer {
+            width: calc(100% - 24px) !important;
+        }
+
         .fancytree-container {
             background: #efefef !important;
             border-style: none !important;
-            font-size: 18px !important;
-            font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif !important;
+            font-size: 1rem !important;
+            font-family: "Segoe UI", Tahoma, Arial, "Courier New" !important;
             outline-style: none !important;
         }
 
-        /* .fancytree-folder{
+        .fancytree-title {
+            background: #efefef !important;
+            height: 24px;
+        }
+
+        .fancytree-node:hover,
+        .fancytree-node:hover > .fancytree-title,
+        .fancytree-title:hover {
             background: #64b5f6 !important;
-        } */
+            color: white !important;
+            font-weight: bold !important;
+            cursor: pointer;
+        }
 
         ul.fancytree-container ul {
             padding: 0 0 0 20px !important;
@@ -75,6 +89,57 @@
             padding: 5px;
             height: calc(100% - 50px) !important;
         }
+
+        .fancytree-node > span.fancytree-checkbox {
+            background-position: 0 0;
+            background-image: url("./img/checkbox.svg");
+            width: 24px;
+            height: 24px;
+        }
+        
+        .fancytree-node.fancytree-partsel > span.fancytree-checkbox {
+            background-position: 0 0;
+            background-image: url("./img/checkbox_intermediate.svg");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-partsel.fancytree-selected > span.fancytree-checkbox {
+            background-position: 0 0;
+            background-image: url("./img/checkbox_marked.svg");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node > span.fancytree-icon,
+        .fancytree-node > span.fancytree-icon:hover {
+            background-position: 0 0;
+            background-image: url("./img/state.png");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-folder > span.fancytree-icon {
+            background-position: 0 0;
+            background-image: url("./img/folder.png");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-folder > span.fancytree-expander {
+            background-position: 0 0;
+            background-image: url("./img/menu_right.svg");
+            width: 24px;
+            height: 24px;
+        }
+
+        .fancytree-node.fancytree-expanded.fancytree-folder > span.fancytree-expander {
+            background-position: 0 0;
+            background-image: url("./img/menu_down.svg");
+            width: 24px;
+            height: 24px;
+        }
+
     </style>
 
 </head>
