@@ -178,7 +178,7 @@ async function createTreeViews(settings, onChange) {
                 activeVisible: true,                        // Make sure, active nodes are visible (expanded)
                 aria: true,                                 // Enable WAI-ARIA support
                 autoActivate: true,                         // Automatically activate a node when it is focused using keyboard
-                autoCollapse: true,                         // Automatically collapse all siblings, when a node is expanded
+                autoCollapse: false,                         // Automatically collapse all siblings, when a node is expanded
                 autoScroll: false,                          // Automatically scroll nodes into visible area
                 clickFolderMode: 2,                         // 1:activate, 2:expand, 3:activate and expand, 4:activate (dblclick expands)
                 checkbox: true,                             // Show check boxes
@@ -225,6 +225,8 @@ async function createTreeViews(settings, onChange) {
                     onChange();
                 }
             });
+
+            M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
         } catch (err) {
             console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
         }
