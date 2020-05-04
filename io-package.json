@@ -160,11 +160,13 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
-        "blacklistedClients": [],
-        "blacklistedDevices": [],
-        "blacklistedHealth": [],
-        "blacklistedNetworks": [],
-        "blacklistedWlans": [],
+        "blacklist": {
+            "clients": [],
+            "devices": [],
+            "wlans": [],
+            "networks": [],
+            "health": []
+        },
         "whitelist": {
             "sysinfo": [],
             "clients": [],

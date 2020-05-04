@@ -55,11 +55,7 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
 
-        this.blacklist.clients = this.config.blacklistedClients || {};
-        this.blacklist.devices = this.config.blacklistedDevices || {};
-        this.blacklist.wlans = this.config.blacklistedWlans || {};
-        this.blacklist.networks = this.config.blacklistedNetworks || {};
-        this.blacklist.health = this.config.blacklistedHealth || {};
+        this.blacklist = this.config.blacklist;
 
         if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {

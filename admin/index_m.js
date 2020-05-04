@@ -88,12 +88,6 @@ function loadHelper(settings, onChange) {
     });
     onChange(false);
     M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
-
-    list2chips('.blacklistedClients', settings.blacklistedClients || [], onChange);
-    list2chips('.blacklistedDevices', settings.blacklistedDevices || [], onChange);
-    list2chips('.blacklistedWlans', settings.blacklistedWlans || [], onChange);
-    list2chips('.blacklistedNetworks', settings.blacklistedNetworks || [], onChange);
-    list2chips('.blacklistedHealth', settings.blacklistedHealth || [], onChange);
 }
 
 
@@ -109,6 +103,8 @@ async function load(settings, onChange) {
         secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
         loadHelper(settings, onChange);
     });
+
+    await createChips(settings, onChange);
 
     await createTreeViews(settings, onChange);
 
@@ -139,12 +135,15 @@ function save(callback) {
         }
     });
 
-    obj.blacklistedClients = chips2list('.blacklistedClients');
-    obj.blacklistedDevices = chips2list('.blacklistedDevices');
-    obj.blacklistedWlans = chips2list('.blacklistedWlans');
-    obj.blacklistedNetworks = chips2list('.blacklistedNetworks');
-    obj.blacklistedHealth = chips2list('.blacklistedHealth');
+    // Process blacklists
+    obj.blacklist = {};
+    $('[id*=chips_]').each(function () {
+        const settingsName = $(this).attr('id').replace('chips_', '');
 
+        obj.blacklist[settingsName] = chips2list(`#chips_${settingsName}`);
+    });
+
+    //Process whitelists
     obj.whitelist = {};
     $('[id*=tree_]').each(function () {
         // store selected nodes of tree
@@ -163,8 +162,26 @@ function save(callback) {
 
 
 //#region Functions
-async function createTreeViews(settings, onChange) {
+/**
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+async function createChips(settings, onChange) {
+    for (const key of Object.keys(settings.blacklist)) {
+        try {
+            list2chips(`#chips_${key}`, settings.blacklist[key], onChange);
+            M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
+        } catch (err) {
+            console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
+        }
+    }
+}
 
+/**
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+async function createTreeViews(settings, onChange) {
     for (const key of Object.keys(settings.whitelist)) {
         try {
             // get json data from file
@@ -238,6 +255,12 @@ async function createTreeViews(settings, onChange) {
     }
 }
 
+/**
+ * @param {*} name 
+ * @param {*} obj 
+ * @param {*} tree 
+ * @param {*} settings 
+ */
 async function convertJsonToTreeObject(name, obj, tree, settings) {
     for (const [id, value] of Object.entries(obj)) {
         try {
@@ -278,6 +301,9 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
     }
 }
 
+/**
+ * @param {*} lib 
+ */
 async function getUnifiObjects(lib) {
     return new Promise((resolve, reject) => {
         $.getJSON(`./lib/objects_${lib}.json`, function (json) {
