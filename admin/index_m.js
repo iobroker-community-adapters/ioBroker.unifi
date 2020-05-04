@@ -146,16 +146,16 @@ function save(callback) {
     obj.blacklistedHealth = chips2list('.blacklistedHealth');
 
     obj.whitelist = {};
-    $("[id*=tree_]").each(function () {
+    $('[id*=tree_]').each(function () {
         // store selected nodes of tree
-        let settingsName = $(this).attr('id').replace('tree_', '');
+        const settingsName = $(this).attr('id').replace('tree_', '');
 
-        var selected = $.ui.fancytree.getTree(`#tree_${settingsName}`).getSelectedNodes();
-        var selectedIds = $.map(selected, function (node) {
+        const selected = $.ui.fancytree.getTree(`#tree_${settingsName}`).getSelectedNodes();
+        const selectedIds = $.map(selected, function (node) {
             return node.data.id;
         });
 
-        obj.whitelist[settingsName] = selectedIds
+        obj.whitelist[settingsName] = selectedIds;
     });
 
     callback(obj);
@@ -195,12 +195,12 @@ async function createTreeViews(settings, onChange) {
                 escapeTitles: false,                        // Escape `node.title` content for display
                 generateIds: false,                         // Generate id attributes like <span id='fancytree-id-KEY'>
                 keyboard: true,                             // Support keyboard navigation
-                keyPathSeparator: "/",                      // Used by node.getKeyPath() and tree.loadKeyPath()
+                keyPathSeparator: '/',                      // Used by node.getKeyPath() and tree.loadKeyPath()
                 minExpandLevel: 1,                          // 1: root node is not collapsible
                 quicksearch: false,                         // Navigate to next node by typing the first letters
                 rtl: false,                                 // Enable RTL (right-to-left) mode
                 selectMode: 3,                              // 1:single, 2:multi, 3:multi-hier
-                tabindex: "0",                              // Whole tree behaves as one single control
+                tabindex: '0',                              // Whole tree behaves as one single control
                 titlesTabbable: false,                      // Node titles can receive keyboard focus
                 tooltip: false,                             // Use title as tooltip (also a callback could be specified)
                 // icon: function (event, data) {
@@ -209,7 +209,7 @@ async function createTreeViews(settings, onChange) {
                 //     }
                 // },
                 click: function (event, data) {
-                    console.log(data)
+                    console.log(data);
                     if (data.targetType === 'title' && !data.node.folder) {
                         data.node.setSelected(!data.node.isSelected());
                     }
@@ -219,7 +219,6 @@ async function createTreeViews(settings, onChange) {
                     tree
                 ],
                 select: function (event, data) {
-
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
                     // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
                     //     if (node.children === null) {
@@ -240,31 +239,33 @@ async function createTreeViews(settings, onChange) {
 }
 
 async function convertJsonToTreeObject(name, obj, tree, settings) {
-    for (const [key, value] of Object.entries(obj)) {
+    for (const [id, value] of Object.entries(obj)) {
         try {
-            const id = key.replace(`${name}.`, '');
-            const title = id; //value.common.name || id; //TODO: use value.common.name for title?
+            let idReadable = id.split('.');
+            idReadable = idReadable[idReadable.length - 1];
+
+            const title = value.common.name ? `${idReadable} | ${_(value.common.name)}` : `${idReadable}`;
 
             if (value && value.type === 'state') {
-                let id = key.replace(`${name}.`, '');
-
-                let idReadable = id.split('.');
-                idReadable = idReadable[idReadable.length - 1];
-
-                //TODO: use value.common.name for title
                 if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
-                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id, selected: true })
+                    tree.children.push({
+                        title: title,
+                        id: id,
+                        selected: true
+                    });
                 } else {
-                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id })
+                    tree.children.push({
+                        title: title,
+                        id: id
+                    });
                 }
-
             } else if (value && value.type === 'channel' || value.type === 'device') {
-                const subtree = { 
-                    title: title, 
-                    key: id, 
-                    folder: true, 
-                    expanded: true, 
-                    children: [] 
+                const subtree = {
+                    title: title,
+                    key: id,
+                    folder: true,
+                    expanded: true,
+                    children: []
                 };
 
                 await convertJsonToTreeObject(name, value.logic.has, subtree, settings);
