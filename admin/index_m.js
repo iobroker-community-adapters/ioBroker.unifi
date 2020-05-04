@@ -161,7 +161,6 @@ function save(callback) {
     callback(obj);
 }
 
-
 //#region Functions
 async function createTreeViews(settings, onChange) {
 
@@ -187,6 +186,15 @@ async function createTreeViews(settings, onChange) {
                     tree
                 ],
                 select: function (event, data) {
+
+                    // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
+                    // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
+                    //     if (node.children === null) {
+                    //         return node.title;
+                    //     }
+                    // });
+                    // console.log(selKeys.join('\n').replace(/_/g, " "));
+
                     onChange();
                 }
             });
@@ -202,11 +210,14 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
             if (value && value.type === 'state') {
                 let id = key.replace(`${name}.`, '');
 
+                let idReadable = id.split('.');
+                idReadable = idReadable[idReadable.length - 1];
+
                 //TODO: use value.common.name for title
                 if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
-                    tree.children.push({ title: id, id: id, selected: true })
+                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id, selected: true })
                 } else {
-                    tree.children.push({ title: id, id: id })
+                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id })
                 }
 
             } else if (value && value.type === 'channel' || value.type === 'device') {
