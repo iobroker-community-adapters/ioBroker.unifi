@@ -18,6 +18,80 @@
                         },
                         "has_key": "_self",
                         "has": {
+                            "health.subsystem.speedtest": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {},
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "speedtest_status"
+                                            },
+                                            "speedtest",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "_self",
+                                    "has": {
+                                        "health.subsytem.speedtest.lastrun": {
+                                            "_id": "lastrun",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest lastrun",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": {
+                                                    "secondsToDateTime": [
+                                                        {
+                                                            "var": "speedtest_lastrun"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "health.subsytem.speedtest.ping": {
+                                            "_id": "ping",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest ping",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "speedtest_ping"
+                                            }
+                                        },
+                                        "health.subsytem.speedtest.status": {
+                                            "_id": "status",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest status",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {},
+                                            "logic": {
+                                                "value": "speedtest_status"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "health.subsytem.lan_ip": {
                                 "type": "state",
                                 "common": {
@@ -169,80 +243,6 @@
                                 "native": {},
                                 "logic": {
                                     "value": "subsystem"
-                                }
-                            },
-                            "health.subsystem.speedtest": {
-                                "type": "channel",
-                                "common": {},
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "speedtest_status"
-                                            },
-                                            "speedtest",
-                                            null
-                                        ]
-                                    },
-                                    "has_key": "_self",
-                                    "has": {
-                                        "health.subsytem.speedtest.lastrun": {
-                                            "_id": "lastrun",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest lastrun",
-                                                "type": "number",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": {
-                                                    "secondsToDateTime": [
-                                                        {
-                                                            "var": "speedtest_lastrun"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "health.subsytem.speedtest.ping": {
-                                            "_id": "ping",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest ping",
-                                                "type": "number",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "unit": "ms",
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": "speedtest_ping"
-                                            }
-                                        },
-                                        "health.subsytem.speedtest.status": {
-                                            "_id": "status",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest status",
-                                                "type": "string",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": "speedtest_status"
-                                            }
-                                        }
-                                    }
                                 }
                             },
                             "health.subsytem.uptime": {
