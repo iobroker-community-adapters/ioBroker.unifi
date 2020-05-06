@@ -7,7 +7,7 @@
             "object_id": "health"
         },
         "logic": {
-            "has_key": "health",
+            "has_key": "_self",
             "has": {
                 "health.subsystem": {
                     "type": "device",
@@ -40,7 +40,7 @@
                                     },
                                     "has_key": "_self",
                                     "has": {
-                                        "health.subsytem.speedtest.lastrun": {
+                                        "health.subsystem.speedtest.lastrun": {
                                             "_id": "lastrun",
                                             "type": "state",
                                             "common": {
@@ -52,7 +52,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "health.subsytem.speedtest.lastrun"
+                                                "object_id": "health.subsystem.speedtest.lastrun"
                                             },
                                             "logic": {
                                                 "value": {
@@ -64,7 +64,7 @@
                                                 }
                                             }
                                         },
-                                        "health.subsytem.speedtest.ping": {
+                                        "health.subsystem.speedtest.ping": {
                                             "_id": "ping",
                                             "type": "state",
                                             "common": {
@@ -77,13 +77,13 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "health.subsytem.speedtest.ping"
+                                                "object_id": "health.subsystem.speedtest.ping"
                                             },
                                             "logic": {
                                                 "value": "speedtest_ping"
                                             }
                                         },
-                                        "health.subsytem.speedtest.status": {
+                                        "health.subsystem.speedtest.status": {
                                             "_id": "status",
                                             "type": "state",
                                             "common": {
@@ -95,7 +95,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "health.subsytem.speedtest.status"
+                                                "object_id": "health.subsystem.speedtest.status"
                                             },
                                             "logic": {
                                                 "value": "speedtest_status"
@@ -104,7 +104,7 @@
                                     }
                                 }
                             },
-                            "health.subsytem.lan_ip": {
+                            "health.subsystem.lan_ip": {
                                 "type": "state",
                                 "common": {
                                     "name": "LAN IP",
@@ -115,7 +115,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.lan_ip"
+                                    "object_id": "health.subsystem.lan_ip"
                                 },
                                 "logic": {
                                     "_id": {
@@ -130,7 +130,7 @@
                                     "value": "lan_ip"
                                 }
                             },
-                            "health.subsytem.latency": {
+                            "health.subsystem.latency": {
                                 "type": "state",
                                 "common": {
                                     "name": "Latency",
@@ -142,7 +142,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.latency"
+                                    "object_id": "health.subsystem.latency"
                                 },
                                 "logic": {
                                     "_id": {
@@ -157,7 +157,7 @@
                                     "value": "latency"
                                 }
                             },
-                            "health.subsytem.num_guest": {
+                            "health.subsystem.num_guest": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of guests",
@@ -168,7 +168,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.num_guest"
+                                    "object_id": "health.subsystem.num_guest"
                                 },
                                 "logic": {
                                     "_id": {
@@ -183,7 +183,7 @@
                                     "value": "num_guest"
                                 }
                             },
-                            "health.subsytem.num_iot": {
+                            "health.subsystem.num_iot": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of IOT",
@@ -194,7 +194,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.num_iot"
+                                    "object_id": "health.subsystem.num_iot"
                                 },
                                 "logic": {
                                     "_id": {
@@ -209,7 +209,7 @@
                                     "value": "num_iot"
                                 }
                             },
-                            "health.subsytem.num_user": {
+                            "health.subsystem.num_user": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of users",
@@ -220,7 +220,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.num_user"
+                                    "object_id": "health.subsystem.num_user"
                                 },
                                 "logic": {
                                     "_id": {
@@ -235,7 +235,7 @@
                                     "value": "num_user"
                                 }
                             },
-                            "health.subsytem.status": {
+                            "health.subsystem.status": {
                                 "_id": "status",
                                 "type": "state",
                                 "common": {
@@ -247,13 +247,13 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.status"
+                                    "object_id": "health.subsystem.status"
                                 },
                                 "logic": {
                                     "value": "status"
                                 }
                             },
-                            "health.subsytem.subsystem": {
+                            "health.subsystem.subsystem": {
                                 "_id": "subsystem",
                                 "type": "state",
                                 "common": {
@@ -265,13 +265,13 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.subsystem"
+                                    "object_id": "health.subsystem.subsystem"
                                 },
                                 "logic": {
                                     "value": "subsystem"
                                 }
                             },
-                            "health.subsytem.uptime": {
+                            "health.subsystem.uptime": {
                                 "type": "state",
                                 "common": {
                                     "name": "Uptime",
@@ -283,7 +283,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.uptime"
+                                    "object_id": "health.subsystem.uptime"
                                 },
                                 "logic": {
                                     "_id": {
@@ -298,7 +298,7 @@
                                     "value": "uptime"
                                 }
                             },
-                            "health.subsytem.wan_ip": {
+                            "health.subsystem.wan_ip": {
                                 "type": "state",
                                 "common": {
                                     "name": "WAN IP",
@@ -309,7 +309,7 @@
                                     "desc": ""
                                 },
                                 "native": {
-                                    "object_id": "health.subsytem.wan_ip"
+                                    "object_id": "health.subsystem.wan_ip"
                                 },
                                 "logic": {
                                     "_id": {
