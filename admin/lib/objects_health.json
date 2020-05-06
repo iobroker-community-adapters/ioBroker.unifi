@@ -3,14 +3,18 @@
         "_id": "health",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "health"
+        },
         "logic": {
             "has_key": "health",
             "has": {
                 "health.subsystem": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "health.subsystem"
+                    },
                     "logic": {
                         "_id": "subsystem",
                         "common": {
@@ -21,7 +25,9 @@
                             "health.subsystem.speedtest": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.speedtest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -45,7 +51,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "health.subsytem.speedtest.lastrun"
+                                            },
                                             "logic": {
                                                 "value": {
                                                     "secondsToDateTime": [
@@ -68,7 +76,9 @@
                                                 "unit": "ms",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "health.subsytem.speedtest.ping"
+                                            },
                                             "logic": {
                                                 "value": "speedtest_ping"
                                             }
@@ -84,7 +94,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "health.subsytem.speedtest.status"
+                                            },
                                             "logic": {
                                                 "value": "speedtest_status"
                                             }
@@ -102,7 +114,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.lan_ip"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -127,7 +141,9 @@
                                     "unit": "ms",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.latency"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -151,7 +167,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.num_guest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -175,7 +193,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.num_iot"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -199,7 +219,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.num_user"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -224,7 +246,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.status"
+                                },
                                 "logic": {
                                     "value": "status"
                                 }
@@ -240,7 +264,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.subsystem"
+                                },
                                 "logic": {
                                     "value": "subsystem"
                                 }
@@ -256,7 +282,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.uptime"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -280,7 +308,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsytem.wan_ip"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -304,7 +334,9 @@
         "_id": "num_new_alarms",
         "type": "state",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "num_new_alarms"
+        },
         "logic": {
             "value": "num_new_alarms"
         }

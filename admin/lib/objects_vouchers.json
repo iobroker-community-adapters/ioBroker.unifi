@@ -3,14 +3,18 @@
         "_id": "vouchers",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "vouchers"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "vouchers.voucher": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "vouchers.voucher"
+                    },
                     "logic": {
                         "_id": "code",
                         "common": {
@@ -29,7 +33,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.code"
+                                },
                                 "logic": {
                                     "value": "code"
                                 }
@@ -45,7 +51,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.create_time"
+                                },
                                 "logic": {
                                     "value": {
                                         "secondsToDateTime": [
@@ -68,7 +76,9 @@
                                     "unit": "m",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.duration"
+                                },
                                 "logic": {
                                     "value": "duration"
                                 }
@@ -84,7 +94,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.note"
+                                },
                                 "logic": {
                                     "value": "note"
                                 }
@@ -100,7 +112,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.qos_overwrite"
+                                },
                                 "logic": {
                                     "value": "qos_overwrite"
                                 }
@@ -116,7 +130,9 @@
                                     "unit": "Kbps",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.qos_rate_max_down"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -141,7 +157,9 @@
                                     "unit": "Kbps",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.qos_rate_max_up"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -166,7 +184,9 @@
                                     "unit": "MB",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.qos_usage_quota"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -191,7 +211,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.quota"
+                                },
                                 "logic": {
                                     "value": "quota"
                                 }
@@ -207,7 +229,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "vouchers.voucher.used"
+                                },
                                 "logic": {
                                     "value": "used"
                                 }

@@ -3,14 +3,18 @@
         "_id": "clients",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "clients"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "clients.client": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "clients.client"
+                    },
                     "logic": {
                         "_id": {
                             "cat": [
@@ -49,7 +53,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.ap_mac"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -74,7 +80,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.first_seen"
+                                },
                                 "logic": {
                                     "value": {
                                         "secondsToDateTime": [
@@ -96,7 +104,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.hostname"
+                                },
                                 "logic": {
                                     "value": "hostname"
                                 }
@@ -112,7 +122,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.ip"
+                                },
                                 "logic": {
                                     "value": "ip"
                                 }
@@ -128,7 +140,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_guest"
+                                },
                                 "logic": {
                                     "value": "is_guest"
                                 }
@@ -143,7 +157,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_uap"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -167,7 +183,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_ugw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -191,7 +209,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_usw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -216,7 +236,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_wired"
+                                },
                                 "logic": {
                                     "value": "is_wired"
                                 }
@@ -232,7 +254,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.last_seen"
+                                },
                                 "logic": {
                                     "value": {
                                         "secondsToDateTime": [
@@ -253,7 +277,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_uap"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -283,7 +309,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_ugw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -313,7 +341,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_usw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -344,7 +374,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.mac"
+                                },
                                 "logic": {
                                     "value": "mac"
                                 }
@@ -360,7 +392,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.name"
+                                },
                                 "logic": {
                                     "value": "name"
                                 }
@@ -376,7 +410,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.network"
+                                },
                                 "logic": {
                                     "value": "network"
                                 }
@@ -391,7 +427,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.note"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -416,7 +454,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.noted"
+                                },
                                 "logic": {
                                     "value": "noted"
                                 }
@@ -432,7 +472,9 @@
                                     "unit": "dBm",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.rssi"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -457,7 +499,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.rx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -483,7 +527,9 @@
                                     "unit": "%",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.satisfaction"
+                                },
                                 "logic": {
                                     "value": "satisfaction"
                                 }
@@ -499,7 +545,9 @@
                                     "unit": "dBm",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.signal"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -523,7 +571,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.sw_mac"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -547,7 +597,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.sw_port"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -572,7 +624,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -598,7 +652,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.uptime"
+                                },
                                 "logic": {
                                     "value": "uptime"
                                 }
@@ -614,7 +670,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_uap"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -639,7 +697,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_ugw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -664,7 +724,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_usw"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -689,7 +751,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.wired-rx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -714,7 +778,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.wired-tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [

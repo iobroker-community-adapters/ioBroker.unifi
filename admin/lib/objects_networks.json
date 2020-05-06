@@ -3,14 +3,18 @@
         "_id": "networks",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "networks"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "networks.network": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "networks.network"
+                    },
                     "logic": {
                         "_id": "name",
                         "common": {
@@ -28,7 +32,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.dhcpd_dns_enabled"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -52,7 +58,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.dhcpd_enabled"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -77,7 +85,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.dhcpd_leasetime"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -101,7 +111,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.dhcpd_start"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -125,7 +137,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.dhcpd_stop"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -149,7 +163,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.enabled"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -173,7 +189,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.ip_subnet"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -197,7 +215,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.name"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -221,7 +241,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.networkgroup"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -245,7 +267,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.purpose"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -269,7 +293,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.vlan"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -293,7 +319,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.vlan_enabled"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -317,7 +345,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.vpn_type"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -341,7 +371,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "networks.network.wan_ip"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [

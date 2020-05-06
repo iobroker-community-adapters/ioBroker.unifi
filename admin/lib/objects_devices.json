@@ -3,14 +3,18 @@
         "_id": "devices",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "devices"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "devices.device": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "devices.device"
+                    },
                     "logic": {
                         "_id": {
                             "cat": [
@@ -37,14 +41,18 @@
                                 "_id": "port_table",
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.port_table"
+                                },
                                 "logic": {
                                     "has_key": "port_table",
                                     "has": {
                                         "devices.device.port_table.port": {
                                             "type": "channel",
                                             "common": {},
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.port_table.port"
+                                            },
                                             "logic": {
                                                 "_id": "name",
                                                 "common": {
@@ -63,7 +71,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.enable"
+                                                        },
                                                         "logic": {
                                                             "value": "enable"
                                                         }
@@ -78,7 +88,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.is_uplink"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -103,7 +115,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.name"
+                                                        },
                                                         "logic": {
                                                             "value": "name"
                                                         }
@@ -118,7 +132,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_idx"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -142,7 +158,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_poe"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -167,7 +185,9 @@
                                                             "unit": "%",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.satisfaction"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -193,7 +213,9 @@
                                                             "unit": "mbps",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.speed"
+                                                        },
                                                         "logic": {
                                                             "value": "speed"
                                                         }
@@ -207,7 +229,9 @@
                             "devices.device.radio_table_stats": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.radio_table_stats"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -223,7 +247,9 @@
                                         "devices.device.radio_table_stats.stat": {
                                             "type": "channel",
                                             "common": {},
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.radio_table_stats.stat"
+                                            },
                                             "logic": {
                                                 "_id": "name",
                                                 "common": {
@@ -243,7 +269,9 @@
                                                             "unit": "%",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_total"
+                                                        },
                                                         "logic": {
                                                             "value": "cu_total"
                                                         }
@@ -257,7 +285,9 @@
                             "devices.device.speedtest": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.speedtest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -282,7 +312,9 @@
                                                 "unit": "ms",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.latency"
+                                            },
                                             "logic": {
                                                 "value": "latency"
                                             }
@@ -298,7 +330,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.rundate"
+                                            },
                                             "logic": {
                                                 "value": {
                                                     "secondsToDateTime": [
@@ -321,7 +355,9 @@
                                                 "unit": "s",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.runtime"
+                                            },
                                             "logic": {
                                                 "value": "runtime"
                                             }
@@ -338,7 +374,9 @@
                                                 "unit": "Mbps",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.xput_download"
+                                            },
                                             "logic": {
                                                 "value": "xput_download"
                                             }
@@ -355,7 +393,9 @@
                                                 "unit": "Mbps",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.xput_upload"
+                                            },
                                             "logic": {
                                                 "value": "xput_upload"
                                             }
@@ -367,7 +407,9 @@
                                 "_id": "sys_stats",
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.sys_stats"
+                                },
                                 "logic": {
                                     "has_key": "sys_stats",
                                     "has": {
@@ -382,7 +424,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_1"
+                                            },
                                             "logic": {
                                                 "value": "loadavg_1"
                                             }
@@ -398,7 +442,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_15"
+                                            },
                                             "logic": {
                                                 "value": "loadavg_15"
                                             }
@@ -414,7 +460,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_5"
+                                            },
                                             "logic": {
                                                 "value": "loadavg_5"
                                             }
@@ -425,7 +473,9 @@
                             "devices.device.system-stats": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.system-stats"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -450,7 +500,9 @@
                                                 "unit": "%",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.cpu"
+                                            },
                                             "logic": {
                                                 "value": "cpu"
                                             }
@@ -467,7 +519,9 @@
                                                 "unit": "%",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.mem"
+                                            },
                                             "logic": {
                                                 "value": "mem"
                                             }
@@ -484,7 +538,9 @@
                                                 "unit": "s",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.uptime"
+                                            },
                                             "logic": {
                                                 "value": "uptime"
                                             }
@@ -495,7 +551,9 @@
                             "devices.device.vap_table": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.vap_table"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -511,7 +569,9 @@
                                         "devices.device.vap_table.vap": {
                                             "type": "channel",
                                             "common": {},
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.vap_table.vap"
+                                            },
                                             "logic": {
                                                 "_id": "name",
                                                 "common": {
@@ -531,7 +591,9 @@
                                                             "unit": "%",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.satisfaction"
+                                                        },
                                                         "logic": {
                                                             "value": "satisfaction"
                                                         }
@@ -547,7 +609,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.channel"
+                                                        },
                                                         "logic": {
                                                             "value": "channel"
                                                         }
@@ -563,7 +627,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.num_sta"
+                                                        },
                                                         "logic": {
                                                             "value": "num_sta"
                                                         }
@@ -585,7 +651,9 @@
                                     "unit": "°C",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.general_temperature"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -609,7 +677,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.guest-num_sta"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -634,7 +704,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.ip"
+                                },
                                 "logic": {
                                     "value": "ip"
                                 }
@@ -650,7 +722,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.mac"
+                                },
                                 "logic": {
                                     "value": "mac"
                                 }
@@ -666,7 +740,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.model"
+                                },
                                 "logic": {
                                     "value": "model"
                                 }
@@ -682,7 +758,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.name"
+                                },
                                 "logic": {
                                     "value": "name"
                                 }
@@ -697,7 +775,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.num_guest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -721,7 +801,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.num_sta"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -746,7 +828,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.rx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -771,7 +855,9 @@
                                     "unit": "%",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.satisfaction"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -796,7 +882,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.type"
+                                },
                                 "logic": {
                                     "value": "type"
                                 }
@@ -812,7 +900,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -837,7 +927,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.upgradable"
+                                },
                                 "logic": {
                                     "value": "upgradable"
                                 }
@@ -852,7 +944,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.upgrade_to_firmware"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -878,7 +972,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.uptime"
+                                },
                                 "logic": {
                                     "value": "uptime"
                                 }
@@ -894,7 +990,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.version"
+                                },
                                 "logic": {
                                     "value": "version"
                                 }
