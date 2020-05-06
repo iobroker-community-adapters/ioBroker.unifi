@@ -248,29 +248,6 @@ class Unifi extends utils.Adapter {
 
             await this.applyJsonLogic('', siteData, objects, ['site']);
         }
-
-        /*const objects = require('./admin/lib/objects_health.json');
-
-        for (const site of sites) {
-            const x = sites.indexOf(site);
-            let siteData;
-
-            // Process blacklist
-            if (Object.prototype.hasOwnProperty.call(data[x], 'health')) {
-                const health = data[x].health.filter((item) => {
-                    if (this.blacklist.health.includes(item.subsystem) !== true) {
-                        return item;
-                    }
-                });
-
-                siteData = data[x];
-                siteData.health = health;
-            } else {
-                siteData = data[x];
-            }
-
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
-        }*/
     }
 
     /**
@@ -562,11 +539,6 @@ class Unifi extends utils.Adapter {
      * @param {*} whitelist
      */
     async applyJsonLogic(objectTree, data, objects, whitelist) {
-        this.log.debug(objectTree);
-        this.log.debug('1 ' + JSON.stringify(data));
-        this.log.debug('2 ' + JSON.stringify(objects));
-        this.log.debug('3 ' + JSON.stringify(whitelist));
-
         for (const key in objects) {
             if (whitelist.lenth === 0 || whitelist.includes(key)) {
                 const obj = {
@@ -582,8 +554,6 @@ class Unifi extends utils.Adapter {
                 } else {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
-
-                this.log.debug(obj._id);
     
                 if (obj._id !== null) {
                     if (objectTree !== '') {
@@ -638,7 +608,7 @@ class Unifi extends utils.Adapter {
                     tempId = tempId.toLowerCase();
                     obj._id = tempId;
     
-                    this.log.debug(JSON.stringify(obj));
+                    //this.log.debug(JSON.stringify(obj));
     
                     await this.extendObjectAsync(obj._id, {
                         type: obj.type,
