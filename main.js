@@ -166,6 +166,10 @@ class Unifi extends utils.Adapter {
                     await this.fetchNetworks(sites);
                 }
 
+                if (this.update.health === true) {
+                    await this.fetchHealth(sites);
+                }
+
                 if (this.update.vouchers === true) {
                     await this.fetchVouchers(sites);
                 }
@@ -214,7 +218,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchSites() {
         return new Promise((resolve, reject) => {
-            this.controller.getSitesStats((err, data) => {
+            this.controller.getSites((err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
@@ -222,9 +226,7 @@ class Unifi extends utils.Adapter {
 
                     this.log.debug('fetchSites: ' + sites);
 
-                    if (this.update.health === true) {
-                        this.processSites(sites, data);
-                    }
+                    this.processSites(sites, data);
 
                     resolve(sites);
                 }
@@ -238,7 +240,16 @@ class Unifi extends utils.Adapter {
      * @param {Object} data 
      */
     async processSites(sites, data) {
-        const objects = require('./admin/lib/objects_health.json');
+        const objects = require('./admin/lib/objects_sites.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+            const siteData = data[x];
+
+            await this.applyJsonLogic('', siteData, objects, ['site']);
+        }
+
+        /*const objects = require('./admin/lib/objects_health.json');
 
         for (const site of sites) {
             const x = sites.indexOf(site);
@@ -259,7 +270,7 @@ class Unifi extends utils.Adapter {
             }
 
             await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
-        }
+        }*/
     }
 
     /**
@@ -472,6 +483,42 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Function to fetch health
+     * @param {Object} sites 
+     */
+    async fetchHealth(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.getHealth(sites, (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else {
+                    this.log.debug('fetchHealth: ' + data[0].length);
+
+                    this.processHealth(sites, data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Function that receives the health as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processHealth(sites, data) {
+        const objects = require('./admin/lib/objects_health.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+            const siteData = data[x];
+
+            await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
+        }
+    }
+
+    /**
      * Function to fetch vouchers
      * @param {Object} sites 
      */
@@ -515,6 +562,11 @@ class Unifi extends utils.Adapter {
      * @param {*} whitelist
      */
     async applyJsonLogic(objectTree, data, objects, whitelist) {
+        this.log.debug(objectTree);
+        this.log.debug('1 ' + JSON.stringify(data));
+        this.log.debug('2 ' + JSON.stringify(objects));
+        this.log.debug('3 ' + JSON.stringify(whitelist));
+
         for (const key in objects) {
             if (whitelist.lenth === 0 || whitelist.includes(key)) {
                 const obj = {
@@ -530,6 +582,8 @@ class Unifi extends utils.Adapter {
                 } else {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
+
+                this.log.debug(obj._id);
     
                 if (obj._id !== null) {
                     if (objectTree !== '') {
@@ -584,7 +638,7 @@ class Unifi extends utils.Adapter {
                     tempId = tempId.toLowerCase();
                     obj._id = tempId;
     
-                    //this.log.debug(JSON.stringify(obj));
+                    this.log.debug(JSON.stringify(obj));
     
                     await this.extendObjectAsync(obj._id, {
                         type: obj.type,

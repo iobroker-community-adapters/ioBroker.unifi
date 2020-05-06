@@ -1,0 +1,12 @@
+{
+    "site": {
+        "type": "device",
+        "common": {},
+        "native": {
+            "object_id": "site"
+        },
+        "logic": {
+            "_id": "name"
+        }
+    }
+}
