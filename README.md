@@ -35,7 +35,7 @@ It is possible to disable the update of selected information or blacklist specif
 | Health      | Subsystem                               |
 
 ## Changelog
-### 0.5.0-beta.1 (2020-05-01)
+### __WORK IN PROGRESS__
 * (braindead1) Implemented configuration of updates
 * (braindead1) Improved JsonLogic
 * (braindead1) Removed legacy code
