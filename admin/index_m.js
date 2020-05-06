@@ -154,7 +154,25 @@ function save(callback) {
             return node.data.id;
         });
 
-        obj.whitelist[settingsName] = selectedIds;
+        const retVal = [];
+        for (const id of selectedIds) {
+            const dummy = id.split('.');
+
+            let dummy2 = [];
+            for (let i = 0; i < dummy.length; i++) {
+                if (i === 0) {
+                    dummy2 = [];
+                }
+
+                dummy2.push(dummy[i]);
+
+                if (!retVal.includes(dummy2.join('.'))) {
+                    retVal.push(dummy2.join('.'));
+                }
+            }
+        }
+
+        obj.whitelist[settingsName] = retVal;
     });
 
     callback(obj);
@@ -231,7 +249,6 @@ async function createTreeViews(settings, onChange) {
                         data.node.setSelected(!data.node.isSelected());
                     }
                 },
-
                 source: [
                     tree
                 ],
