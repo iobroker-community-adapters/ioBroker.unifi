@@ -31,6 +31,8 @@ class Unifi extends utils.Adapter {
         this.update = {};
         this.whitelist = {};
         this.queryTimeout;
+
+        this.ownObjects = {};
     }
 
     /**
@@ -547,52 +549,85 @@ class Unifi extends utils.Adapter {
                     'common': {},
                     'native': {}
                 };
-    
+
                 // Process object id
                 if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
                     obj._id = objects[key]._id;
                 } else {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
-    
+
                 if (obj._id !== null) {
                     if (objectTree !== '') {
                         obj._id = objectTree + '.' + obj._id;
                     }
-    
+
                     // Process type
                     if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
                         obj.type = objects[key].type;
                     } else {
                         obj.type = await this.applyRule(objects[key].logic.type, data);
                     }
-    
+
                     // Process common
                     if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
-                        obj.common = objects[key].common;
+                        obj.common = JSON.parse(JSON.stringify(objects[key].common));
                     }
-    
+
                     if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
                         const common = objects[key].logic.common;
-    
+
                         for (const commonKey in common) {
                             obj.common[commonKey] = await this.applyRule(common[commonKey], data);
                         }
                     }
-    
+
                     // Process native
                     if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
-                        obj.native = objects[key].native;
+                        obj.native = JSON.parse(JSON.stringify(objects[key].native));
                     }
-    
+
                     if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
                         const native = objects[key].logic.native;
-    
+
                         for (const nativeKey in native) {
                             obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
                         }
                     }
-    
+
+                    // Cleanup _id
+                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
+                    tempId = tempId.toLowerCase();
+                    obj._id = tempId;
+
+                    //this.log.debug(JSON.stringify(obj));
+
+                    // Update object if changed
+                    if (!Object.prototype.hasOwnProperty.call(this.ownObjects, obj._id)) {
+                        await this.extendObjectAsync(obj._id, {
+                            type: obj.type,
+                            common: JSON.parse(JSON.stringify(obj.common)),
+                            native: JSON.parse(JSON.stringify(obj.native))
+                        });
+
+                        this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+                    } else {
+                        const ownObj = this.ownObjects[obj._id];
+
+                        if (JSON.stringify(ownObj) !== JSON.stringify(obj)) {
+                            await this.extendObjectAsync(obj._id, {
+                                type: obj.type,
+                                common: JSON.parse(JSON.stringify(obj.common)),
+                                native: JSON.parse(JSON.stringify(obj.native))
+                            });
+
+                            this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+
+                            this.log.debug('Object ' + obj._id + ' updated');
+                        }
+                    }
+
                     // Process value
                     if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
                         obj.value = objects[key].value;
@@ -600,36 +635,22 @@ class Unifi extends utils.Adapter {
                         if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
                             obj.value = await this.applyRule(objects[key].logic.value, data);
                         }
-                    }
-    
-                    // Cleanup _id
-                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
-                    tempId = tempId.toLowerCase();
-                    obj._id = tempId;
-    
-                    //this.log.debug(JSON.stringify(obj));
-    
-                    await this.extendObjectAsync(obj._id, {
-                        type: obj.type,
-                        common: JSON.parse(JSON.stringify(obj.common)),
-                        native: JSON.parse(JSON.stringify(obj.native))
-                    });
-    
+                    }                    
+
                     // Update state if value changed
                     if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
                         const oldState = await this.getStateAsync(obj._id);
-    
+
                         if (oldState === null || oldState.val != obj.value) {
                             await this.setStateAsync(obj._id, { ack: true, val: obj.value });
                         }
                     }
-    
+
                     // Process has
                     if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
                         const hasKey = objects[key].logic.has_key;
                         const has = objects[key].logic.has;
-    
+
                         if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
                             let tempData;
                             if (hasKey === '_self') {
@@ -637,7 +658,7 @@ class Unifi extends utils.Adapter {
                             } else {
                                 tempData = data[hasKey];
                             }
-    
+
                             if (Array.isArray(tempData)) {
                                 tempData.forEach(async element => {
                                     await this.applyJsonLogic(obj._id, element, has, whitelist);
