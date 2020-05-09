@@ -30,14 +30,17 @@
                                     "type": "boolean",
                                     "role": "state",
                                     "read": true,
-                                    "write": false,
+                                    "write": true,
                                     "desc": ""
                                 },
                                 "native": {
                                     "object_id": "wlans.wlan.enabled"
                                 },
                                 "logic": {
-                                    "value": "enabled"
+                                    "value": "enabled",
+                                    "native": {
+                                        "wlan_id": "_id"
+                                    }
                                 }
                             },
                             "wlans.wlan.name": {

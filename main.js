@@ -23,6 +23,7 @@ class Unifi extends utils.Adapter {
             name: 'unifi',
         });
         this.on('ready', this.onReady.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
         this.controller;
@@ -40,7 +41,7 @@ class Unifi extends utils.Adapter {
      */
     async onReady() {
         // subscribe to all state changes
-        this.subscribeStates('*');
+        this.subscribeStates('*.wlans.*.enabled');
 
         this.log.info('UniFi adapter is ready');
 
@@ -83,6 +84,23 @@ class Unifi extends utils.Adapter {
 
             await this.setStateAsync('info.connection', { ack: true, val: false });
             this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+        }
+    }
+
+    /**
+	 * Is called if a subscribed state changes
+	 * @param {string} id
+	 * @param {ioBroker.State | null | undefined} state
+	 */
+    onStateChange(id, state) {
+        if (typeof state == 'object' && !state.ack) {
+            // The state was changed
+            const idParts = id.split('.');
+            const site = idParts[2];
+
+            if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
+                this.updateWlanStatus(site, id, state);
+            }
         }
     }
 
@@ -534,6 +552,58 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Disable or enable a WLAN
+     * @param {*} site 
+     * @param {*} objId 
+     * @param {*} status 
+     */
+    updateWlanStatus(site, objId, state) {
+        this.login(this.settings.controllerUsername, this.settings.controllerPassword)
+            .then(async () => {
+                this.log.debug('Login successful');
+
+                await this.setWlanStatus(site, objId, state);
+
+                // finalize, logout and finish
+                this.controller.logout();
+
+                this.log.info('WLAN status set to ' + state.val);
+
+                return true;
+            })
+            .catch(async (err) => {
+                this.errorHandling(err);
+
+                return;
+            });
+    }
+
+    /**
+     * Function to fetch vouchers
+     * @param {Object} sites 
+     */
+    async setWlanStatus(site, objId, state) {
+        const obj = await this.getForeignObjectAsync(objId);
+
+        const wlanId = obj.native.wlan_id;
+        const disable = (state.val == true) ? false : true;
+
+        return new Promise((resolve, reject) => {
+            this.controller.disableWLan(site, wlanId, disable, (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else {
+                    this.log.debug('setWlanStatus: ' + data[0].length);
+
+                    this.processWlans([site], data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
      * Function to apply JSON logic to API responses
      * @param {*} objectTree 
      * @param {*} data 
@@ -635,7 +705,7 @@ class Unifi extends utils.Adapter {
                         if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
                             obj.value = await this.applyRule(objects[key].logic.value, data);
                         }
-                    }                    
+                    }
 
                     // Update state if value changed
                     if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
