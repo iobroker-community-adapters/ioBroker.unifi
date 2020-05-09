@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.0-beta.2",
+        "version": "0.5.0",
         "news": {
+            "0.5.0": {
+                "en": "* (braindead1) Implemented configuration of updates\r\n* (braindead1) Improved JsonLogic\r\n* (braindead1) Removed legacy code\r\n* (braindead1) Implemented Sentry",
+                "de": "* (braindead1) Konfiguration von Updates implementiert\r\n* (braindead1) JsonLogic wurde verbessert\r\n* (braindead1) Legacy-Code entfernt\r\n* (braindead1) Sentry implementiert",
+                "ru": "* (braindead1) Реализована конфигурация обновлений\r\n* (braindead1) Улучшенный JsonLogic\r\n* (braindead1) Удален устаревший код\r\n* (braindead1) Реализован Часовой",
+                "pt": "* (braindead1) Configuração implementada de atualizações\r\n* (braindead1) JsonLogic aprimorado\r\n* (braindead1) Código legado removido\r\n* (braindead1) Sentinela implementada",
+                "nl": "* (braindead1) Configuratie van updates geïmplementeerd\r\n* (braindead1) Verbeterde JsonLogic\r\n* (braindead1) Verouderde code verwijderd\r\n* (braindead1) Implementeerde Sentry",
+                "fr": "* (braindead1) Configuration implémentée des mises à jour\r\n* (braindead1) Amélioration de JsonLogic\r\n* (braindead1) Code hérité supprimé\r\n* (braindead1) Sentinelle implémentée",
+                "it": "* (braindead1) Configurazione implementata degli aggiornamenti\r\n* (braindead1) JsonLogic migliorato\r\n* (braindead1) Codice legacy rimosso\r\n* (braindead1) Sentry implementato",
+                "es": "* (braindead1) Configuración implementada de actualizaciones\r\n* (braindead1) JsonLogic mejorado\r\n* (braindead1) Se eliminó el código heredado\r\n* (braindead1) Sentry implementado",
+                "pl": "* (braindead1) Zaimplementowano konfigurację aktualizacji\r\n* (braindead1) Ulepszony JsonLogic\r\n* (braindead1) Usunięto starszy kod\r\n* (braindead1) Wdrożono Wartownik",
+                "zh-cn": "*（braindead1）已实现更新配置\r\n*（braindead1）改进了JsonLogic\r\n*（braindead1）删除了旧代码\r\n*（braindead1）实施哨兵"
+            },
             "0.5.0-beta.2": {
                 "en": "* (braindead1) Implemented configuration of updates\r\n* (braindead1) Improved JsonLogic\r\n* (braindead1) Removed legacy code\r\n* (braindead1) Implemented Sentry",
                 "de": "* (braindead1) Konfiguration von Updates implementiert\r\n* (braindead1) JsonLogic wurde verbessert\r\n* (braindead1) Legacy-Code entfernt\r\n* (braindead1) Sentry implementiert",
