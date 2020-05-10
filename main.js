@@ -141,12 +141,20 @@ class Unifi extends utils.Adapter {
      * @param {Object} err 
      */
     async errorHandling(err) {
-        this.log.error(err.name + ': ' + err.message);
+        if (err.message === 'api.err.Invalid') {
+            this.log.error('Error: Incorrect username or password.');
+        } else if (err.message.includes('connect ECONNREFUSED') === true) {
+            this.log.error('Error: Connection refused. Incorrect IP or port.');
+        } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
+            this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else {
+            this.log.error(err.name + ': ' + err.message);
 
-        if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-            const sentryInstance = this.getPluginInstance('sentry');
-            if (sentryInstance) {
-                sentryInstance.getSentryObject().captureException(err);
+            if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+                const sentryInstance = this.getPluginInstance('sentry');
+                if (sentryInstance) {
+                    sentryInstance.getSentryObject().captureException(err);
+                }
             }
         }
     }
@@ -205,15 +213,7 @@ class Unifi extends utils.Adapter {
             .catch(async (err) => {
                 await this.setStateAsync('info.connection', { ack: true, val: false });
 
-                if (err.message === 'api.err.Invalid') {
-                    this.log.error('Error: Incorrect username or password.');
-                } else if (err.message.includes('connect ECONNREFUSED') === true) {
-                    this.log.error('Error: Connection refused. Incorrect IP or port.');
-                } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
-                    this.log.error('Error: Host not found. Incorrect IP or port.');
-                } else {
-                    this.errorHandling(err);
-                }
+                this.errorHandling(err);
 
                 return;
             });
