@@ -54,7 +54,24 @@
                                                 "object_id": "devices.device.port_table.port"
                                             },
                                             "logic": {
-                                                "_id": "name",
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "port_idx"
+                                                        },
+                                                        {
+                                                            "cat": [
+                                                                "port_",
+                                                                {
+                                                                    "var": "port_idx"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
                                                 "common": {
                                                     "name": "name"
                                                 },
@@ -815,6 +832,32 @@
                                         ]
                                     },
                                     "value": "num_sta"
+                                }
+                            },
+                            "devices.device.overheating": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Overheating",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.overheating"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "overheating"
+                                            },
+                                            "overheating",
+                                            null
+                                        ]
+                                    },
+                                    "value": "overheating"
                                 }
                             },
                             "devices.device.rx_bytes": {
