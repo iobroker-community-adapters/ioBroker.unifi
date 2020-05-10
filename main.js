@@ -207,6 +207,8 @@ class Unifi extends utils.Adapter {
 
                 if (err.message === 'api.err.Invalid') {
                     this.log.error('Error: Incorrect username or password.');
+                } else if (err.message.includes('connect ECONNREFUSED') === true) {
+                    this.log.error('Error: Connection refused. Incorrect IP or port.');
                 } else {
                     this.errorHandling(err);
                 }
