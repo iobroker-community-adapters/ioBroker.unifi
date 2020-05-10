@@ -205,7 +205,11 @@ class Unifi extends utils.Adapter {
             .catch(async (err) => {
                 await this.setStateAsync('info.connection', { ack: true, val: false });
 
-                this.errorHandling(err);
+                if (err.message === 'api.err.Invalid') {
+                    this.log.error('Error: Incorrect username or password.');
+                } else {
+                    this.errorHandling(err);
+                }
 
                 return;
             });
