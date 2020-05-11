@@ -1051,6 +1051,33 @@
                                     "value": "rx_bytes"
                                 }
                             },
+                            "devices.device.rx_bytes-d": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX dropped",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.rx_bytes-d"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes-d"
+                                            },
+                                            "rx_bytes-d",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes-d"
+                                }
+                            },
                             "devices.device.satisfaction": {
                                 "type": "state",
                                 "common": {
@@ -1121,6 +1148,33 @@
                                         ]
                                     },
                                     "value": "tx_bytes"
+                                }
+                            },
+                            "devices.device.tx_bytes-d": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX dropped",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.tx_bytes-d"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "tx_bytes-d"
+                                            },
+                                            "tx_bytes-d",
+                                            null
+                                        ]
+                                    },
+                                    "value": "tx_bytes-d"
                                 }
                             },
                             "devices.device.upgradable": {
