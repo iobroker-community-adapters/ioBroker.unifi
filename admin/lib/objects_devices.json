@@ -139,6 +139,113 @@
                                                             "value": "name"
                                                         }
                                                     },
+                                                    "devices.device.port_table.port.poe_class": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE class",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_class"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_class"
+                                                                    },
+                                                                    "poe_class",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_class"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_current": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE current",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "mA",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_current"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_current"
+                                                                    },
+                                                                    "poe_current",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_current"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_power": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE power",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "W",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_power"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_power"
+                                                                    },
+                                                                    "poe_power",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_power"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_voltage": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE voltage",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "V",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_voltage"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_voltage"
+                                                                    },
+                                                                    "poe_voltage",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_voltage"
+                                                        }
+                                                    },
                                                     "devices.device.port_table.port.port_idx": {
                                                         "type": "state",
                                                         "common": {
@@ -274,6 +381,44 @@
                                                 },
                                                 "has_key": "_self",
                                                 "has": {
+                                                    "devices.device.radio_table_stats.stat.cu_self_rx": {
+                                                        "_id": "cu_self_rx",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "RX channel utilization",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_self_rx"
+                                                        },
+                                                        "logic": {
+                                                            "value": "cu_self_rx"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.cu_self_tx": {
+                                                        "_id": "cu_self_tx",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX channel utilization",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_self_tx"
+                                                        },
+                                                        "logic": {
+                                                            "value": "cu_self_tx"
+                                                        }
+                                                    },
                                                     "devices.device.radio_table_stats.stat.cu_total": {
                                                         "_id": "cu_total",
                                                         "type": "state",
@@ -291,6 +436,25 @@
                                                         },
                                                         "logic": {
                                                             "value": "cu_total"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.tx_power": {
+                                                        "_id": "tx_power",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX power",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "W",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.tx_power"
+                                                        },
+                                                        "logic": {
+                                                            "value": "tx_power"
                                                         }
                                                     }
                                                 }
