@@ -69,6 +69,84 @@
                                     "value": "ap_mac"
                                 }
                             },
+                            "clients.client.bssid": {
+                                "type": "state",
+                                "common": {
+                                    "name": "BSSID",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.bssid"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "bssid"
+                                            },
+                                            "bssid",
+                                            null
+                                        ]
+                                    },
+                                    "value": "bssid"
+                                }
+                            },
+                            "clients.client.channel": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Channel",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.channel"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "channel"
+                                            },
+                                            "channel",
+                                            null
+                                        ]
+                                    },
+                                    "value": "channel"
+                                }
+                            },
+                            "clients.client.essid": {
+                                "type": "state",
+                                "common": {
+                                    "name": "ESSID",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.essid"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "essid",
+                                            null
+                                        ]
+                                    },
+                                    "value": "essid"
+                                }
+                            },
                             "clients.client.first_seen": {
                                 "_id": "first_seen",
                                 "type": "state",
