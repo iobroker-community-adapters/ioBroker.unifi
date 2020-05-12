@@ -36,6 +36,9 @@ It is possible to disable the update of selected information or blacklist specif
 ### Enable/disable WLANs
 By changing the 'enabled' state of a WLAN it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
 
+### Voucher creation
+Using the 'vouchers.create_vouchers' button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
+
 ## Changelog
 ### __WORK IN PROGRESS__
 * (braindead1) Implemented possibility to enable/disable WLANs
