@@ -20,6 +20,91 @@ systemDictionary = {
     "Update vouchers": { "en": "Update vouchers", "de": "Vouchers aktualisieren", "ru": "Обновить ваучеры", "pt": "Atualizar comprovantes", "nl": "Vouchers bijwerken", "fr": "Mettre à jour les bons", "it": "Aggiorna i voucher", "es": "Actualizar comprobantes", "pl": "Zaktualizuj kupony", "zh-cn": "更新优惠券" },
     "Username": { "en": "Username", "de": "Username", "ru": "имя пользователя", "pt": "Nome do usuário", "nl": "Gebruikersnaam", "fr": "Nom d'utilisateur", "it": "Nome utente", "es": "Nombre de usuario", "pl": "Nazwa Użytkownika", "zh-cn": "用户名" },
 
+    "Settings for voucher creation": {
+        "en": "Settings for voucher creation",
+        "de": "Einstellungen für die Voucher Erstellung",
+        "ru": "Настройки для создания ваучеров",
+        "pt": "Configurações para criação de comprovante",
+        "nl": "Instellingen voor het maken van vouchers",
+        "fr": "Paramètres pour la création de bons",
+        "it": "Impostazioni per la creazione di voucher",
+        "es": "Configuraciones para la creación de cupones",
+        "pl": "Ustawienia tworzenia kuponów",
+        "zh-cn": "凭证创建的设置"
+    },
+    "Number of vouchers": {
+        "en": "Number of vouchers",
+        "de": "Anzahl der Vouchers",
+        "ru": "Количество ваучеров",
+        "pt": "Número de vouchers",
+        "nl": "Aantal vouchers",
+        "fr": "Nombre de bons",
+        "it": "Numero di buoni",
+        "es": "Numero de cupones",
+        "pl": "Liczba kuponów",
+        "zh-cn": "凭证数量"
+    },
+    "Duration in minutes": {
+        "en": "Duration in minutes",
+        "de": "Dauer in Minuten",
+        "ru": "Продолжительность в минутах",
+        "pt": "Duração em minutos",
+        "nl": "Duur in minuten",
+        "fr": "Durée en minutes",
+        "it": "Durata in minuti",
+        "es": "Duración en minutos",
+        "pl": "Czas trwania w minutach",
+        "zh-cn": "持续时间（分钟）"
+    },
+    "Usage quota": {
+        "en": "Usage quota",
+        "de": "Nutzungsquote",
+        "ru": "Квота использования",
+        "pt": "Cota de uso",
+        "nl": "Gebruiksquotum",
+        "fr": "Quota d'utilisation",
+        "it": "Quota di utilizzo",
+        "es": "Cuota de uso",
+        "pl": "Limit wykorzystania",
+        "zh-cn": "使用配额"
+    },
+    "Upload limit in Kbps": {
+        "en": "Upload limit in Kbps",
+        "de": "Upload-Limit in Kbps",
+        "ru": "Ограничение загрузки в кбит / с",
+        "pt": "Limite de upload em Kbps",
+        "nl": "Uploadlimiet in Kbps",
+        "fr": "Limite de téléchargement en Kbps",
+        "it": "Limite di upload in Kbps",
+        "es": "Límite de carga en Kbps",
+        "pl": "Limit przesyłania w Kb / s",
+        "zh-cn": "上传限制（以Kbps为单位）"
+    },
+    "Download limit in Kbps": {
+        "en": "Download limit in Kbps",
+        "de": "Download-Limit in Kbps",
+        "ru": "Ограничение загрузки в кбит / с",
+        "pt": "Limite de download em Kbps",
+        "nl": "Downloadlimiet in Kbps",
+        "fr": "Limite de téléchargement en Kbps",
+        "it": "Limite di download in Kbps",
+        "es": "Límite de descarga en Kbps",
+        "pl": "Limit pobierania w Kb / s",
+        "zh-cn": "下载限制（以Kbps为单位）"
+    },
+    "MB quota": {
+        "en": "MB quota",
+        "de": "MB Kontingent",
+        "ru": "Квота в мегабайтах",
+        "pt": "Cota de MB",
+        "nl": "MB-quota",
+        "fr": "Quota de Mo",
+        "it": "Quota MB",
+        "es": "Cuota de MB",
+        "pl": "Limit MB",
+        "zh-cn": "MB配额"
+    },
+
     // sysinfo
     "Hostname": {
         "en": "Hostname",

@@ -30,6 +30,7 @@ class Unifi extends utils.Adapter {
         this.blacklist = {};
         this.settings = {};
         this.update = {};
+        this.vouchers = {};
         this.whitelist = {};
         this.queryTimeout;
 
@@ -42,6 +43,7 @@ class Unifi extends utils.Adapter {
     async onReady() {
         // subscribe to all state changes
         this.subscribeStates('*.wlans.*.enabled');
+        this.subscribeStates('*.vouchers.create_vouchers');
 
         this.log.info('UniFi adapter is ready');
 
@@ -61,6 +63,14 @@ class Unifi extends utils.Adapter {
 
         this.blacklist = this.config.blacklist;
         this.whitelist = this.config.whitelist;
+
+        this.vouchers.number = this.config.createVouchersNumber;
+        this.vouchers.duration = this.config.createVouchersDuration;
+        this.vouchers.quota = this.config.createVouchersQuota;
+        this.vouchers.uploadLimit = (this.config.createVouchersUploadLimit == 0) ? null : this.config.createVouchersUploadLimit;
+        this.vouchers.downloadLimit = (this.config.createVouchersDownloadLimit == 0) ? null : this.config.createVouchersDownloadLimit;
+        this.vouchers.byteQuota = (this.config.createVouchersByteQuota == 0) ? null : this.config.createVouchersByteQuota;
+        this.vouchers.note = this.config.createVouchersNote;
 
         if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
@@ -100,6 +110,8 @@ class Unifi extends utils.Adapter {
 
             if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
                 this.updateWlanStatus(site, id, state);
+            } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
+                this.createUnifiVouchers(site);
             }
         }
     }
@@ -612,6 +624,63 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Create vouchers
+     * @param {*} site 
+     * @param {*} objId
+     */
+    createUnifiVouchers(site) {
+        this.login(this.settings.controllerUsername, this.settings.controllerPassword)
+            .then(async () => {
+                this.log.debug('Login successful');
+
+                await this.createVouchers(site);
+                await this.fetchVouchers([site]);
+
+                // finalize, logout and finish
+                this.controller.logout();
+
+                this.log.info('Vouchers created');
+
+                return true;
+            })
+            .catch(async (err) => {
+                this.errorHandling(err);
+
+                return;
+            });
+    }
+
+    /**
+     * Function to create vouchers
+     * @param {Object} sites 
+     */
+    async createVouchers(site) {
+        const minutes = this.vouchers.duration;
+        const count = this.vouchers.number;
+        const quota = this.vouchers.quota;
+        const note = this.vouchers.note;
+        const up = this.vouchers.uploadLimit;
+        const down = this.vouchers.downloadLimit;
+        const mbytes = this.vouchers.byteQuota;
+
+        return new Promise((resolve, reject) => {
+            const cb = (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else {
+                    this.log.debug('createVouchers: ' + data[0].length);
+
+                    this.processWlans([site], data);
+
+                    resolve(data);
+                }
+            };
+
+            this.controller.createVouchers(site, minutes, cb, count, quota, note, up, down, mbytes);
+        });
+    }
+
+    /**
      * Function to apply JSON logic to API responses
      * @param {*} objectTree 
      * @param {*} data 
@@ -635,7 +704,7 @@ class Unifi extends utils.Adapter {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
 
-                if (obj._id !== null) {
+                if (obj._id !== null && obj._id.slice(-1) !== -1) {
                     if (objectTree !== '') {
                         obj._id = objectTree + '.' + obj._id;
                     }
@@ -737,7 +806,7 @@ class Unifi extends utils.Adapter {
                                 tempData = data[hasKey];
                             }
 
-                            if (Array.isArray(tempData)) {
+                            if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
                                 tempData.forEach(async element => {
                                     await this.applyJsonLogic(obj._id, element, has, whitelist);
                                 });

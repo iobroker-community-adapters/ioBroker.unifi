@@ -218,6 +218,24 @@
                                     "value": "quota"
                                 }
                             },
+                            "vouchers.voucher.status": {
+                                "_id": "status",
+                                "type": "state",
+                                "common": {
+                                    "name": "Status",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "vouchers.voucher.status"
+                                },
+                                "logic": {
+                                    "value": "status"
+                                }
+                            },
                             "vouchers.voucher.used": {
                                 "_id": "used",
                                 "type": "state",
@@ -238,6 +256,21 @@
                             }
                         }
                     }
+                },
+                "vouchers.create_vouchers": {
+                    "_id": "create_vouchers",
+                    "type": "state",
+                    "common": {
+                        "name": "Create new vouchers",
+                        "type": "boolean",
+                        "role": "button",
+                        "read": false,
+                        "write": true,
+                        "desc": ""
+                    },
+                    "native": {
+                        "object_id": "vouchers.create_vouchers"},
+                    "logic": {}
                 }
             }
         }

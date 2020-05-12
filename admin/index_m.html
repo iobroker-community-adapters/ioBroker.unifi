@@ -72,7 +72,7 @@
         }
 
         .fancytree-node:hover,
-        .fancytree-node:hover > .fancytree-title,
+        .fancytree-node:hover>.fancytree-title,
         .fancytree-title:hover {
             background: #64b5f6 !important;
             color: white !important;
@@ -90,56 +90,55 @@
             height: calc(100% - 50px) !important;
         }
 
-        .fancytree-node > span.fancytree-checkbox {
+        .fancytree-node>span.fancytree-checkbox {
             background-position: 0 0;
             background-image: url("./img/checkbox.svg");
             width: 24px;
             height: 24px;
         }
-        
-        .fancytree-node.fancytree-partsel > span.fancytree-checkbox {
+
+        .fancytree-node.fancytree-partsel>span.fancytree-checkbox {
             background-position: 0 0;
             background-image: url("./img/checkbox_intermediate.svg");
             width: 24px;
             height: 24px;
         }
 
-        .fancytree-node.fancytree-partsel.fancytree-selected > span.fancytree-checkbox {
+        .fancytree-node.fancytree-partsel.fancytree-selected>span.fancytree-checkbox {
             background-position: 0 0;
             background-image: url("./img/checkbox_marked.svg");
             width: 24px;
             height: 24px;
         }
 
-        .fancytree-node > span.fancytree-icon,
-        .fancytree-node > span.fancytree-icon:hover {
+        .fancytree-node>span.fancytree-icon,
+        .fancytree-node>span.fancytree-icon:hover {
             background-position: 0 0;
             background-image: url("./img/state.png");
             width: 24px;
             height: 24px;
         }
 
-        .fancytree-node.fancytree-folder > span.fancytree-icon {
+        .fancytree-node.fancytree-folder>span.fancytree-icon {
             background-position: 0 0;
             background-image: url("./img/folder.png");
             width: 24px;
             height: 24px;
         }
 
-        .fancytree-node.fancytree-folder > span.fancytree-expander {
+        .fancytree-node.fancytree-folder>span.fancytree-expander {
             background-position: 0 0;
             background-image: url("./img/menu_right.svg");
             width: 24px;
             height: 24px;
         }
 
-        .fancytree-node.fancytree-expanded.fancytree-folder > span.fancytree-expander {
+        .fancytree-node.fancytree-expanded.fancytree-folder>span.fancytree-expander {
             background-position: 0 0;
             background-image: url("./img/menu_down.svg");
             width: 24px;
             height: 24px;
         }
-
     </style>
 
 </head>
@@ -291,6 +290,45 @@
             <div class="row">
                 <div class="translate sub-title">Objects</div>
                 <div class="col s12 treeContainer" id="tree_vouchers"></div>
+            </div>
+            <div class="row">
+                <div class="translate sub-title">Settings for voucher creation</div>
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersNumber" placeholder="1" class="value" />
+                            <label for="createVouchersNumber" class="translate">Number of vouchers</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersDuration" placeholder="Duration" class="value" />
+                            <label for="createVouchersDuration" class="translate">Duration in minutes</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersQuota" placeholder="Quota" class="value" />
+                            <label for="createVouchersQuota" class="translate">Usage quota</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersUploadLimit" placeholder="0" class="value" />
+                            <label for="createVouchersUploadLimit" class="translate">Upload limit in Kbps</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersDownloadLimit" placeholder="0" class="value" />
+                            <label for="createVouchersDownloadLimit" class="translate">Download limit in Kbps</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="number" id="createVouchersByteQuota" placeholder="0" class="value" />
+                            <label for="createVouchersByteQuota" class="translate">MB quota</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input type="text" id="createVouchersNote" placeholder="Note" class="value" />
+                            <label for="createVouchersNote" class="translate">Note</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -175,7 +175,14 @@
             "networks": [],
             "health": [],
             "vouchers": []
-        }
+        },
+        "createVouchersNumber": 1,
+        "createVouchersDuration": 60,
+        "createVouchersQuota": 1,
+        "createVouchersUploadLimit": null,
+        "createVouchersDownloadLimit": null,
+        "createVouchersByteQuota": null,
+        "createVouchersNote": ""
     },
     "objects": [],
     "instanceObjects": [
