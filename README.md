@@ -39,6 +39,10 @@ By changing the 'enabled' state of a WLAN it is possible to enable/disable it. S
 ## Changelog
 ### __WORK IN PROGRESS__
 * (braindead1) Implemented possibility to enable/disable WLANs
+* (braindead1) Implemented voucher creation
+* (braindead1) Updated client states
+* (braindead1) Updated device states
+* (braindead1) Improved error messages
 
 ### 0.5.0 (2020-05-09)
 * (braindead1) Implemented configuration of updates
