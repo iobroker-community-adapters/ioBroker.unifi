@@ -447,7 +447,7 @@
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "W",
+                                                            "unit": "dBm",
                                                             "desc": ""
                                                         },
                                                         "native": {
