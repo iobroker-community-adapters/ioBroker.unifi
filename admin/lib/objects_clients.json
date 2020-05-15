@@ -303,6 +303,23 @@
                                     "value": "_is_guest_by_usw"
                                 }
                             },
+                            "clients.client.is_online": {
+                                "_id": "is_online",
+                                "type": "state",
+                                "common": {
+                                    "name": "Is online",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.is_online"
+                                },
+                                "value": true,
+                                "logic": {}
+                            },
                             "clients.client.is_wired": {
                                 "_id": "is_wired",
                                 "type": "state",

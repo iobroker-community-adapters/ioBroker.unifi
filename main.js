@@ -368,6 +368,40 @@ class Unifi extends utils.Adapter {
             });
 
             await this.applyJsonLogic(site, siteData, objects, this.whitelist.clients);
+
+            // Update is_online of offline clients
+            //await this.setClientOnlineStatus();
+        }
+    }
+
+    /**
+     * Update is_online of offline clients
+     */
+    async setClientOnlineStatus() {
+        const wlanStates = await this.getStatesAsync('*.clients.*.last_seen_by_uap');
+        const wiredStates = await this.getStatesAsync('*.clients.*.last_seen_by_usw');
+        const states = {
+            ...wlanStates,
+            ...wiredStates
+        };
+
+        const now = Math.floor(Date.now() / 1000) * 1000;
+
+        for (const [key, value] of Object.entries(states)) {
+            const lastSeen = Date.parse(value.val.replace(' ', 'T'));
+            const isOnline = (lastSeen - (now - this.settings.updateInterval) < 0 === true) ? false : true;
+            const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
+            const oldState = await this.getStateAsync(stateId);
+
+            this.log.debug(stateId);
+            this.log.debug(lastSeen);
+            this.log.debug(now);
+            this.log.debug(this.settings.updateInterval);
+            this.log.debug(isOnline);
+
+            if (oldState !== null && oldState.val != isOnline) {
+                await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+            }
         }
     }
 
@@ -759,6 +793,8 @@ class Unifi extends utils.Adapter {
                         });
 
                         this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+
+                        this.log.debug('Object ' + obj._id + ' updated');
                     } else {
                         const ownObj = this.ownObjects[obj._id];
 

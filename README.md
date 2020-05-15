@@ -43,6 +43,7 @@ Using the 'vouchers.create_vouchers' button it is possible to create predefined 
 ### __WORK IN PROGRESS__
 * (braindead1) Implemented possibility to enable/disable WLANs
 * (braindead1) Implemented voucher creation
+* (braindead1) Implemented online state for clients
 * (braindead1) Updated client states
 * (braindead1) Updated device states
 * (braindead1) Improved error messages
