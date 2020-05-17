@@ -380,6 +380,17 @@ class Unifi extends utils.Adapter {
     async setClientOnlineStatus() {
         const wlanStates = await this.getStatesAsync('*.clients.*.last_seen_by_uap');
         const wiredStates = await this.getStatesAsync('*.clients.*.last_seen_by_usw');
+
+        // Workaround for UniFi bug "wireless clients shown as wired clients"
+        // https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1
+        for (const [key, value] of Object.entries(wlanStates)) {
+            const wiredStateId = key.replace('last_seen_by_uap', 'last_seen_by_usw');
+
+            if (Object.prototype.hasOwnProperty.call(wiredStates, wiredStateId)) {
+                delete wiredStates[wiredStateId];
+            }
+        }
+
         const states = {
             ...wlanStates,
             ...wiredStates
