@@ -128,9 +128,13 @@ function save(callback) {
             obj[id] = $this.prop('checked');
         } else {
             let value = $this.val();
+            
+            value = value.trim();
+
             if (id === 'controllerPassword') {
                 value = encrypt(secret, value);
             }
+
             obj[id] = value;
         }
     });
