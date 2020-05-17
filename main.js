@@ -243,7 +243,7 @@ class Unifi extends utils.Adapter {
      */
     async login(controllerUsername, controllerPassword) {
         return new Promise((resolve, reject) => {
-            this.controller.login(controllerUsername, controllerPassword, (err) => {
+            this.controller.login(controllerUsername, controllerPassword, async (err) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
@@ -258,7 +258,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchSites() {
         return new Promise((resolve, reject) => {
-            this.controller.getSites((err, data) => {
+            this.controller.getSites(async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
@@ -266,7 +266,7 @@ class Unifi extends utils.Adapter {
 
                     this.log.debug('fetchSites: ' + sites);
 
-                    this.processSites(sites, data);
+                    await this.processSites(sites, data);
 
                     resolve(sites);
                 }
@@ -296,13 +296,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchSiteSysinfo(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getSiteSysinfo(sites, (err, data) => {
+            this.controller.getSiteSysinfo(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
 
-                    this.processSiteSysinfo(sites, data);
+                    await this.processSiteSysinfo(sites, data);
 
                     resolve(data);
                 }
@@ -332,13 +332,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchClients(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getClientDevices(sites, (err, data) => {
+            this.controller.getClientDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
 
-                    this.processClients(sites, data);
+                    await this.processClients(sites, data);
 
                     resolve(data);
                 }
@@ -370,7 +370,7 @@ class Unifi extends utils.Adapter {
             await this.applyJsonLogic(site, siteData, objects, this.whitelist.clients);
 
             // Update is_online of offline clients
-            //await this.setClientOnlineStatus();
+            await this.setClientOnlineStatus();
         }
     }
 
@@ -393,11 +393,11 @@ class Unifi extends utils.Adapter {
             const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
             const oldState = await this.getStateAsync(stateId);
 
-            this.log.debug(stateId);
+            /*this.log.debug(stateId);
             this.log.debug(lastSeen);
             this.log.debug(now);
             this.log.debug(this.settings.updateInterval);
-            this.log.debug(isOnline);
+            this.log.debug(isOnline);*/
 
             if (oldState !== null && oldState.val != isOnline) {
                 await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
@@ -411,13 +411,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchDevices(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getAccessDevices(sites, (err, data) => {
+            this.controller.getAccessDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
-                    this.processDevices(sites, data);
+                    await this.processDevices(sites, data);
 
                     resolve(data);
                 }
@@ -455,13 +455,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchWlans(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getWLanSettings(sites, (err, data) => {
+            this.controller.getWLanSettings(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
 
-                    this.processWlans(sites, data);
+                    await this.processWlans(sites, data);
 
                     resolve(data);
                 }
@@ -497,13 +497,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchNetworks(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getNetworkConf(sites, (err, data) => {
+            this.controller.getNetworkConf(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
 
-                    this.processNetworks(sites, data);
+                    await this.processNetworks(sites, data);
 
                     resolve(data);
                 }
@@ -539,13 +539,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchHealth(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getHealth(sites, (err, data) => {
+            this.controller.getHealth(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
 
-                    this.processHealth(sites, data);
+                    await this.processHealth(sites, data);
 
                     resolve(data);
                 }
@@ -575,13 +575,13 @@ class Unifi extends utils.Adapter {
      */
     async fetchVouchers(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getVouchers(sites, (err, data) => {
+            this.controller.getVouchers(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
 
-                    this.processVouchers(sites, data);
+                    await this.processVouchers(sites, data);
 
                     resolve(data);
                 }
@@ -643,13 +643,13 @@ class Unifi extends utils.Adapter {
         const disable = (state.val == true) ? false : true;
 
         return new Promise((resolve, reject) => {
-            this.controller.disableWLan(site, wlanId, disable, (err, data) => {
+            this.controller.disableWLan(site, wlanId, disable, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
 
-                    this.processWlans([site], data);
+                    await this.processWlans([site], data);
 
                     resolve(data);
                 }
@@ -698,13 +698,13 @@ class Unifi extends utils.Adapter {
         const mbytes = this.vouchers.byteQuota;
 
         return new Promise((resolve, reject) => {
-            const cb = (err, data) => {
+            const cb = async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
 
-                    this.processWlans([site], data);
+                    await this.processWlans([site], data);
 
                     resolve(data);
                 }
@@ -843,9 +843,9 @@ class Unifi extends utils.Adapter {
                             }
 
                             if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
-                                tempData.forEach(async element => {
+                                for (const element of tempData) {
                                     await this.applyJsonLogic(obj._id, element, has, whitelist);
-                                });
+                                }
                             } else {
                                 await this.applyJsonLogic(obj._id, tempData, has, whitelist);
                             }
