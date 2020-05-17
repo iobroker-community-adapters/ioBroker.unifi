@@ -298,6 +298,33 @@
                                                             "value": "port_poe"
                                                         }
                                                     },
+                                                    "devices.device.port_table.port.rx_bytes": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "RX Bytes",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "Byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.rx_bytes"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "rx_bytes"
+                                                                    },
+                                                                    "rx_bytes",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "rx_bytes"
+                                                        }
+                                                    },
                                                     "devices.device.port_table.port.satisfaction": {
                                                         "type": "state",
                                                         "common": {
@@ -342,6 +369,33 @@
                                                         },
                                                         "logic": {
                                                             "value": "speed"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.tx_bytes": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX Bytes",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "Byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.tx_bytes"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "tx_bytes"
+                                                                    },
+                                                                    "tx_bytes",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "tx_bytes"
                                                         }
                                                     }
                                                 }
