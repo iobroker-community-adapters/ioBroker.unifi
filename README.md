@@ -52,6 +52,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 
 ## Changelog
 ### __WORK IN PROGRESS__
+* (jens-maus) Implemented UniFiOS/UDM-Pro support
 * (braindead1) Implemented possibility to enable/disable WLANs
 * (braindead1) Implemented voucher creation
 * (braindead1) Implemented online state for clients
