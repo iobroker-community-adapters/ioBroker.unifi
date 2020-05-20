@@ -261,6 +261,8 @@ class Unifi extends utils.Adapter {
             this.controller.getSites(async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     const sites = data.map((s) => { return s.name; });
 
@@ -299,6 +301,8 @@ class Unifi extends utils.Adapter {
             this.controller.getSiteSysinfo(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
 
@@ -335,6 +339,8 @@ class Unifi extends utils.Adapter {
             this.controller.getClientDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
 
@@ -425,6 +431,8 @@ class Unifi extends utils.Adapter {
             this.controller.getAccessDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
@@ -469,6 +477,8 @@ class Unifi extends utils.Adapter {
             this.controller.getWLanSettings(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
 
@@ -511,6 +521,8 @@ class Unifi extends utils.Adapter {
             this.controller.getNetworkConf(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
 
@@ -553,6 +565,8 @@ class Unifi extends utils.Adapter {
             this.controller.getHealth(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
 
@@ -589,6 +603,8 @@ class Unifi extends utils.Adapter {
             this.controller.getVouchers(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
 
@@ -657,6 +673,8 @@ class Unifi extends utils.Adapter {
             this.controller.disableWLan(site, wlanId, disable, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
 
@@ -712,6 +730,8 @@ class Unifi extends utils.Adapter {
             const cb = async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
 
