@@ -805,7 +805,7 @@ class Unifi extends utils.Adapter {
 
                         this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
 
-                        this.log.debug('Object ' + obj._id + ' updated');
+                        //this.log.debug('Object ' + obj._id + ' updated');
                     } else {
                         const ownObj = this.ownObjects[obj._id];
 
