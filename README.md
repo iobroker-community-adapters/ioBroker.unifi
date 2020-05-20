@@ -51,7 +51,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
 
 ## Changelog
-### 0.5.1-beta.2 (2020-05-20)
+### __WORK IN PROGRESS__
 * (jens-maus) Implemented UniFiOS/UDM-Pro support
 * (braindead1) Implemented possibility to enable/disable WLANs
 * (braindead1) Implemented voucher creation
