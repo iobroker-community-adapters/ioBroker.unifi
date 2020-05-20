@@ -373,7 +373,9 @@ class Unifi extends utils.Adapter {
                 }
             });
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.clients);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.whitelist.clients);
+            }
 
             // Update is_online of offline clients
             await this.setClientOnlineStatus();
@@ -464,7 +466,9 @@ class Unifi extends utils.Adapter {
                 }
             });
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.devices);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.whitelist.devices);
+            }
         }
     }
 
@@ -508,7 +512,9 @@ class Unifi extends utils.Adapter {
                 }
             });
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.wlans);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.whitelist.wlans);
+            }
         }
     }
 
@@ -552,7 +558,9 @@ class Unifi extends utils.Adapter {
                 }
             });
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.networks);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.whitelist.networks);
+            }
         }
     }
 
