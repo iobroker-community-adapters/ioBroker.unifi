@@ -317,7 +317,6 @@
                                 "native": {
                                     "object_id": "clients.client.is_online"
                                 },
-                                "value": null,
                                 "logic": {}
                             },
                             "clients.client.is_wired": {

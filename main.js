@@ -412,13 +412,15 @@ class Unifi extends utils.Adapter {
             const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
             const oldState = await this.getStateAsync(stateId);
 
-            /*this.log.debug(stateId);
-            this.log.debug(lastSeen);
-            this.log.debug(now);
-            this.log.debug(this.settings.updateInterval);
-            this.log.debug(isOnline);*/
+            if (oldState === null) {
+                // This is the case if the client is new to the adapter
+                // Check if object is available and set the value
+                const oldObject = await this.getForeignObjectAsync(stateId);
 
-            if (oldState !== null && oldState.val != isOnline) {
+                if (oldObject !== null) {
+                    await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+                }
+            } else if (oldState.val != isOnline) {
                 await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
             }
         }
