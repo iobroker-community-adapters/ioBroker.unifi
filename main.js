@@ -159,6 +159,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Login required. Check username and password.');
         } else if (err.message.includes('connect ECONNREFUSED') === true) {
             this.log.error('Error: Connection refused. Incorrect IP or port.');
+        } else if (err.message.includes('getaddrinfo EAI_AGAIN') === true) {
+            this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
         } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
             this.log.error('Error: Host not found. Incorrect IP or port.');
         } else {
