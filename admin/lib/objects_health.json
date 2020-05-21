@@ -377,6 +377,60 @@
                                     },
                                     "value": "wan_ip"
                                 }
+                            },
+                            "health.subsystem.xput_down": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Download speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_down"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_down"
+                                            },
+                                            "xput_down",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_down"
+                                }
+                            },
+                            "health.subsystem.xput_up": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Upload speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_up"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_up"
+                                            },
+                                            "xput_up",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_up"
+                                }
                             }
                         }
                     }
