@@ -594,9 +594,17 @@ class Unifi extends utils.Adapter {
 
         for (const site of sites) {
             const x = sites.indexOf(site);
-            const siteData = data[x];
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
+            // Process blacklist
+            const siteData = data[x].filter((item) => {
+                if (this.blacklist.health.includes(item.subsystem) !== true) {
+                    return item;
+                }
+            });
+
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
+            }
         }
     }
 
