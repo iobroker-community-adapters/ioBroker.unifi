@@ -16,6 +16,7 @@ appveyor.yaml
 .gitignore
 .npmignore
 .github
+.snyk
 
 .eslintrc.json
 .eslintrc.js
