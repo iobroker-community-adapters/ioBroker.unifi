@@ -32,17 +32,17 @@ systemDictionary = {
         "pl": "Wskazówka:",
         "zh-cn": "暗示："
     },
-    "To calculate is_online, is_guest_by_uap and is_guest_by_usw need to be activated additionally.": {
-        "en": "To calculate is_online, is_guest_by_uap and is_guest_by_usw need to be activated additionally.",
-        "de": "Um is_online zu berechnen, müssen is_guest_by_uap und is_guest_by_usw zusätzlich aktiviert werden.",
-        "ru": "Для расчета is_online необходимо дополнительно активировать is_guest_by_uap и is_guest_by_usw.",
-        "pt": "Para calcular is_online, is_guest_by_uap e is_guest_by_usw precisam ser ativados adicionalmente.",
-        "nl": "Om te berekenen is_online, is_guest_by_uap en is_guest_by_usw moeten bovendien worden geactiveerd.",
-        "fr": "Pour calculer is_online, is_guest_by_uap et is_guest_by_usw doivent être activés en plus.",
-        "it": "Per calcolare is_online, is_guest_by_uap e is_guest_by_usw devono essere attivati ulteriormente.",
-        "es": "Para calcular is_online, is_guest_by_uap y is_guest_by_usw deben activarse adicionalmente.",
-        "pl": "Aby obliczyć is_online, należy dodatkowo aktywować is_guest_by_uap i is_guest_by_usw.",
-        "zh-cn": "要计算is_online，需要另外激活is_guest_by_uap和is_guest_by_usw。"
+    "To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.": {
+        "en": "To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.",
+        "de": "Um is_online zu berechnen, müssen last_seen_by_uap und last_seen_by_usw zusätzlich aktiviert werden.",
+        "ru": "Для расчета is_online необходимо дополнительно активировать last_seen_by_uap и last_seen_by_usw.",
+        "pt": "Para calcular is_online, last_seen_by_uap e last_seen_by_usw precisam ser ativados adicionalmente.",
+        "nl": "Om te berekenen is_online, last_seen_by_uap en last_seen_by_usw moeten bovendien worden geactiveerd.",
+        "fr": "Pour calculer is_online, last_seen_by_uap et last_seen_by_usw doivent être activés en plus.",
+        "it": "Per calcolare is_online, last_seen_by_uap e last_seen_by_usw devono essere attivati ulteriormente.",
+        "es": "Para calcular is_online, last_seen_by_uap y last_seen_by_usw deben activarse adicionalmente.",
+        "pl": "Aby obliczyć is_online, należy dodatkowo aktywować last_seen_by_uap i last_seen_by_usw.",
+        "zh-cn": "要计算is_online，需要另外激活last_seen_by_uap和last_seen_by_usw。"
     },
 
     "Settings for voucher creation": {
