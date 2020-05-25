@@ -3,7 +3,6 @@
 
 systemDictionary = {
     "Add": { "en": "Add", "de": "Hinzufügen", "ru": "Добавить", "pt": "Adicionar", "nl": "Toevoegen", "fr": "Ajouter", "it": "Inserisci", "es": "Añadir", "pl": "Dodaj", "zh-cn": "加" },
-    "Blacklists": { "en": "Blacklists", "de": "Blacklists", "ru": "Черные списки", "pt": "Listas negras", "nl": "Zwarte lijsten", "fr": "Listes noires", "it": "blacklist", "es": "Listas negras", "pl": "Czarne listy", "zh-cn": "黑名单" },
     "IP address": { "en": "IP address", "de": "IP Adresse", "ru": "айпи адрес", "pt": "endereço de IP", "nl": "IP adres", "fr": "adresse IP", "it": "indirizzo IP", "es": "dirección IP", "pl": "adres IP", "zh-cn": "IP地址" },
     "Login": { "en": "Login", "de": "Login", "ru": "Авторизоваться", "pt": "Conecte-se", "nl": "Log in", "fr": "S'identifier", "it": "Accesso", "es": "Iniciar sesión", "pl": "Zaloguj sie", "zh-cn": "登录" },
     "Network settings": { "en": "Network settings", "de": "Netzwerkeinstellungen", "ru": "Сетевые настройки", "pt": "Configurações de rede", "nl": "Netwerkinstellingen", "fr": "Paramètres réseau", "it": "Impostazioni di rete", "es": "Configuración de red", "pl": "Ustawienia sieci", "zh-cn": "网络设置" },
@@ -20,6 +19,30 @@ systemDictionary = {
     "Update vouchers": { "en": "Update vouchers", "de": "Vouchers aktualisieren", "ru": "Обновить ваучеры", "pt": "Atualizar comprovantes", "nl": "Vouchers bijwerken", "fr": "Mettre à jour les bons", "it": "Aggiorna i voucher", "es": "Actualizar comprobantes", "pl": "Zaktualizuj kupony", "zh-cn": "更新优惠券" },
     "Username": { "en": "Username", "de": "Username", "ru": "имя пользователя", "pt": "Nome do usuário", "nl": "Gebruikersnaam", "fr": "Nom d'utilisateur", "it": "Nome utente", "es": "Nombre de usuario", "pl": "Nazwa Użytkownika", "zh-cn": "用户名" },
 
+    "Filter objects": {
+        "en": "Filter objects",
+        "de": "Objekte filtern",
+        "ru": "Фильтровать объекты",
+        "pt": "Filtrar objetos",
+        "nl": "Objecten filteren",
+        "fr": "Filtrer les objets",
+        "it": "Filtra oggetti",
+        "es": "Filtrar objetos",
+        "pl": "Filtruj obiekty",
+        "zh-cn": "过滤对象"
+    },
+    "Filter states": {
+        "en": "Filter states",
+        "de": "States filtern",
+        "ru": "Фильтр состояний",
+        "pt": "Estados do filtro",
+        "nl": "Filterstatussen",
+        "fr": "États du filtre",
+        "it": "Stati del filtro",
+        "es": "Estados de filtro",
+        "pl": "Filtruj stany",
+        "zh-cn": "过滤状态"
+    },
     "Hint:": {
         "en": "Hint:",
         "de": "Hinweis:",

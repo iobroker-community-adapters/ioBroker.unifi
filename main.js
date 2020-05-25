@@ -27,11 +27,11 @@ class Unifi extends utils.Adapter {
         this.on('unload', this.onUnload.bind(this));
 
         this.controller;
-        this.blacklist = {};
+        this.objectsFilter = {};
         this.settings = {};
         this.update = {};
         this.vouchers = {};
-        this.whitelist = {};
+        this.statesFilter = {};
         this.queryTimeout;
 
         this.ownObjects = {};
@@ -61,8 +61,8 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
 
-        this.blacklist = this.config.blacklist;
-        this.whitelist = this.config.whitelist;
+        this.objectsFilter = this.config.objectsFilter;
+        this.statesFilter = this.config.statesFilter;
 
         this.vouchers.number = this.config.createVouchersNumber;
         this.vouchers.duration = this.config.createVouchersDuration;
@@ -330,7 +330,7 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.sysinfo);
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.sysinfo);
         }
     }
 
@@ -367,18 +367,18 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.clients.includes(item.mac) !== true &&
-                    this.blacklist.clients.includes(item.ip) !== true &&
-                    this.blacklist.clients.includes(item.name) !== true &&
-                    this.blacklist.clients.includes(item.hostname) !== true) {
+                if (this.objectsFilter.clients.includes(item.mac) !== true &&
+                    this.objectsFilter.clients.includes(item.ip) !== true &&
+                    this.objectsFilter.clients.includes(item.name) !== true &&
+                    this.objectsFilter.clients.includes(item.hostname) !== true) {
                     return item;
                 }
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.whitelist.clients);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
             }
 
             // Update is_online of offline clients
@@ -463,17 +463,17 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.devices.includes(item.mac) !== true &&
-                    this.blacklist.devices.includes(item.ip) !== true &&
-                    this.blacklist.devices.includes(item.name) !== true) {
+                if (this.objectsFilter.devices.includes(item.mac) !== true &&
+                    this.objectsFilter.devices.includes(item.ip) !== true &&
+                    this.objectsFilter.devices.includes(item.name) !== true) {
                     return item;
                 }
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.whitelist.devices);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
             }
         }
     }
@@ -511,15 +511,15 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.wlans.includes(item.name) !== true) {
+                if (this.objectsFilter.wlans.includes(item.name) !== true) {
                     return item;
                 }
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.whitelist.wlans);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
             }
         }
     }
@@ -557,15 +557,15 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.networks.includes(item.name) !== true) {
+                if (this.objectsFilter.networks.includes(item.name) !== true) {
                     return item;
                 }
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.whitelist.networks);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
             }
         }
     }
@@ -603,15 +603,15 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.health.includes(item.subsystem) !== true) {
+                if (this.objectsFilter.health.includes(item.subsystem) !== true) {
                     return item;
                 }
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.whitelist.health);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
             }
         }
     }
@@ -650,7 +650,7 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
-            await this.applyJsonLogic(site, siteData, objects, this.whitelist.vouchers);
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
     }
 
@@ -772,11 +772,11 @@ class Unifi extends utils.Adapter {
      * @param {*} objectTree 
      * @param {*} data 
      * @param {*} objects 
-     * @param {*} whitelist
+     * @param {*} statesFilter
      */
-    async applyJsonLogic(objectTree, data, objects, whitelist) {
+    async applyJsonLogic(objectTree, data, objects, statesFilter) {
         for (const key in objects) {
-            if (whitelist.lenth === 0 || whitelist.includes(key)) {
+            if (statesFilter.lenth === 0 || statesFilter.includes(key)) {
                 const obj = {
                     '_id': null,
                     'type': null,
@@ -897,10 +897,10 @@ class Unifi extends utils.Adapter {
 
                             if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
                                 for (const element of tempData) {
-                                    await this.applyJsonLogic(obj._id, element, has, whitelist);
+                                    await this.applyJsonLogic(obj._id, element, has, statesFilter);
                                 }
                             } else {
-                                await this.applyJsonLogic(obj._id, tempData, has, whitelist);
+                                await this.applyJsonLogic(obj._id, tempData, has, statesFilter);
                             }
                         }
                     }

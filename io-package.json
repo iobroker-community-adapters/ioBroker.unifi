@@ -172,14 +172,14 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
-        "blacklist": {
+        "objectsFilter": {
             "clients": [],
             "devices": [],
             "wlans": [],
             "networks": [],
             "health": []
         },
-        "whitelist": {
+        "statesFilter": {
             "sysinfo": [],
             "clients": [],
             "devices": [],

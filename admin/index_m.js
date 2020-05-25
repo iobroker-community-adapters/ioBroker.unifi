@@ -139,16 +139,16 @@ function save(callback) {
         }
     });
 
-    // Process blacklists
-    obj.blacklist = {};
+    // Process objectsFilter
+    obj.objectsFilter = {};
     $('[id*=chips_]').each(function () {
         const settingsName = $(this).attr('id').replace('chips_', '');
 
-        obj.blacklist[settingsName] = chips2list(`#chips_${settingsName}`);
+        obj.objectsFilter[settingsName] = chips2list(`#chips_${settingsName}`);
     });
 
-    //Process whitelists
-    obj.whitelist = {};
+    //Process statesFilter
+    obj.statesFilter = {};
     $('[id*=tree_]').each(function () {
         // store selected nodes of tree
         const settingsName = $(this).attr('id').replace('tree_', '');
@@ -176,7 +176,7 @@ function save(callback) {
             }
         }
 
-        obj.whitelist[settingsName] = retVal;
+        obj.statesFilter[settingsName] = retVal;
     });
 
     callback(obj);
@@ -189,9 +189,9 @@ function save(callback) {
  * @param {*} onChange 
  */
 async function createChips(settings, onChange) {
-    for (const key of Object.keys(settings.blacklist)) {
+    for (const key of Object.keys(settings.objectsFilter)) {
         try {
-            list2chips(`#chips_${key}`, settings.blacklist[key], onChange);
+            list2chips(`#chips_${key}`, settings.objectsFilter[key], onChange);
             M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
         } catch (err) {
             console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
@@ -204,7 +204,7 @@ async function createChips(settings, onChange) {
  * @param {*} onChange 
  */
 async function createTreeViews(settings, onChange) {
-    for (const key of Object.keys(settings.whitelist)) {
+    for (const key of Object.keys(settings.statesFilter)) {
         try {
             // get json data from file
             const obj = await getUnifiObjects(key);
@@ -291,7 +291,7 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
             const title = value.common.name ? `${idReadable} | ${_(value.common.name)}` : `${idReadable}`;
 
             if (value && value.type === 'state') {
-                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
+                if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
                     tree.children.push({
                         title: title,
                         id: id,
