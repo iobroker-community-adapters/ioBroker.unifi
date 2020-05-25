@@ -16,7 +16,13 @@
                         "object_id": "vouchers.voucher"
                     },
                     "logic": {
-                        "_id": "code",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "code"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "code"
                         },

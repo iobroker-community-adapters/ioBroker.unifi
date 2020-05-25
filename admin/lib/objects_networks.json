@@ -16,7 +16,13 @@
                         "object_id": "networks.network"
                     },
                     "logic": {
-                        "_id": "name",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "name"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "name"
                         },

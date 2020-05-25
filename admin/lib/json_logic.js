@@ -49,4 +49,15 @@ jsonLogic.add_operation('ifNotNull', function (a, b, c) {
     }
 });
 
+/**
+ * Cleanup for use as ID
+ */
+jsonLogic.add_operation('cleanupForUseAsId', function (a) {
+    const FORBIDDEN_CHARS = /[\]\[*.,;'"`<>\\?\s]/g;
+    let tempId = a.replace(FORBIDDEN_CHARS, '_');
+    tempId = tempId.toLowerCase();
+    
+    return tempId;
+});
+
 module.exports = jsonLogic;

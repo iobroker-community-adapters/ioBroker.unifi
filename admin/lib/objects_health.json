@@ -16,7 +16,13 @@
                         "object_id": "health.subsystem"
                     },
                     "logic": {
-                        "_id": "subsystem",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "subsystem"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "subsystem"
                         },

@@ -17,7 +17,7 @@
                     },
                     "logic": {
                         "_id": {
-                            "cat": [
+                            "cleanupForUseAsId": [
                                 {
                                     "var": "mac"
                                 }
@@ -60,10 +60,14 @@
                                                             "var": "port_idx"
                                                         },
                                                         {
-                                                            "cat": [
-                                                                "port_",
+                                                            "cleanupForUseAsId": [
                                                                 {
-                                                                    "var": "port_idx"
+                                                                    "cat": [
+                                                                        "port_",
+                                                                        {
+                                                                            "var": "port_idx"
+                                                                        }
+                                                                    ]
                                                                 }
                                                             ]
                                                         },
@@ -429,7 +433,13 @@
                                                 "object_id": "devices.device.radio_table_stats.stat"
                                             },
                                             "logic": {
-                                                "_id": "name",
+                                                "_id": {
+                                                    "cleanupForUseAsId": [
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
                                                 "common": {
                                                     "name": "name"
                                                 },
@@ -808,7 +818,13 @@
                                                 "object_id": "devices.device.vap_table.vap"
                                             },
                                             "logic": {
-                                                "_id": "name",
+                                                "_id": {
+                                                    "cleanupForUseAsId": [
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
                                                 "common": {
                                                     "name": "name"
                                                 },

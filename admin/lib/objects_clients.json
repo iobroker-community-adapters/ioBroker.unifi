@@ -17,7 +17,7 @@
                     },
                     "logic": {
                         "_id": {
-                            "cat": [
+                            "cleanupForUseAsId": [
                                 {
                                     "var": "mac"
                                 }
