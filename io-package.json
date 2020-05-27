@@ -188,6 +188,7 @@
             "health": [],
             "vouchers": []
         },
+        "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,
         "createVouchersDuration": 60,
         "createVouchersQuota": 1,

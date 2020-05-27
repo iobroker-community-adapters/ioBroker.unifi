@@ -30,6 +30,7 @@ class Unifi extends utils.Adapter {
         this.objectsFilter = {};
         this.settings = {};
         this.update = {};
+        this.clients = {};
         this.vouchers = {};
         this.statesFilter = {};
         this.queryTimeout;
@@ -63,6 +64,8 @@ class Unifi extends utils.Adapter {
 
         this.objectsFilter = this.config.objectsFilter;
         this.statesFilter = this.config.statesFilter;
+
+        this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
 
         this.vouchers.number = this.config.createVouchersNumber;
         this.vouchers.duration = this.config.createVouchersDuration;
@@ -412,7 +415,7 @@ class Unifi extends utils.Adapter {
 
         for (const [key, value] of Object.entries(states)) {
             const lastSeen = Date.parse(value.val.replace(' ', 'T'));
-            const isOnline = (lastSeen - (now - this.settings.updateInterval) < 0 === true) ? false : true;
+            const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
             const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
             const oldState = await this.getStateAsync(stateId);
 

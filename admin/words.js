@@ -67,6 +67,18 @@ systemDictionary = {
         "pl": "Aby obliczyć is_online, należy dodatkowo aktywować last_seen_by_uap i last_seen_by_usw.",
         "zh-cn": "要计算is_online，需要另外激活last_seen_by_uap和last_seen_by_usw。"
     },
+    "Offset for is_online": {
+        "en": "Offset for is_online",
+        "de": "Offset für is_online",
+        "ru": "Смещение для is_online",
+        "pt": "Deslocamento para is_online",
+        "nl": "Offset voor is_online",
+        "fr": "Décalage pour is_online",
+        "it": "Offset per is_online",
+        "es": "Offset para is_online",
+        "pl": "Przesunięcie dla is_online",
+        "zh-cn": "is_online的偏移量"
+    },
 
     "Settings for voucher creation": {
         "en": "Settings for voucher creation",
