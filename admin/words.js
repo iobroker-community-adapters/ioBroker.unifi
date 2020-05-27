@@ -79,6 +79,18 @@ systemDictionary = {
         "pl": "Przesunięcie dla is_online",
         "zh-cn": "is_online的偏移量"
     },
+    "Settings for clients": {
+        "en": "Settings for clients",
+        "de": "Einstellungen für Clients",
+        "ru": "Настройки для клиентов",
+        "pt": "Configurações para clientes",
+        "nl": "Instellingen voor klanten",
+        "fr": "Paramètres pour les clients",
+        "it": "Impostazioni per i clienti",
+        "es": "Configuraciones para clientes",
+        "pl": "Ustawienia dla klientów",
+        "zh-cn": "客户端设置"
+    },
 
     "Settings for voucher creation": {
         "en": "Settings for voucher creation",
