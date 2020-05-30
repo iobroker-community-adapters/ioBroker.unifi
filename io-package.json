@@ -1,9 +1,21 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.0-beta.1",
+        "version": "0.5.2",
         "news": {
-            "0.5.0-beta.1": {
+            "0.5.2": {
+                "en": "* (jens-maus) Implemented UniFiOS/UDM-Pro support\r\n* (braindead1) Implemented possibility to enable/disable WLANs\r\n* (braindead1) Implemented voucher creation\r\n* (braindead1) Implemented online state for clients\r\n* (braindead1) Updated client states\r\n* (braindead1) Updated device states\r\n* (braindead1) Improved error messages",
+                "de": "* (jens-maus) UniFiOS / UDM-Pro-Unterstützung implementiert\r\n* (braindead1) Möglichkeit zum Aktivieren / Deaktivieren von WLANs implementiert\r\n* (braindead1) Die Erstellung von Gutscheinen wurde implementiert\r\n* (braindead1) Implementierter Online-Status für Clients\r\n* (braindead1) Aktualisierte Client-Status\r\n* (braindead1) Aktualisierte Gerätezustände\r\n* (braindead1) Verbesserte Fehlermeldungen",
+                "ru": "* (jens-maus) Реализована поддержка UniFiOS / UDM-Pro\r\n* (braindead1) Реализована возможность включения / отключения WLAN\r\n* (braindead1) Реализовано создание ваучеров\r\n* (braindead1) Реализовано онлайн состояние для клиентов\r\n* (braindead1) Обновлены состояния клиентов\r\n* (braindead1) Обновлены состояния устройства\r\n* (braindead1) Улучшены сообщения об ошибках",
+                "pt": "* (jens-maus) Implementado suporte a UniFiOS / UDM-Pro\r\n* (braindead1) Possibilidade implementada para ativar / desativar WLANs\r\n* (braindead1) Criação de comprovante implementada\r\n* (braindead1) Estado online implementado para clientes\r\n* (braindead1) Estados do cliente atualizados\r\n* (braindead1) Estados atualizados do dispositivo\r\n* (braindead1) Mensagens de erro aprimoradas",
+                "nl": "* (jens-maus) Implementatie van UniFiOS / UDM-Pro-ondersteuning\r\n* (braindead1) Geïmplementeerde mogelijkheid om WLAN's in / uit te schakelen\r\n* (braindead1) Implementatie van vouchers geïmplementeerd\r\n* (braindead1) Implementatie van online status voor klanten\r\n* (braindead1) Bijgewerkte klantstatussen\r\n* (braindead1) Bijgewerkte apparaatstatussen\r\n* (braindead1) Verbeterde foutmeldingen",
+                "fr": "* (jens-maus) Prise en charge UniFiOS / UDM-Pro implémentée\r\n* (braindead1) Possibilité implémentée d'activer / désactiver les WLAN\r\n* (braindead1) Création de bons de réduction implémentée\r\n* (braindead1) État en ligne implémenté pour les clients\r\n* (braindead1) États client mis à jour\r\n* (braindead1) États de l'appareil mis à jour\r\n* (braindead1) Amélioration des messages d'erreur",
+                "it": "* (jens-maus) Implementato il supporto UniFiOS / UDM-Pro\r\n* (braindead1) Possibilità implementata per abilitare / disabilitare le WLAN\r\n* (braindead1) Creazione del voucher implementata\r\n* (braindead1) Stato online implementato per i client\r\n* (braindead1) Stati client aggiornati\r\n* (braindead1) Stati aggiornati del dispositivo\r\n* (braindead1) Messaggi di errore migliorati",
+                "es": "* (jens-maus) Implementado soporte UniFiOS / UDM-Pro\r\n* (braindead1) Posibilidad implementada para habilitar / deshabilitar WLAN\r\n* (braindead1) Implementación de creación de cupones\r\n* (braindead1) Estado en línea implementado para clientes\r\n* (braindead1) Estados de cliente actualizados\r\n* (braindead1) Estados actualizados del dispositivo\r\n* (braindead1) Mensajes de error mejorados",
+                "pl": "* (jens-maus) Wdrożono obsługę UniFiOS / UDM-Pro\r\n* (braindead1) Wdrożona możliwość włączania / wyłączania sieci WLAN\r\n* (braindead1) Zaimplementowano tworzenie kuponów\r\n* (braindead1) Zaimplementowano stan online dla klientów\r\n* (braindead1) Zaktualizowano stany klienta\r\n* (braindead1) Zaktualizowano stany urządzeń\r\n* (braindead1) Poprawione komunikaty o błędach",
+                "zh-cn": "*（jens-maus）已实现UniFiOS / UDM-Pro支持\r\n*（braindead1）已实现启用/禁用WLAN的可能性\r\n*（braindead1）已创建凭证\r\n*（braindead1）为客户端实现了在线状态\r\n*（braindead1）更新了客户端状态\r\n*（braindead1）更新了设备状态\r\n*（braindead1）改进了错误消息"
+            },
+            "0.5.0": {
                 "en": "* (braindead1) Implemented configuration of updates\r\n* (braindead1) Improved JsonLogic\r\n* (braindead1) Removed legacy code\r\n* (braindead1) Implemented Sentry",
                 "de": "* (braindead1) Konfiguration von Updates implementiert\r\n* (braindead1) JsonLogic wurde verbessert\r\n* (braindead1) Legacy-Code entfernt\r\n* (braindead1) Sentry implementiert",
                 "ru": "* (braindead1) Реализована конфигурация обновлений\r\n* (braindead1) Улучшенный JsonLogic\r\n* (braindead1) Удален устаревший код\r\n* (braindead1) Реализован Часовой",
@@ -13,7 +25,7 @@
                 "it": "* (braindead1) Configurazione implementata degli aggiornamenti\r\n* (braindead1) JsonLogic migliorato\r\n* (braindead1) Codice legacy rimosso\r\n* (braindead1) Sentry implementato",
                 "es": "* (braindead1) Configuración implementada de actualizaciones\r\n* (braindead1) JsonLogic mejorado\r\n* (braindead1) Se eliminó el código heredado\r\n* (braindead1) Sentry implementado",
                 "pl": "* (braindead1) Zaimplementowano konfigurację aktualizacji\r\n* (braindead1) Ulepszony JsonLogic\r\n* (braindead1) Usunięto starszy kod\r\n* (braindead1) Wdrożono Wartownik",
-                "zh-cn": "*（braindead1）已实施更新配置\r\n*（braindead1）改进了JsonLogic\r\n*（braindead1）删除了旧代码\r\n*（braindead1）实施哨兵"
+                "zh-cn": "*（braindead1）已实现更新配置\r\n*（braindead1）改进了JsonLogic\r\n*（braindead1）删除了旧代码\r\n*（braindead1）实施哨兵"
             },
             "0.4.3": {
                 "en": "fixed configuration issue",
@@ -160,12 +172,14 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
-        "blacklistedClients": [],
-        "blacklistedDevices": [],
-        "blacklistedHealth": [],
-        "blacklistedNetworks": [],
-        "blacklistedWlans": [],
-        "whitelist": {
+        "objectsFilter": {
+            "clients": [],
+            "devices": [],
+            "wlans": [],
+            "networks": [],
+            "health": []
+        },
+        "statesFilter": {
             "sysinfo": [],
             "clients": [],
             "devices": [],
@@ -173,7 +187,15 @@
             "networks": [],
             "health": [],
             "vouchers": []
-        }
+        },
+        "clientsIsOnlineOffset": 30,
+        "createVouchersNumber": 1,
+        "createVouchersDuration": 60,
+        "createVouchersQuota": 1,
+        "createVouchersUploadLimit": null,
+        "createVouchersDownloadLimit": null,
+        "createVouchersByteQuota": null,
+        "createVouchersNote": ""
     },
     "objects": [],
     "instanceObjects": [

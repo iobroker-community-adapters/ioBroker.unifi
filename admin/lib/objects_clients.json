@@ -3,17 +3,21 @@
         "_id": "clients",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "clients"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "clients.client": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "clients.client"
+                    },
                     "logic": {
                         "_id": {
-                            "cat": [
+                            "cleanupForUseAsId": [
                                 {
                                     "var": "mac"
                                 }
@@ -39,243 +43,6 @@
                         },
                         "has_key": "_self",
                         "has": {
-                            "clients.client._is_guest_by_uap": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by UAP",
-                                    "type": "boolean",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_uap"
-                                            },
-                                            "is_guest_by_uap",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_uap"
-                                }
-                            },
-                            "clients.client._is_guest_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by UGW",
-                                    "type": "boolean",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_ugw"
-                                            },
-                                            "is_guest_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_ugw"
-                                }
-                            },
-                            "clients.client._is_guest_by_usw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by USW",
-                                    "type": "boolean",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_usw"
-                                            },
-                                            "is_guest_by_usw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_usw"
-                                }
-                            },
-                            "clients.client._last_seen_by_uap": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Last seen by UAP",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_last_seen_by_uap"
-                                            },
-                                            "last_seen_by_uap",
-                                            null
-                                        ]
-                                    },
-                                    "value": {
-                                        "secondsToDateTime": [
-                                            {
-                                                "var": "_last_seen_by_uap"
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            "clients.client._last_seen_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Last seen by UGW",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_last_seen_by_ugw"
-                                            },
-                                            "last_seen_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": {
-                                        "secondsToDateTime": [
-                                            {
-                                                "var": "_last_seen_by_ugw"
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            "clients.client._last_seen_by_usw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Last seen by USW",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_last_seen_by_usw"
-                                            },
-                                            "last_seen_by_usw",
-                                            null
-                                        ]
-                                    },
-                                    "value": {
-                                        "secondsToDateTime": [
-                                            {
-                                                "var": "_last_seen_by_usw"
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            "clients.client._uptime_by_uap": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by UAP",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_uap"
-                                            },
-                                            "uptime_by_uap",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_uap"
-                                }
-                            },
-                            "clients.client._uptime_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by UGW",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_ugw"
-                                            },
-                                            "uptime_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_ugw"
-                                }
-                            },
-                            "clients.client._uptime_by_usw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by USW",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_usw"
-                                            },
-                                            "uptime_by_usw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_usw"
-                                }
-                            },
                             "clients.client.ap_mac": {
                                 "type": "state",
                                 "common": {
@@ -286,7 +53,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.ap_mac"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -300,6 +69,84 @@
                                     "value": "ap_mac"
                                 }
                             },
+                            "clients.client.bssid": {
+                                "type": "state",
+                                "common": {
+                                    "name": "BSSID",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.bssid"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "bssid"
+                                            },
+                                            "bssid",
+                                            null
+                                        ]
+                                    },
+                                    "value": "bssid"
+                                }
+                            },
+                            "clients.client.channel": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Channel",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.channel"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "channel"
+                                            },
+                                            "channel",
+                                            null
+                                        ]
+                                    },
+                                    "value": "channel"
+                                }
+                            },
+                            "clients.client.essid": {
+                                "type": "state",
+                                "common": {
+                                    "name": "ESSID",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.essid"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "essid",
+                                            null
+                                        ]
+                                    },
+                                    "value": "essid"
+                                }
+                            },
                             "clients.client.first_seen": {
                                 "_id": "first_seen",
                                 "type": "state",
@@ -311,7 +158,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.first_seen"
+                                },
                                 "logic": {
                                     "value": {
                                         "secondsToDateTime": [
@@ -333,7 +182,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.hostname"
+                                },
                                 "logic": {
                                     "value": "hostname"
                                 }
@@ -349,7 +200,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.ip"
+                                },
                                 "logic": {
                                     "value": "ip"
                                 }
@@ -365,10 +218,107 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_guest"
+                                },
                                 "logic": {
                                     "value": "is_guest"
                                 }
+                            },
+                            "clients.client.is_guest_by_uap": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Is guest by UAP",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_uap"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_is_guest_by_uap"
+                                            },
+                                            "is_guest_by_uap",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_is_guest_by_uap"
+                                }
+                            },
+                            "clients.client.is_guest_by_ugw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Is guest by UGW",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_ugw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_is_guest_by_ugw"
+                                            },
+                                            "is_guest_by_ugw",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_is_guest_by_ugw"
+                                }
+                            },
+                            "clients.client.is_guest_by_usw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Is guest by USW",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.is_guest_by_usw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_is_guest_by_usw"
+                                            },
+                                            "is_guest_by_usw",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_is_guest_by_usw"
+                                }
+                            },
+                            "clients.client.is_online": {
+                                "_id": "is_online",
+                                "type": "state",
+                                "common": {
+                                    "name": "Is online",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": "",
+                                    "def": true
+                                },
+                                "native": {
+                                    "object_id": "clients.client.is_online"
+                                },
+                                "logic": {}
                             },
                             "clients.client.is_wired": {
                                 "_id": "is_wired",
@@ -381,7 +331,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.is_wired"
+                                },
                                 "logic": {
                                     "value": "is_wired"
                                 }
@@ -397,12 +349,110 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.last_seen"
+                                },
                                 "logic": {
                                     "value": {
                                         "secondsToDateTime": [
                                             {
                                                 "var": "last_seen"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.last_seen_by_uap": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Last seen by UAP",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_uap"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_last_seen_by_uap"
+                                            },
+                                            "last_seen_by_uap",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "secondsToDateTime": [
+                                            {
+                                                "var": "_last_seen_by_uap"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.last_seen_by_ugw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Last seen by UGW",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_ugw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_last_seen_by_ugw"
+                                            },
+                                            "last_seen_by_ugw",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "secondsToDateTime": [
+                                            {
+                                                "var": "_last_seen_by_ugw"
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.last_seen_by_usw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Last seen by USW",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.last_seen_by_usw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_last_seen_by_usw"
+                                            },
+                                            "last_seen_by_usw",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "secondsToDateTime": [
+                                            {
+                                                "var": "_last_seen_by_usw"
                                             }
                                         ]
                                     }
@@ -419,7 +469,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.mac"
+                                },
                                 "logic": {
                                     "value": "mac"
                                 }
@@ -435,7 +487,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.name"
+                                },
                                 "logic": {
                                     "value": "name"
                                 }
@@ -451,7 +505,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.network"
+                                },
                                 "logic": {
                                     "value": "network"
                                 }
@@ -466,7 +522,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.note"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -491,7 +549,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.noted"
+                                },
                                 "logic": {
                                     "value": "noted"
                                 }
@@ -507,7 +567,9 @@
                                     "unit": "dBm",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.rssi"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -532,7 +594,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.rx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -558,7 +622,9 @@
                                     "unit": "%",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.satisfaction"
+                                },
                                 "logic": {
                                     "value": "satisfaction"
                                 }
@@ -574,7 +640,9 @@
                                     "unit": "dBm",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.signal"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -598,7 +666,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.sw_mac"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -622,7 +692,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.sw_port"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -647,7 +719,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -673,9 +747,92 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.uptime"
+                                },
                                 "logic": {
                                     "value": "uptime"
+                                }
+                            },
+                            "clients.client.uptime_by_uap": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Uptime by UAP",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_uap"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_uptime_by_uap"
+                                            },
+                                            "uptime_by_uap",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_uptime_by_uap"
+                                }
+                            },
+                            "clients.client.uptime_by_ugw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Uptime by UGW",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_ugw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_uptime_by_ugw"
+                                            },
+                                            "uptime_by_ugw",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_uptime_by_ugw"
+                                }
+                            },
+                            "clients.client.uptime_by_usw": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Uptime by USW",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.uptime_by_usw"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "_uptime_by_usw"
+                                            },
+                                            "uptime_by_usw",
+                                            null
+                                        ]
+                                    },
+                                    "value": "_uptime_by_usw"
                                 }
                             },
                             "clients.client.wired-rx_bytes": {
@@ -689,7 +846,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.wired-rx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -714,7 +873,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "clients.client.wired-tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [

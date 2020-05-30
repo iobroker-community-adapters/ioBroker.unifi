@@ -88,12 +88,6 @@ function loadHelper(settings, onChange) {
     });
     onChange(false);
     M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
-
-    list2chips('.blacklistedClients', settings.blacklistedClients || [], onChange);
-    list2chips('.blacklistedDevices', settings.blacklistedDevices || [], onChange);
-    list2chips('.blacklistedWlans', settings.blacklistedWlans || [], onChange);
-    list2chips('.blacklistedNetworks', settings.blacklistedNetworks || [], onChange);
-    list2chips('.blacklistedHealth', settings.blacklistedHealth || [], onChange);
 }
 
 
@@ -109,6 +103,8 @@ async function load(settings, onChange) {
         secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
         loadHelper(settings, onChange);
     });
+
+    await createChips(settings, onChange);
 
     await createTreeViews(settings, onChange);
 
@@ -132,30 +128,55 @@ function save(callback) {
             obj[id] = $this.prop('checked');
         } else {
             let value = $this.val();
+            
+            value = value.trim();
+
             if (id === 'controllerPassword') {
                 value = encrypt(secret, value);
             }
+
             obj[id] = value;
         }
     });
 
-    obj.blacklistedClients = chips2list('.blacklistedClients');
-    obj.blacklistedDevices = chips2list('.blacklistedDevices');
-    obj.blacklistedWlans = chips2list('.blacklistedWlans');
-    obj.blacklistedNetworks = chips2list('.blacklistedNetworks');
-    obj.blacklistedHealth = chips2list('.blacklistedHealth');
+    // Process objectsFilter
+    obj.objectsFilter = {};
+    $('[id*=chips_]').each(function () {
+        const settingsName = $(this).attr('id').replace('chips_', '');
 
-    obj.whitelist = {};
-    $("[id*=tree_]").each(function () {
+        obj.objectsFilter[settingsName] = chips2list(`#chips_${settingsName}`);
+    });
+
+    //Process statesFilter
+    obj.statesFilter = {};
+    $('[id*=tree_]').each(function () {
         // store selected nodes of tree
-        let settingsName = $(this).attr('id').replace('tree_', '');
+        const settingsName = $(this).attr('id').replace('tree_', '');
 
-        var selected = $.ui.fancytree.getTree(`#tree_${settingsName}`).getSelectedNodes();
-        var selectedIds = $.map(selected, function (node) {
+        const selected = $.ui.fancytree.getTree(`#tree_${settingsName}`).getSelectedNodes();
+        const selectedIds = $.map(selected, function (node) {
             return node.data.id;
         });
 
-        obj.whitelist[settingsName] = selectedIds
+        const retVal = [];
+        for (const id of selectedIds) {
+            const dummy = id.split('.');
+
+            let dummy2 = [];
+            for (let i = 0; i < dummy.length; i++) {
+                if (i === 0) {
+                    dummy2 = [];
+                }
+
+                dummy2.push(dummy[i]);
+
+                if (!retVal.includes(dummy2.join('.'))) {
+                    retVal.push(dummy2.join('.'));
+                }
+            }
+        }
+
+        obj.statesFilter[settingsName] = retVal;
     });
 
     callback(obj);
@@ -163,15 +184,39 @@ function save(callback) {
 
 
 //#region Functions
-async function createTreeViews(settings, onChange) {
+/**
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+async function createChips(settings, onChange) {
+    for (const key of Object.keys(settings.objectsFilter)) {
+        try {
+            list2chips(`#chips_${key}`, settings.objectsFilter[key], onChange);
+            M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
+        } catch (err) {
+            console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
+        }
+    }
+}
 
-    for (const key of Object.keys(settings.whitelist)) {
+/**
+ * @param {*} settings 
+ * @param {*} onChange 
+ */
+async function createTreeViews(settings, onChange) {
+    for (const key of Object.keys(settings.statesFilter)) {
         try {
             // get json data from file
-            let obj = await getUnifiObjects(key);
+            const obj = await getUnifiObjects(key);
 
             // convert json to tree object
-            let tree = { title: key, key: key, folder: true, expanded: true, children: [] };
+            const tree = {
+                title: key,
+                key: key,
+                folder: true,
+                expanded: true,
+                children: []
+            };
             await convertJsonToTreeObject(key, obj[key].logic.has, tree, settings);
 
             $(`#tree_${key}`).fancytree({
@@ -189,12 +234,12 @@ async function createTreeViews(settings, onChange) {
                 escapeTitles: false,                        // Escape `node.title` content for display
                 generateIds: false,                         // Generate id attributes like <span id='fancytree-id-KEY'>
                 keyboard: true,                             // Support keyboard navigation
-                keyPathSeparator: "/",                      // Used by node.getKeyPath() and tree.loadKeyPath()
+                keyPathSeparator: '/',                      // Used by node.getKeyPath() and tree.loadKeyPath()
                 minExpandLevel: 1,                          // 1: root node is not collapsible
                 quicksearch: false,                         // Navigate to next node by typing the first letters
                 rtl: false,                                 // Enable RTL (right-to-left) mode
                 selectMode: 3,                              // 1:single, 2:multi, 3:multi-hier
-                tabindex: "0",                              // Whole tree behaves as one single control
+                tabindex: '0',                              // Whole tree behaves as one single control
                 titlesTabbable: false,                      // Node titles can receive keyboard focus
                 tooltip: false,                             // Use title as tooltip (also a callback could be specified)
                 // icon: function (event, data) {
@@ -203,17 +248,15 @@ async function createTreeViews(settings, onChange) {
                 //     }
                 // },
                 click: function (event, data) {
-                    console.log(data)
+                    console.log(data);
                     if (data.targetType === 'title' && !data.node.folder) {
                         data.node.setSelected(!data.node.isSelected());
                     }
                 },
-
                 source: [
                     tree
                 ],
                 select: function (event, data) {
-
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
                     // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
                     //     if (node.children === null) {
@@ -233,31 +276,45 @@ async function createTreeViews(settings, onChange) {
     }
 }
 
+/**
+ * @param {*} name 
+ * @param {*} obj 
+ * @param {*} tree 
+ * @param {*} settings 
+ */
 async function convertJsonToTreeObject(name, obj, tree, settings) {
-    for (const [key, value] of Object.entries(obj)) {
+    for (const [id, value] of Object.entries(obj)) {
         try {
+            let idReadable = id.split('.');
+            idReadable = idReadable[idReadable.length - 1];
+
+            const title = value.common.name ? `${idReadable} | ${_(value.common.name)}` : `${idReadable}`;
+
             if (value && value.type === 'state') {
-                let id = key.replace(`${name}.`, '');
-
-                let idReadable = id.split('.');
-                idReadable = idReadable[idReadable.length - 1];
-
-                //TODO: use value.common.name for title
-                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
-                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id, selected: true })
+                if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
+                    tree.children.push({
+                        title: title,
+                        id: id,
+                        selected: true
+                    });
                 } else {
-                    tree.children.push({ title: `${_(value.common.name)} | ${idReadable}`, id: id })
+                    tree.children.push({
+                        title: title,
+                        id: id
+                    });
                 }
-
             } else if (value && value.type === 'channel' || value.type === 'device') {
-                let id = key.replace(`${name}.`, '');
-
-                //TODO: use was besseres für name;
-                let subtree = { title: id, key: id, folder: true, expanded: true, children: [] }
+                const subtree = {
+                    title: title,
+                    key: id,
+                    folder: true,
+                    expanded: true,
+                    children: []
+                };
 
                 await convertJsonToTreeObject(name, value.logic.has, subtree, settings);
 
-                tree.children.push(subtree)
+                tree.children.push(subtree);
             }
         } catch (err) {
             console.error(`[convertJsonToTreeObject] error: ${err.message}, stack: ${err.stack}`);
@@ -265,6 +322,9 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
     }
 }
 
+/**
+ * @param {*} lib 
+ */
 async function getUnifiObjects(lib) {
     return new Promise((resolve, reject) => {
         $.getJSON(`./lib/objects_${lib}.json`, function (json) {

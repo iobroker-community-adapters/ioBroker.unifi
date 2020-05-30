@@ -3,16 +3,26 @@
         "_id": "wlans",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "wlans"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "wlans.wlan": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "wlans.wlan"
+                    },
                     "logic": {
-                        "_id": "name",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "name"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "name"
                         },
@@ -26,12 +36,17 @@
                                     "type": "boolean",
                                     "role": "state",
                                     "read": true,
-                                    "write": false,
+                                    "write": true,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "wlans.wlan.enabled"
+                                },
                                 "logic": {
-                                    "value": "enabled"
+                                    "value": "enabled",
+                                    "native": {
+                                        "wlan_id": "_id"
+                                    }
                                 }
                             },
                             "wlans.wlan.name": {
@@ -44,7 +59,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "wlans.wlan.name"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -69,7 +86,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "wlans.wlan.security"
+                                },
                                 "logic": {
                                     "value": "security"
                                 }
@@ -84,7 +103,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "wlans.wlan.vlan"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -108,7 +129,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "wlans.wlan.vlan_enabled"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [

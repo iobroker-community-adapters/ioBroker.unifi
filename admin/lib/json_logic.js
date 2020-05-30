@@ -1,4 +1,5 @@
 const jsonLogic = require('json-logic-js');
+const dateFormat = require('dateformat');
 
 /**
  *  Convert seconds to date time
@@ -6,15 +7,7 @@ const jsonLogic = require('json-logic-js');
 jsonLogic.add_operation('secondsToDateTime', function (a) {
     const date = new Date(a * 1000);
 
-    const options = {
-        year: 'numeric', month: '2-digit', day: '2-digit',
-        hour: '2-digit', minute: '2-digit', second: '2-digit',
-        hour12: false
-    };
-
-    return new Intl.DateTimeFormat('de-DE', options).format(date);
-
-    //return date.toISOString();
+    return dateFormat(date, 'yyyy-mm-dd HH:MM:ss');
 });
 
 /**
@@ -47,6 +40,17 @@ jsonLogic.add_operation('ifNotNull', function (a, b, c) {
     } else {
         return c;
     }
+});
+
+/**
+ * Cleanup for use as ID
+ */
+jsonLogic.add_operation('cleanupForUseAsId', function (a) {
+    const FORBIDDEN_CHARS = /[\]\[*.,;'"`<>\\?\s]/g;
+    let tempId = a.replace(FORBIDDEN_CHARS, '_');
+    tempId = tempId.toLowerCase();
+    
+    return tempId;
 });
 
 module.exports = jsonLogic;

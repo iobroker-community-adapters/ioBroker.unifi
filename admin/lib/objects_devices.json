@@ -3,17 +3,21 @@
         "_id": "devices",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "devices"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
                 "devices.device": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "devices.device"
+                    },
                     "logic": {
                         "_id": {
-                            "cat": [
+                            "cleanupForUseAsId": [
                                 {
                                     "var": "mac"
                                 }
@@ -33,181 +37,45 @@
                         },
                         "has_key": "_self",
                         "has": {
-                            "devices.device.general_temperature": {
-                                "type": "state",
-                                "common": {
-                                    "name": "General temperature",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "°C",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "general_temperature"
-                                            },
-                                            "general_temperature",
-                                            null
-                                        ]
-                                    },
-                                    "value": "general_temperature"
-                                }
-                            },
-                            "clients.client.guest-num_sta": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Number of guests",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "guest-num_sta"
-                                            },
-                                            "guest-num_sta",
-                                            null
-                                        ]
-                                    },
-                                    "value": "guest-num_sta"
-                                }
-                            },
-                            "devices.device.ip": {
-                                "_id": "ip",
-                                "type": "state",
-                                "common": {
-                                    "name": "IP address",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "value": "ip"
-                                }
-                            },
-                            "devices.device.mac": {
-                                "_id": "mac",
-                                "type": "state",
-                                "common": {
-                                    "name": "MAC address",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "value": "mac"
-                                }
-                            },
-                            "devices.device.model": {
-                                "_id": "model",
-                                "type": "state",
-                                "common": {
-                                    "name": "Model",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "value": "model"
-                                }
-                            },
-                            "devices.device.name": {
-                                "_id": "name",
-                                "type": "state",
-                                "common": {
-                                    "name": "Name",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "value": "name"
-                                }
-                            },
-                            "clients.client.num_guest": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Number of guests",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "num_guest"
-                                            },
-                                            "num_guest",
-                                            null
-                                        ]
-                                    },
-                                    "value": "num_guest"
-                                }
-                            },
-                            "clients.client.num_sta": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Number of users",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "num_sta"
-                                            },
-                                            "num_sta",
-                                            null
-                                        ]
-                                    },
-                                    "value": "num_sta"
-                                }
-                            },
                             "devices.device.port_table": {
                                 "_id": "port_table",
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.port_table"
+                                },
                                 "logic": {
                                     "has_key": "port_table",
                                     "has": {
                                         "devices.device.port_table.port": {
                                             "type": "channel",
                                             "common": {},
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.port_table.port"
+                                            },
                                             "logic": {
-                                                "_id": "name",
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "port_idx"
+                                                        },
+                                                        {
+                                                            "cleanupForUseAsId": [
+                                                                {
+                                                                    "cat": [
+                                                                        "port_",
+                                                                        {
+                                                                            "var": "port_idx"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
                                                 "common": {
                                                     "name": "name"
                                                 },
@@ -224,7 +92,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.enable"
+                                                        },
                                                         "logic": {
                                                             "value": "enable"
                                                         }
@@ -239,7 +109,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.is_uplink"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -264,9 +136,118 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.name"
+                                                        },
                                                         "logic": {
                                                             "value": "name"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_class": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE class",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_class"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_class"
+                                                                    },
+                                                                    "poe_class",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_class"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_current": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE current",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "mA",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_current"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_current"
+                                                                    },
+                                                                    "poe_current",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_current"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_power": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE power",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "W",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_power"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_power"
+                                                                    },
+                                                                    "poe_power",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_power"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.poe_voltage": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE voltage",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "V",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_voltage"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_voltage"
+                                                                    },
+                                                                    "poe_voltage",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_voltage"
                                                         }
                                                     },
                                                     "devices.device.port_table.port.port_idx": {
@@ -279,7 +260,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_idx"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -303,7 +286,9 @@
                                                             "write": false,
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_poe"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -317,6 +302,33 @@
                                                             "value": "port_poe"
                                                         }
                                                     },
+                                                    "devices.device.port_table.port.rx_bytes": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "RX Bytes",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "Byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.rx_bytes"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "rx_bytes"
+                                                                    },
+                                                                    "rx_bytes",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "rx_bytes"
+                                                        }
+                                                    },
                                                     "devices.device.port_table.port.satisfaction": {
                                                         "type": "state",
                                                         "common": {
@@ -328,7 +340,9 @@
                                                             "unit": "%",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.satisfaction"
+                                                        },
                                                         "logic": {
                                                             "_id": {
                                                                 "ifNotNull": [
@@ -354,9 +368,38 @@
                                                             "unit": "mbps",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.speed"
+                                                        },
                                                         "logic": {
                                                             "value": "speed"
+                                                        }
+                                                    },
+                                                    "devices.device.port_table.port.tx_bytes": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX Bytes",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "Byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.tx_bytes"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "tx_bytes"
+                                                                    },
+                                                                    "tx_bytes",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "tx_bytes"
                                                         }
                                                     }
                                                 }
@@ -368,7 +411,9 @@
                             "devices.device.radio_table_stats": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.radio_table_stats"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -384,14 +429,60 @@
                                         "devices.device.radio_table_stats.stat": {
                                             "type": "channel",
                                             "common": {},
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.radio_table_stats.stat"
+                                            },
                                             "logic": {
-                                                "_id": "name",
+                                                "_id": {
+                                                    "cleanupForUseAsId": [
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
                                                 "common": {
                                                     "name": "name"
                                                 },
                                                 "has_key": "_self",
                                                 "has": {
+                                                    "devices.device.radio_table_stats.stat.cu_self_rx": {
+                                                        "_id": "cu_self_rx",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "RX channel utilization",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_self_rx"
+                                                        },
+                                                        "logic": {
+                                                            "value": "cu_self_rx"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.cu_self_tx": {
+                                                        "_id": "cu_self_tx",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX channel utilization",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_self_tx"
+                                                        },
+                                                        "logic": {
+                                                            "value": "cu_self_tx"
+                                                        }
+                                                    },
                                                     "devices.device.radio_table_stats.stat.cu_total": {
                                                         "_id": "cu_total",
                                                         "type": "state",
@@ -404,9 +495,30 @@
                                                             "unit": "%",
                                                             "desc": ""
                                                         },
-                                                        "native": {},
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.cu_total"
+                                                        },
                                                         "logic": {
                                                             "value": "cu_total"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.tx_power": {
+                                                        "_id": "tx_power",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "TX power",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "dBm",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.tx_power"
+                                                        },
+                                                        "logic": {
+                                                            "value": "tx_power"
                                                         }
                                                     }
                                                 }
@@ -415,60 +527,12 @@
                                     }
                                 }
                             },
-                            "clients.client.rx_bytes": {
-                                "type": "state",
-                                "common": {
-                                    "name": "RX",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "Byte",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "rx_bytes"
-                                            },
-                                            "rx_bytes",
-                                            null
-                                        ]
-                                    },
-                                    "value": "rx_bytes"
-                                }
-                            },
-                            "devices.device.satisfaction": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Satisfaction",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "%",
-                                    "desc": ""
-                                },
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "satisfaction"
-                                            },
-                                            "satisfaction",
-                                            null
-                                        ]
-                                    },
-                                    "value": "satisfaction"
-                                }
-                            },
-                            "devices.device.speedtest-status": {
+                            "devices.device.speedtest": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.speedtest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -493,7 +557,9 @@
                                                 "unit": "ms",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.latency"
+                                            },
                                             "logic": {
                                                 "value": "latency"
                                             }
@@ -509,7 +575,9 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.rundate"
+                                            },
                                             "logic": {
                                                 "value": {
                                                     "secondsToDateTime": [
@@ -532,7 +600,9 @@
                                                 "unit": "s",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.runtime"
+                                            },
                                             "logic": {
                                                 "value": "runtime"
                                             }
@@ -549,7 +619,9 @@
                                                 "unit": "Mbps",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.xput_download"
+                                            },
                                             "logic": {
                                                 "value": "xput_download"
                                             }
@@ -566,7 +638,9 @@
                                                 "unit": "Mbps",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.speedtest-status.xput_upload"
+                                            },
                                             "logic": {
                                                 "value": "xput_upload"
                                             }
@@ -578,7 +652,9 @@
                                 "_id": "sys_stats",
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.sys_stats"
+                                },
                                 "logic": {
                                     "has_key": "sys_stats",
                                     "has": {
@@ -593,25 +669,11 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_1"
+                                            },
                                             "logic": {
                                                 "value": "loadavg_1"
-                                            }
-                                        },
-                                        "devices.device.sys_stats.loadavg_5": {
-                                            "_id": "loadavg_5",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Load average 5m",
-                                                "type": "number",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": "loadavg_5"
                                             }
                                         },
                                         "devices.device.sys_stats.loadavg_15": {
@@ -625,9 +687,29 @@
                                                 "write": false,
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_15"
+                                            },
                                             "logic": {
                                                 "value": "loadavg_15"
+                                            }
+                                        },
+                                        "devices.device.sys_stats.loadavg_5": {
+                                            "_id": "loadavg_5",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Load average 5m",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.loadavg_5"
+                                            },
+                                            "logic": {
+                                                "value": "loadavg_5"
                                             }
                                         }
                                     }
@@ -636,7 +718,9 @@
                             "devices.device.system-stats": {
                                 "type": "channel",
                                 "common": {},
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.system-stats"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -661,7 +745,9 @@
                                                 "unit": "%",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.cpu"
+                                            },
                                             "logic": {
                                                 "value": "cpu"
                                             }
@@ -678,7 +764,9 @@
                                                 "unit": "%",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.mem"
+                                            },
                                             "logic": {
                                                 "value": "mem"
                                             }
@@ -695,12 +783,396 @@
                                                 "unit": "s",
                                                 "desc": ""
                                             },
-                                            "native": {},
+                                            "native": {
+                                                "object_id": "devices.device.system-stats.uptime"
+                                            },
                                             "logic": {
                                                 "value": "uptime"
                                             }
                                         }
                                     }
+                                }
+                            },
+                            "devices.device.vap_table": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "devices.device.vap_table"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "vap_table"
+                                            },
+                                            "vap_table",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "vap_table",
+                                    "has": {
+                                        "devices.device.vap_table.vap": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {
+                                                "object_id": "devices.device.vap_table.vap"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "cleanupForUseAsId": [
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
+                                                "common": {
+                                                    "name": "name"
+                                                },
+                                                "has_key": "_self",
+                                                "has": {
+                                                    "devices.device.vap_table.vap.satisfaction": {
+                                                        "_id": "satisfaction",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Satisfaction",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "%",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.satisfaction"
+                                                        },
+                                                        "logic": {
+                                                            "value": "satisfaction"
+                                                        }
+                                                    },
+                                                    "devices.device.vap_table.vap.channel": {
+                                                        "_id": "channel",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Channel",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.channel"
+                                                        },
+                                                        "logic": {
+                                                            "value": "channel"
+                                                        }
+                                                    },
+                                                    "devices.device.vap_table.vap.num_sta": {
+                                                        "_id": "num_sta",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Number of users",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.num_sta"
+                                                        },
+                                                        "logic": {
+                                                            "value": "num_sta"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "devices.device.general_temperature": {
+                                "type": "state",
+                                "common": {
+                                    "name": "General temperature",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "°C",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.general_temperature"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "general_temperature"
+                                            },
+                                            "general_temperature",
+                                            null
+                                        ]
+                                    },
+                                    "value": "general_temperature"
+                                }
+                            },
+                            "devices.device.guest-num_sta": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of guests",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.guest-num_sta"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "guest-num_sta"
+                                            },
+                                            "guest-num_sta",
+                                            null
+                                        ]
+                                    },
+                                    "value": "guest-num_sta"
+                                }
+                            },
+                            "devices.device.ip": {
+                                "_id": "ip",
+                                "type": "state",
+                                "common": {
+                                    "name": "IP address",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.ip"
+                                },
+                                "logic": {
+                                    "value": "ip"
+                                }
+                            },
+                            "devices.device.mac": {
+                                "_id": "mac",
+                                "type": "state",
+                                "common": {
+                                    "name": "MAC address",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.mac"
+                                },
+                                "logic": {
+                                    "value": "mac"
+                                }
+                            },
+                            "devices.device.model": {
+                                "_id": "model",
+                                "type": "state",
+                                "common": {
+                                    "name": "Model",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.model"
+                                },
+                                "logic": {
+                                    "value": "model"
+                                }
+                            },
+                            "devices.device.name": {
+                                "_id": "name",
+                                "type": "state",
+                                "common": {
+                                    "name": "Name",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.name"
+                                },
+                                "logic": {
+                                    "value": "name"
+                                }
+                            },
+                            "devices.device.num_guest": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of guests",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.num_guest"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "num_guest"
+                                            },
+                                            "num_guest",
+                                            null
+                                        ]
+                                    },
+                                    "value": "num_guest"
+                                }
+                            },
+                            "devices.device.num_sta": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of users",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.num_sta"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "num_sta"
+                                            },
+                                            "num_sta",
+                                            null
+                                        ]
+                                    },
+                                    "value": "num_sta"
+                                }
+                            },
+                            "devices.device.overheating": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Overheating",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.overheating"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "overheating"
+                                            },
+                                            "overheating",
+                                            null
+                                        ]
+                                    },
+                                    "value": "overheating"
+                                }
+                            },
+                            "devices.device.rx_bytes": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.rx_bytes"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes"
+                                            },
+                                            "rx_bytes",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes"
+                                }
+                            },
+                            "devices.device.rx_bytes-d": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX dropped",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.rx_bytes-d"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes-d"
+                                            },
+                                            "rx_bytes-d",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes-d"
+                                }
+                            },
+                            "devices.device.satisfaction": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Satisfaction",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "%",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.satisfaction"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "satisfaction"
+                                            },
+                                            "satisfaction",
+                                            null
+                                        ]
+                                    },
+                                    "value": "satisfaction"
                                 }
                             },
                             "devices.device.type": {
@@ -714,12 +1186,14 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.type"
+                                },
                                 "logic": {
                                     "value": "type"
                                 }
                             },
-                            "clients.client.tx_bytes": {
+                            "devices.device.tx_bytes": {
                                 "type": "state",
                                 "common": {
                                     "name": "TX",
@@ -730,7 +1204,9 @@
                                     "unit": "Byte",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.tx_bytes"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -744,6 +1220,33 @@
                                     "value": "tx_bytes"
                                 }
                             },
+                            "devices.device.tx_bytes-d": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX dropped",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.tx_bytes-d"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "tx_bytes-d"
+                                            },
+                                            "tx_bytes-d",
+                                            null
+                                        ]
+                                    },
+                                    "value": "tx_bytes-d"
+                                }
+                            },
                             "devices.device.upgradable": {
                                 "_id": "upgradable",
                                 "type": "state",
@@ -755,7 +1258,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.upgradable"
+                                },
                                 "logic": {
                                     "value": "upgradable"
                                 }
@@ -770,7 +1275,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.upgrade_to_firmware"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -796,91 +1303,11 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.uptime"
+                                },
                                 "logic": {
                                     "value": "uptime"
-                                }
-                            },
-                            "devices.device.vap_table": {
-                                "type": "channel",
-                                "common": {},
-                                "native": {},
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "vap_table"
-                                            },
-                                            "vap_table",
-                                            null
-                                        ]
-                                    },
-                                    "has_key": "vap_table",
-                                    "has": {
-                                        "devices.device.vap_table.vap": {
-                                            "type": "channel",
-                                            "common": {},
-                                            "native": {},
-                                            "logic": {
-                                                "_id": "name",
-                                                "common": {
-                                                    "name": "name"
-                                                },
-                                                "has_key": "_self",
-                                                "has": {
-                                                    "devices.device.vap_table.vap.satisfaction": {
-                                                        "_id": "satisfaction",
-                                                        "type": "state",
-                                                        "common": {
-                                                            "name": "Satisfaction",
-                                                            "type": "number",
-                                                            "role": "state",
-                                                            "read": true,
-                                                            "write": false,
-                                                            "unit": "%",
-                                                            "desc": ""
-                                                        },
-                                                        "native": {},
-                                                        "logic": {
-                                                            "value": "satisfaction"
-                                                        }
-                                                    },
-                                                    "devices.device.vap_table.vap.channel": {
-                                                        "_id": "channel",
-                                                        "type": "state",
-                                                        "common": {
-                                                            "name": "Channel",
-                                                            "type": "number",
-                                                            "role": "state",
-                                                            "read": true,
-                                                            "write": false,
-                                                            "desc": ""
-                                                        },
-                                                        "native": {},
-                                                        "logic": {
-                                                            "value": "channel"
-                                                        }
-                                                    },
-                                                    "devices.device.vap_table.vap.num_sta": {
-                                                        "_id": "num_sta",
-                                                        "type": "state",
-                                                        "common": {
-                                                            "name": "Number of users",
-                                                            "type": "number",
-                                                            "role": "state",
-                                                            "read": true,
-                                                            "write": false,
-                                                            "desc": ""
-                                                        },
-                                                        "native": {},
-                                                        "logic": {
-                                                            "value": "num_sta"
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
                                 }
                             },
                             "devices.device.version": {
@@ -894,7 +1321,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "devices.device.version"
+                                },
                                 "logic": {
                                     "value": "version"
                                 }

@@ -3,7 +3,9 @@
         "_id": "sysinfo",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "sysinfo"
+        },
         "logic": {
             "has_key": "_self",
             "has": {
@@ -18,7 +20,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.hostname"
+                    },
                     "logic": {
                         "value": "hostname"
                     }
@@ -34,7 +38,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.name"
+                    },
                     "logic": {
                         "value": "name"
                     }
@@ -50,7 +56,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.previous_version"
+                    },
                     "logic": {
                         "value": "previous_version"
                     }
@@ -66,7 +74,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.update_available"
+                    },
                     "logic": {
                         "value": "update_available"
                     }
@@ -82,7 +92,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.update_downloaded"
+                    },
                     "logic": {
                         "value": "update_downloaded"
                     }
@@ -98,7 +110,9 @@
                         "write": false,
                         "desc": ""
                     },
-                    "native": {},
+                    "native": {
+                        "object_id": "sysinfo.version"
+                    },
                     "logic": {
                         "value": "version"
                     }

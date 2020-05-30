@@ -3,22 +3,114 @@
         "_id": "health",
         "type": "channel",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "health"
+        },
         "logic": {
-            "has_key": "health",
+            "has_key": "_self",
             "has": {
                 "health.subsystem": {
                     "type": "device",
                     "common": {},
-                    "native": {},
+                    "native": {
+                        "object_id": "health.subsystem"
+                    },
                     "logic": {
-                        "_id": "subsystem",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "subsystem"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "subsystem"
                         },
                         "has_key": "_self",
                         "has": {
-                            "health.subsytem.lan_ip": {
+                            "health.subsystem.speedtest": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "health.subsystem.speedtest"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "speedtest_status"
+                                            },
+                                            "speedtest",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "_self",
+                                    "has": {
+                                        "health.subsystem.speedtest.lastrun": {
+                                            "_id": "lastrun",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest lastrun",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "health.subsystem.speedtest.lastrun"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "secondsToDateTime": [
+                                                        {
+                                                            "var": "speedtest_lastrun"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "health.subsystem.speedtest.ping": {
+                                            "_id": "ping",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest ping",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "health.subsystem.speedtest.ping"
+                                            },
+                                            "logic": {
+                                                "value": "speedtest_ping"
+                                            }
+                                        },
+                                        "health.subsystem.speedtest.status": {
+                                            "_id": "status",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Speedtest status",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "health.subsystem.speedtest.status"
+                                            },
+                                            "logic": {
+                                                "value": "speedtest_status"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "health.subsystem.lan_ip": {
                                 "type": "state",
                                 "common": {
                                     "name": "LAN IP",
@@ -28,7 +120,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.lan_ip"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -42,7 +136,7 @@
                                     "value": "lan_ip"
                                 }
                             },
-                            "health.subsytem.latency": {
+                            "health.subsystem.latency": {
                                 "type": "state",
                                 "common": {
                                     "name": "Latency",
@@ -53,7 +147,9 @@
                                     "unit": "ms",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.latency"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -67,7 +163,7 @@
                                     "value": "latency"
                                 }
                             },
-                            "health.subsytem.num_guest": {
+                            "health.subsystem.num_guest": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of guests",
@@ -77,7 +173,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.num_guest"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -91,7 +189,7 @@
                                     "value": "num_guest"
                                 }
                             },
-                            "health.subsytem.num_iot": {
+                            "health.subsystem.num_iot": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of IOT",
@@ -101,7 +199,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.num_iot"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -115,7 +215,7 @@
                                     "value": "num_iot"
                                 }
                             },
-                            "health.subsytem.num_user": {
+                            "health.subsystem.num_user": {
                                 "type": "state",
                                 "common": {
                                     "name": "Number of users",
@@ -125,7 +225,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.num_user"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -139,7 +241,34 @@
                                     "value": "num_user"
                                 }
                             },
-                            "health.subsytem.status": {
+                            "health.subsystem.rx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX Bytes R",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.rx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes-r"
+                                            },
+                                            "rx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes-r"
+                                }
+                            },
+                            "health.subsystem.status": {
                                 "_id": "status",
                                 "type": "state",
                                 "common": {
@@ -150,12 +279,14 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.status"
+                                },
                                 "logic": {
                                     "value": "status"
                                 }
                             },
-                            "health.subsytem.subsystem": {
+                            "health.subsystem.subsystem": {
                                 "_id": "subsystem",
                                 "type": "state",
                                 "common": {
@@ -166,86 +297,41 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.subsystem"
+                                },
                                 "logic": {
                                     "value": "subsystem"
                                 }
                             },
-                            "health.subsystem.speedtest": {
-                                "type": "channel",
-                                "common": {},
-                                "native": {},
+                            "health.subsystem.tx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX Bytes R",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.tx_bytes-r"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
                                             {
-                                                "var": "speedtest_status"
+                                                "var": "tx_bytes-r"
                                             },
-                                            "speedtest",
+                                            "tx_bytes-r",
                                             null
                                         ]
                                     },
-                                    "has_key": "_self",
-                                    "has": {
-                                        "health.subsytem.speedtest.lastrun": {
-                                            "_id": "lastrun",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest lastrun",
-                                                "type": "number",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": {
-                                                    "secondsToDateTime": [
-                                                        {
-                                                            "var": "speedtest_lastrun"
-                                                        }
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "health.subsytem.speedtest.ping": {
-                                            "_id": "ping",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest ping",
-                                                "type": "number",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "unit": "ms",
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": "speedtest_ping"
-                                            }
-                                        },
-                                        "health.subsytem.speedtest.status": {
-                                            "_id": "status",
-                                            "type": "state",
-                                            "common": {
-                                                "name": "Speedtest status",
-                                                "type": "string",
-                                                "role": "state",
-                                                "read": true,
-                                                "write": false,
-                                                "desc": ""
-                                            },
-                                            "native": {},
-                                            "logic": {
-                                                "value": "speedtest_status"
-                                            }
-                                        }
-                                    }
+                                    "value": "tx_bytes-r"
                                 }
                             },
-                            "health.subsytem.uptime": {
+                            "health.subsystem.uptime": {
                                 "type": "state",
                                 "common": {
                                     "name": "Uptime",
@@ -256,7 +342,9 @@
                                     "unit": "s",
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.uptime"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -270,7 +358,7 @@
                                     "value": "uptime"
                                 }
                             },
-                            "health.subsytem.wan_ip": {
+                            "health.subsystem.wan_ip": {
                                 "type": "state",
                                 "common": {
                                     "name": "WAN IP",
@@ -280,7 +368,9 @@
                                     "write": false,
                                     "desc": ""
                                 },
-                                "native": {},
+                                "native": {
+                                    "object_id": "health.subsystem.wan_ip"
+                                },
                                 "logic": {
                                     "_id": {
                                         "ifNotNull": [
@@ -293,6 +383,60 @@
                                     },
                                     "value": "wan_ip"
                                 }
+                            },
+                            "health.subsystem.xput_down": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Download speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_down"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_down"
+                                            },
+                                            "xput_down",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_down"
+                                }
+                            },
+                            "health.subsystem.xput_up": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Upload speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_up"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_up"
+                                            },
+                                            "xput_up",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_up"
+                                }
                             }
                         }
                     }
@@ -304,7 +448,9 @@
         "_id": "num_new_alarms",
         "type": "state",
         "common": {},
-        "native": {},
+        "native": {
+            "object_id": "num_new_alarms"
+        },
         "logic": {
             "value": "num_new_alarms"
         }

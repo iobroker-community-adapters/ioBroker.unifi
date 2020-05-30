@@ -23,13 +23,19 @@ class Unifi extends utils.Adapter {
             name: 'unifi',
         });
         this.on('ready', this.onReady.bind(this));
+        this.on('stateChange', this.onStateChange.bind(this));
         this.on('unload', this.onUnload.bind(this));
 
         this.controller;
-        this.blacklist = {};
+        this.objectsFilter = {};
         this.settings = {};
         this.update = {};
+        this.clients = {};
+        this.vouchers = {};
+        this.statesFilter = {};
         this.queryTimeout;
+
+        this.ownObjects = {};
     }
 
     /**
@@ -37,7 +43,8 @@ class Unifi extends utils.Adapter {
      */
     async onReady() {
         // subscribe to all state changes
-        this.subscribeStates('*');
+        this.subscribeStates('*.wlans.*.enabled');
+        this.subscribeStates('*.vouchers.create_vouchers');
 
         this.log.info('UniFi adapter is ready');
 
@@ -55,11 +62,18 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
 
-        this.blacklist.clients = this.config.blacklistedClients || {};
-        this.blacklist.devices = this.config.blacklistedDevices || {};
-        this.blacklist.wlans = this.config.blacklistedWlans || {};
-        this.blacklist.networks = this.config.blacklistedNetworks || {};
-        this.blacklist.health = this.config.blacklistedHealth || {};
+        this.objectsFilter = this.config.objectsFilter;
+        this.statesFilter = this.config.statesFilter;
+
+        this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
+
+        this.vouchers.number = this.config.createVouchersNumber;
+        this.vouchers.duration = this.config.createVouchersDuration;
+        this.vouchers.quota = this.config.createVouchersQuota;
+        this.vouchers.uploadLimit = (this.config.createVouchersUploadLimit == 0) ? null : this.config.createVouchersUploadLimit;
+        this.vouchers.downloadLimit = (this.config.createVouchersDownloadLimit == 0) ? null : this.config.createVouchersDownloadLimit;
+        this.vouchers.byteQuota = (this.config.createVouchersByteQuota == 0) ? null : this.config.createVouchersByteQuota;
+        this.vouchers.note = this.config.createVouchersNote;
 
         if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
             this.getForeignObject('system.config', async (err, obj) => {
@@ -75,12 +89,6 @@ class Unifi extends utils.Adapter {
                 this.log.debug('controller = ' + this.settings.controllerIp + ':' + this.settings.controllerPort);
                 this.log.debug('updateInterval = ' + this.settings.updateInterval / 1000);
 
-                this.log.debug('Blacklisted clients: ' + JSON.stringify(this.blacklist.clients));
-                this.log.debug('Blacklisted devices: ' + JSON.stringify(this.blacklist.devices));
-                this.log.debug('Blacklisted WLANs: ' + JSON.stringify(this.blacklist.wlans));
-                this.log.debug('Blacklisted networks: ' + JSON.stringify(this.blacklist.networks));
-                this.log.debug('Blacklisted health: ' + JSON.stringify(this.blacklist.health));
-
                 // Start main function
                 this.updateUnifiData();
             });
@@ -89,6 +97,25 @@ class Unifi extends utils.Adapter {
 
             await this.setStateAsync('info.connection', { ack: true, val: false });
             this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+        }
+    }
+
+    /**
+	 * Is called if a subscribed state changes
+	 * @param {string} id
+	 * @param {ioBroker.State | null | undefined} state
+	 */
+    onStateChange(id, state) {
+        if (typeof state == 'object' && !state.ack) {
+            // The state was changed
+            const idParts = id.split('.');
+            const site = idParts[2];
+
+            if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
+                this.updateWlanStatus(site, id, state);
+            } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
+                this.createUnifiVouchers(site);
+            }
         }
     }
 
@@ -129,12 +156,24 @@ class Unifi extends utils.Adapter {
      * @param {Object} err 
      */
     async errorHandling(err) {
-        this.log.error(err.name + ': ' + err.message);
+        if (err.message === 'api.err.Invalid') {
+            this.log.error('Error: Incorrect username or password.');
+        } else if (err.message === 'api.err.LoginRequired') {
+            this.log.error('Error: Login required. Check username and password.');
+        } else if (err.message.includes('connect ECONNREFUSED') === true) {
+            this.log.error('Error: Connection refused. Incorrect IP or port.');
+        } else if (err.message.includes('getaddrinfo EAI_AGAIN') === true) {
+            this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
+        } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
+            this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else {
+            this.log.error(err.name + ': ' + err.message);
 
-        if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
-            const sentryInstance = this.getPluginInstance('sentry');
-            if (sentryInstance) {
-                sentryInstance.getSentryObject().captureException(err);
+            if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+                const sentryInstance = this.getPluginInstance('sentry');
+                if (sentryInstance) {
+                    sentryInstance.getSentryObject().captureException(err);
+                }
             }
         }
     }
@@ -174,6 +213,10 @@ class Unifi extends utils.Adapter {
                     await this.fetchNetworks(sites);
                 }
 
+                if (this.update.health === true) {
+                    await this.fetchHealth(sites);
+                }
+
                 if (this.update.vouchers === true) {
                     await this.fetchVouchers(sites);
                 }
@@ -207,7 +250,7 @@ class Unifi extends utils.Adapter {
      */
     async login(controllerUsername, controllerPassword) {
         return new Promise((resolve, reject) => {
-            this.controller.login(controllerUsername, controllerPassword, (err) => {
+            this.controller.login(controllerUsername, controllerPassword, async (err) => {
                 if (err) {
                     reject(new Error(err));
                 } else {
@@ -222,17 +265,17 @@ class Unifi extends utils.Adapter {
      */
     async fetchSites() {
         return new Promise((resolve, reject) => {
-            this.controller.getSitesStats((err, data) => {
+            this.controller.getSites(async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     const sites = data.map((s) => { return s.name; });
 
                     this.log.debug('fetchSites: ' + sites);
 
-                    if (this.update.health === true) {
-                        this.processSites(sites, data);
-                    }
+                    await this.processSites(sites, data);
 
                     resolve(sites);
                 }
@@ -246,27 +289,13 @@ class Unifi extends utils.Adapter {
      * @param {Object} data 
      */
     async processSites(sites, data) {
-        const objects = require('./admin/lib/objects_health.json');
+        const objects = require('./admin/lib/objects_sites.json');
 
         for (const site of sites) {
             const x = sites.indexOf(site);
-            let siteData;
+            const siteData = data[x];
 
-            // Process blacklist
-            if (Object.prototype.hasOwnProperty.call(data[x], 'health')) {
-                const health = data[x].health.filter((item) => {
-                    if (this.blacklist.health.includes(item.subsystem) !== true) {
-                        return item;
-                    }
-                });
-
-                siteData = data[x];
-                siteData.health = health;
-            } else {
-                siteData = data[x];
-            }
-
-            await this.applyJsonLogic(siteData, objects, site);
+            await this.applyJsonLogic('', siteData, objects, ['site']);
         }
     }
 
@@ -276,13 +305,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchSiteSysinfo(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getSiteSysinfo(sites, (err, data) => {
+            this.controller.getSiteSysinfo(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
 
-                    this.processSiteSysinfo(sites, data);
+                    await this.processSiteSysinfo(sites, data);
 
                     resolve(data);
                 }
@@ -302,7 +333,7 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
-            await this.applyJsonLogic(siteData, objects, site);
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.sysinfo);
         }
     }
 
@@ -312,13 +343,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchClients(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getClientDevices(sites, (err, data) => {
+            this.controller.getClientDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
 
-                    this.processClients(sites, data);
+                    await this.processClients(sites, data);
 
                     resolve(data);
                 }
@@ -337,17 +370,66 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.clients.includes(item.mac) !== true &&
-                    this.blacklist.clients.includes(item.ip) !== true &&
-                    this.blacklist.clients.includes(item.name) !== true &&
-                    this.blacklist.clients.includes(item.hostname) !== true) {
+                if (this.objectsFilter.clients.includes(item.mac) !== true &&
+                    this.objectsFilter.clients.includes(item.ip) !== true &&
+                    this.objectsFilter.clients.includes(item.name) !== true &&
+                    this.objectsFilter.clients.includes(item.hostname) !== true) {
                     return item;
                 }
             });
 
-            await this.applyJsonLogic(siteData, objects, site);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+            }
+
+            // Update is_online of offline clients
+            await this.setClientOnlineStatus();
+        }
+    }
+
+    /**
+     * Update is_online of offline clients
+     */
+    async setClientOnlineStatus() {
+        const wlanStates = await this.getStatesAsync('*.clients.*.last_seen_by_uap');
+        const wiredStates = await this.getStatesAsync('*.clients.*.last_seen_by_usw');
+
+        // Workaround for UniFi bug "wireless clients shown as wired clients"
+        // https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1
+        for (const [key, value] of Object.entries(wlanStates)) {
+            const wiredStateId = key.replace('last_seen_by_uap', 'last_seen_by_usw');
+
+            if (Object.prototype.hasOwnProperty.call(wiredStates, wiredStateId)) {
+                delete wiredStates[wiredStateId];
+            }
+        }
+
+        const states = {
+            ...wlanStates,
+            ...wiredStates
+        };
+
+        const now = Math.floor(Date.now() / 1000) * 1000;
+
+        for (const [key, value] of Object.entries(states)) {
+            const lastSeen = Date.parse(value.val.replace(' ', 'T'));
+            const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
+            const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
+            const oldState = await this.getStateAsync(stateId);
+
+            if (oldState === null) {
+                // This is the case if the client is new to the adapter with older JS-Controller versions
+                // Check if object is available and set the value
+                const oldObject = await this.getForeignObjectAsync(stateId);
+
+                if (oldObject !== null) {
+                    await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+                }
+            } else if (oldState.val != isOnline) {
+                await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+            }
         }
     }
 
@@ -357,13 +439,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchDevices(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getAccessDevices(sites, (err, data) => {
+            this.controller.getAccessDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
-                    this.processDevices(sites, data);
+                    await this.processDevices(sites, data);
 
                     resolve(data);
                 }
@@ -382,16 +466,18 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.devices.includes(item.mac) !== true &&
-                    this.blacklist.devices.includes(item.ip) !== true &&
-                    this.blacklist.devices.includes(item.name) !== true) {
+                if (this.objectsFilter.devices.includes(item.mac) !== true &&
+                    this.objectsFilter.devices.includes(item.ip) !== true &&
+                    this.objectsFilter.devices.includes(item.name) !== true) {
                     return item;
                 }
             });
 
-            await this.applyJsonLogic(siteData, objects, site);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
+            }
         }
     }
 
@@ -401,13 +487,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchWlans(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getWLanSettings(sites, (err, data) => {
+            this.controller.getWLanSettings(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
 
-                    this.processWlans(sites, data);
+                    await this.processWlans(sites, data);
 
                     resolve(data);
                 }
@@ -426,14 +514,16 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.wlans.includes(item.name) !== true) {
+                if (this.objectsFilter.wlans.includes(item.name) !== true) {
                     return item;
                 }
             });
 
-            await this.applyJsonLogic(siteData, objects, site);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
+            }
         }
     }
 
@@ -443,13 +533,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchNetworks(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getNetworkConf(sites, (err, data) => {
+            this.controller.getNetworkConf(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
 
-                    this.processNetworks(sites, data);
+                    await this.processNetworks(sites, data);
 
                     resolve(data);
                 }
@@ -468,14 +560,62 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            // Process blacklist
+            // Process objectsFilter
             const siteData = data[x].filter((item) => {
-                if (this.blacklist.networks.includes(item.name) !== true) {
+                if (this.objectsFilter.networks.includes(item.name) !== true) {
                     return item;
                 }
             });
 
-            await this.applyJsonLogic(siteData, objects, site);
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
+            }
+        }
+    }
+
+    /**
+     * Function to fetch health
+     * @param {Object} sites 
+     */
+    async fetchHealth(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.getHealth(sites, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchHealth: ' + data[0].length);
+
+                    await this.processHealth(sites, data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Function that receives the health as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processHealth(sites, data) {
+        const objects = require('./admin/lib/objects_health.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                if (this.objectsFilter.health.includes(item.subsystem) !== true) {
+                    return item;
+                }
+            });
+
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
+            }
         }
     }
 
@@ -485,13 +625,15 @@ class Unifi extends utils.Adapter {
      */
     async fetchVouchers(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getVouchers(sites, (err, data) => {
+            this.controller.getVouchers(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
 
-                    this.processVouchers(sites, data);
+                    await this.processVouchers(sites, data);
 
                     resolve(data);
                 }
@@ -511,121 +653,258 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
-            await this.applyJsonLogic(siteData, objects, site);
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
     }
 
     /**
-     * Function to apply JSON logic to API responses
-     * @param {*} data 
-     * @param {*} objects 
-     * @param {*} objectTree 
+     * Disable or enable a WLAN
+     * @param {*} site 
+     * @param {*} objId 
+     * @param {*} status 
      */
-    async applyJsonLogic(data, objects, objectTree = '') {
-        for (const key in objects) {
-            const obj = {
-                '_id': null,
-                'type': null,
-                'common': {},
-                'native': {}
+    updateWlanStatus(site, objId, state) {
+        this.login(this.settings.controllerUsername, this.settings.controllerPassword)
+            .then(async () => {
+                this.log.debug('Login successful');
+
+                await this.setWlanStatus(site, objId, state);
+
+                // finalize, logout and finish
+                this.controller.logout();
+
+                this.log.info('WLAN status set to ' + state.val);
+
+                return true;
+            })
+            .catch(async (err) => {
+                this.errorHandling(err);
+
+                return;
+            });
+    }
+
+    /**
+     * Function to fetch vouchers
+     * @param {Object} sites 
+     */
+    async setWlanStatus(site, objId, state) {
+        const obj = await this.getForeignObjectAsync(objId);
+
+        const wlanId = obj.native.wlan_id;
+        const disable = (state.val == true) ? false : true;
+
+        return new Promise((resolve, reject) => {
+            this.controller.disableWLan(site, wlanId, disable, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('setWlanStatus: ' + data[0].length);
+
+                    await this.processWlans([site], data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Create vouchers
+     * @param {*} site 
+     * @param {*} objId
+     */
+    createUnifiVouchers(site) {
+        this.login(this.settings.controllerUsername, this.settings.controllerPassword)
+            .then(async () => {
+                this.log.debug('Login successful');
+
+                await this.createVouchers(site);
+                await this.fetchVouchers([site]);
+
+                // finalize, logout and finish
+                this.controller.logout();
+
+                this.log.info('Vouchers created');
+
+                return true;
+            })
+            .catch(async (err) => {
+                this.errorHandling(err);
+
+                return;
+            });
+    }
+
+    /**
+     * Function to create vouchers
+     * @param {Object} sites 
+     */
+    async createVouchers(site) {
+        const minutes = this.vouchers.duration;
+        const count = this.vouchers.number;
+        const quota = this.vouchers.quota;
+        const note = this.vouchers.note;
+        const up = this.vouchers.uploadLimit;
+        const down = this.vouchers.downloadLimit;
+        const mbytes = this.vouchers.byteQuota;
+
+        return new Promise((resolve, reject) => {
+            const cb = async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('createVouchers: ' + data[0].length);
+
+                    await this.processWlans([site], data);
+
+                    resolve(data);
+                }
             };
 
-            // Process object id
-            if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
-                obj._id = objects[key]._id;
-            } else {
-                obj._id = await this.applyRule(objects[key].logic._id, data);
-            }
+            this.controller.createVouchers(site, minutes, cb, count, quota, note, up, down, mbytes);
+        });
+    }
 
-            if (obj._id !== null) {
-                if (objectTree !== '') {
-                    obj._id = objectTree + '.' + obj._id;
-                }
+    /**
+     * Function to apply JSON logic to API responses
+     * @param {*} objectTree 
+     * @param {*} data 
+     * @param {*} objects 
+     * @param {*} statesFilter
+     */
+    async applyJsonLogic(objectTree, data, objects, statesFilter) {
+        for (const key in objects) {
+            if (statesFilter.lenth === 0 || statesFilter.includes(key)) {
+                const obj = {
+                    '_id': null,
+                    'type': null,
+                    'common': {},
+                    'native': {}
+                };
 
-                // Process type
-                if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
-                    obj.type = objects[key].type;
+                // Process object id
+                if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
+                    obj._id = objects[key]._id;
                 } else {
-                    obj.type = await this.applyRule(objects[key].logic.type, data);
+                    obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
 
-                // Process common
-                if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
-                    obj.common = objects[key].common;
-                }
-
-                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
-                    const common = objects[key].logic.common;
-
-                    for (const commonKey in common) {
-                        obj.common[commonKey] = await this.applyRule(common[commonKey], data);
+                if (obj._id !== null && obj._id.slice(-1) !== -1) {
+                    if (objectTree !== '') {
+                        obj._id = objectTree + '.' + obj._id;
                     }
-                }
 
-                // Process native
-                if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
-                    obj.native = objects[key].native;
-                }
-
-                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
-                    const native = objects[key].logic.native;
-
-                    for (const nativeKey in native) {
-                        obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
+                    // Process type
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
+                        obj.type = objects[key].type;
+                    } else {
+                        obj.type = await this.applyRule(objects[key].logic.type, data);
                     }
-                }
 
-                // Process value
-                if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
-                    obj.value = objects[key].value;
-                } else {
-                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
-                        obj.value = await this.applyRule(objects[key].logic.value, data);
+                    // Process common
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
+                        obj.common = JSON.parse(JSON.stringify(objects[key].common));
                     }
-                }
 
-                // Cleanup _id
-                const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-                let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
-                tempId = tempId.toLowerCase();
-                obj._id = tempId;
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
+                        const common = objects[key].logic.common;
 
-                //this.log.debug(JSON.stringify(obj));
-
-                await this.extendObjectAsync(obj._id, {
-                    type: obj.type,
-                    common: JSON.parse(JSON.stringify(obj.common)),
-                    native: JSON.parse(JSON.stringify(obj.native))
-                });
-
-                // Update state if value changed
-                if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
-                    const oldState = await this.getStateAsync(obj._id);
-
-                    if (oldState === null || oldState.val != obj.value) {
-                        await this.setStateAsync(obj._id, { ack: true, val: obj.value });
-                    }
-                }
-
-                // Process has
-                if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
-                    const hasKey = objects[key].logic.has_key;
-                    const has = objects[key].logic.has;
-
-                    if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
-                        let tempData;
-                        if (hasKey === '_self') {
-                            tempData = data;
-                        } else {
-                            tempData = data[hasKey];
+                        for (const commonKey in common) {
+                            obj.common[commonKey] = await this.applyRule(common[commonKey], data);
                         }
+                    }
 
-                        if (Array.isArray(tempData)) {
-                            tempData.forEach(async element => {
-                                await this.applyJsonLogic(element, has, obj._id);
+                    // Process native
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
+                        obj.native = JSON.parse(JSON.stringify(objects[key].native));
+                    }
+
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
+                        const native = objects[key].logic.native;
+
+                        for (const nativeKey in native) {
+                            obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
+                        }
+                    }
+
+                    // Cleanup _id
+                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
+                    tempId = tempId.toLowerCase();
+                    obj._id = tempId;
+
+                    //this.log.debug(JSON.stringify(obj));
+
+                    // Update object if changed
+                    if (!Object.prototype.hasOwnProperty.call(this.ownObjects, obj._id)) {
+                        await this.extendObjectAsync(obj._id, {
+                            type: obj.type,
+                            common: JSON.parse(JSON.stringify(obj.common)),
+                            native: JSON.parse(JSON.stringify(obj.native))
+                        });
+
+                        this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+
+                        //this.log.debug('Object ' + obj._id + ' updated');
+                    } else {
+                        const ownObj = this.ownObjects[obj._id];
+
+                        if (JSON.stringify(ownObj) !== JSON.stringify(obj)) {
+                            await this.extendObjectAsync(obj._id, {
+                                type: obj.type,
+                                common: JSON.parse(JSON.stringify(obj.common)),
+                                native: JSON.parse(JSON.stringify(obj.native))
                             });
-                        } else {
-                            await this.applyJsonLogic(tempData, has, obj._id);
+
+                            this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+
+                            this.log.debug('Object ' + obj._id + ' updated');
+                        }
+                    }
+
+                    // Process value
+                    if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
+                        obj.value = objects[key].value;
+                    } else {
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
+                            obj.value = await this.applyRule(objects[key].logic.value, data);
+                        }
+                    }
+
+                    // Update state if value changed
+                    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
+                        const oldState = await this.getStateAsync(obj._id);
+
+                        if (oldState === null || oldState.val != obj.value) {
+                            await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                        }
+                    }
+
+                    // Process has
+                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
+                        const hasKey = objects[key].logic.has_key;
+                        const has = objects[key].logic.has;
+
+                        if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
+                            let tempData;
+                            if (hasKey === '_self') {
+                                tempData = data;
+                            } else {
+                                tempData = data[hasKey];
+                            }
+
+                            if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
+                                for (const element of tempData) {
+                                    await this.applyJsonLogic(obj._id, element, has, statesFilter);
+                                }
+                            } else {
+                                await this.applyJsonLogic(obj._id, tempData, has, statesFilter);
+                            }
                         }
                     }
                 }

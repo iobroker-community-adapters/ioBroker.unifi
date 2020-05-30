@@ -3,12 +3,11 @@
 
 systemDictionary = {
     "Add": { "en": "Add", "de": "Hinzufügen", "ru": "Добавить", "pt": "Adicionar", "nl": "Toevoegen", "fr": "Ajouter", "it": "Inserisci", "es": "Añadir", "pl": "Dodaj", "zh-cn": "加" },
-    "Blacklists": { "en": "Blacklists", "de": "Blacklists", "ru": "Черные списки", "pt": "Listas negras", "nl": "Zwarte lijsten", "fr": "Listes noires", "it": "blacklist", "es": "Listas negras", "pl": "Czarne listy", "zh-cn": "黑名单" },
     "IP address": { "en": "IP address", "de": "IP Adresse", "ru": "айпи адрес", "pt": "endereço de IP", "nl": "IP adres", "fr": "adresse IP", "it": "indirizzo IP", "es": "dirección IP", "pl": "adres IP", "zh-cn": "IP地址" },
     "Login": { "en": "Login", "de": "Login", "ru": "Авторизоваться", "pt": "Conecte-se", "nl": "Log in", "fr": "S'identifier", "it": "Accesso", "es": "Iniciar sesión", "pl": "Zaloguj sie", "zh-cn": "登录" },
     "Network settings": { "en": "Network settings", "de": "Netzwerkeinstellungen", "ru": "Сетевые настройки", "pt": "Configurações de rede", "nl": "Netwerkinstellingen", "fr": "Paramètres réseau", "it": "Impostazioni di rete", "es": "Configuración de red", "pl": "Ustawienia sieci", "zh-cn": "网络设置" },
     "Password": { "en": "Password", "de": "Passwort", "ru": "пароль", "pt": "Senha", "nl": "Wachtwoord", "fr": "Mot de passe", "it": "Parola d'ordine", "es": "Contraseña", "pl": "Hasło", "zh-cn": "密码" },
-    "Port": { "en": "Port", "de": "Portn", "ru": "порт", "pt": "Porta", "nl": "Haven", "fr": "Port", "it": "Porta", "es": "Puerto", "pl": "Port", "zh-cn": "港口" },
+    "Port": { "en": "Port", "de": "Port", "ru": "порт", "pt": "Porta", "nl": "Haven", "fr": "Port", "it": "Porta", "es": "Puerto", "pl": "Port", "zh-cn": "港口" },
     "Update": { "en": "Update", "de": "Update", "ru": "Обновить", "pt": "Atualizar", "nl": "Bijwerken", "fr": "Mise à jour", "it": "Aggiornare", "es": "Actualizar", "pl": "Aktualizacja", "zh-cn": "更新资料" },
     "Update clients": { "en": "Update clients", "de": "Clients aktualisieren", "ru": "Обновление клиентов", "pt": "Atualizar clientes", "nl": "Cliënten bijwerken", "fr": "Mettre à jour les clients", "it": "Aggiorna client", "es": "Actualizar clientes", "pl": "Zaktualizuj klientów", "zh-cn": "更新客户" },
     "Update devices": { "en": "Update devices", "de": "Devices aktualisieren", "ru": "Обновление устройств", "pt": "Atualizar dispositivos", "nl": "Apparaten updaten", "fr": "Mettre à jour les appareils", "it": "Aggiorna dispositivi", "es": "Actualizar dispositivos", "pl": "Zaktualizuj urządzenia", "zh-cn": "更新设备" },
@@ -19,6 +18,164 @@ systemDictionary = {
     "Update WLANs": { "en": "Update WLANs", "de": "WLANs aktualisieren", "ru": "Обновить WLAN", "pt": "Atualizar WLANs", "nl": "WLAN's bijwerken", "fr": "Mettre à jour les WLAN", "it": "Aggiorna WLAN", "es": "Actualizar WLAN", "pl": "Zaktualizuj sieci WLAN", "zh-cn": "更新WLAN" },
     "Update vouchers": { "en": "Update vouchers", "de": "Vouchers aktualisieren", "ru": "Обновить ваучеры", "pt": "Atualizar comprovantes", "nl": "Vouchers bijwerken", "fr": "Mettre à jour les bons", "it": "Aggiorna i voucher", "es": "Actualizar comprobantes", "pl": "Zaktualizuj kupony", "zh-cn": "更新优惠券" },
     "Username": { "en": "Username", "de": "Username", "ru": "имя пользователя", "pt": "Nome do usuário", "nl": "Gebruikersnaam", "fr": "Nom d'utilisateur", "it": "Nome utente", "es": "Nombre de usuario", "pl": "Nazwa Użytkownika", "zh-cn": "用户名" },
+
+    "Filter objects": {
+        "en": "Filter objects",
+        "de": "Objekte filtern",
+        "ru": "Фильтровать объекты",
+        "pt": "Filtrar objetos",
+        "nl": "Objecten filteren",
+        "fr": "Filtrer les objets",
+        "it": "Filtra oggetti",
+        "es": "Filtrar objetos",
+        "pl": "Filtruj obiekty",
+        "zh-cn": "过滤对象"
+    },
+    "Filter states": {
+        "en": "Filter states",
+        "de": "States filtern",
+        "ru": "Фильтр состояний",
+        "pt": "Estados do filtro",
+        "nl": "Filterstatussen",
+        "fr": "États du filtre",
+        "it": "Stati del filtro",
+        "es": "Estados de filtro",
+        "pl": "Filtruj stany",
+        "zh-cn": "过滤状态"
+    },
+    "Hint:": {
+        "en": "Hint:",
+        "de": "Hinweis:",
+        "ru": "Подсказка:",
+        "pt": "Dica:",
+        "nl": "Tip:",
+        "fr": "Allusion:",
+        "it": "Suggerimento:",
+        "es": "Insinuación:",
+        "pl": "Wskazówka:",
+        "zh-cn": "暗示："
+    },
+    "To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.": {
+        "en": "To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.",
+        "de": "Um is_online zu berechnen, müssen last_seen_by_uap und last_seen_by_usw zusätzlich aktiviert werden.",
+        "ru": "Для расчета is_online необходимо дополнительно активировать last_seen_by_uap и last_seen_by_usw.",
+        "pt": "Para calcular is_online, last_seen_by_uap e last_seen_by_usw precisam ser ativados adicionalmente.",
+        "nl": "Om te berekenen is_online, last_seen_by_uap en last_seen_by_usw moeten bovendien worden geactiveerd.",
+        "fr": "Pour calculer is_online, last_seen_by_uap et last_seen_by_usw doivent être activés en plus.",
+        "it": "Per calcolare is_online, last_seen_by_uap e last_seen_by_usw devono essere attivati ulteriormente.",
+        "es": "Para calcular is_online, last_seen_by_uap y last_seen_by_usw deben activarse adicionalmente.",
+        "pl": "Aby obliczyć is_online, należy dodatkowo aktywować last_seen_by_uap i last_seen_by_usw.",
+        "zh-cn": "要计算is_online，需要另外激活last_seen_by_uap和last_seen_by_usw。"
+    },
+    "Offset for is_online": {
+        "en": "Offset for is_online",
+        "de": "Offset für is_online",
+        "ru": "Смещение для is_online",
+        "pt": "Deslocamento para is_online",
+        "nl": "Offset voor is_online",
+        "fr": "Décalage pour is_online",
+        "it": "Offset per is_online",
+        "es": "Offset para is_online",
+        "pl": "Przesunięcie dla is_online",
+        "zh-cn": "is_online的偏移量"
+    },
+    "Settings for clients": {
+        "en": "Settings for clients",
+        "de": "Einstellungen für Clients",
+        "ru": "Настройки для клиентов",
+        "pt": "Configurações para clientes",
+        "nl": "Instellingen voor klanten",
+        "fr": "Paramètres pour les clients",
+        "it": "Impostazioni per i clienti",
+        "es": "Configuraciones para clientes",
+        "pl": "Ustawienia dla klientów",
+        "zh-cn": "客户端设置"
+    },
+
+    "Settings for voucher creation": {
+        "en": "Settings for voucher creation",
+        "de": "Einstellungen für die Voucher Erstellung",
+        "ru": "Настройки для создания ваучеров",
+        "pt": "Configurações para criação de comprovante",
+        "nl": "Instellingen voor het maken van vouchers",
+        "fr": "Paramètres pour la création de bons",
+        "it": "Impostazioni per la creazione di voucher",
+        "es": "Configuraciones para la creación de cupones",
+        "pl": "Ustawienia tworzenia kuponów",
+        "zh-cn": "凭证创建的设置"
+    },
+    "Number of vouchers": {
+        "en": "Number of vouchers",
+        "de": "Anzahl der Vouchers",
+        "ru": "Количество ваучеров",
+        "pt": "Número de vouchers",
+        "nl": "Aantal vouchers",
+        "fr": "Nombre de bons",
+        "it": "Numero di buoni",
+        "es": "Numero de cupones",
+        "pl": "Liczba kuponów",
+        "zh-cn": "凭证数量"
+    },
+    "Duration in minutes": {
+        "en": "Duration in minutes",
+        "de": "Dauer in Minuten",
+        "ru": "Продолжительность в минутах",
+        "pt": "Duração em minutos",
+        "nl": "Duur in minuten",
+        "fr": "Durée en minutes",
+        "it": "Durata in minuti",
+        "es": "Duración en minutos",
+        "pl": "Czas trwania w minutach",
+        "zh-cn": "持续时间（分钟）"
+    },
+    "Usage quota": {
+        "en": "Usage quota",
+        "de": "Nutzungsquote",
+        "ru": "Квота использования",
+        "pt": "Cota de uso",
+        "nl": "Gebruiksquotum",
+        "fr": "Quota d'utilisation",
+        "it": "Quota di utilizzo",
+        "es": "Cuota de uso",
+        "pl": "Limit wykorzystania",
+        "zh-cn": "使用配额"
+    },
+    "Upload limit in Kbps": {
+        "en": "Upload limit in Kbps",
+        "de": "Upload-Limit in Kbps",
+        "ru": "Ограничение загрузки в кбит / с",
+        "pt": "Limite de upload em Kbps",
+        "nl": "Uploadlimiet in Kbps",
+        "fr": "Limite de téléchargement en Kbps",
+        "it": "Limite di upload in Kbps",
+        "es": "Límite de carga en Kbps",
+        "pl": "Limit przesyłania w Kb / s",
+        "zh-cn": "上传限制（以Kbps为单位）"
+    },
+    "Download limit in Kbps": {
+        "en": "Download limit in Kbps",
+        "de": "Download-Limit in Kbps",
+        "ru": "Ограничение загрузки в кбит / с",
+        "pt": "Limite de download em Kbps",
+        "nl": "Downloadlimiet in Kbps",
+        "fr": "Limite de téléchargement en Kbps",
+        "it": "Limite di download in Kbps",
+        "es": "Límite de descarga en Kbps",
+        "pl": "Limit pobierania w Kb / s",
+        "zh-cn": "下载限制（以Kbps为单位）"
+    },
+    "MB quota": {
+        "en": "MB quota",
+        "de": "MB Kontingent",
+        "ru": "Квота в мегабайтах",
+        "pt": "Cota de MB",
+        "nl": "MB-quota",
+        "fr": "Quota de Mo",
+        "it": "Quota MB",
+        "es": "Cuota de MB",
+        "pl": "Limit MB",
+        "zh-cn": "MB配额"
+    },
 
     // sysinfo
     "Hostname": {
