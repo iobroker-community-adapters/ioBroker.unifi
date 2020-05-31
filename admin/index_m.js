@@ -65,10 +65,10 @@ function loadHelper(settings, onChange) {
     if (!settings) return;
 
     // Update settings < v0.5.3
-    if (Object.prototype.hasOwnProperty.call(settings, 'objectsFilter') === false && Object.prototype.hasOwnProperty.call(settings, 'blacklist') === true) {
+    if (Object.prototype.hasOwnProperty.call(settings, 'blacklist')) {
         settings['objectsFilter'] = settings['blacklist'];
     }
-    if (Object.prototype.hasOwnProperty.call(settings, 'statesFilter') === false && Object.prototype.hasOwnProperty.call(settings, 'whitelist') === true) {
+    if (Object.prototype.hasOwnProperty.call(settings, 'whitelist')) {
         settings['statesFilter'] = settings['whitelist'];
     }
 
@@ -186,6 +186,10 @@ function save(callback) {
 
         obj.statesFilter[settingsName] = retVal;
     });
+
+    // Delete settings < v0.5.3
+    obj.blacklist = undefined;
+    obj.whitelist = undefined;
 
     callback(obj);
 }
