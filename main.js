@@ -62,8 +62,9 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
 
-        this.objectsFilter = this.config.objectsFilter;
-        this.statesFilter = this.config.statesFilter;
+
+        this.objectsFilter = this.config.objectsFilter || this.config.blacklist; // blacklist was renamed to objectFilter in v0.5.3
+        this.statesFilter = this.config.statesFilter || this.config.whitelist; // blacklist was renamed to objectFilter in v0.5.3
 
         this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
 

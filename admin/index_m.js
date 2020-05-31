@@ -63,8 +63,16 @@ function chips2list(selector) {
 function loadHelper(settings, onChange) {
     // example: select elements with id=key and class=value and insert value
     if (!settings) return;
-    if (settings.electricityPollingInterval === undefined) settings.electricityPollingInterval = 20;
 
+    // Update settings < v0.5.3
+    if (Object.prototype.hasOwnProperty.call(settings, 'objectsFilter') === false && Object.prototype.hasOwnProperty.call(settings, 'blacklist') === true) {
+        settings['objectsFilter'] = settings['blacklist'];
+    }
+    if (Object.prototype.hasOwnProperty.call(settings, 'statesFilter') === false && Object.prototype.hasOwnProperty.call(settings, 'whitelist') === true) {
+        settings['statesFilter'] = settings['whitelist'];
+    }
+
+    // Update fields
     $('.value').each(function () {
         const $key = $(this);
         const id = $key.attr('id');
