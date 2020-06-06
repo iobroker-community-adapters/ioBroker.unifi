@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.2",
+        "version": "0.5.3",
         "news": {
+            "0.5.3": {
+                "en": "* (braindead1) Implemented offset for is_online\r\n* (braindead1) Fixed some issues related to is_online\r\n* (braindead1) Prepared whitelisting of clients etc.",
+                "de": "* (braindead1) Offset für is_online implementiert\r\n* (braindead1) Einige Probleme im Zusammenhang mit is_online wurden behoben\r\n* (braindead1) Vorbereitete Whitelist von Clients usw.",
+                "ru": "* (braindead1) Реализованное смещение для is_online\r\n* (braindead1) Исправлены некоторые проблемы, связанные с is_online\r\n* (braindead1) Подготовлен белый список клиентов и т. д.",
+                "pt": "* (braindead1) Deslocamento implementado para is_online\r\n* (braindead1) Corrigidos alguns problemas relacionados a is_online\r\n* (braindead1) Lista de permissões preparada de clientes etc.",
+                "nl": "* (braindead1) Geïmplementeerde offset voor is_online\r\n* (braindead1) Enkele problemen opgelost met betrekking tot is_online\r\n* (braindead1) Opgestelde whitelisting van klanten etc.",
+                "fr": "* (braindead1) Décalage implémenté pour is_online\r\n* (braindead1) Correction de certains problèmes liés à is_online\r\n* (braindead1) Préparation de la liste blanche des clients, etc.",
+                "it": "* (braindead1) Offset implementato per is_online\r\n* (braindead1) Risolti alcuni problemi relativi a is_online\r\n* (braindead1) Lista bianca preparata per clienti ecc.",
+                "es": "* (braindead1) Desplazamiento implementado para is_online\r\n* (braindead1) Se corrigieron algunos problemas relacionados con is_online\r\n* (braindead1) Lista blanca preparada de clientes, etc.",
+                "pl": "* (braindead1) Zaimplementowano przesunięcie dla is_online\r\n* (braindead1) Naprawiono niektóre problemy związane z is_online\r\n* (braindead1) Przygotowano białą listę klientów itp.",
+                "zh-cn": "*（braindead1）为is_online实现的偏移量\r\n*（braindead1）修复了与is_online相关的一些问题\r\n*（braindead1）准备客户的白名单等"
+            },
             "0.5.2": {
                 "en": "* (jens-maus) Implemented UniFiOS/UDM-Pro support\r\n* (braindead1) Implemented possibility to enable/disable WLANs\r\n* (braindead1) Implemented voucher creation\r\n* (braindead1) Implemented online state for clients\r\n* (braindead1) Updated client states\r\n* (braindead1) Updated device states\r\n* (braindead1) Improved error messages",
                 "de": "* (jens-maus) UniFiOS / UDM-Pro-Unterstützung implementiert\r\n* (braindead1) Möglichkeit zum Aktivieren / Deaktivieren von WLANs implementiert\r\n* (braindead1) Die Erstellung von Gutscheinen wurde implementiert\r\n* (braindead1) Implementierter Online-Status für Clients\r\n* (braindead1) Aktualisierte Client-Status\r\n* (braindead1) Aktualisierte Gerätezustände\r\n* (braindead1) Verbesserte Fehlermeldungen",
