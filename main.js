@@ -11,6 +11,7 @@ const utils = require('@iobroker/adapter-core');
 // Load your modules here
 const unifi = require('node-unifi');
 const jsonLogic = require('./admin/lib/json_logic.js');
+const tools = require('./lib/tools.js');
 
 class Unifi extends utils.Adapter {
 
@@ -167,6 +168,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
         } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
             this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else if (err.message === 'Returned data is not in valid format') {
+            this.log.error(err.message);
         } else {
             this.log.error(err.name + ': ' + err.message);
 
@@ -347,7 +350,7 @@ class Unifi extends utils.Adapter {
             this.controller.getClientDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
@@ -443,7 +446,7 @@ class Unifi extends utils.Adapter {
             this.controller.getAccessDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
@@ -491,7 +494,7 @@ class Unifi extends utils.Adapter {
             this.controller.getWLanSettings(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
@@ -537,7 +540,7 @@ class Unifi extends utils.Adapter {
             this.controller.getNetworkConf(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
@@ -583,7 +586,7 @@ class Unifi extends utils.Adapter {
             this.controller.getHealth(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
@@ -629,7 +632,7 @@ class Unifi extends utils.Adapter {
             this.controller.getVouchers(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
@@ -699,7 +702,7 @@ class Unifi extends utils.Adapter {
             this.controller.disableWLan(site, wlanId, disable, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
@@ -756,7 +759,7 @@ class Unifi extends utils.Adapter {
             const cb = async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
