@@ -418,21 +418,23 @@ class Unifi extends utils.Adapter {
         const now = Math.floor(Date.now() / 1000) * 1000;
 
         for (const [key, value] of Object.entries(states)) {
-            const lastSeen = Date.parse(value.val.replace(' ', 'T'));
-            const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
-            const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
-            const oldState = await this.getStateAsync(stateId);
+            if (value !== null && typeof value.val === 'string') {
+                const lastSeen = Date.parse(value.val.replace(' ', 'T'));
+                const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
+                const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
+                const oldState = await this.getStateAsync(stateId);
 
-            if (oldState === null) {
-                // This is the case if the client is new to the adapter with older JS-Controller versions
-                // Check if object is available and set the value
-                const oldObject = await this.getForeignObjectAsync(stateId);
+                if (oldState === null) {
+                    // This is the case if the client is new to the adapter with older JS-Controller versions
+                    // Check if object is available and set the value
+                    const oldObject = await this.getForeignObjectAsync(stateId);
 
-                if (oldObject !== null) {
+                    if (oldObject !== null) {
+                        await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+                    }
+                } else if (oldState.val != isOnline) {
                     await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
                 }
-            } else if (oldState.val != isOnline) {
-                await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
             }
         }
     }
