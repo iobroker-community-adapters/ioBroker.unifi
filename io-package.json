@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.4",
+        "version": "0.5.5",
         "news": {
+            "0.5.5": {
+                "en": "* (braindead1) Fixed some errors reported via Sentry",
+                "de": "* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
+                "ru": "* (braindead1) Исправлены некоторые ошибки, сообщаемые через Sentry",
+                "pt": "* (braindead1) Corrigidos alguns erros relatados via Sentry",
+                "nl": "* (braindead1) Enkele fouten opgelost die via Sentry zijn gemeld",
+                "fr": "* (braindead1) Correction de certaines erreurs signalées via Sentry",
+                "it": "* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
+                "es": "* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
+                "pl": "* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
+                "zh-cn": "*（braindead1）修复了通过哨兵报告的一些错误"
+            },
             "0.5.4": {
                 "en": "* (braindead1) Implemented offset for is_online\r\n* (braindead1) Fixed some issues related to is_online\r\n* (braindead1) Prepared whitelisting of clients etc.",
                 "de": "* (braindead1) Offset für is_online implementiert\r\n* (braindead1) Einige Probleme im Zusammenhang mit is_online wurden behoben\r\n* (braindead1) Vorbereitete Whitelist von Clients usw.",
