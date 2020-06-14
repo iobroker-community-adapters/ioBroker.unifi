@@ -600,7 +600,124 @@
                                                         "logic": {
                                                             "value": "value"
                                                         }
-                                                    }                                                    
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "devices.device.storage": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "devices.device.storage"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "storage"
+                                            },
+                                            "storage",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "storage",
+                                    "has": {
+                                        "devices.device.storage.stat": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {
+                                                "object_id": "devices.device.storage.stat"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "cleanupForUseAsId": [
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
+                                                "common": {
+                                                    "name": "name"
+                                                },
+                                                "has_key": "_self",
+                                                "has": {
+                                                    "devices.device.storage.stat.mount_point": {
+                                                        "_id": "mount_point",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "moiting point of storage",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.storage.stat.mount_point"
+                                                        },
+                                                        "logic": {
+                                                            "value": "mount_point"
+                                                        }
+                                                    },
+                                                    "devices.device.storage.stat.size": {
+                                                        "_id": "size",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "size of storage",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.storage.stat.size"
+                                                        },
+                                                        "logic": {
+                                                            "value": "size"
+                                                        }
+                                                    },
+                                                    "devices.device.storage.stat.type": {
+                                                        "_id": "type",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "type of storage",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.storage.stat.type"
+                                                        },
+                                                        "logic": {
+                                                            "value": "type"
+                                                        }
+                                                    },
+                                                    "devices.device.storage.stat.used": {
+                                                        "_id": "used",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "using of storage size",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "byte",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.storage.stat.used"
+                                                        },
+                                                        "logic": {
+                                                            "value": "used"
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }
