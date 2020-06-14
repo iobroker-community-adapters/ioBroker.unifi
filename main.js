@@ -11,6 +11,7 @@ const utils = require('@iobroker/adapter-core');
 // Load your modules here
 const unifi = require('node-unifi');
 const jsonLogic = require('./admin/lib/json_logic.js');
+const tools = require('./lib/tools.js');
 
 class Unifi extends utils.Adapter {
 
@@ -62,8 +63,9 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
 
-        this.objectsFilter = this.config.objectsFilter;
-        this.statesFilter = this.config.statesFilter;
+
+        this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
+        this.statesFilter = this.config.whitelist || this.config.statesFilter; // blacklist was renamed to statesFilter in v0.5.3
 
         this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
 
@@ -162,10 +164,14 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Login required. Check username and password.');
         } else if (err.message.includes('connect ECONNREFUSED') === true) {
             this.log.error('Error: Connection refused. Incorrect IP or port.');
+        } else if (err.message.includes('read ECONNRESET') === true) {
+            this.log.error('Error: Connection was closed by the UniFi controller.');
         } else if (err.message.includes('getaddrinfo EAI_AGAIN') === true) {
             this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
         } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
             this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else if (err.message === 'Returned data is not in valid format') {
+            this.log.error(err.message);
         } else {
             this.log.error(err.name + ': ' + err.message);
 
@@ -346,7 +352,7 @@ class Unifi extends utils.Adapter {
             this.controller.getClientDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
@@ -414,21 +420,23 @@ class Unifi extends utils.Adapter {
         const now = Math.floor(Date.now() / 1000) * 1000;
 
         for (const [key, value] of Object.entries(states)) {
-            const lastSeen = Date.parse(value.val.replace(' ', 'T'));
-            const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
-            const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
-            const oldState = await this.getStateAsync(stateId);
+            if (value !== null && typeof value.val === 'string') {
+                const lastSeen = Date.parse(value.val.replace(' ', 'T'));
+                const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) < 0 === true) ? false : true;
+                const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
+                const oldState = await this.getStateAsync(stateId);
 
-            if (oldState === null) {
-                // This is the case if the client is new to the adapter with older JS-Controller versions
-                // Check if object is available and set the value
-                const oldObject = await this.getForeignObjectAsync(stateId);
+                if (oldState === null) {
+                    // This is the case if the client is new to the adapter with older JS-Controller versions
+                    // Check if object is available and set the value
+                    const oldObject = await this.getForeignObjectAsync(stateId);
 
-                if (oldObject !== null) {
+                    if (oldObject !== null) {
+                        await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
+                    }
+                } else if (oldState.val != isOnline) {
                     await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
                 }
-            } else if (oldState.val != isOnline) {
-                await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
             }
         }
     }
@@ -442,7 +450,7 @@ class Unifi extends utils.Adapter {
             this.controller.getAccessDevices(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
@@ -490,7 +498,7 @@ class Unifi extends utils.Adapter {
             this.controller.getWLanSettings(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
@@ -536,7 +544,7 @@ class Unifi extends utils.Adapter {
             this.controller.getNetworkConf(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
@@ -582,7 +590,7 @@ class Unifi extends utils.Adapter {
             this.controller.getHealth(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
@@ -628,7 +636,7 @@ class Unifi extends utils.Adapter {
             this.controller.getVouchers(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
@@ -698,7 +706,7 @@ class Unifi extends utils.Adapter {
             this.controller.disableWLan(site, wlanId, disable, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
@@ -755,7 +763,7 @@ class Unifi extends utils.Adapter {
             const cb = async (err, data) => {
                 if (err) {
                     reject(new Error(err));
-                } else if (data === undefined) {
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('Returned data is not in valid format'));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
