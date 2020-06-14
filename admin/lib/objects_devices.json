@@ -908,6 +908,63 @@
                                             "logic": {
                                                 "value": "loadavg_5"
                                             }
+                                        },
+                                        "devices.device.sys_stats.mem_buffer": {
+                                            "_id": "mem_buffer",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "memory buffer",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.mem_buffer"
+                                            },
+                                            "logic": {
+                                                "value": "mem_buffer"
+                                            }
+                                        },
+                                        "devices.device.sys_stats.mem_total": {
+                                            "_id": "mem_total",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "memory total",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.mem_total"
+                                            },
+                                            "logic": {
+                                                "value": "mem_total"
+                                            }
+                                        },
+                                        "devices.device.sys_stats.mem_used": {
+                                            "_id": "mem_used",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "memory used",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.sys_stats.mem_used"
+                                            },
+                                            "logic": {
+                                                "value": "mem_used"
+                                            }
                                         }
                                     }
                                 }
