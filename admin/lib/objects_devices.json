@@ -724,7 +724,7 @@
                                     }
                                 }
                             },
-                            "devices.device.speedtest": {
+                            "devices.device.speedtest-status": {
                                 "type": "channel",
                                 "common": {},
                                 "native": {
@@ -755,7 +755,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "devices.device.speedtest-status.latency"
+                                                "object_id": "devices.device.speedtest.latency"
                                             },
                                             "logic": {
                                                 "value": "latency"
@@ -773,7 +773,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "devices.device.speedtest-status.rundate"
+                                                "object_id": "devices.device.speedtest.rundate"
                                             },
                                             "logic": {
                                                 "value": {
@@ -798,7 +798,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "devices.device.speedtest-status.runtime"
+                                                "object_id": "devices.device.speedtest.runtime"
                                             },
                                             "logic": {
                                                 "value": "runtime"
@@ -817,7 +817,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "devices.device.speedtest-status.xput_download"
+                                                "object_id": "devices.device.speedtest.xput_download"
                                             },
                                             "logic": {
                                                 "value": "xput_download"
@@ -836,7 +836,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "devices.device.speedtest-status.xput_upload"
+                                                "object_id": "devices.device.speedtest.xput_upload"
                                             },
                                             "logic": {
                                                 "value": "xput_upload"
