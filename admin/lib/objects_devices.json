@@ -520,7 +520,61 @@
                                                         "logic": {
                                                             "value": "tx_power"
                                                         }
-                                                    }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.channel": {
+                                                        "_id": "channel",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Channel",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.channel"
+                                                        },
+                                                        "logic": {
+                                                            "value": "channel"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.satisfaction": {
+                                                        "_id": "satisfaction",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Satisfaction",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.satisfaction"
+                                                        },
+                                                        "logic": {
+                                                            "value": "satisfaction"
+                                                        }
+                                                    },
+                                                    "devices.device.radio_table_stats.stat.radio": {
+                                                        "_id": "radio",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "radio",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.radio_table_stats.stat.radio"
+                                                        },
+                                                        "logic": {
+                                                            "value": "radio"
+                                                        }
+                                                    }                                                    
                                                 }
                                             }
                                         }
@@ -1137,6 +1191,24 @@
                                                         },
                                                         "logic": {
                                                             "value": "num_sta"
+                                                        }
+                                                    },
+                                                    "devices.device.vap_table.vap.essid": {
+                                                        "_id": "essid",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "SSID",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.vap_table.vap.essid"
+                                                        },
+                                                        "logic": {
+                                                            "value": "essid"
                                                         }
                                                     }
                                                 }
