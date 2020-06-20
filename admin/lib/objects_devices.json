@@ -1368,6 +1368,32 @@
                                     "value": "num_guest"
                                 }
                             },
+                            "devices.device.user-num_sta": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Number of clients",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.user-num_sta"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "user-num_sta"
+                                            },
+                                            "user-num_sta",
+                                            null
+                                        ]
+                                    },
+                                    "value": "user-num_sta"
+                                }
+                            },                            
                             "devices.device.num_sta": {
                                 "type": "state",
                                 "common": {
