@@ -197,6 +197,7 @@
         "updateVouchers": true,
         "updateWlans": true,
         "updateDpi": true,
+        "updateGatewayTraffic": true,
         "objectsFilter": {
             "clients": [],
             "devices": [],
@@ -212,7 +213,8 @@
             "networks": [],
             "health": [],
             "vouchers": [],
-            "dpi": []
+            "dpi": [],
+            "gatewayTraffic": []
         },
         "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,

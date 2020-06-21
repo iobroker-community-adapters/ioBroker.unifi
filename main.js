@@ -64,6 +64,7 @@ class Unifi extends utils.Adapter {
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
         this.update.dpi = this.config.updateDpi;
+        this.update.gatewayTraffic = this.config.updateGatewayTraffic;
 
 
         this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
@@ -231,6 +232,10 @@ class Unifi extends utils.Adapter {
 
                 if (this.update.dpi === true) {
                     await this.fetchDpi(sites);
+                }
+
+                if (this.update.gatewayTraffic === true) {
+                    await this.fetchGatewayTraffic(sites);
                 }
 
                 // finalize, logout and finish
@@ -461,6 +466,8 @@ class Unifi extends utils.Adapter {
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
+                    this.log.info(JSON.stringify(data));
+
                     await this.processDevices(sites, data);
 
                     resolve(data);
@@ -488,6 +495,8 @@ class Unifi extends utils.Adapter {
                     return item;
                 }
             });
+
+            this.log.info(JSON.stringify(siteData));
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
@@ -677,7 +686,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchDpi(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getDPIStats (sites, async (err, data) => {
+            this.controller.getDPIStats(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
@@ -712,12 +721,63 @@ class Unifi extends utils.Adapter {
                 return item;
             });
 
-            this.log.info(JSON.stringify(siteData));
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
             }
         }
-    }    
+    }
+
+
+    /**
+     * Function to fetch daily gateway traffic
+     * @param {Object} sites 
+     */
+    async fetchGatewayTraffic(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.getDailyGatewayStats(sites, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchGatewayTraffic: ' + data[0].length);
+
+
+                    this.log.info(JSON.stringify(data));
+                    await this.processGatewayTraffic(sites, data);
+
+                    resolve(data);
+                }
+            }, undefined, undefined, ["lan-rx_bytes", "lan-tx_bytes"]);
+        });
+    }
+
+    /**
+     * Function that receives the dpi as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processGatewayTraffic(sites, data) {
+        const objects = require('./admin/lib/objects_gatewayTraffic.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                //     return item;
+                // }
+                return item;
+            });
+
+            this.log.info(JSON.stringify(siteData));
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gatewayTraffic);
+            }
+        }
+    }
+
 
     /**
      * Disable or enable a WLAN

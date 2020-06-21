@@ -1,0 +1,91 @@
+{
+    "gatewayTraffic": {
+        "_id": "gatewayTraffic",
+        "type": "channel",
+        "common": {},
+        "native": {
+            "object_id": "gatewayTraffic"
+        },
+        "logic": {
+            "has_key": "_self",
+            "has": {
+                "gatewayTraffic.device": {
+                    "type": "device",
+                    "common": {},
+                    "native": {
+                        "object_id": "gatewayTraffic.device"
+                    },
+                    "logic": {
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "gw"
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": "gw"
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "gatewayTraffic.device.time": {
+                                "_id": "time",
+                                "type": "state",
+                                "common": {
+                                    "name": "MAC address",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "gatewayTraffic.device.time"
+                                },
+                                "logic": {
+                                    "value": "time"
+                                }
+                            },
+                            "gatewayTraffic.device.lan-rx_bytes": {
+                                "_id": "lan-rx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "MAC address",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "gatewayTraffic.device.lan-rx_bytes"
+                                },
+                                "logic": {
+                                    "value": "lan-rx_bytes"
+                                }
+                            },
+                            "gatewayTraffic.device.lan-tx_bytes": {
+                                "_id": "lan-tx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "MAC address",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "gatewayTraffic.device.lan-tx_bytes"
+                                },
+                                "logic": {
+                                    "value": "lan-tx_bytes"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
