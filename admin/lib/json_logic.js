@@ -53,7 +53,7 @@ jsonLogic.add_operation('cleanupForUseAsId', function (a) {
     const FORBIDDEN_CHARS = /[\]\[*.,;'"`<>\\?\s]/g;
     let tempId = a.replace(FORBIDDEN_CHARS, '_');
     tempId = tempId.toLowerCase();
-    
+
     return tempId;
 });
 
@@ -91,6 +91,26 @@ jsonLogic.add_operation('translateCatCodeToName', function (a) {
     } else {
         return 'undefined';
     }
+});
+
+/**
+ *  Convert timestamp to date
+ */
+jsonLogic.add_operation('timestampToDate', function (a) {
+    const date = new Date(a);
+
+    return dateFormat(date, 'yyyy-mm-dd');
+});
+
+/**
+ *  Convert timestamp to date
+ */
+jsonLogic.add_operation('timestampDiffInDaysToNow', function (a, b) {
+    var now = new Date();
+    var date = new Date(b);
+    var diffDays = parseInt((now - date) / (1000 * 60 * 60 * 24), 10);
+
+    return a + diffDays;
 });
 
 module.exports = jsonLogic;

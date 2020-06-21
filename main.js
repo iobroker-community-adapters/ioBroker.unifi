@@ -742,8 +742,6 @@ class Unifi extends utils.Adapter {
                 } else {
                     this.log.debug('fetchGatewayTraffic: ' + data[0].length);
 
-
-                    this.log.info(JSON.stringify(data));
                     await this.processGatewayTraffic(sites, data);
 
                     resolve(data);
@@ -771,7 +769,6 @@ class Unifi extends utils.Adapter {
                 return item;
             });
 
-            this.log.info(JSON.stringify(siteData));
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gatewayTraffic);
             }

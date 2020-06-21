@@ -1701,5 +1701,41 @@ systemDictionary = {
         "es": "Actualizar el tráfico de la puerta de enlace (se necesita USG)",
         "pl": "Zaktualizuj ruch bramy (wymagane USG)",
         "zh-cn": "更新网关流量（需要USG）"
+    },
+    "Date of day": {
+        "en": "Date of day",
+        "de": "Datum des Tages",
+        "ru": "Дата дня",
+        "pt": "Data do dia",
+        "nl": "Datum van de dag",
+        "fr": "Date du jour",
+        "it": "Data del giorno",
+        "es": "Fecha del dia",
+        "pl": "Data dnia",
+        "zh-cn": "星期几"
+    },
+    "Bytes sent": {
+        "en": "sent",
+        "de": "gesendet",
+        "ru": "послал",
+        "pt": "enviei",
+        "nl": "verzonden",
+        "fr": "envoyé",
+        "it": "inviato",
+        "es": "expedido",
+        "pl": "wysłane",
+        "zh-cn": "已发送"
+    },
+    "Bytes received": {
+        "en": "received",
+        "de": "empfangen",
+        "ru": "получил",
+        "pt": "recebido",
+        "nl": "ontvangen",
+        "fr": "reçu",
+        "it": "ricevuto",
+        "es": "recibido",
+        "pl": "Odebrane",
+        "zh-cn": "已收到"
     }
 };
