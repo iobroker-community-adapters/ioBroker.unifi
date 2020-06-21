@@ -57,4 +57,40 @@ jsonLogic.add_operation('cleanupForUseAsId', function (a) {
     return tempId;
 });
 
+/**
+ * Translate category code to name
+ */
+jsonLogic.add_operation('translateCatCodeToName', function (a) {
+    const categories = {
+        0: 'Instant messengers',
+        1: 'Peer-to-peer networks',
+        3: 'File sharing services and tools',
+        4: 'Media streaming services',
+        5: 'Email messaging services',
+        6: 'VoIP services',
+        7: 'Database tools',
+        8: 'Online games',
+        9: 'Management tools and protocols',
+        10: 'Remote access terminals',
+        11: 'Tunneling and proxy services',
+        12: 'Investment platforms',
+        13: 'Web services',
+        14: 'Security update tools',
+        15: 'Web instant messengers',
+        17: 'Business tools',
+        18: 'Network protocols',
+        19: 'Network protocols',
+        20: 'Network protocols',
+        23: 'Private protocols',
+        24: 'Social networks',
+        255: 'Unknown'
+    };
+
+    if (Object.prototype.hasOwnProperty.call(categories, a)) {
+        return categories[a];
+    } else {
+        return 'undefined';
+    }
+});
+
 module.exports = jsonLogic;
