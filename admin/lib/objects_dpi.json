@@ -47,7 +47,13 @@
                                         ]
                                     },
                                     "common": {
-                                        "name": "app"
+                                        "name": {
+                                            "string": [
+                                                {
+                                                    "var": "app"
+                                                }                                                
+                                            ]
+                                        }
                                     },
                                     "has_key": "_self",
                                     "has": {
@@ -85,6 +91,173 @@
                                             },
                                             "logic": {
                                                 "value": "cat"
+                                            }
+                                        },
+                                        "dpi.by_app.app.clients": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.clients"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "clients"
+                                                        },
+                                                        "clients",
+                                                        null
+                                                    ]
+                                                },
+                                                "has_key": "clients",
+                                                "has": {
+                                                    "dpi.by_app.app.clients.client": {
+                                                        "type": "channel",
+                                                        "common": {},
+                                                        "native": {
+                                                            "object_id": "dpi.by_app.app.clients.client"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "cleanupForUseAsId": [
+                                                                    {
+                                                                        "var": "mac"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "common": {
+                                                                "name": "mac"
+                                                            },
+                                                            "has_key": "_self",
+                                                            "has": {
+                                                                "dpi.by_app.app.clients.client.mac": {
+                                                                    "_id": "mac",
+                                                                    "type": "state",
+                                                                    "common": {
+                                                                        "name": "MAC address",
+                                                                        "type": "string",
+                                                                        "role": "state",
+                                                                        "read": true,
+                                                                        "write": false,
+                                                                        "desc": ""
+                                                                    },
+                                                                    "native": {
+                                                                        "object_id": "dpi.by_app.app.clients.client.mac"
+                                                                    },
+                                                                    "logic": {
+                                                                        "value": "mac"
+                                                                    }
+                                                                },
+                                                                "dpi.by_app.app.clients.client.rx_bytes": {
+                                                                    "type": "state",
+                                                                    "common": {
+                                                                        "name": "RX",
+                                                                        "type": "number",
+                                                                        "role": "state",
+                                                                        "read": true,
+                                                                        "write": false,
+                                                                        "unit": "Byte",
+                                                                        "desc": ""
+                                                                    },
+                                                                    "native": {
+                                                                        "object_id": "dpi.by_app.app.clients.client.rx_bytes"
+                                                                    },
+                                                                    "logic": {
+                                                                        "_id": {
+                                                                            "ifNotNull": [
+                                                                                {
+                                                                                    "var": "rx_bytes"
+                                                                                },
+                                                                                "rx_bytes",
+                                                                                null
+                                                                            ]
+                                                                        },
+                                                                        "value": "rx_bytes"
+                                                                    }
+                                                                },
+                                                                "dpi.by_app.app.clients.client.rx_packets": {
+                                                                    "type": "state",
+                                                                    "common": {
+                                                                        "name": "RX packets",
+                                                                        "type": "number",
+                                                                        "role": "state",
+                                                                        "read": true,
+                                                                        "write": false,
+                                                                        "desc": ""
+                                                                    },
+                                                                    "native": {
+                                                                        "object_id": "dpi.by_app.app.clients.client.rx_packets"
+                                                                    },
+                                                                    "logic": {
+                                                                        "_id": {
+                                                                            "ifNotNull": [
+                                                                                {
+                                                                                    "var": "rx_packets"
+                                                                                },
+                                                                                "rx_packets",
+                                                                                null
+                                                                            ]
+                                                                        },
+                                                                        "value": "rx_packets"
+                                                                    }
+                                                                },
+                                                                "dpi.by_app.app.clients.client.tx_bytes": {
+                                                                    "type": "state",
+                                                                    "common": {
+                                                                        "name": "TX",
+                                                                        "type": "number",
+                                                                        "role": "state",
+                                                                        "read": true,
+                                                                        "write": false,
+                                                                        "unit": "Byte",
+                                                                        "desc": ""
+                                                                    },
+                                                                    "native": {
+                                                                        "object_id": "dpi.by_app.app.clients.client.tx_bytes"
+                                                                    },
+                                                                    "logic": {
+                                                                        "_id": {
+                                                                            "ifNotNull": [
+                                                                                {
+                                                                                    "var": "tx_bytes"
+                                                                                },
+                                                                                "tx_bytes",
+                                                                                null
+                                                                            ]
+                                                                        },
+                                                                        "value": "tx_bytes"
+                                                                    }
+                                                                },
+                                                                "dpi.by_app.app.clients.client.tx_packets": {
+                                                                    "type": "state",
+                                                                    "common": {
+                                                                        "name": "TX packets",
+                                                                        "type": "number",
+                                                                        "role": "state",
+                                                                        "read": true,
+                                                                        "write": false,
+                                                                        "desc": ""
+                                                                    },
+                                                                    "native": {
+                                                                        "object_id": "dpi.by_app.app.clients.client.tx_packets"
+                                                                    },
+                                                                    "logic": {
+                                                                        "_id": {
+                                                                            "ifNotNull": [
+                                                                                {
+                                                                                    "var": "tx_packets"
+                                                                                },
+                                                                                "tx_packets",
+                                                                                null
+                                                                            ]
+                                                                        },
+                                                                        "value": "tx_packets"
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         },
                                         "dpi.by_app.app.known_clients": {
@@ -263,10 +436,34 @@
                                         ]
                                     },
                                     "common": {
-                                        "name": "cat"
+                                        "name": {
+                                            "translateCatCodeToName": [
+                                                {
+                                                    "var": "cat"
+                                                }                                                
+                                            ]
+                                        }
                                     },
                                     "has_key": "_self",
                                     "has": {
+                                        "dpi.by_cat.cat.apps": {
+                                            "_id": "apps",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Applications",
+                                                "type": "array",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.apps"
+                                            },
+                                            "logic": {
+                                                "value": "apps"
+                                            }
+                                        },
                                         "dpi.by_cat.cat.cat": {
                                             "_id": "cat",
                                             "type": "state",

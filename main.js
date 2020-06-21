@@ -712,7 +712,6 @@ class Unifi extends utils.Adapter {
                 return item;
             });
 
-            this.log.info(JSON.stringify(siteData));
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
             }
