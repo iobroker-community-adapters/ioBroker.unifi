@@ -61,7 +61,7 @@
                                             "_id": "app",
                                             "type": "state",
                                             "common": {
-                                                "name": "Application",
+                                                "name": "Application Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,
@@ -79,7 +79,7 @@
                                             "_id": "cat",
                                             "type": "state",
                                             "common": {
-                                                "name": "Category",
+                                                "name": "Category Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,
@@ -474,7 +474,7 @@
                                             "_id": "apps",
                                             "type": "state",
                                             "common": {
-                                                "name": "List of Applications",
+                                                "name": "List of Application Ids",
                                                 "type": "array",
                                                 "role": "state",
                                                 "read": true,
@@ -492,7 +492,7 @@
                                             "_id": "cat",
                                             "type": "state",
                                             "common": {
-                                                "name": "Category",
+                                                "name": "Category Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,
