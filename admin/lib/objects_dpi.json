@@ -28,171 +28,198 @@
                         "has_key": "by_app",
                         "has": {
                             "dpi.by_app.app": {
-                                "_id": "app",
-                                "type": "state",
-                                "common": {
-                                    "name": "Application",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
+                                "type": "channel",
+                                "common": {},
                                 "native": {
                                     "object_id": "dpi.by_app.app"
                                 },
                                 "logic": {
-                                    "value": "app"
-                                }
-                            },
-                            "dpi.by_app.cat": {
-                                "_id": "cat",
-                                "type": "state",
-                                "common": {
-                                    "name": "Category",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.cat"
-                                },
-                                "logic": {
-                                    "value": "cat"
-                                }
-                            },
-                            "dpi.by_app.known_clients": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Known clients",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.known_clients"
-                                },
-                                "logic": {
                                     "_id": {
-                                        "ifNotNull": [
+                                        "cleanupForUseAsId": [
                                             {
-                                                "var": "known_clients"
-                                            },
-                                            "known_clients",
-                                            null
+                                                "cat": [
+                                                    "app_",
+                                                    {
+                                                        "var": "app"
+                                                    }
+                                                ]
+                                            }
                                         ]
                                     },
-                                    "value": "known_clients"
-                                }
-                            },
-                            "dpi.by_app.rx_bytes": {
-                                "type": "state",
-                                "common": {
-                                    "name": "RX",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "Byte",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.rx_bytes"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "rx_bytes"
-                                            },
-                                            "rx_bytes",
-                                            null
-                                        ]
+                                    "common": {
+                                        "name": "app"
                                     },
-                                    "value": "rx_bytes"
-                                }
-                            },
-                            "dpi.by_app.rx_packets": {
-                                "type": "state",
-                                "common": {
-                                    "name": "RX packets",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.rx_packets"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "rx_packets"
+                                    "has_key": "_self",
+                                    "has": {
+                                        "dpi.by_app.app.app": {
+                                            "_id": "app",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Application",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
                                             },
-                                            "rx_packets",
-                                            null
-                                        ]
-                                    },
-                                    "value": "rx_packets"
-                                }
-                            },
-                            "dpi.by_app.tx_bytes": {
-                                "type": "state",
-                                "common": {
-                                    "name": "TX",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "Byte",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.tx_bytes"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "tx_bytes"
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.app"
                                             },
-                                            "tx_bytes",
-                                            null
-                                        ]
-                                    },
-                                    "value": "tx_bytes"
-                                }
-                            },
-                            "dpi.by_app.tx_packets": {
-                                "type": "state",
-                                "common": {
-                                    "name": "TX packets",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_app.tx_packets"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "tx_packets"
+                                            "logic": {
+                                                "value": "app"
+                                            }
+                                        },
+                                        "dpi.by_app.app.cat": {
+                                            "_id": "cat",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Category",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
                                             },
-                                            "tx_packets",
-                                            null
-                                        ]
-                                    },
-                                    "value": "tx_packets"
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.cat"
+                                            },
+                                            "logic": {
+                                                "value": "cat"
+                                            }
+                                        },
+                                        "dpi.by_app.app.known_clients": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Known clients",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.known_clients"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "known_clients"
+                                                        },
+                                                        "known_clients",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "known_clients"
+                                            }
+                                        },
+                                        "dpi.by_app.app.rx_bytes": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "RX",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.rx_bytes"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "rx_bytes"
+                                                        },
+                                                        "rx_bytes",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "rx_bytes"
+                                            }
+                                        },
+                                        "dpi.by_app.app.rx_packets": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "RX packets",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.rx_packets"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "rx_packets"
+                                                        },
+                                                        "rx_packets",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "rx_packets"
+                                            }
+                                        },
+                                        "dpi.by_app.app.tx_bytes": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "TX",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.tx_bytes"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "tx_bytes"
+                                                        },
+                                                        "tx_bytes",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "tx_bytes"
+                                            }
+                                        },
+                                        "dpi.by_app.app.tx_packets": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "TX packets",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.tx_packets"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "tx_packets"
+                                                        },
+                                                        "tx_packets",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "tx_packets"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -217,127 +244,154 @@
                         "has_key": "by_cat",
                         "has": {
                             "dpi.by_cat.cat": {
-                                "_id": "cat",
-                                "type": "state",
-                                "common": {
-                                    "name": "Category",
-                                    "type": "string",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
+                                "type": "channel",
+                                "common": {},
                                 "native": {
                                     "object_id": "dpi.by_cat.cat"
                                 },
                                 "logic": {
-                                    "value": "cat"
-                                }
-                            },
-                            "dpi.by_cat.rx_bytes": {
-                                "type": "state",
-                                "common": {
-                                    "name": "RX",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "Byte",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_cat.rx_bytes"
-                                },
-                                "logic": {
                                     "_id": {
-                                        "ifNotNull": [
+                                        "cleanupForUseAsId": [
                                             {
-                                                "var": "rx_bytes"
-                                            },
-                                            "rx_bytes",
-                                            null
+                                                "cat": [
+                                                    "cat_",
+                                                    {
+                                                        "var": "cat"
+                                                    }
+                                                ]
+                                            }
                                         ]
                                     },
-                                    "value": "rx_bytes"
-                                }
-                            },
-                            "dpi.by_cat.rx_packets": {
-                                "type": "state",
-                                "common": {
-                                    "name": "RX packets",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_cat.rx_packets"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "rx_packets"
-                                            },
-                                            "rx_packets",
-                                            null
-                                        ]
+                                    "common": {
+                                        "name": "cat"
                                     },
-                                    "value": "rx_packets"
-                                }
-                            },
-                            "dpi.by_cat.tx_bytes": {
-                                "type": "state",
-                                "common": {
-                                    "name": "TX",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "Byte",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_cat.tx_bytes"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "tx_bytes"
+                                    "has_key": "_self",
+                                    "has": {
+                                        "dpi.by_cat.cat.cat": {
+                                            "_id": "cat",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Category",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
                                             },
-                                            "tx_bytes",
-                                            null
-                                        ]
-                                    },
-                                    "value": "tx_bytes"
-                                }
-                            },
-                            "dpi.by_cat.tx_packets": {
-                                "type": "state",
-                                "common": {
-                                    "name": "TX packets",
-                                    "type": "number",
-                                    "role": "state",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "dpi.by_cat.tx_packets"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "tx_packets"
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.cat"
                                             },
-                                            "tx_packets",
-                                            null
-                                        ]
-                                    },
-                                    "value": "tx_packets"
+                                            "logic": {
+                                                "value": "cat"
+                                            }
+                                        },
+                                        "dpi.by_cat.cat.rx_bytes": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "RX",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.rx_bytes"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "rx_bytes"
+                                                        },
+                                                        "rx_bytes",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "rx_bytes"
+                                            }
+                                        },
+                                        "dpi.by_cat.cat.rx_packets": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "RX packets",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.rx_packets"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "rx_packets"
+                                                        },
+                                                        "rx_packets",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "rx_packets"
+                                            }
+                                        },
+                                        "dpi.by_cat.cat.tx_bytes": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "TX",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.tx_bytes"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "tx_bytes"
+                                                        },
+                                                        "tx_bytes",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "tx_bytes"
+                                            }
+                                        },
+                                        "dpi.by_cat.cat.tx_packets": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "TX packets",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.tx_packets"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "tx_packets"
+                                                        },
+                                                        "tx_packets",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "tx_packets"
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
