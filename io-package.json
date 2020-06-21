@@ -196,6 +196,7 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
+        "updateDpi": true,
         "objectsFilter": {
             "clients": [],
             "devices": [],
@@ -210,7 +211,8 @@
             "wlans": [],
             "networks": [],
             "health": [],
-            "vouchers": []
+            "vouchers": [],
+            "dpi": []
         },
         "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,

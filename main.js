@@ -33,6 +33,7 @@ class Unifi extends utils.Adapter {
         this.update = {};
         this.clients = {};
         this.vouchers = {};
+        this.dpi = {};
         this.statesFilter = {};
         this.queryTimeout;
 
@@ -62,6 +63,7 @@ class Unifi extends utils.Adapter {
         this.update.sysinfo = this.config.updateSysinfo;
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
+        this.update.dpi = this.config.updateDpi;
 
 
         this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
@@ -225,6 +227,10 @@ class Unifi extends utils.Adapter {
 
                 if (this.update.vouchers === true) {
                     await this.fetchVouchers(sites);
+                }
+
+                if (this.update.dpi === true) {
+                    await this.fetchDpi(sites);
                 }
 
                 // finalize, logout and finish
@@ -664,6 +670,54 @@ class Unifi extends utils.Adapter {
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
     }
+
+    /**
+     * Function to fetch dpi
+     * @param {Object} sites 
+     */
+    async fetchDpi(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.getDPIStats (sites, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchDpi: ' + data[0].length);
+
+                    await this.processDpi(sites, data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Function that receives the dpi as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processDpi(sites, data) {
+        const objects = require('./admin/lib/objects_dpi.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                //     return item;
+                // }
+                return item;
+            });
+
+            this.log.info(JSON.stringify(siteData));
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
+            }
+        }
+    }    
 
     /**
      * Disable or enable a WLAN

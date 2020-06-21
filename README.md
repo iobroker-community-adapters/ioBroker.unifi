@@ -49,6 +49,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Networks    | https://IP:PORT/api/s/SITE/rest/networkconf |
 | Health      | https://IP:PORT/api/s/SITE/stat/health      |
 | Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
+| DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
 
 ### UbiOS endpoints
 
@@ -62,6 +63,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Networks    | https://IP/proxy/network/api/s/SITE/rest/networkconf |
 | Health      | https://IP/proxy/network/api/s/SITE/stat/health      |
 | Vouchers    | https://IP/proxy/network/api/s/SITE/stat/voucher     |
+| DPI         | https://IP/proxy/network/api/s/SITE/stat/dpi         |
 
 
 ## Known issues
