@@ -119,7 +119,7 @@ class Unifi extends utils.Adapter {
             } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
                 this.createUnifiVouchers(site);
             } else if (idParts[2] === 'info' && idParts[3] === 'UpdateAllData') {                
-                this.updateUnifiData();
+                this.updateUnifiData(true);
             }
         }
     }
@@ -191,7 +191,7 @@ class Unifi extends utils.Adapter {
      * Function that takes care of the API calls and processes
      * the responses afterwards
      */
-    async updateUnifiData() {
+    async updateUnifiData(PreventReschedule) {
         this.log.debug('Update started');
 
         this.controller = new unifi.Controller(this.settings.controllerIp, this.settings.controllerPort);
@@ -246,10 +246,13 @@ class Unifi extends utils.Adapter {
                 return;
             });
 
-        // schedule a new execution of updateUnifiData in X seconds
-        this.queryTimeout = setTimeout(() => {
-            this.updateUnifiData();
-        }, this.settings.updateInterval);
+        if(!PreventReschedule)
+        {
+            // schedule a new execution of updateUnifiData in X seconds
+            this.queryTimeout = setTimeout(() => {
+                this.updateUnifiData();
+            }, this.settings.updateInterval);
+        }
     }
 
     /**
