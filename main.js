@@ -63,6 +63,8 @@ class Unifi extends utils.Adapter {
         this.update.sysinfo = this.config.updateSysinfo;
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
+        this.update.alarms = this.config.updateAlarms;
+        this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
         this.update.dpi = this.config.updateDpi;
         this.update.gatewayTraffic = this.config.updateGatewayTraffic;
 
@@ -236,6 +238,10 @@ class Unifi extends utils.Adapter {
 
                 if (this.update.gatewayTraffic === true) {
                     await this.fetchGatewayTraffic(sites);
+                }
+
+                if (this.update.alarms === true) {
+                    await this.fetchAlarms(sites);
                 }
 
                 // finalize, logout and finish
@@ -466,8 +472,6 @@ class Unifi extends utils.Adapter {
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
-                    this.log.info(JSON.stringify(data));
-
                     await this.processDevices(sites, data);
 
                     resolve(data);
@@ -495,8 +499,6 @@ class Unifi extends utils.Adapter {
                     return item;
                 }
             });
-
-            this.log.info(JSON.stringify(siteData));
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
@@ -751,7 +753,7 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function that receives the dpi as a JSON data array
+     * Function that receives the daily gateway traffic as a JSON data array
      * @param {Object} sites 
      * @param {Object} data 
      */
@@ -775,6 +777,52 @@ class Unifi extends utils.Adapter {
         }
     }
 
+    /**
+     * Function to fetch alarms
+     * @param {Object} sites 
+     */
+    async fetchAlarms(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm?archived=${!this.update.alarmsNoArchived}`, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchAlarms: ' + data[0].length);
+
+                    await this.processAlarms(sites, data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Function that receives the alarms as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processAlarms(sites, data) {
+        const objects = require('./admin/lib/objects_alarms.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                //     return item;
+                // }
+                return item;
+            });
+
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
+            }
+        }
+    }
 
     /**
      * Disable or enable a WLAN
@@ -912,7 +960,7 @@ class Unifi extends utils.Adapter {
                 } else {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
-
+                
                 if (obj._id !== null && obj._id.slice(-1) !== -1) {
                     if (objectTree !== '') {
                         obj._id = objectTree + '.' + obj._id;
