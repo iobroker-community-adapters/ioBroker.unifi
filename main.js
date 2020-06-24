@@ -840,7 +840,7 @@ class Unifi extends utils.Adapter {
      */
     async applyJsonLogic(objectTree, data, objects, statesFilter) {
         for (const key in objects) {
-            if (statesFilter.lenth === 0 || statesFilter.includes(key)) {
+            if (statesFilter.length === 0 || statesFilter.includes(key)) {
                 const obj = {
                     '_id': null,
                     'type': null,
