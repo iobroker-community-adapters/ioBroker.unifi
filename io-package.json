@@ -196,6 +196,8 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
+        "updateAlarms": true,
+        "updateAlarmsNoArchived": false,
         "updateDpi": true,
         "updateGatewayTraffic": true,
         "objectsFilter": {
@@ -213,6 +215,7 @@
             "networks": [],
             "health": [],
             "vouchers": [],
+            "alarms": [],
             "dpi": [],
             "gatewayTraffic": []
         },

@@ -1,0 +1,60 @@
+{
+    "alarms": {
+        "_id": "alarms",
+        "type": "channel",
+        "common": {},
+        "native": {
+            "object_id": "alarms"
+        },
+        "logic": {
+            "has_key": "_self",
+            "has": {
+                "alarms.alarm": {
+                    "type": "channel",
+                    "common": {},
+                    "native": {
+                        "object_id": "alarms.alarm"
+                    },
+                    "logic": {
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "cat": [
+                                        "alarm_",
+                                        {
+                                            "var": "_id"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": "msg"
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "alarms.alarm.archived": {
+                                "_id": "archived",
+                                "type": "state",
+                                "common": {
+                                    "name": "Archived",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "alarms.alarm.archived"
+                                },
+                                "logic": {
+                                    "value": "archived"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
