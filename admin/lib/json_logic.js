@@ -97,7 +97,17 @@ jsonLogic.add_operation('timestampDiffInDaysToNow', function (a, b) {
 jsonLogic.add_operation('alarmPrepareMessage', function (msg, mac, name) {
 
     if (mac && name) {
-        return msg.replace(`[${mac}]`, ` - ${name}:`);
+        if (msg.includes('{gw}')) {
+            return msg.replace('{gw}', `${name}:`);
+        } else if (msg.includes('{dm}')) {
+            return msg.replace('{dm}', `${name}:`);
+        } else if (msg.includes('{sw}')) {
+            return msg.replace('{sw}', `${name}:`);
+        } else if (msg.includes('{ap}')) {
+            return msg.replace('{ap}', `${name}:`);
+        } else {
+            return msg.replace(`[${mac}]`, ` - ${name}:`);
+        }
     }
     return msg;
 });

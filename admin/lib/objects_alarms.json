@@ -29,7 +29,7 @@
                             ]
                         },
                         "common": {
-                            "name": "msg"
+                            "name": "key"
                         },
                         "has_key": "_self",
                         "has": {
