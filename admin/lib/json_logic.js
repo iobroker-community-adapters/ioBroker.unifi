@@ -90,6 +90,19 @@ jsonLogic.add_operation('timestampDiffInDaysToNow', function (a, b) {
     return a + diffDays;
 });
 
+
+/**
+ *  Replace MAC Adress in alarm message with device name if exist
+ */
+jsonLogic.add_operation('alarmPrepareMessage', function (msg, mac, name) {
+
+    if (mac && name) {
+        return msg.replace(`[${mac}]`, ` - ${name}:`);
+    }
+    return msg;
+});
+
+
 /**
  * Translate category code to name
  */

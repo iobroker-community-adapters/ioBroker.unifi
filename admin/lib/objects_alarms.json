@@ -91,7 +91,93 @@
                                 },
                                 "logic": {
                                     "value": {
-                                        "var": "msg"
+                                        "alarmPrepareMessage": [
+                                            {
+                                                "var": "msg"
+                                            },
+                                            {
+                                                "ifNotNull": [
+                                                    {
+                                                        "var": "gw"
+                                                    },
+                                                    {
+                                                        "var": "gw"
+                                                    },
+                                                    {
+                                                        "ifNotNull": [
+                                                            {
+                                                                "var": "dm"
+                                                            },
+                                                            {
+                                                                "var": "dm"
+                                                            },
+                                                            {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "sw"
+                                                                    },
+                                                                    {
+                                                                        "var": "sw"
+                                                                    },
+                                                                    {
+                                                                        "ifNotNull": [
+                                                                            {
+                                                                                "var": "ap"
+                                                                            },
+                                                                            {
+                                                                                "var": "ap"
+                                                                            },
+                                                                            null
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "ifNotNull": [
+                                                    {
+                                                        "var": "gw_name"
+                                                    },
+                                                    {
+                                                        "var": "gw_name"
+                                                    },
+                                                    {
+                                                        "ifNotNull": [
+                                                            {
+                                                                "var": "dm_name"
+                                                            },
+                                                            {
+                                                                "var": "dm_name"
+                                                            },
+                                                            {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "sw_name"
+                                                                    },
+                                                                    {
+                                                                        "var": "sw_name"
+                                                                    },
+                                                                    {
+                                                                        "ifNotNull": [
+                                                                            {
+                                                                                "var": "ap_name"
+                                                                            },
+                                                                            {
+                                                                                "var": "ap_name"
+                                                                            },
+                                                                            null
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                     }
                                 }
                             },
@@ -118,7 +204,9 @@
                             "alarms.alarm.device": {
                                 "_id": "device",
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": "Device Information"
+                                },
                                 "native": {
                                     "object_id": "alarms.alarm.device"
                                 },
@@ -163,49 +251,6 @@
                                                 ]
                                             }
                                         ]
-                                    },
-                                    "common": {
-                                        "name": {
-                                            "ifNotNull": [
-                                                {
-                                                    "var": "gw_name"
-                                                },
-                                                {
-                                                    "var": "gw_name"
-                                                },
-                                                {
-                                                    "ifNotNull": [
-                                                        {
-                                                            "var": "dm_name"
-                                                        },
-                                                        {
-                                                            "var": "dm_name"
-                                                        },
-                                                        {
-                                                            "ifNotNull": [
-                                                                {
-                                                                    "var": "sw_name"
-                                                                },
-                                                                {
-                                                                    "var": "sw_name"
-                                                                },
-                                                                {
-                                                                    "ifNotNull": [
-                                                                        {
-                                                                            "var": "ap_name"
-                                                                        },
-                                                                        {
-                                                                            "var": "ap_name"
-                                                                        },
-                                                                        null
-                                                                    ]
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        }
                                     },
                                     "has_key": "_self",
                                     "has": {
@@ -332,7 +377,7 @@
                                 "_id": "client",
                                 "type": "channel",
                                 "common": {
-                                    "name": "Triggered by client"
+                                    "name": "Client Information"
                                 },
                                 "native": {
                                     "object_id": "alarms.alarm.client"
