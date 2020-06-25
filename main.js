@@ -783,7 +783,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchAlarms(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm?archived=${!this.update.alarmsNoArchived}`, async (err, data) => {
+            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
@@ -960,7 +960,7 @@ class Unifi extends utils.Adapter {
                 } else {
                     obj._id = await this.applyRule(objects[key].logic._id, data);
                 }
-                
+
                 if (obj._id !== null && obj._id.slice(-1) !== -1) {
                     if (objectTree !== '') {
                         obj._id = objectTree + '.' + obj._id;
