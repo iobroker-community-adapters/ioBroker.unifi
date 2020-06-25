@@ -73,6 +73,15 @@ jsonLogic.add_operation('timestampToDate', function (a) {
 /**
  *  Convert timestamp to date
  */
+jsonLogic.add_operation('timestampToDateTime', function (a) {
+    const date = new Date(a);
+
+    return dateFormat(date, 'yyyy-mm-dd HH:MM:ss');
+});
+
+/**
+ *  Convert timestamp to date
+ */
 jsonLogic.add_operation('timestampDiffInDaysToNow', function (a, b) {
     var now = new Date();
     var date = new Date(b);
