@@ -1,19 +1,19 @@
 {
-    "gatewayTraffic": {
-        "_id": "gatewayTraffic",
+    "gateway_traffic": {
+        "_id": "gateway_traffic",
         "type": "channel",
         "common": {},
         "native": {
-            "object_id": "gatewayTraffic"
+            "object_id": "gateway_traffic"
         },
         "logic": {
             "has_key": "_self",
             "has": {
-                "gatewayTraffic.device": {
+                "gateway_traffic.device": {
                     "type": "device",
                     "common": {},
                     "native": {
-                        "object_id": "gatewayTraffic.device"
+                        "object_id": "gateway_traffic.device"
                     },
                     "logic": {
                         "_id": {
@@ -28,11 +28,11 @@
                         },
                         "has_key": "_self",
                         "has": {
-                            "gatewayTraffic.device.day": {
+                            "gateway_traffic.device.day": {
                                 "type": "channel",
                                 "common": {},
                                 "native": {
-                                    "object_id": "gatewayTraffic.device.day"
+                                    "object_id": "gateway_traffic.device.day"
                                 },
                                 "logic": {
                                     "_id": {
@@ -65,7 +65,7 @@
                                     },
                                     "has_key": "_self",
                                     "has": {
-                                        "gatewayTraffic.device.day.date": {
+                                        "gateway_traffic.device.day.date": {
                                             "_id": "date",
                                             "type": "state",
                                             "common": {
@@ -77,7 +77,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "gatewayTraffic.device.date"
+                                                "object_id": "gateway_traffic.device.date"
                                             },
                                             "logic": {
                                                 "value": {
@@ -89,7 +89,7 @@
                                                 }
                                             }
                                         },
-                                        "gatewayTraffic.device.day.sent": {
+                                        "gateway_traffic.device.day.sent": {
                                             "_id": "sent",
                                             "type": "state",
                                             "common": {
@@ -102,13 +102,13 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "gatewayTraffic.device.sent"
+                                                "object_id": "gateway_traffic.device.sent"
                                             },
                                             "logic": {
                                                 "value": "lan-rx_bytes"
                                             }
                                         },
-                                        "gatewayTraffic.device.day.received": {
+                                        "gateway_traffic.device.day.received": {
                                             "_id": "received",
                                             "type": "state",
                                             "common": {
@@ -121,7 +121,7 @@
                                                 "desc": ""
                                             },
                                             "native": {
-                                                "object_id": "gatewayTraffic.device.received"
+                                                "object_id": "gateway_traffic.device.received"
                                             },
                                             "logic": {
                                                 "value": "lan-tx_bytes"

@@ -217,7 +217,7 @@
             "vouchers": [],
             "alarms": [],
             "dpi": [],
-            "gatewayTraffic": []
+            "gateway_traffic": []
         },
         "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,
