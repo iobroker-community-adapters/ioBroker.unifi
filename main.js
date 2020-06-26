@@ -16,7 +16,7 @@ const tools = require('./lib/tools.js');
 class Unifi extends utils.Adapter {
 
     /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
+     * @param {Partial<utils.AdapterOptions>} [options={}]
      */
     constructor(options) {
         super({
@@ -63,7 +63,10 @@ class Unifi extends utils.Adapter {
         this.update.sysinfo = this.config.updateSysinfo;
         this.update.vouchers = this.config.updateVouchers;
         this.update.wlans = this.config.updateWlans;
+        this.update.alarms = this.config.updateAlarms;
+        this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
         this.update.dpi = this.config.updateDpi;
+        this.update.gatewayTraffic = this.config.updateGatewayTraffic;
 
 
         this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
@@ -231,6 +234,14 @@ class Unifi extends utils.Adapter {
 
                 if (this.update.dpi === true) {
                     await this.fetchDpi(sites);
+                }
+
+                if (this.update.gatewayTraffic === true) {
+                    await this.fetchGatewayTraffic(sites);
+                }
+
+                if (this.update.alarms === true) {
+                    await this.fetchAlarms(sites);
                 }
 
                 // finalize, logout and finish
@@ -677,7 +688,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchDpi(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getDPIStats (sites, async (err, data) => {
+            this.controller.getDPIStats(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
@@ -716,7 +727,111 @@ class Unifi extends utils.Adapter {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
             }
         }
-    }    
+    }
+
+
+    /**
+     * Function to fetch daily gateway traffic
+     * @param {Object} sites 
+     */
+    async fetchGatewayTraffic(sites) {
+        return new Promise((resolve, reject) => {
+            this.controller.getDailyGatewayStats(sites, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchGatewayTraffic: ' + data[0].length);
+
+                    await this.processGatewayTraffic(sites, data);
+
+                    resolve(data);
+                }
+            }, undefined, undefined, ["lan-rx_bytes", "lan-tx_bytes"]);
+        });
+    }
+
+    /**
+     * Function that receives the daily gateway traffic as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processGatewayTraffic(sites, data) {
+        const objects = require('./admin/lib/objects_gatewayTraffic.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                //     return item;
+                // }
+                return item;
+            });
+
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gatewayTraffic);
+            }
+        }
+    }
+
+    /**
+     * Function to fetch alarms
+     * @param {Object} sites 
+     */
+    async fetchAlarms(sites) {
+        return new Promise((resolve, reject) => {
+            //TODO: change custom request to use of API function if its implemented
+            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
+                if (err) {
+                    reject(new Error(err));
+                } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
+                    reject(new Error('Returned data is not in valid format'));
+                } else {
+                    this.log.debug('fetchAlarms: ' + data[0].length);
+
+                    await this.processAlarms(sites, data);
+
+                    resolve(data);
+                }
+            });
+        });
+    }
+
+    /**
+     * Function that receives the alarms as a JSON data array
+     * @param {Object} sites 
+     * @param {Object} data 
+     */
+    async processAlarms(sites, data) {
+        const objects = require('./admin/lib/objects_alarms.json');
+
+        for (const site of sites) {
+            const x = sites.indexOf(site);
+
+            // Process objectsFilter
+            const siteData = data[x].filter((item) => {
+                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                //     return item;
+                // }
+                return item;
+            });
+
+            if (this.update.alarmsNoArchived) {
+                let existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.*`);
+
+                for (const id in existingAlarms) {
+                    await this.delObjectAsync(id);
+                }
+            }
+
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
+            }
+        }
+    }
 
     /**
      * Disable or enable a WLAN

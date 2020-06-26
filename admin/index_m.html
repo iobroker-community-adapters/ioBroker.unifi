@@ -151,7 +151,9 @@
             <li class="tab col s6 l3"><a href="#tab_networks" class="translate">networks</a></li>
             <li class="tab col s6 l3"><a href="#tab_health" class="translate">health</a></li>
             <li class="tab col s6 l3"><a href="#tab_vouchers" class="translate">vouchers</a></li>
+            <li class="tab col s6 l3"><a href="#tab_alarms" class="translate">alarms</a></li>
             <li class="tab col s6 l3"><a href="#tab_dpi" class="translate">dpi</a></li>
+            <li class="tab col s6 l3"><a href="#tab_gatewayTraffic" class="translate">gatewayTraffic</a></li>
         </ul>
         <div id="tab_general" class="page">
             <div class="row">
@@ -213,7 +215,8 @@
             <div class="row">
                 <div class="translate sub-title">Filter states</div>
                 <div class="col s12 mb10">
-                    <strong class="translate">Hint:</strong> <span class="translate">To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.</span>
+                    <strong class="translate">Hint:</strong> <span class="translate">To calculate is_online,
+                        last_seen_by_uap and last_seen_by_usw need to be activated additionally.</span>
                 </div>
                 <div class="col s12 treeContainer" id="tree_clients"></div>
             </div>
@@ -342,6 +345,19 @@
                 </div>
             </div>
         </div>
+        <div id="tab_alarms" class="page">
+            <div class="input-field blacklist_title">
+                <input type="checkbox" id="updateAlarms" class="value" />
+                <label for="updateAlarms" class="translate" style="margin-right: 30px;">Update Alarms</label>
+
+                <input type="checkbox" id="updateAlarmsNoArchived" class="value" />
+                <label for="updateAlarmsNoArchived" class="translate">Update only new Alarms</label>
+            </div>
+            <div class="row">
+                <div class="translate sub-title">Filter states</div>
+                <div class="col s12 treeContainer" id="tree_alarms"></div>
+            </div>
+        </div>
         <div id="tab_dpi" class="page">
             <div class="input-field blacklist_title">
                 <input type="checkbox" id="updateDpi" class="value" />
@@ -351,7 +367,17 @@
                 <div class="translate sub-title">Filter states</div>
                 <div class="col s12 treeContainer" id="tree_dpi"></div>
             </div>
-        </div>        
+        </div>
+        <div id="tab_gatewayTraffic" class="page">
+            <div class="input-field blacklist_title">
+                <input type="checkbox" id="updateGatewayTraffic" class="value" />
+                <label for="updateGatewayTraffic" class="translate">Update Gateway Traffic</label>
+            </div>
+            <div class="row">
+                <div class="translate sub-title">Filter states</div>
+                <div class="col s12 treeContainer" id="tree_gatewayTraffic"></div>
+            </div>
+        </div>
     </div>
 
 </body>

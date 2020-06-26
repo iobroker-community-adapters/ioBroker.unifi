@@ -48,10 +48,13 @@
                                     },
                                     "common": {
                                         "name": {
-                                            "string": [
+                                            "translateAppCodeToName": [
+                                                {
+                                                    "var": "cat"
+                                                },
                                                 {
                                                     "var": "app"
-                                                }                                                
+                                                }
                                             ]
                                         }
                                     },
@@ -61,7 +64,7 @@
                                             "_id": "app",
                                             "type": "state",
                                             "common": {
-                                                "name": "Application",
+                                                "name": "Application Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,
@@ -79,7 +82,7 @@
                                             "_id": "cat",
                                             "type": "state",
                                             "common": {
-                                                "name": "Category",
+                                                "name": "Category Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,
@@ -93,6 +96,33 @@
                                                 "value": "cat"
                                             }
                                         },
+                                        "dpi.by_app.app.name": {
+                                            "_id": "name",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Name of Application",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_app.app.name"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "translateAppCodeToName": [
+                                                        {
+                                                            "var": "cat"
+                                                        },
+                                                        {
+                                                            "var": "app"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },                                        
                                         "dpi.by_app.app.clients": {
                                             "type": "channel",
                                             "common": {},
@@ -440,17 +470,41 @@
                                             "translateCatCodeToName": [
                                                 {
                                                     "var": "cat"
-                                                }                                                
+                                                }
                                             ]
                                         }
                                     },
                                     "has_key": "_self",
                                     "has": {
+                                        "dpi.by_cat.cat.name": {
+                                            "_id": "name",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Name of Category",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "dpi.by_cat.cat.name"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "translateCatCodeToName": [
+                                                        {
+                                                            "var": "cat"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
                                         "dpi.by_cat.cat.apps": {
                                             "_id": "apps",
                                             "type": "state",
                                             "common": {
-                                                "name": "Applications",
+                                                "name": "List of Application Ids",
                                                 "type": "array",
                                                 "role": "state",
                                                 "read": true,
@@ -468,7 +522,7 @@
                                             "_id": "cat",
                                             "type": "state",
                                             "common": {
-                                                "name": "Category",
+                                                "name": "Category Id",
                                                 "type": "number",
                                                 "role": "state",
                                                 "read": true,

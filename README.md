@@ -50,6 +50,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Health      | https://IP:PORT/api/s/SITE/stat/health      |
 | Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
 | DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
+| Alarms      | https://IP:PORT/api/s/SITE/stat/alarm       |
 
 ### UbiOS endpoints
 
@@ -64,7 +65,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Health      | https://IP/proxy/network/api/s/SITE/stat/health      |
 | Vouchers    | https://IP/proxy/network/api/s/SITE/stat/voucher     |
 | DPI         | https://IP/proxy/network/api/s/SITE/stat/dpi         |
-
+| Alarms      | https://IP/proxy/network/api/s/SITE/stat/alarm       |
 
 ## Known issues
 * The is_wired state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller and is not related to the adapter. (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1)

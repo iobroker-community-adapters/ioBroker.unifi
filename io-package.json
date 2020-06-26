@@ -196,7 +196,10 @@
         "updateSysinfo": true,
         "updateVouchers": true,
         "updateWlans": true,
+        "updateAlarms": true,
+        "updateAlarmsNoArchived": false,
         "updateDpi": true,
+        "updateGatewayTraffic": true,
         "objectsFilter": {
             "clients": [],
             "devices": [],
@@ -212,7 +215,9 @@
             "networks": [],
             "health": [],
             "vouchers": [],
-            "dpi": []
+            "alarms": [],
+            "dpi": [],
+            "gatewayTraffic": []
         },
         "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,
