@@ -818,6 +818,14 @@ class Unifi extends utils.Adapter {
                 return item;
             });
 
+            if (this.update.alarmsNoArchived) {
+                let existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.*`);
+
+                for (const id in existingAlarms) {
+                    await this.delObjectAsync(id);
+                }
+            }
+
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
             }
