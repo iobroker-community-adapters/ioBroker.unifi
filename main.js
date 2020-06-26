@@ -16,7 +16,7 @@ const tools = require('./lib/tools.js');
 class Unifi extends utils.Adapter {
 
     /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
+     * @param {Partial<utils.AdapterOptions>} [options={}]
      */
     constructor(options) {
         super({
