@@ -258,7 +258,7 @@
                                             "_id": "mac",
                                             "type": "state",
                                             "common": {
-                                                "name": "Device MAC Address",
+                                                "name": "MAC Address",
                                                 "type": "string",
                                                 "role": "state",
                                                 "read": true,
@@ -316,7 +316,7 @@
                                             "_id": "name",
                                             "type": "state",
                                             "common": {
-                                                "name": "Device Name",
+                                                "name": "Name",
                                                 "type": "string",
                                                 "role": "state",
                                                 "read": true,
@@ -410,7 +410,7 @@
                                             "_id": "mac",
                                             "type": "state",
                                             "common": {
-                                                "name": "Client MAC Address",
+                                                "name": "MAC Address",
                                                 "type": "string",
                                                 "role": "state",
                                                 "read": true,
@@ -448,7 +448,7 @@
                                             "_id": "ip",
                                             "type": "state",
                                             "common": {
-                                                "name": "Client IP",
+                                                "name": "IP",
                                                 "type": "string",
                                                 "role": "state",
                                                 "read": true,
