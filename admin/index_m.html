@@ -348,14 +348,22 @@
         <div id="tab_alarms" class="page">
             <div class="input-field blacklist_title">
                 <input type="checkbox" id="updateAlarms" class="value" />
-                <label for="updateAlarms" class="translate" style="margin-right: 30px;">Update Alarms</label>
-
-                <input type="checkbox" id="updateAlarmsNoArchived" class="value" />
-                <label for="updateAlarmsNoArchived" class="translate">Update only new Alarms</label>
+                <label for="updateAlarms" class="translate" style="margin-right: 30px;">Update alarms</label>
             </div>
             <div class="row">
                 <div class="translate sub-title">Filter states</div>
                 <div class="col s12 treeContainer" id="tree_alarms"></div>
+            </div>
+            <div class="row">
+                <div class="translate sub-title">Settings for alarns</div>
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12 m6">
+                            <input type="checkbox" id="updateAlarmsNoArchived" class="value" />
+                            <label for="updateAlarmsNoArchived" class="translate">Update only new alarms</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="tab_dpi" class="page">
