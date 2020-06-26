@@ -783,6 +783,7 @@ class Unifi extends utils.Adapter {
      */
     async fetchAlarms(sites) {
         return new Promise((resolve, reject) => {
+            //TODO: change custom request to use of API function if its implemented
             this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
