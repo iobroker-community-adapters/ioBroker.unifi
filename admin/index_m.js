@@ -329,12 +329,22 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
 
             if (value && value.type === 'state') {
                 if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
-                    tree.children.push({
-                        title: title,
-                        key: id,
-                        id: id,
-                        selected: true
-                    });
+                    if ((id === 'clients.client.last_seen_by_uap' || id === 'clients.client.last_seen_by_usw') && settings.statesFilter[name].includes('clients.client.is_online')) {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true,
+                            unselectable: true
+                        });
+                    } else {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true
+                        });
+                    }
                 } else {
                     tree.children.push({
                         title: title,
