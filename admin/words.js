@@ -1834,8 +1834,8 @@ systemDictionary = {
         "pl": "IP",
         "zh-cn": "知识产权"
     },
-    "Update Alarms": {
-        "en": "Update Alarm Messages",
+    "Update alarms": {
+        "en": "Update alarm messages",
         "de": "Alarmmeldungen aktualisieren",
         "ru": "Обновить аварийные сообщения",
         "pt": "Atualizar mensagens de alarme",
@@ -1846,8 +1846,8 @@ systemDictionary = {
         "pl": "Zaktualizuj komunikaty alarmowe",
         "zh-cn": "更新警报消息"
     },
-    "Update only new Alarms": {
-        "en": "show only new Alarm Messages",
+    "Update only new alarms": {
+        "en": "show only new alarm messages",
         "de": "Nur neue Alarmmeldungen anzeigen",
         "ru": "показывать только новые аварийные сообщения",
         "pt": "mostrar apenas novas mensagens de alarme",

@@ -758,7 +758,7 @@ class Unifi extends utils.Adapter {
      * @param {Object} data 
      */
     async processGatewayTraffic(sites, data) {
-        const objects = require('./admin/lib/objects_gatewayTraffic.json');
+        const objects = require('./admin/lib/objects_gateway_traffic.json');
 
         for (const site of sites) {
             const x = sites.indexOf(site);
@@ -772,7 +772,7 @@ class Unifi extends utils.Adapter {
             });
 
             if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gatewayTraffic);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
             }
         }
     }
@@ -955,7 +955,7 @@ class Unifi extends utils.Adapter {
      */
     async applyJsonLogic(objectTree, data, objects, statesFilter) {
         for (const key in objects) {
-            if (statesFilter.lenth === 0 || statesFilter.includes(key)) {
+            if (statesFilter.length === 0 || statesFilter.includes(key)) {
                 const obj = {
                     '_id': null,
                     'type': null,

@@ -143,17 +143,17 @@
 
     <div class="m adapter-container">
         <ul class="tabs tabs-fixed-width">
-            <li class="tab col s6 l3"><a href="#tab_general" class="translate active">general</a></li>
-            <li class="tab col s6 l3"><a href="#tab_sysinfo" class="translate">sysinfo</a></li>
-            <li class="tab col s6 l3"><a href="#tab_clients" class="translate">clients</a></li>
-            <li class="tab col s6 l3"><a href="#tab_devices" class="translate">devices</a></li>
-            <li class="tab col s6 l3"><a href="#tab_wlans" class="translate">wlans</a></li>
-            <li class="tab col s6 l3"><a href="#tab_networks" class="translate">networks</a></li>
-            <li class="tab col s6 l3"><a href="#tab_health" class="translate">health</a></li>
-            <li class="tab col s6 l3"><a href="#tab_vouchers" class="translate">vouchers</a></li>
-            <li class="tab col s6 l3"><a href="#tab_alarms" class="translate">alarms</a></li>
-            <li class="tab col s6 l3"><a href="#tab_dpi" class="translate">dpi</a></li>
-            <li class="tab col s6 l3"><a href="#tab_gatewayTraffic" class="translate">gatewayTraffic</a></li>
+            <li class="tab col s6 l3"><a href="#tab_general" class="translate active">General</a></li>
+            <li class="tab col s6 l3"><a href="#tab_sysinfo" class="translate">Sysinfo</a></li>
+            <li class="tab col s6 l3"><a href="#tab_clients" class="translate">Clients</a></li>
+            <li class="tab col s6 l3"><a href="#tab_devices" class="translate">Devices</a></li>
+            <li class="tab col s6 l3"><a href="#tab_wlans" class="translate">WLANs</a></li>
+            <li class="tab col s6 l3"><a href="#tab_networks" class="translate">Networks</a></li>
+            <li class="tab col s6 l3"><a href="#tab_health" class="translate">Health</a></li>
+            <li class="tab col s6 l3"><a href="#tab_vouchers" class="translate">Vouchers</a></li>
+            <li class="tab col s6 l3"><a href="#tab_alarms" class="translate">Alarms</a></li>
+            <li class="tab col s6 l3"><a href="#tab_dpi" class="translate">DPI</a></li>
+            <li class="tab col s6 l3"><a href="#tab_gateway_traffic" class="translate">Gateway traffic</a></li>
         </ul>
         <div id="tab_general" class="page">
             <div class="row">
@@ -348,14 +348,22 @@
         <div id="tab_alarms" class="page">
             <div class="input-field blacklist_title">
                 <input type="checkbox" id="updateAlarms" class="value" />
-                <label for="updateAlarms" class="translate" style="margin-right: 30px;">Update Alarms</label>
-
-                <input type="checkbox" id="updateAlarmsNoArchived" class="value" />
-                <label for="updateAlarmsNoArchived" class="translate">Update only new Alarms</label>
+                <label for="updateAlarms" class="translate" style="margin-right: 30px;">Update alarms</label>
             </div>
             <div class="row">
                 <div class="translate sub-title">Filter states</div>
                 <div class="col s12 treeContainer" id="tree_alarms"></div>
+            </div>
+            <div class="row">
+                <div class="translate sub-title">Settings for alarns</div>
+                <div class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12 m6">
+                            <input type="checkbox" id="updateAlarmsNoArchived" class="value" />
+                            <label for="updateAlarmsNoArchived" class="translate">Update only new alarms</label>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="tab_dpi" class="page">
@@ -368,14 +376,14 @@
                 <div class="col s12 treeContainer" id="tree_dpi"></div>
             </div>
         </div>
-        <div id="tab_gatewayTraffic" class="page">
+        <div id="tab_gateway_traffic" class="page">
             <div class="input-field blacklist_title">
                 <input type="checkbox" id="updateGatewayTraffic" class="value" />
                 <label for="updateGatewayTraffic" class="translate">Update Gateway Traffic</label>
             </div>
             <div class="row">
                 <div class="translate sub-title">Filter states</div>
-                <div class="col s12 treeContainer" id="tree_gatewayTraffic"></div>
+                <div class="col s12 treeContainer" id="tree_gateway_traffic"></div>
             </div>
         </div>
     </div>
