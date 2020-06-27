@@ -200,6 +200,7 @@
         "updateAlarmsNoArchived": false,
         "updateDpi": true,
         "updateGatewayTraffic": true,
+        "gatewayTrafficMaxDays": 7,
         "objectsFilter": {
             "clients": [],
             "devices": [],

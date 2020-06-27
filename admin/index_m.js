@@ -136,7 +136,7 @@ function save(callback) {
             obj[id] = $this.prop('checked');
         } else {
             let value = $this.val();
-            
+
             value = value.trim();
 
             if (id === 'controllerPassword') {
@@ -217,6 +217,7 @@ async function createChips(settings, onChange) {
  */
 async function createTreeViews(settings, onChange) {
     for (const key of Object.keys(settings.statesFilter)) {
+
         try {
             // get json data from file
             const obj = await getUnifiObjects(key);
@@ -260,7 +261,6 @@ async function createTreeViews(settings, onChange) {
                 //     }
                 // },
                 click: function (event, data) {
-                    console.log(data);
                     if (data.targetType === 'title' && !data.node.folder) {
                         data.node.setSelected(!data.node.isSelected());
                     }
@@ -269,6 +269,31 @@ async function createTreeViews(settings, onChange) {
                     tree
                 ],
                 select: function (event, data) {
+                    if (key === 'clients') {
+                        var isOnlineNode = $.map(data.tree.getSelectedNodes(), function (node) {
+                            if (node.data.id === 'clients.client.is_online') {
+                                return node;
+                            }
+                        });
+
+                        var nodeLastSeenByUap = data.tree.getNodeByKey('clients.client.last_seen_by_uap');
+                        var nodeLastSeenByUsw = data.tree.getNodeByKey('clients.client.last_seen_by_usw');
+
+                        if (isOnlineNode && isOnlineNode.length === 1) {
+                            // is_online is selected 
+                            nodeLastSeenByUap.setSelected(true);
+                            nodeLastSeenByUap.unselectable = true;
+                            nodeLastSeenByUsw.setSelected(true);
+                            nodeLastSeenByUsw.unselectable = true;
+                        } else {
+                            nodeLastSeenByUap.unselectable = false;
+                            nodeLastSeenByUsw.unselectable = false;
+                        }
+
+                        nodeLastSeenByUap.applyPatch(nodeLastSeenByUap);
+                        nodeLastSeenByUsw.applyPatch(nodeLastSeenByUsw);
+                    }
+
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
                     // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
                     //     if (node.children === null) {
@@ -306,12 +331,14 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
                 if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
                     tree.children.push({
                         title: title,
+                        key: id,
                         id: id,
                         selected: true
                     });
                 } else {
                     tree.children.push({
                         title: title,
+                        key: id,
                         id: id
                     });
                 }
