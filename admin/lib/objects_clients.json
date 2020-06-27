@@ -17,10 +17,18 @@
                     },
                     "logic": {
                         "_id": {
-                            "cleanupForUseAsId": [
+                            "ifNotNull": [
                                 {
-                                    "var": "mac"
-                                }
+                                    "var": "ip"
+                                },
+                                {
+                                    "cleanupForUseAsId": [
+                                        {
+                                            "var": "mac"
+                                        }
+                                    ]
+                                },
+                                null
                             ]
                         },
                         "common": {
