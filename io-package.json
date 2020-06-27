@@ -251,6 +251,19 @@
                 "def": false
             },
             "native": {}
+        },
+        {
+            "_id": "info.UpdateAllData",
+            "type": "state",
+            "common": {
+                "name": "Manually trigger an update",
+                "type": "boolean",
+                "role": "button",
+                "read": false,
+                "write": true,
+                "def": false
+              },
+            "native": {}
         }
     ]
 }
