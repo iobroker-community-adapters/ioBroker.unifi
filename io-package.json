@@ -253,7 +253,7 @@
             "native": {}
         },
         {
-            "_id": "info.UpdateAllData",
+            "_id": "trigger_update",
             "type": "state",
             "common": {
                 "name": "Manually trigger an update",

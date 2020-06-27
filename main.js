@@ -47,7 +47,7 @@ class Unifi extends utils.Adapter {
         // subscribe to all state changes
         this.subscribeStates('*.wlans.*.enabled');
         this.subscribeStates('*.vouchers.create_vouchers');
-        this.subscribeStates('*.UpdateAllData');
+        this.subscribeStates('trigger_update');
 
         this.log.info('UniFi adapter is ready');
 
@@ -69,7 +69,6 @@ class Unifi extends utils.Adapter {
         this.update.dpi = this.config.updateDpi;
         this.update.gatewayTraffic = this.config.updateGatewayTraffic;
         this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
-
 
         this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
         this.statesFilter = this.config.whitelist || this.config.statesFilter; // blacklist was renamed to statesFilter in v0.5.3
@@ -124,7 +123,7 @@ class Unifi extends utils.Adapter {
                 this.updateWlanStatus(site, id, state);
             } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
                 this.createUnifiVouchers(site);
-            } else if (idParts[2] === 'info' && idParts[3] === 'UpdateAllData') {                
+            } else if (idParts[2] === 'trigger_update') {
                 this.updateUnifiData(true);
             }
         }
@@ -197,7 +196,7 @@ class Unifi extends utils.Adapter {
      * Function that takes care of the API calls and processes
      * the responses afterwards
      */
-    async updateUnifiData(PreventReschedule) {
+    async updateUnifiData(preventReschedule = false) {
         this.log.debug('Update started');
 
         this.controller = new unifi.Controller(this.settings.controllerIp, this.settings.controllerPort);
@@ -264,7 +263,7 @@ class Unifi extends utils.Adapter {
                 return;
             });
 
-        if(!PreventReschedule)
+        if (preventReschedule === false)
         {
             // schedule a new execution of updateUnifiData in X seconds
             this.queryTimeout = setTimeout(() => {
@@ -745,7 +744,7 @@ class Unifi extends utils.Adapter {
         let start = undefined;
         let end = undefined;
         if (this.update.gatewayTrafficMaxDays > 0) {
-            let now = new Date()
+            const now = new Date();
             end = now.getTime();
 
             now.setDate(now.getDate() - this.update.gatewayTrafficMaxDays);
@@ -765,7 +764,7 @@ class Unifi extends utils.Adapter {
 
                     resolve(data);
                 }
-            }, start, end, ["lan-rx_bytes", "lan-tx_bytes"]);
+            }, start, end, ['lan-rx_bytes', 'lan-tx_bytes']);
         });
     }
 
@@ -837,7 +836,7 @@ class Unifi extends utils.Adapter {
             });
 
             if (this.update.alarmsNoArchived) {
-                let existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.*`);
+                const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.*`);
 
                 for (const id in existingAlarms) {
                     await this.delObjectAsync(id);
@@ -854,7 +853,7 @@ class Unifi extends utils.Adapter {
      * Disable or enable a WLAN
      * @param {*} site 
      * @param {*} objId 
-     * @param {*} status 
+     * @param {*} state
      */
     updateWlanStatus(site, objId, state) {
         this.login(this.settings.controllerUsername, this.settings.controllerPassword)
@@ -879,7 +878,9 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to fetch vouchers
-     * @param {Object} sites 
+     * @param {Object} site 
+     * @param {Object} objId
+     * @param {Object} state
      */
     async setWlanStatus(site, objId, state) {
         const obj = await this.getForeignObjectAsync(objId);
@@ -906,8 +907,7 @@ class Unifi extends utils.Adapter {
 
     /**
      * Create vouchers
-     * @param {*} site 
-     * @param {*} objId
+     * @param {*} site
      */
     createUnifiVouchers(site) {
         this.login(this.settings.controllerUsername, this.settings.controllerPassword)
@@ -933,7 +933,7 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to create vouchers
-     * @param {Object} sites 
+     * @param {Object} site
      */
     async createVouchers(site) {
         const minutes = this.vouchers.duration;
@@ -1056,7 +1056,7 @@ class Unifi extends utils.Adapter {
 
                             this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
 
-                            this.log.debug('Object ' + obj._id + ' updated');
+                            //this.log.debug('Object ' + obj._id + ' updated');
                         }
                     }
 
