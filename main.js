@@ -67,6 +67,7 @@ class Unifi extends utils.Adapter {
         this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
         this.update.dpi = this.config.updateDpi;
         this.update.gatewayTraffic = this.config.updateGatewayTraffic;
+        this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
 
 
         this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
@@ -735,6 +736,16 @@ class Unifi extends utils.Adapter {
      * @param {Object} sites 
      */
     async fetchGatewayTraffic(sites) {
+        let start = undefined;
+        let end = undefined;
+        if (this.update.gatewayTrafficMaxDays > 0) {
+            let now = new Date()
+            end = now.getTime();
+
+            now.setDate(now.getDate() - this.update.gatewayTrafficMaxDays);
+            start = now.getTime();
+        }
+
         return new Promise((resolve, reject) => {
             this.controller.getDailyGatewayStats(sites, async (err, data) => {
                 if (err) {
@@ -748,7 +759,7 @@ class Unifi extends utils.Adapter {
 
                     resolve(data);
                 }
-            }, undefined, undefined, ["lan-rx_bytes", "lan-tx_bytes"]);
+            }, start, end, ["lan-rx_bytes", "lan-tx_bytes"]);
         });
     }
 
