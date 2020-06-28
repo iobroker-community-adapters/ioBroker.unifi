@@ -73,6 +73,8 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 ## Changelog
 ### __WORK IN PROGRESS__
 * (Scrounger, braindead1) Implemented Alarms, DPI & Gateway Traffic
+* (braindead1) Prevented creation of ghost clients caused by iOS MAC randomization
+* (dklinger) Implemented manual update trigger
 
 ### 0.5.5 (2020-06-13)
 * (braindead1) Fixed some errors reported via Sentry
