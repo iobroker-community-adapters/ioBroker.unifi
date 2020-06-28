@@ -263,8 +263,7 @@ class Unifi extends utils.Adapter {
                 return;
             });
 
-        if (preventReschedule === false)
-        {
+        if (preventReschedule === false) {
             // schedule a new execution of updateUnifiData in X seconds
             this.queryTimeout = setTimeout(() => {
                 this.updateUnifiData();
@@ -798,6 +797,9 @@ class Unifi extends utils.Adapter {
      * @param {Object} sites 
      */
     async fetchAlarms(sites) {
+
+
+
         return new Promise((resolve, reject) => {
             //TODO: change custom request to use of API function if its implemented
             this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
@@ -836,10 +838,36 @@ class Unifi extends utils.Adapter {
             });
 
             if (this.update.alarmsNoArchived) {
-                const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.*`);
+                const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
 
-                for (const id in existingAlarms) {
-                    await this.delObjectAsync(id);
+                for (const alarm in existingAlarms) {
+                    const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
+
+                    if (!siteData.find(item => item._id === alarmId)) {
+                        let alarmChannelId = `${this.namespace}.${site}.alarms.alarm_${alarmId}`;
+
+                        this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
+
+                        // alarm id not exist in api request result -> get dps and delete them
+                        const dpsOfAlarmId = await this.getForeignObjectsAsync(`${alarmChannelId}.*`);
+
+                        for (const id in dpsOfAlarmId) {
+                            // delete datapoint
+                            await this.delObjectAsync(id);
+
+                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                                // remove from own objects if exist
+                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                            }
+                        }
+
+                        // delete alarm channel
+                        await this.delObjectAsync(`${alarmChannelId}`);
+                        if (this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')];
+                        }
+                    }
                 }
             }
 

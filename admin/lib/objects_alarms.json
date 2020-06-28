@@ -203,7 +203,7 @@
                             },
                             "alarms.alarm.device": {
                                 "_id": "device",
-                                "type": "channel",
+                                "type": "device",
                                 "common": {
                                     "name": "Device Information"
                                 },
@@ -375,7 +375,7 @@
                             },
                             "alarms.alarm.client": {
                                 "_id": "client",
-                                "type": "channel",
+                                "type": "device",
                                 "common": {
                                     "name": "Client Information"
                                 },
