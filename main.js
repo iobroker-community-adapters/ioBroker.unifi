@@ -172,6 +172,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Login required. Check username and password.');
         } else if (err.message === 'api.err.Ubic2faTokenRequired') {
             this.log.error('Error: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.');
+        } else if (err.message === 'api.err.ServerBusy') {
+            this.log.error('Error: Server is busy. There seems to be a problem with the UniFi controller.');
         } else if (err.message.includes('connect ECONNREFUSED') === true) {
             this.log.error('Error: Connection refused. Incorrect IP or port.');
         } else if (err.message.includes('read ECONNRESET') === true) {
