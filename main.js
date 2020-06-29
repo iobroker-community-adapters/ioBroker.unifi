@@ -182,6 +182,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
         } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
             this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else if (err.message.includes('socket hang up') === true) {
+            this.log.error('Error: Socket hang up.');
         } else if (err.message === 'Returned data is not in valid format') {
             this.log.error(err.message);
         } else {
