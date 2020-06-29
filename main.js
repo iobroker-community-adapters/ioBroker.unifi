@@ -863,6 +863,20 @@ class Unifi extends utils.Adapter {
                             }
                         }
 
+                        // delete device alarm.client
+                        await this.delObjectAsync(`${alarmChannelId}.client`);
+                        if (this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')];
+                        }
+
+                        // delete device alarm.device
+                        await this.delObjectAsync(`${alarmChannelId}.device`);
+                        if (this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')];
+                        }
+
                         // delete alarm channel
                         await this.delObjectAsync(`${alarmChannelId}`);
                         if (this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')]) {
