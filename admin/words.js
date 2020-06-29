@@ -91,7 +91,18 @@ systemDictionary = {
         "pl": "Ustawienia dla klientów",
         "zh-cn": "客户端设置"
     },
-
+    "Settings for vouchers": {
+        "en": "Settings for vouchers",
+        "de": "Einstellungen für Vouchers",
+        "ru": "Настройки для ваучеров",
+        "pt": "Configurações para comprovantes",
+        "nl": "Instellingen voor vouchers",
+        "fr": "Paramètres des bons",
+        "it": "Impostazioni per i voucher",
+        "es": "Configuraciones para cupones",
+        "pl": "Ustawienia kuponów",
+        "zh-cn": "凭证设置"
+    },
     "Settings for voucher creation": {
         "en": "Settings for voucher creation",
         "de": "Einstellungen für die Voucher Erstellung",
@@ -1692,7 +1703,7 @@ systemDictionary = {
     },
     "Update Gateway Traffic": {
         "en": "Update Gateway Traffic (USG needed)",
-        "de": "Gateway Verkehr aktualisieren (USG erforderlich)",
+        "de": "Gateway Traffic aktualisieren (USG erforderlich)",
         "ru": "Обновление трафика шлюза (требуется USG)",
         "pt": "Atualizar tráfego de gateway (USG necessário)",
         "nl": "Gatewayverkeer bijwerken (USG nodig)",
@@ -1846,6 +1857,18 @@ systemDictionary = {
         "pl": "Zaktualizuj komunikaty alarmowe",
         "zh-cn": "更新警报消息"
     },
+    "Settings for alarms": {
+        "en": "Settings for alarms",
+        "de": "Einstellungen für Alarmmeldungen",
+        "ru": "Настройки для будильника",
+        "pt": "Configurações para alarmes",
+        "nl": "Instellingen voor alarmen",
+        "fr": "Paramètres des alarmes",
+        "it": "Impostazioni per allarmi",
+        "es": "Configuraciones para alarmas",
+        "pl": "Ustawienia alarmów",
+        "zh-cn": "警报设定"
+    },
     "Update only new alarms": {
         "en": "show only new alarm messages",
         "de": "Nur neue Alarmmeldungen anzeigen",
@@ -1857,5 +1880,41 @@ systemDictionary = {
         "es": "mostrar solo nuevos mensajes de alarma",
         "pl": "pokaż tylko nowe komunikaty alarmowe",
         "zh-cn": "仅显示新的警报消息"
+    },
+    "Settings for Gateway Traffic": {
+        "en": "Settings for Gateway Traffic",
+        "de": "Einstellungen für Gateway Traffic",
+        "ru": "Настройки для шлюза трафика",
+        "pt": "Configurações para tráfego de gateway",
+        "nl": "Instellingen voor gatewayverkeer",
+        "fr": "Paramètres du trafic de passerelle",
+        "it": "Impostazioni per il traffico gateway",
+        "es": "Configuraciones para el tráfico de la puerta de enlace",
+        "pl": "Ustawienia ruchu bramy",
+        "zh-cn": "网关流量的设置"
+    },
+    "Get data for x Days (0 = all available data)": {
+        "en": "Get data for x Days (0 = all available data)",
+        "de": "Daten für x Tage abrufen (0 = alle verfügbaren Daten)",
+        "ru": "Получить данные за x дней (0 = все доступные данные)",
+        "pt": "Obter dados para x dias (0 = todos os dados disponíveis)",
+        "nl": "Gegevens ophalen voor x dagen (0 = alle beschikbare gegevens)",
+        "fr": "Obtenir des données pour x jours (0 = toutes les données disponibles)",
+        "it": "Ottieni dati per x giorni (0 = tutti i dati disponibili)",
+        "es": "Obtener datos para x días (0 = todos los datos disponibles)",
+        "pl": "Uzyskaj dane za x dni (0 = wszystkie dostępne dane)",
+        "zh-cn": "获取x天的数据（0 =所有可用数据）"
+    },
+    "Update only unused vouchers": {
+        "en": "Update only unused vouchers",
+        "de": "Nur ungenutzte Vouchers anzeigen",
+        "ru": "Обновлять только неиспользованные ваучеры",
+        "pt": "Atualizar apenas vouchers não utilizados",
+        "nl": "Update alleen ongebruikte vouchers",
+        "fr": "Mettre à jour uniquement les coupons inutilisés",
+        "it": "Aggiorna solo i voucher non utilizzati",
+        "es": "Actualizar solo cupones no utilizados",
+        "pl": "Aktualizuj tylko nieużywane kupony",
+        "zh-cn": "仅更新未使用的凭证"
     }
 };
