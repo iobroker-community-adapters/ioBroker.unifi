@@ -1022,13 +1022,13 @@ class Unifi extends utils.Adapter {
      * @param {Object} site
      */
     async createVouchers(site) {
-        const minutes = this.vouchers.duration;
-        const count = this.vouchers.number;
-        const quota = this.vouchers.quota;
-        const note = this.vouchers.note;
-        const up = this.vouchers.uploadLimit;
-        const down = this.vouchers.downloadLimit;
-        const mbytes = this.vouchers.byteQuota;
+        const minutes = this.vouchers.duration || 60;
+        const count = this.vouchers.number || 1;
+        const quota = this.vouchers.quota || 1;
+        const note = this.vouchers.note || '';
+        const up = this.vouchers.uploadLimit || 0;
+        const down = this.vouchers.downloadLimit || 0;
+        const mbytes = this.vouchers.byteQuota || 0;
 
         return new Promise((resolve, reject) => {
             const cb = async (err, data) => {
