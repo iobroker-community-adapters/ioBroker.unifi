@@ -170,6 +170,10 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Incorrect username or password.');
         } else if (err.message === 'api.err.LoginRequired') {
             this.log.error('Error: Login required. Check username and password.');
+        } else if (err.message === 'api.err.Ubic2faTokenRequired') {
+            this.log.error('Error: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.');
+        } else if (err.message === 'api.err.ServerBusy') {
+            this.log.error('Error: Server is busy. There seems to be a problem with the UniFi controller.');
         } else if (err.message.includes('connect ECONNREFUSED') === true) {
             this.log.error('Error: Connection refused. Incorrect IP or port.');
         } else if (err.message.includes('read ECONNRESET') === true) {
@@ -178,6 +182,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.');
         } else if (err.message.includes('getaddrinfo ENOTFOUND') === true) {
             this.log.error('Error: Host not found. Incorrect IP or port.');
+        } else if (err.message.includes('socket hang up') === true) {
+            this.log.error('Error: Socket hang up.');
         } else if (err.message === 'Returned data is not in valid format') {
             this.log.error(err.message);
         } else {
@@ -797,12 +803,8 @@ class Unifi extends utils.Adapter {
      * @param {Object} sites 
      */
     async fetchAlarms(sites) {
-
-
-
         return new Promise((resolve, reject) => {
-            //TODO: change custom request to use of API function if its implemented
-            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
+            this.controller.getAlarms(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
@@ -814,7 +816,7 @@ class Unifi extends utils.Adapter {
 
                     resolve(data);
                 }
-            });
+            }, (this.update.alarmsNoArchived === false));
         });
     }
 
