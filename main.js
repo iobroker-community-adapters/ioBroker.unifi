@@ -63,6 +63,7 @@ class Unifi extends utils.Adapter {
         this.update.networks = this.config.updateNetworks;
         this.update.sysinfo = this.config.updateSysinfo;
         this.update.vouchers = this.config.updateVouchers;
+        this.update.vouchersNoUsed = this.config.updateVouchersNoUsed;
         this.update.wlans = this.config.updateWlans;
         this.update.alarms = this.config.updateAlarms;
         this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
@@ -687,7 +688,48 @@ class Unifi extends utils.Adapter {
 
         for (const site of sites) {
             const x = sites.indexOf(site);
-            const siteData = data[x];
+            let siteData = data[x];
+
+            if (this.update.vouchersNoUsed) {
+                // Remove used vouchers
+                siteData = data[x].filter((item) => {
+                    if (item.used === 0) {
+                        return item;
+                    }
+                });
+
+                const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
+
+                for (const voucher in existingVouchers) {
+                    const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
+
+                    if (!siteData.find(item => item.code === voucherId)) {
+                        const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
+
+                        this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
+
+                        // voucher id not exist in api request result -> get dps and delete them
+                        const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
+
+                        for (const id in dpsOfVoucherId) {
+                            // delete datapoint
+                            await this.delObjectAsync(id);
+
+                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                                // remove from own objects if exist
+                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                            }
+                        }
+
+                        // delete voucher channel
+                        await this.delObjectAsync(`${voucherChannelId}`);
+                        if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
+                        }
+                    }
+                }
+            }
 
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
@@ -804,7 +846,8 @@ class Unifi extends utils.Adapter {
      */
     async fetchAlarms(sites) {
         return new Promise((resolve, reject) => {
-            this.controller.getAlarms(sites, async (err, data) => {
+            this.controller.customApiRequest(sites, `/api/s/<SITE>/stat/alarm${this.update.alarmsNoArchived ? '?archived=false' : ''}`, async (err, data) => {
+            //this.controller.getAlarms(sites, async (err, data) => {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
@@ -816,7 +859,8 @@ class Unifi extends utils.Adapter {
 
                     resolve(data);
                 }
-            }, (this.update.alarmsNoArchived === false));
+            });
+            //}, (this.update.alarmsNoArchived === false));
         });
     }
 

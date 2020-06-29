@@ -195,6 +195,7 @@
         "updateNetworks": true,
         "updateSysinfo": true,
         "updateVouchers": true,
+        "updateVouchersNoUsed": false,
         "updateWlans": true,
         "updateAlarms": true,
         "updateAlarmsNoArchived": false,
