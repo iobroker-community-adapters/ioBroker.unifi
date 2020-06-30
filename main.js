@@ -44,68 +44,72 @@ class Unifi extends utils.Adapter {
      * Is called when adapter received configuration.
      */
     async onReady() {
-        // subscribe to all state changes
-        this.subscribeStates('*.wlans.*.enabled');
-        this.subscribeStates('*.vouchers.create_vouchers');
-        this.subscribeStates('trigger_update');
+        try {
+            // subscribe to all state changes
+            this.subscribeStates('*.wlans.*.enabled');
+            this.subscribeStates('*.vouchers.create_vouchers');
+            this.subscribeStates('trigger_update');
 
-        this.log.info('UniFi adapter is ready');
+            this.log.info('UniFi adapter is ready');
 
-        // Load configuration
-        this.settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
-        this.settings.controllerIp = this.config.controllerIp;
-        this.settings.controllerPort = this.config.controllerPort;
-        this.settings.controllerUsername = this.config.controllerUsername;
+            // Load configuration
+            this.settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
+            this.settings.controllerIp = this.config.controllerIp;
+            this.settings.controllerPort = this.config.controllerPort;
+            this.settings.controllerUsername = this.config.controllerUsername;
 
-        this.update.clients = this.config.updateClients;
-        this.update.devices = this.config.updateDevices;
-        this.update.health = this.config.updateHealth;
-        this.update.networks = this.config.updateNetworks;
-        this.update.sysinfo = this.config.updateSysinfo;
-        this.update.vouchers = this.config.updateVouchers;
-        this.update.vouchersNoUsed = this.config.updateVouchersNoUsed;
-        this.update.wlans = this.config.updateWlans;
-        this.update.alarms = this.config.updateAlarms;
-        this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
-        this.update.dpi = this.config.updateDpi;
-        this.update.gatewayTraffic = this.config.updateGatewayTraffic;
-        this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
+            this.update.clients = this.config.updateClients;
+            this.update.devices = this.config.updateDevices;
+            this.update.health = this.config.updateHealth;
+            this.update.networks = this.config.updateNetworks;
+            this.update.sysinfo = this.config.updateSysinfo;
+            this.update.vouchers = this.config.updateVouchers;
+            this.update.vouchersNoUsed = this.config.updateVouchersNoUsed;
+            this.update.wlans = this.config.updateWlans;
+            this.update.alarms = this.config.updateAlarms;
+            this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
+            this.update.dpi = this.config.updateDpi;
+            this.update.gatewayTraffic = this.config.updateGatewayTraffic;
+            this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
 
-        this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
-        this.statesFilter = this.config.whitelist || this.config.statesFilter; // blacklist was renamed to statesFilter in v0.5.3
+            this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
+            this.statesFilter = this.config.whitelist || this.config.statesFilter; // blacklist was renamed to statesFilter in v0.5.3
 
-        this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
+            this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
 
-        this.vouchers.number = this.config.createVouchersNumber;
-        this.vouchers.duration = this.config.createVouchersDuration;
-        this.vouchers.quota = this.config.createVouchersQuota;
-        this.vouchers.uploadLimit = (this.config.createVouchersUploadLimit == 0) ? null : this.config.createVouchersUploadLimit;
-        this.vouchers.downloadLimit = (this.config.createVouchersDownloadLimit == 0) ? null : this.config.createVouchersDownloadLimit;
-        this.vouchers.byteQuota = (this.config.createVouchersByteQuota == 0) ? null : this.config.createVouchersByteQuota;
-        this.vouchers.note = this.config.createVouchersNote;
+            this.vouchers.number = this.config.createVouchersNumber;
+            this.vouchers.duration = this.config.createVouchersDuration;
+            this.vouchers.quota = this.config.createVouchersQuota;
+            this.vouchers.uploadLimit = (this.config.createVouchersUploadLimit == 0) ? null : this.config.createVouchersUploadLimit;
+            this.vouchers.downloadLimit = (this.config.createVouchersDownloadLimit == 0) ? null : this.config.createVouchersDownloadLimit;
+            this.vouchers.byteQuota = (this.config.createVouchersByteQuota == 0) ? null : this.config.createVouchersByteQuota;
+            this.vouchers.note = this.config.createVouchersNote;
 
-        if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
-            this.getForeignObject('system.config', async (err, obj) => {
-                if (obj && obj.native && obj.native.secret) {
-                    //noinspection JSUnresolvedVariable
-                    this.settings.controllerPassword = await this.decrypt(obj.native.secret, this.config.controllerPassword);
-                } else {
-                    //noinspection JSUnresolvedVariable
-                    this.settings.controllerPassword = await this.decrypt('Zgfr56gFe87jJOM', this.config.controllerPassword);
-                }
+            if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
+                this.getForeignObject('system.config', async (err, obj) => {
+                    if (obj && obj.native && obj.native.secret) {
+                        //noinspection JSUnresolvedVariable
+                        this.settings.controllerPassword = await this.decrypt(obj.native.secret, this.config.controllerPassword);
+                    } else {
+                        //noinspection JSUnresolvedVariable
+                        this.settings.controllerPassword = await this.decrypt('Zgfr56gFe87jJOM', this.config.controllerPassword);
+                    }
 
-                // Send some log messages
-                this.log.debug('controller = ' + this.settings.controllerIp + ':' + this.settings.controllerPort);
-                this.log.debug('updateInterval = ' + this.settings.updateInterval / 1000);
+                    // Send some log messages
+                    this.log.debug('controller = ' + this.settings.controllerIp + ':' + this.settings.controllerPort);
+                    this.log.debug('updateInterval = ' + this.settings.updateInterval / 1000);
 
-                // Start main function
-                this.updateUnifiData();
-            });
-        } else {
-            this.log.error('Adapter deactivated due to missing configuration.');
+                    // Start main function
+                    this.updateUnifiData();
+                });
+            } else {
+                this.log.error('Adapter deactivated due to missing configuration.');
 
-            await this.setStateAsync('info.connection', { ack: true, val: false });
-            this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+                await this.setStateAsync('info.connection', { ack: true, val: false });
+                this.setForeignState('system.adapter.' + this.namespace + '.alive', false);
+            }
+        } catch (err) {
+            this.errorHandling(err, 'onReady');
         }
     }
 
@@ -115,18 +119,22 @@ class Unifi extends utils.Adapter {
 	 * @param {ioBroker.State | null | undefined} state
 	 */
     onStateChange(id, state) {
-        if (typeof state == 'object' && !state.ack) {
-            // The state was changed
-            const idParts = id.split('.');
-            const site = idParts[2];
+        try {
+            if (typeof state == 'object' && !state.ack) {
+                // The state was changed
+                const idParts = id.split('.');
+                const site = idParts[2];
 
-            if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
-                this.updateWlanStatus(site, id, state);
-            } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
-                this.createUnifiVouchers(site);
-            } else if (idParts[2] === 'trigger_update') {
-                this.updateUnifiData(true);
+                if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
+                    this.updateWlanStatus(site, id, state);
+                } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
+                    this.createUnifiVouchers(site);
+                } else if (idParts[2] === 'trigger_update') {
+                    this.updateUnifiData(true);
+                }
             }
+        } catch (err) {
+            this.errorHandling(err, 'onStateChange');
         }
     }
 
@@ -164,9 +172,10 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to handle error messages
-     * @param {Object} err 
+     * @param {Object} err
+     * @param {String | undefined} methodName
      */
-    async errorHandling(err) {
+    async errorHandling(err, methodName = undefined) {
         if (err.message === 'api.err.Invalid') {
             this.log.error('Error: Incorrect username or password.');
         } else if (err.message === 'api.err.LoginRequired') {
@@ -185,10 +194,15 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Host not found. Incorrect IP or port.');
         } else if (err.message.includes('socket hang up') === true) {
             this.log.error('Error: Socket hang up.');
-        } else if (err.message === 'Returned data is not in valid format') {
+        } else if (err.message.includes('Returned data is not in valid format')) {
             this.log.error(err.message);
         } else {
-            this.log.error(err.name + ': ' + err.message);
+
+            if (methodName) {
+                this.log.error(`[${methodName}] error: ${err.message}, stack: ${err.stack}`);
+            } else {
+                this.log.error(`error: ${err.message}, stack: ${err.stack}`);
+            }
 
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                 const sentryInstance = this.getPluginInstance('sentry');
@@ -204,77 +218,81 @@ class Unifi extends utils.Adapter {
      * the responses afterwards
      */
     async updateUnifiData(preventReschedule = false) {
-        this.log.debug('Update started');
+        try {
+            this.log.debug('Update started');
 
-        this.controller = new unifi.Controller(this.settings.controllerIp, this.settings.controllerPort);
+            this.controller = new unifi.Controller(this.settings.controllerIp, this.settings.controllerPort);
 
-        this.login(this.settings.controllerUsername, this.settings.controllerPassword)
-            .then(async () => {
-                this.log.debug('Login successful');
+            this.login(this.settings.controllerUsername, this.settings.controllerPassword)
+                .then(async () => {
+                    this.log.debug('Login successful');
 
-                const sites = await this.fetchSites();
+                    const sites = await this.fetchSites();
 
-                if (this.update.sysinfo === true) {
-                    await this.fetchSiteSysinfo(sites);
-                }
+                    if (this.update.sysinfo === true) {
+                        await this.fetchSiteSysinfo(sites);
+                    }
 
-                if (this.update.clients === true) {
-                    await this.fetchClients(sites);
-                }
+                    if (this.update.clients === true) {
+                        await this.fetchClients(sites);
+                    }
 
-                if (this.update.devices === true) {
-                    await this.fetchDevices(sites);
-                }
+                    if (this.update.devices === true) {
+                        await this.fetchDevices(sites);
+                    }
 
-                if (this.update.wlans === true) {
-                    await this.fetchWlans(sites);
-                }
+                    if (this.update.wlans === true) {
+                        await this.fetchWlans(sites);
+                    }
 
-                if (this.update.networks === true) {
-                    await this.fetchNetworks(sites);
-                }
+                    if (this.update.networks === true) {
+                        await this.fetchNetworks(sites);
+                    }
 
-                if (this.update.health === true) {
-                    await this.fetchHealth(sites);
-                }
+                    if (this.update.health === true) {
+                        await this.fetchHealth(sites);
+                    }
 
-                if (this.update.vouchers === true) {
-                    await this.fetchVouchers(sites);
-                }
+                    if (this.update.vouchers === true) {
+                        await this.fetchVouchers(sites);
+                    }
 
-                if (this.update.dpi === true) {
-                    await this.fetchDpi(sites);
-                }
+                    if (this.update.dpi === true) {
+                        await this.fetchDpi(sites);
+                    }
 
-                if (this.update.gatewayTraffic === true) {
-                    await this.fetchGatewayTraffic(sites);
-                }
+                    if (this.update.gatewayTraffic === true) {
+                        await this.fetchGatewayTraffic(sites);
+                    }
 
-                if (this.update.alarms === true) {
-                    await this.fetchAlarms(sites);
-                }
+                    if (this.update.alarms === true) {
+                        await this.fetchAlarms(sites);
+                    }
 
-                // finalize, logout and finish
-                this.controller.logout();
+                    // finalize, logout and finish
+                    this.controller.logout();
 
-                await this.setStateAsync('info.connection', { ack: true, val: true });
-                this.log.info('Update done');
+                    await this.setStateAsync('info.connection', { ack: true, val: true });
+                    this.log.info('Update done');
 
-                return Promise.resolve(true);
-            })
-            .catch(async (err) => {
-                await this.setStateAsync('info.connection', { ack: true, val: false });
+                    return Promise.resolve(true);
+                })
+                .catch(async (err) => {
+                    await this.setStateAsync('info.connection', { ack: true, val: false });
 
-                this.errorHandling(err);
+                    this.errorHandling(err);
 
-                return;
-            });
+                    return;
+                });
 
-        if (preventReschedule === false) {
-            // schedule a new execution of updateUnifiData in X seconds
-            this.queryTimeout = setTimeout(() => {
-                this.updateUnifiData();
-            }, this.settings.updateInterval);
+            if (preventReschedule === false) {
+                // schedule a new execution of updateUnifiData in X seconds
+                this.queryTimeout = setTimeout(() => {
+                    this.updateUnifiData();
+                }, this.settings.updateInterval);
+            }
+        } catch (err) {
+            this.errorHandling(err, 'updateUnifiData');
         }
     }
 
@@ -304,7 +322,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchSites: Returned data is not in valid format'));
                 } else {
                     const sites = data.map((s) => { return s.name; });
 
@@ -344,7 +362,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchSiteSysinfo: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
 
@@ -382,7 +400,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchClients: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
 
@@ -480,7 +498,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchDevices: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
@@ -528,7 +546,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchWlans: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
 
@@ -574,7 +592,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchNetworks: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
 
@@ -620,7 +638,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchHealth: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
 
@@ -666,7 +684,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchVouchers: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
 
@@ -745,7 +763,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchDpi: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
                     this.log.debug('fetchDpi: ' + data[0].length);
 
@@ -803,7 +821,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchGatewayTraffic: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
                     this.log.debug('fetchGatewayTraffic: ' + data[0].length);
 
@@ -850,7 +868,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchAlarms: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchAlarms: ' + data[0].length);
 
@@ -883,47 +901,23 @@ class Unifi extends utils.Adapter {
 
             if (this.update.alarmsNoArchived) {
                 const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
+                const alarmDatapoints = await this.getUnifiObjectsLibIds('alarms');
 
                 for (const alarm in existingAlarms) {
                     const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
 
                     if (!siteData.find(item => item._id === alarmId)) {
-                        let alarmChannelId = `${this.namespace}.${site}.alarms.alarm_${alarmId}`;
-
                         this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
 
-                        // alarm id not exist in api request result -> get dps and delete them
-                        const dpsOfAlarmId = await this.getForeignObjectsAsync(`${alarmChannelId}.*`);
+                        for (const dp of alarmDatapoints) {
+                            const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
 
-                        for (const id in dpsOfAlarmId) {
-                            // delete datapoint
-                            await this.delObjectAsync(id);
+                            await this.delObjectAsync(dpId);
 
-                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                            if (this.ownObjects[dpId]) {
                                 // remove from own objects if exist
-                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                                await delete this.ownObjects[dpId];
                             }
-                        }
-
-                        // delete device alarm.client
-                        await this.delObjectAsync(`${alarmChannelId}.client`);
-                        if (this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')];
-                        }
-
-                        // delete device alarm.device
-                        await this.delObjectAsync(`${alarmChannelId}.device`);
-                        if (this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')];
-                        }
-
-                        // delete alarm channel
-                        await this.delObjectAsync(`${alarmChannelId}`);
-                        if (this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')];
                         }
                     }
                 }
@@ -979,7 +973,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('setWlanStatus: Returned data is not in valid format'));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
 
@@ -1035,7 +1029,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('createVouchers: Returned data is not in valid format'));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
 
@@ -1057,83 +1051,73 @@ class Unifi extends utils.Adapter {
      * @param {*} statesFilter
      */
     async applyJsonLogic(objectTree, data, objects, statesFilter) {
-        for (const key in objects) {
-            if (statesFilter.length === 0 || statesFilter.includes(key)) {
-                const obj = {
-                    '_id': null,
-                    'type': null,
-                    'common': {},
-                    'native': {}
-                };
+        try {
 
-                // Process object id
-                if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
-                    obj._id = objects[key]._id;
-                } else {
-                    obj._id = await this.applyRule(objects[key].logic._id, data);
-                }
 
-                if (obj._id !== null && obj._id.slice(-1) !== -1) {
-                    if (objectTree !== '') {
-                        obj._id = objectTree + '.' + obj._id;
-                    }
+            for (const key in objects) {
+                if (statesFilter.length === 0 || statesFilter.includes(key)) {
+                    const obj = {
+                        '_id': null,
+                        'type': null,
+                        'common': {},
+                        'native': {}
+                    };
 
-                    // Process type
-                    if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
-                        obj.type = objects[key].type;
+                    // Process object id
+                    if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
+                        obj._id = objects[key]._id;
                     } else {
-                        obj.type = await this.applyRule(objects[key].logic.type, data);
+                        obj._id = await this.applyRule(objects[key].logic._id, data);
                     }
 
-                    // Process common
-                    if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
-                        obj.common = JSON.parse(JSON.stringify(objects[key].common));
-                    }
-
-                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
-                        const common = objects[key].logic.common;
-
-                        for (const commonKey in common) {
-                            obj.common[commonKey] = await this.applyRule(common[commonKey], data);
+                    if (obj._id !== null && obj._id.slice(-1) !== -1) {
+                        if (objectTree !== '') {
+                            obj._id = objectTree + '.' + obj._id;
                         }
-                    }
 
-                    // Process native
-                    if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
-                        obj.native = JSON.parse(JSON.stringify(objects[key].native));
-                    }
-
-                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
-                        const native = objects[key].logic.native;
-
-                        for (const nativeKey in native) {
-                            obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
+                        // Process type
+                        if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
+                            obj.type = objects[key].type;
+                        } else {
+                            obj.type = await this.applyRule(objects[key].logic.type, data);
                         }
-                    }
 
-                    // Cleanup _id
-                    const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-                    let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
-                    tempId = tempId.toLowerCase();
-                    obj._id = tempId;
+                        // Process common
+                        if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
+                            obj.common = JSON.parse(JSON.stringify(objects[key].common));
+                        }
 
-                    //this.log.debug(JSON.stringify(obj));
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
+                            const common = objects[key].logic.common;
 
-                    // Update object if changed
-                    if (!Object.prototype.hasOwnProperty.call(this.ownObjects, obj._id)) {
-                        await this.extendObjectAsync(obj._id, {
-                            type: obj.type,
-                            common: JSON.parse(JSON.stringify(obj.common)),
-                            native: JSON.parse(JSON.stringify(obj.native))
-                        });
+                            for (const commonKey in common) {
+                                obj.common[commonKey] = await this.applyRule(common[commonKey], data);
+                            }
+                        }
 
-                        this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
+                        // Process native
+                        if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
+                            obj.native = JSON.parse(JSON.stringify(objects[key].native));
+                        }
 
-                        //this.log.debug('Object ' + obj._id + ' updated');
-                    } else {
-                        const ownObj = this.ownObjects[obj._id];
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
+                            const native = objects[key].logic.native;
 
-                        if (JSON.stringify(ownObj) !== JSON.stringify(obj)) {
+                            for (const nativeKey in native) {
+                                obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
+                            }
+                        }
+
+                        // Cleanup _id
+                        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
+                        let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
+                        tempId = tempId.toLowerCase();
+                        obj._id = tempId;
+
+                        //this.log.debug(JSON.stringify(obj));
+
+                        // Update object if changed
+                        if (!Object.prototype.hasOwnProperty.call(this.ownObjects, obj._id)) {
                             await this.extendObjectAsync(obj._id, {
                                 type: obj.type,
                                 common: JSON.parse(JSON.stringify(obj.common)),
@@ -1143,51 +1127,67 @@ class Unifi extends utils.Adapter {
                             this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
 
                             //this.log.debug('Object ' + obj._id + ' updated');
-                        }
-                    }
+                        } else {
+                            const ownObj = this.ownObjects[obj._id];
 
-                    // Process value
-                    if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
-                        obj.value = objects[key].value;
-                    } else {
-                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
-                            obj.value = await this.applyRule(objects[key].logic.value, data);
-                        }
-                    }
+                            if (JSON.stringify(ownObj) !== JSON.stringify(obj)) {
+                                await this.extendObjectAsync(obj._id, {
+                                    type: obj.type,
+                                    common: JSON.parse(JSON.stringify(obj.common)),
+                                    native: JSON.parse(JSON.stringify(obj.native))
+                                });
 
-                    // Update state if value changed
-                    if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
-                        const oldState = await this.getStateAsync(obj._id);
+                                this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
 
-                        if (oldState === null || oldState.val != obj.value) {
-                            await this.setStateAsync(obj._id, { ack: true, val: obj.value });
-                        }
-                    }
-
-                    // Process has
-                    if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
-                        const hasKey = objects[key].logic.has_key;
-                        const has = objects[key].logic.has;
-
-                        if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
-                            let tempData;
-                            if (hasKey === '_self') {
-                                tempData = data;
-                            } else {
-                                tempData = data[hasKey];
+                                //this.log.debug('Object ' + obj._id + ' updated');
                             }
+                        }
 
-                            if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
-                                for (const element of tempData) {
-                                    await this.applyJsonLogic(obj._id, element, has, statesFilter);
+                        // Process value
+                        if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
+                            obj.value = objects[key].value;
+                        } else {
+                            if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
+                                obj.value = await this.applyRule(objects[key].logic.value, data);
+                            }
+                        }
+
+                        // Update state if value changed
+                        if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
+                            const oldState = await this.getStateAsync(obj._id);
+
+                            if (oldState === null || oldState.val != obj.value) {
+                                await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                            }
+                        }
+
+                        // Process has
+                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
+                            const hasKey = objects[key].logic.has_key;
+                            const has = objects[key].logic.has;
+
+                            if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
+                                let tempData;
+                                if (hasKey === '_self') {
+                                    tempData = data;
+                                } else {
+                                    tempData = data[hasKey];
                                 }
-                            } else {
-                                await this.applyJsonLogic(obj._id, tempData, has, statesFilter);
+
+                                if (Array.isArray(tempData) && Object.keys(tempData).length > 0) {
+                                    for (const element of tempData) {
+                                        await this.applyJsonLogic(obj._id, element, has, statesFilter);
+                                    }
+                                } else {
+                                    await this.applyJsonLogic(obj._id, tempData, has, statesFilter);
+                                }
                             }
                         }
                     }
                 }
             }
+        } catch (err) {
+            this.errorHandling(err, 'applyJsonLogic');
         }
     }
 
@@ -1209,6 +1209,36 @@ class Unifi extends utils.Adapter {
             _rule,
             data
         );
+    }
+
+    /**
+     * @param {String} libName 
+     */
+    async getUnifiObjectsLibIds(libName) {
+        const objects = require(`./admin/lib/objects_${libName}.json`);
+
+        let idList = [];
+        await this.extractsIds(objects, idList, libName);
+
+        return idList.reverse();
+    }
+
+    /**
+     * @param {Object} obj
+     * @param {Array} idList
+     */
+    async extractsIds(obj, idList, libName) {
+        for (const [id, value] of Object.entries(obj)) {
+            if (value && value.type === 'state') {
+                idList.push(id);
+            } else if (value && value.type === 'channel' || value.type === 'device') {
+                if (id !== libName) {
+                    // ignore root id
+                    idList.push(id);
+                }
+                this.extractsIds(value.logic.has, idList, libName);
+            }
+        };
     }
 }
 

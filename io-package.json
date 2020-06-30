@@ -211,8 +211,8 @@
         "updateWlans": true,
         "updateAlarms": true,
         "updateAlarmsNoArchived": false,
-        "updateDpi": true,
-        "updateGatewayTraffic": true,
+        "updateDpi": false,
+        "updateGatewayTraffic": false,
         "gatewayTrafficMaxDays": 7,
         "objectsFilter": {
             "clients": [],
