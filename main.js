@@ -185,7 +185,7 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Host not found. Incorrect IP or port.');
         } else if (err.message.includes('socket hang up') === true) {
             this.log.error('Error: Socket hang up.');
-        } else if (err.message === 'Returned data is not in valid format') {
+        } else if (err.message.includes('Returned data is not in valid format')) {
             this.log.error(err.message);
         } else {
             this.log.error(err.name + ': ' + err.message);
@@ -304,7 +304,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchSites: Returned data is not in valid format'));
                 } else {
                     const sites = data.map((s) => { return s.name; });
 
@@ -344,7 +344,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchSiteSysinfo: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
 
@@ -382,7 +382,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchClients: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
 
@@ -480,7 +480,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchDevices: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
 
@@ -528,7 +528,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchWlans: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
 
@@ -574,7 +574,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchNetworks: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
 
@@ -620,7 +620,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchHealth: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
 
@@ -666,7 +666,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchVouchers: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
 
@@ -745,7 +745,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchDpi: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
                     this.log.debug('fetchDpi: ' + data[0].length);
 
@@ -803,7 +803,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchGatewayTraffic: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
                     this.log.debug('fetchGatewayTraffic: ' + data[0].length);
 
@@ -850,7 +850,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('fetchAlarms: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchAlarms: ' + data[0].length);
 
@@ -955,7 +955,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('setWlanStatus: Returned data is not in valid format'));
                 } else {
                     this.log.debug('setWlanStatus: ' + data[0].length);
 
@@ -1011,7 +1011,7 @@ class Unifi extends utils.Adapter {
                 if (err) {
                     reject(new Error(err));
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
-                    reject(new Error('Returned data is not in valid format'));
+                    reject(new Error('createVouchers: Returned data is not in valid format'));
                 } else {
                     this.log.debug('createVouchers: ' + data[0].length);
 
