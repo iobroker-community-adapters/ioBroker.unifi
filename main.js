@@ -883,47 +883,23 @@ class Unifi extends utils.Adapter {
 
             if (this.update.alarmsNoArchived) {
                 const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
+                const alarmDatapoints = await this.getUnifiObjectsLibIds('alarms');
 
                 for (const alarm in existingAlarms) {
                     const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
 
                     if (!siteData.find(item => item._id === alarmId)) {
-                        let alarmChannelId = `${this.namespace}.${site}.alarms.alarm_${alarmId}`;
-
                         this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
 
-                        // alarm id not exist in api request result -> get dps and delete them
-                        const dpsOfAlarmId = await this.getForeignObjectsAsync(`${alarmChannelId}.*`);
+                        for (const dp of alarmDatapoints) {
+                            const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
 
-                        for (const id in dpsOfAlarmId) {
-                            // delete datapoint
-                            await this.delObjectAsync(id);
+                            await this.delObjectAsync(dpId);
 
-                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                            if (this.ownObjects[dpId]) {
                                 // remove from own objects if exist
-                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                                await delete this.ownObjects[dpId];
                             }
-                        }
-
-                        // delete device alarm.client
-                        await this.delObjectAsync(`${alarmChannelId}.client`);
-                        if (this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[`${alarmChannelId}.client`.replace(`${this.namespace}.`, '')];
-                        }
-
-                        // delete device alarm.device
-                        await this.delObjectAsync(`${alarmChannelId}.device`);
-                        if (this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[`${alarmChannelId}.device`.replace(`${this.namespace}.`, '')];
-                        }
-
-                        // delete alarm channel
-                        await this.delObjectAsync(`${alarmChannelId}`);
-                        if (this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[alarmChannelId.replace(`${this.namespace}.`, '')];
                         }
                     }
                 }
@@ -1209,6 +1185,36 @@ class Unifi extends utils.Adapter {
             _rule,
             data
         );
+    }
+
+    /**
+     * @param {String} libName 
+     */
+    async getUnifiObjectsLibIds(libName) {
+        const objects = require(`./admin/lib/objects_${libName}.json`);
+
+        let idList = [];
+        await this.extractsIds(objects, idList, libName);
+
+        return idList.reverse();
+    }
+
+    /**
+     * @param {Object} obj
+     * @param {Array} idList
+     */
+    async extractsIds(obj, idList, libName) {
+        for (const [id, value] of Object.entries(obj)) {
+            if (value && value.type === 'state') {
+                idList.push(id);
+            } else if (value && value.type === 'channel' || value.type === 'device') {
+                if (id !== libName) {
+                    // ignore root id
+                    idList.push(id);
+                }
+                this.extractsIds(value.logic.has, idList, libName);
+            }
+        };
     }
 }
 
