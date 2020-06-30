@@ -717,23 +717,33 @@ class Unifi extends utils.Adapter {
                 });
 
                 const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
-                const voucherDatapoints = await this.getUnifiObjectsLibIds('vouchers');
 
                 for (const voucher in existingVouchers) {
                     const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
 
-                    if (!siteData.find(item => item._id === voucherId)) {
+                    if (!siteData.find(item => item.code === voucherId)) {
+                        const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
+
                         this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
 
-                        for (const dp of voucherDatapoints) {
-                            const dpId = `${site}.${dp.replace('.voucher', `.voucher_${voucherId}`)}`;
+                        // voucher id not exist in api request result -> get dps and delete them
+                        const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
 
-                            await this.delObjectAsync(dpId);
+                        for (const id in dpsOfVoucherId) {
+                            // delete datapoint
+                            await this.delObjectAsync(id);
 
-                            if (this.ownObjects[dpId]) {
+                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
                                 // remove from own objects if exist
-                                await delete this.ownObjects[dpId];
+                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
                             }
+                        }
+
+                        // delete voucher channel
+                        await this.delObjectAsync(`${voucherChannelId}`);
+                        if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
                         }
                     }
                 }
@@ -1207,7 +1217,7 @@ class Unifi extends utils.Adapter {
     async getUnifiObjectsLibIds(libName) {
         const objects = require(`./admin/lib/objects_${libName}.json`);
 
-        const idList = [];
+        let idList = [];
         await this.extractsIds(objects, idList, libName);
 
         return idList.reverse();
@@ -1228,7 +1238,7 @@ class Unifi extends utils.Adapter {
                 }
                 this.extractsIds(value.logic.has, idList, libName);
             }
-        }
+        };
     }
 }
 
