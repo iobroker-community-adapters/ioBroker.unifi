@@ -10,7 +10,7 @@
             "has_key": "_self",
             "has": {
                 "vouchers.voucher": {
-                    "type": "device",
+                    "type": "channel",
                     "common": {},
                     "native": {
                         "object_id": "vouchers.voucher"
@@ -19,7 +19,12 @@
                         "_id": {
                             "cleanupForUseAsId": [
                                 {
-                                    "var": "code"
+                                    "cat": [
+                                        "voucher_",
+                                        {
+                                            "var": "code"
+                                        }
+                                    ]
                                 }
                             ]
                         },

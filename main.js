@@ -63,6 +63,7 @@ class Unifi extends utils.Adapter {
         this.update.networks = this.config.updateNetworks;
         this.update.sysinfo = this.config.updateSysinfo;
         this.update.vouchers = this.config.updateVouchers;
+        this.update.vouchersNoUsed = this.config.updateVouchersNoUsed;
         this.update.wlans = this.config.updateWlans;
         this.update.alarms = this.config.updateAlarms;
         this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
@@ -687,7 +688,48 @@ class Unifi extends utils.Adapter {
 
         for (const site of sites) {
             const x = sites.indexOf(site);
-            const siteData = data[x];
+            let siteData = data[x];
+
+            if (this.update.vouchersNoUsed) {
+                // Remove used vouchers
+                siteData = data[x].filter((item) => {
+                    if (item.used === 0) {
+                        return item;
+                    }
+                });
+
+                const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
+
+                for (const voucher in existingVouchers) {
+                    const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
+
+                    if (!siteData.find(item => item.code === voucherId)) {
+                        const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
+
+                        this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
+
+                        // voucher id not exist in api request result -> get dps and delete them
+                        const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
+
+                        for (const id in dpsOfVoucherId) {
+                            // delete datapoint
+                            await this.delObjectAsync(id);
+
+                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                                // remove from own objects if exist
+                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                            }
+                        }
+
+                        // delete voucher channel
+                        await this.delObjectAsync(`${voucherChannelId}`);
+                        if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
+                            // remove from own objects if exist
+                            await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
+                        }
+                    }
+                }
+            }
 
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
@@ -980,13 +1022,13 @@ class Unifi extends utils.Adapter {
      * @param {Object} site
      */
     async createVouchers(site) {
-        const minutes = this.vouchers.duration;
-        const count = this.vouchers.number;
-        const quota = this.vouchers.quota;
-        const note = this.vouchers.note;
-        const up = this.vouchers.uploadLimit;
-        const down = this.vouchers.downloadLimit;
-        const mbytes = this.vouchers.byteQuota;
+        const minutes = this.vouchers.duration || 60;
+        const count = this.vouchers.number || 1;
+        const quota = this.vouchers.quota || 1;
+        const note = this.vouchers.note || '';
+        const up = this.vouchers.uploadLimit || 0;
+        const down = this.vouchers.downloadLimit || 0;
+        const mbytes = this.vouchers.byteQuota || 0;
 
         return new Promise((resolve, reject) => {
             const cb = async (err, data) => {
