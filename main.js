@@ -188,7 +188,7 @@ class Unifi extends utils.Adapter {
         } else if (err.message.includes('Returned data is not in valid format')) {
             this.log.error(err.message);
         } else {
-            this.log.error(err.name + ': ' + err.message);
+            this.log.error(`error: ${err.message}, stack: ${err.stack}`);
 
             if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
                 const sentryInstance = this.getPluginInstance('sentry');
