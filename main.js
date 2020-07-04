@@ -325,7 +325,6 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchSites: Returned data is not in valid format'));
                 } else {
                     const sites = data.map((s) => { return s.name; });
-
                     this.log.debug('fetchSites: ' + sites);
 
                     await this.processSites(sites, data);
@@ -348,6 +347,8 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
+            this.log.silly(`processSites: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             await this.applyJsonLogic('', siteData, objects, ['site']);
         }
     }
@@ -365,6 +366,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchSiteSysinfo: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchSiteSysinfo: ' + data.length);
+                    this.log.silly(`fetchSiteSysinfo: ${JSON.stringify(data)}`);
 
                     await this.processSiteSysinfo(sites, data);
 
@@ -386,6 +388,8 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             const siteData = data[x];
 
+            this.log.silly(`processSiteSysinfo: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.sysinfo);
         }
     }
@@ -403,6 +407,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchClients: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchClients: ' + data[0].length);
+                    this.log.silly(`fetchClients: ${JSON.stringify(data)}`);
 
                     await this.processClients(sites, data);
 
@@ -423,6 +428,8 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processClients: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 if (this.objectsFilter.clients.includes(item.mac) !== true &&
@@ -432,6 +439,8 @@ class Unifi extends utils.Adapter {
                     return item;
                 }
             });
+
+            this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
@@ -501,6 +510,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchDevices: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchDevices: ' + data[0].length);
+                    this.log.silly(`fetchDevices: ${JSON.stringify(data)}`);
 
                     await this.processDevices(sites, data);
 
@@ -521,6 +531,8 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processDevices: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 if (this.objectsFilter.devices.includes(item.mac) !== true &&
@@ -529,6 +541,8 @@ class Unifi extends utils.Adapter {
                     return item;
                 }
             });
+
+            this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
@@ -549,6 +563,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchWlans: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchWlans: ' + data[0].length);
+                    this.log.silly(`fetchWlans: ${JSON.stringify(data)}`);
 
                     await this.processWlans(sites, data);
 
@@ -569,12 +584,16 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processWlans: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 if (this.objectsFilter.wlans.includes(item.name) !== true) {
                     return item;
                 }
             });
+
+            this.log.silly(`processWlans: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
@@ -595,6 +614,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchNetworks: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchNetworks: ' + data[0].length);
+                    this.log.silly(`fetchNetworks: ${JSON.stringify(data)}`);
 
                     await this.processNetworks(sites, data);
 
@@ -615,12 +635,16 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processNetworks: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 if (this.objectsFilter.networks.includes(item.name) !== true) {
                     return item;
                 }
             });
+
+            this.log.silly(`processNetworks: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
@@ -641,6 +665,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchHealth: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchHealth: ' + data[0].length);
+                    this.log.silly(`fetchHealth: ${JSON.stringify(data)}`);
 
                     await this.processHealth(sites, data);
 
@@ -661,12 +686,16 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processHealth: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 if (this.objectsFilter.health.includes(item.subsystem) !== true) {
                     return item;
                 }
             });
+
+            this.log.silly(`processHealth: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
@@ -687,6 +716,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchVouchers: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchVouchers: ' + data[0].length);
+                    this.log.silly(`fetchVouchers: ${JSON.stringify(data)}`);
 
                     await this.processVouchers(sites, data);
 
@@ -708,6 +738,8 @@ class Unifi extends utils.Adapter {
             const x = sites.indexOf(site);
             let siteData = data[x];
 
+            this.log.silly(`processVouchers: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             if (this.update.vouchersNoUsed) {
                 // Remove used vouchers
                 siteData = data[x].filter((item) => {
@@ -715,6 +747,8 @@ class Unifi extends utils.Adapter {
                         return item;
                     }
                 });
+
+                this.log.silly(`processVouchers: filtered data: ${JSON.stringify(siteData)}`);
 
                 const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
 
@@ -765,7 +799,11 @@ class Unifi extends utils.Adapter {
                 } else if (data === undefined || tools.isArray(data) === false || data[0] === undefined || tools.isArray(data[0]) === false) {
                     reject(new Error('fetchDpi: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
-                    this.log.debug('fetchDpi: ' + data[0].length);
+                    if (data[0] && data[0][0] && data[0][0].by_cat && data[0][0].by_app) {
+                        this.log.debug(`fetchDpi: categories: ${data[0][0].by_cat.length}, apps: ${data[0][0].by_app.length}`);
+                    }
+
+                    this.log.silly(`fetchDpi: ${JSON.stringify(data)}`);
 
                     await this.processDpi(sites, data);
 
@@ -786,6 +824,8 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processDpi: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
@@ -793,6 +833,8 @@ class Unifi extends utils.Adapter {
                 // }
                 return item;
             });
+
+            this.log.silly(`processDpi: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
@@ -814,6 +856,8 @@ class Unifi extends utils.Adapter {
 
             now.setDate(now.getDate() - this.update.gatewayTrafficMaxDays);
             start = now.getTime();
+
+            this.log.silly(`fetchGatewayTraffic: start: ${new Date(start).toLocaleDateString()}, end: ${new Date(end).toLocaleDateString()}`);
         }
 
         return new Promise((resolve, reject) => {
@@ -824,6 +868,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchGatewayTraffic: Returned data is not in valid format. This option is only available for gateways!'));
                 } else {
                     this.log.debug('fetchGatewayTraffic: ' + data[0].length);
+                    this.log.silly(`fetchGatewayTraffic: ${JSON.stringify(data)}`);
 
                     await this.processGatewayTraffic(sites, data);
 
@@ -844,6 +889,8 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processGatewayTraffic: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
@@ -851,6 +898,8 @@ class Unifi extends utils.Adapter {
                 // }
                 return item;
             });
+
+            this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
@@ -871,6 +920,7 @@ class Unifi extends utils.Adapter {
                     reject(new Error('fetchAlarms: Returned data is not in valid format'));
                 } else {
                     this.log.debug('fetchAlarms: ' + data[0].length);
+                    this.log.silly(`fetchAlarms: ${JSON.stringify(data)}`);
 
                     await this.processAlarms(sites, data);
 
@@ -891,6 +941,8 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
+            this.log.silly(`processAlarms: site: ${site}, data: ${JSON.stringify(data[x])}`);
+
             // Process objectsFilter
             const siteData = data[x].filter((item) => {
                 // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
@@ -898,6 +950,8 @@ class Unifi extends utils.Adapter {
                 // }
                 return item;
             });
+
+            this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
 
             if (this.update.alarmsNoArchived) {
                 const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
