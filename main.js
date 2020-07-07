@@ -1271,7 +1271,7 @@ class Unifi extends utils.Adapter {
     async getUnifiObjectsLibIds(libName) {
         const objects = require(`./admin/lib/objects_${libName}.json`);
 
-        let idList = [];
+        const idList = [];
         await this.extractsIds(objects, idList, libName);
 
         return idList.reverse();
@@ -1292,7 +1292,7 @@ class Unifi extends utils.Adapter {
                 }
                 this.extractsIds(value.logic.has, idList, libName);
             }
-        };
+        }
     }
 }
 
