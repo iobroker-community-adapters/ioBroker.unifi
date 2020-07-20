@@ -966,7 +966,9 @@ class Unifi extends utils.Adapter {
                         for (const dp of alarmDatapoints) {
                             const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
 
-                            await this.delObjectAsync(dpId);
+                            if (await this.getObjectAsync(dpId)) {
+                                await this.delObjectAsync(dpId);
+                            }
 
                             if (this.ownObjects[dpId]) {
                                 // remove from own objects if exist
