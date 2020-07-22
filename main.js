@@ -186,6 +186,8 @@ class Unifi extends utils.Adapter {
             this.log.error('Error: Server is busy. There seems to be a problem with the UniFi controller.');
         } else if (err.message.includes('connect ECONNREFUSED') === true) {
             this.log.error('Error: Connection refused. Incorrect IP or port.');
+        } else if (err.message.includes('connect ETIMEDOUT') === true) {
+            this.log.error('Error: Connection timedout.');
         } else if (err.message.includes('read ECONNRESET') === true) {
             this.log.error('Error: Connection was closed by the UniFi controller.');
         } else if (err.message.includes('getaddrinfo EAI_AGAIN') === true) {
