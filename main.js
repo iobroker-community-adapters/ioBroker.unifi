@@ -1115,7 +1115,7 @@ class Unifi extends utils.Adapter {
 
 
             for (const key in objects) {
-                if (statesFilter.length === 0 || statesFilter.includes(key)) {
+                if (statesFilter === undefined || statesFilter.length === 0 || statesFilter.includes(key)) {
                     const obj = {
                         '_id': null,
                         'type': null,
