@@ -120,7 +120,7 @@ class Unifi extends utils.Adapter {
 	 */
     onStateChange(id, state) {
         try {
-            if (typeof state == 'object' && !state.ack) {
+            if (typeof state === 'object' && state !== null && !state.ack) {
                 // The state was changed
                 const idParts = id.split('.');
                 const site = idParts[2];
