@@ -432,26 +432,28 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processClients: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processClients: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                if (this.objectsFilter.clients.includes(item.mac) !== true &&
-                    this.objectsFilter.clients.includes(item.ip) !== true &&
-                    this.objectsFilter.clients.includes(item.name) !== true &&
-                    this.objectsFilter.clients.includes(item.hostname) !== true) {
-                    return item;
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    if (this.objectsFilter.clients.includes(item.mac) !== true &&
+                        this.objectsFilter.clients.includes(item.ip) !== true &&
+                        this.objectsFilter.clients.includes(item.name) !== true &&
+                        this.objectsFilter.clients.includes(item.hostname) !== true) {
+                        return item;
+                    }
+                });
+
+                this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
                 }
-            });
 
-            this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+                // Update is_online of offline clients
+                await this.setClientOnlineStatus();
             }
-
-            // Update is_online of offline clients
-            await this.setClientOnlineStatus();
         }
     }
 
@@ -535,21 +537,23 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processDevices: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processDevices: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                if (this.objectsFilter.devices.includes(item.mac) !== true &&
-                    this.objectsFilter.devices.includes(item.ip) !== true &&
-                    this.objectsFilter.devices.includes(item.name) !== true) {
-                    return item;
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    if (this.objectsFilter.devices.includes(item.mac) !== true &&
+                        this.objectsFilter.devices.includes(item.ip) !== true &&
+                        this.objectsFilter.devices.includes(item.name) !== true) {
+                        return item;
+                    }
+                });
+
+                this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
                 }
-            });
-
-            this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
             }
         }
     }
@@ -588,19 +592,21 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processWlans: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processWlans: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                if (this.objectsFilter.wlans.includes(item.name) !== true) {
-                    return item;
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    if (this.objectsFilter.wlans.includes(item.name) !== true) {
+                        return item;
+                    }
+                });
+
+                this.log.silly(`processWlans: filtered data: ${JSON.stringify(siteData)}`);
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
                 }
-            });
-
-            this.log.silly(`processWlans: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
             }
         }
     }
@@ -639,19 +645,21 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processNetworks: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processNetworks: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                if (this.objectsFilter.networks.includes(item.name) !== true) {
-                    return item;
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    if (this.objectsFilter.networks.includes(item.name) !== true) {
+                        return item;
+                    }
+                });
+
+                this.log.silly(`processNetworks: filtered data: ${JSON.stringify(siteData)}`);
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
                 }
-            });
-
-            this.log.silly(`processNetworks: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
             }
         }
     }
@@ -690,19 +698,21 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processHealth: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processHealth: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                if (this.objectsFilter.health.includes(item.subsystem) !== true) {
-                    return item;
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    if (this.objectsFilter.health.includes(item.subsystem) !== true) {
+                        return item;
+                    }
+                });
+
+                this.log.silly(`processHealth: filtered data: ${JSON.stringify(siteData)}`);
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
                 }
-            });
-
-            this.log.silly(`processHealth: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
             }
         }
     }
@@ -740,54 +750,57 @@ class Unifi extends utils.Adapter {
 
         for (const site of sites) {
             const x = sites.indexOf(site);
-            let siteData = data[x];
 
-            this.log.silly(`processVouchers: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                let siteData = data[x];
 
-            if (this.update.vouchersNoUsed) {
-                // Remove used vouchers
-                siteData = data[x].filter((item) => {
-                    if (item.used === 0) {
-                        return item;
-                    }
-                });
+                this.log.silly(`processVouchers: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-                this.log.silly(`processVouchers: filtered data: ${JSON.stringify(siteData)}`);
-
-                const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
-
-                for (const voucher in existingVouchers) {
-                    const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
-
-                    if (!siteData.find(item => item.code === voucherId)) {
-                        const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
-
-                        this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
-
-                        // voucher id not exist in api request result -> get dps and delete them
-                        const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
-
-                        for (const id in dpsOfVoucherId) {
-                            // delete datapoint
-                            await this.delObjectAsync(id);
-
-                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
-                                // remove from own objects if exist
-                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
-                            }
+                if (this.update.vouchersNoUsed) {
+                    // Remove used vouchers
+                    siteData = data[x].filter((item) => {
+                        if (item.used === 0) {
+                            return item;
                         }
+                    });
 
-                        // delete voucher channel
-                        await this.delObjectAsync(`${voucherChannelId}`);
-                        if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
+                    this.log.silly(`processVouchers: filtered data: ${JSON.stringify(siteData)}`);
+
+                    const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
+
+                    for (const voucher in existingVouchers) {
+                        const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
+
+                        if (!siteData.find(item => item.code === voucherId)) {
+                            const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
+
+                            this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
+
+                            // voucher id not exist in api request result -> get dps and delete them
+                            const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
+
+                            for (const id in dpsOfVoucherId) {
+                                // delete datapoint
+                                await this.delObjectAsync(id);
+
+                                if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
+                                    // remove from own objects if exist
+                                    await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
+                                }
+                            }
+
+                            // delete voucher channel
+                            await this.delObjectAsync(`${voucherChannelId}`);
+                            if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
+                                // remove from own objects if exist
+                                await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
+                            }
                         }
                     }
                 }
-            }
 
-            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
+            }
         }
     }
 
@@ -828,20 +841,22 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processDpi: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processDpi: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                    //     return item;
+                    // }
+                    return item;
+                });
 
-            this.log.silly(`processDpi: filtered data: ${JSON.stringify(siteData)}`);
+                this.log.silly(`processDpi: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
+                }
             }
         }
     }
@@ -893,20 +908,22 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processGatewayTraffic: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processGatewayTraffic: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                    //     return item;
+                    // }
+                    return item;
+                });
 
-            this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
+                this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
+                }
             }
         }
     }
@@ -945,46 +962,48 @@ class Unifi extends utils.Adapter {
         for (const site of sites) {
             const x = sites.indexOf(site);
 
-            this.log.silly(`processAlarms: site: ${site}, data: ${JSON.stringify(data[x])}`);
+            if (x != -1 && data[x]) {
+                this.log.silly(`processAlarms: site: ${site}, data: ${JSON.stringify(data[x])}`);
 
-            // Process objectsFilter
-            const siteData = data[x].filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+                // Process objectsFilter
+                const siteData = data[x].filter((item) => {
+                    // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
+                    //     return item;
+                    // }
+                    return item;
+                });
 
-            this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
+                this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (this.update.alarmsNoArchived) {
-                const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
-                const alarmDatapoints = await this.getUnifiObjectsLibIds('alarms');
+                if (this.update.alarmsNoArchived) {
+                    const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
+                    const alarmDatapoints = await this.getUnifiObjectsLibIds('alarms');
 
-                for (const alarm in existingAlarms) {
-                    const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
+                    for (const alarm in existingAlarms) {
+                        const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
 
-                    if (!siteData.find(item => item._id === alarmId)) {
-                        this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
+                        if (!siteData.find(item => item._id === alarmId)) {
+                            this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
 
-                        for (const dp of alarmDatapoints) {
-                            const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
+                            for (const dp of alarmDatapoints) {
+                                const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
 
-                            if (await this.getObjectAsync(dpId)) {
-                                await this.delObjectAsync(dpId);
-                            }
+                                if (await this.getObjectAsync(dpId)) {
+                                    await this.delObjectAsync(dpId);
+                                }
 
-                            if (this.ownObjects[dpId]) {
-                                // remove from own objects if exist
-                                await delete this.ownObjects[dpId];
+                                if (this.ownObjects[dpId]) {
+                                    // remove from own objects if exist
+                                    await delete this.ownObjects[dpId];
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
+                }
             }
         }
     }
