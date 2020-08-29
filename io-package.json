@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.7",
+        "version": "0.5.8",
         "news": {
+            "0.5.8": {
+                "en": "* (braindead1) Fixed problems related to unused sites\r\n* (braindead1) Fixed some errors reported via Sentry",
+                "de": "* (braindead1) Probleme im Zusammenhang mit nicht verwendeten Sites wurden behoben\r\n* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
+                "ru": "* (braindead1) Исправлены проблемы, связанные с неиспользуемыми сайтами\r\n* (braindead1) Исправлены некоторые ошибки, о которых сообщалось через Sentry.",
+                "pt": "* (braindead1) Corrigido problemas relacionados a sites não utilizados\r\n* (braindead1) Corrigidos alguns erros relatados via Sentry",
+                "nl": "* (braindead1) Problemen opgelost met betrekking tot ongebruikte sites\r\n* (braindead1) Enkele fouten verholpen die via Sentry werden gerapporteerd",
+                "fr": "* (braindead1) Correction de problèmes liés aux sites inutilisés\r\n* (braindead1) Correction de certaines erreurs signalées via Sentry",
+                "it": "* (braindead1) Risolti i problemi relativi ai siti inutilizzati\r\n* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
+                "es": "* (braindead1) Se corrigieron problemas relacionados con sitios no utilizados\r\n* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
+                "pl": "* (braindead1) Naprawiono problemy związane z nieużywanymi witrynami\r\n* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
+                "zh-cn": "*（braindead1）修复了与未使用站点有关的问题\r\n*（braindead1）修复了通过哨兵报告的一些错误"
+            },
             "0.5.7": {
                 "en": "* (braindead1) Fixed Sentry errors caused by not updated configuration after update",
                 "de": "* (braindead1) Sentry-Fehler wurden behoben, die durch nicht aktualisierte Konfiguration nach dem Update verursacht wurden",
