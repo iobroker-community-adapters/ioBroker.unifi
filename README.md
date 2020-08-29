@@ -10,8 +10,8 @@ This ioBroker adapter allows the monitoring and limited controlling of [UniFi de
 ## Configuration
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
-* IP address and port of your UniFi controller
-* Username and password
+* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UbiOS (e.g. UDM Pro))
+* Username and password (2FA is not supported)
 * Update interval
 
 By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is not recommended to further decrease the interval.
