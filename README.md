@@ -71,6 +71,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 * The is_wired state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller and is not related to the adapter. (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1)
 
 ## Changelog
+### __WORK IN PROGRESS__
+* (braindead1) Fixed problems related to unused sites
+* (braindead1) Fixed some errors reported via Sentry
+
 ### 0.5.7 (2020-07-27)
 * (braindead1) Fixed Sentry errors caused by not updated configuration after update
 
