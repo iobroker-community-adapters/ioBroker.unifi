@@ -63,8 +63,16 @@ function chips2list(selector) {
 function loadHelper(settings, onChange) {
     // example: select elements with id=key and class=value and insert value
     if (!settings) return;
-    if (settings.electricityPollingInterval === undefined) settings.electricityPollingInterval = 20;
 
+    // Update settings < v0.5.3
+    if (Object.prototype.hasOwnProperty.call(settings, 'blacklist')) {
+        settings['objectsFilter'] = settings['blacklist'];
+    }
+    if (Object.prototype.hasOwnProperty.call(settings, 'whitelist')) {
+        settings['statesFilter'] = settings['whitelist'];
+    }
+
+    // Update fields
     $('.value').each(function () {
         const $key = $(this);
         const id = $key.attr('id');
@@ -128,7 +136,7 @@ function save(callback) {
             obj[id] = $this.prop('checked');
         } else {
             let value = $this.val();
-            
+
             value = value.trim();
 
             if (id === 'controllerPassword') {
@@ -139,16 +147,16 @@ function save(callback) {
         }
     });
 
-    // Process blacklists
-    obj.blacklist = {};
+    // Process objectsFilter
+    obj.objectsFilter = {};
     $('[id*=chips_]').each(function () {
         const settingsName = $(this).attr('id').replace('chips_', '');
 
-        obj.blacklist[settingsName] = chips2list(`#chips_${settingsName}`);
+        obj.objectsFilter[settingsName] = chips2list(`#chips_${settingsName}`);
     });
 
-    //Process whitelists
-    obj.whitelist = {};
+    //Process statesFilter
+    obj.statesFilter = {};
     $('[id*=tree_]').each(function () {
         // store selected nodes of tree
         const settingsName = $(this).attr('id').replace('tree_', '');
@@ -176,8 +184,12 @@ function save(callback) {
             }
         }
 
-        obj.whitelist[settingsName] = retVal;
+        obj.statesFilter[settingsName] = retVal;
     });
+
+    // Delete settings < v0.5.3
+    obj.blacklist = undefined;
+    obj.whitelist = undefined;
 
     callback(obj);
 }
@@ -189,9 +201,9 @@ function save(callback) {
  * @param {*} onChange 
  */
 async function createChips(settings, onChange) {
-    for (const key of Object.keys(settings.blacklist)) {
+    for (const key of Object.keys(settings.objectsFilter)) {
         try {
-            list2chips(`#chips_${key}`, settings.blacklist[key], onChange);
+            list2chips(`#chips_${key}`, settings.objectsFilter[key], onChange);
             M.updateTextFields();  // function Materialize.updateTextFields(); to reinitialize all the Materialize labels on the page if you are dynamically adding inputs.
         } catch (err) {
             console.error(`[createTreeViews] key: ${key} error: ${err.message}, stack: ${err.stack}`);
@@ -204,7 +216,8 @@ async function createChips(settings, onChange) {
  * @param {*} onChange 
  */
 async function createTreeViews(settings, onChange) {
-    for (const key of Object.keys(settings.whitelist)) {
+    for (const key of Object.keys(settings.statesFilter)) {
+
         try {
             // get json data from file
             const obj = await getUnifiObjects(key);
@@ -248,7 +261,6 @@ async function createTreeViews(settings, onChange) {
                 //     }
                 // },
                 click: function (event, data) {
-                    console.log(data);
                     if (data.targetType === 'title' && !data.node.folder) {
                         data.node.setSelected(!data.node.isSelected());
                     }
@@ -257,6 +269,31 @@ async function createTreeViews(settings, onChange) {
                     tree
                 ],
                 select: function (event, data) {
+                    if (key === 'clients') {
+                        var isOnlineNode = $.map(data.tree.getSelectedNodes(), function (node) {
+                            if (node.data.id === 'clients.client.is_online') {
+                                return node;
+                            }
+                        });
+
+                        var nodeLastSeenByUap = data.tree.getNodeByKey('clients.client.last_seen_by_uap');
+                        var nodeLastSeenByUsw = data.tree.getNodeByKey('clients.client.last_seen_by_usw');
+
+                        if (isOnlineNode && isOnlineNode.length === 1) {
+                            // is_online is selected 
+                            nodeLastSeenByUap.setSelected(true);
+                            nodeLastSeenByUap.unselectable = true;
+                            nodeLastSeenByUsw.setSelected(true);
+                            nodeLastSeenByUsw.unselectable = true;
+                        } else {
+                            nodeLastSeenByUap.unselectable = false;
+                            nodeLastSeenByUsw.unselectable = false;
+                        }
+
+                        nodeLastSeenByUap.applyPatch(nodeLastSeenByUap);
+                        nodeLastSeenByUsw.applyPatch(nodeLastSeenByUsw);
+                    }
+
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
                     // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
                     //     if (node.children === null) {
@@ -291,15 +328,27 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
             const title = value.common.name ? `${idReadable} | ${_(value.common.name)}` : `${idReadable}`;
 
             if (value && value.type === 'state') {
-                if (settings.whitelist[name] && settings.whitelist[name].includes(id)) {
-                    tree.children.push({
-                        title: title,
-                        id: id,
-                        selected: true
-                    });
+                if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
+                    if ((id === 'clients.client.last_seen_by_uap' || id === 'clients.client.last_seen_by_usw') && settings.statesFilter[name].includes('clients.client.is_online')) {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true,
+                            unselectable: true
+                        });
+                    } else {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true
+                        });
+                    }
                 } else {
                     tree.children.push({
                         title: title,
+                        key: id,
                         id: id
                     });
                 }

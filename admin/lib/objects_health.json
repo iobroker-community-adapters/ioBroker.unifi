@@ -16,7 +16,13 @@
                         "object_id": "health.subsystem"
                     },
                     "logic": {
-                        "_id": "subsystem",
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "subsystem"
+                                }
+                            ]
+                        },
                         "common": {
                             "name": "subsystem"
                         },
@@ -235,6 +241,33 @@
                                     "value": "num_user"
                                 }
                             },
+                            "health.subsystem.rx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX Bytes R",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.rx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_bytes-r"
+                                            },
+                                            "rx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": "rx_bytes-r"
+                                }
+                            },
                             "health.subsystem.status": {
                                 "_id": "status",
                                 "type": "state",
@@ -269,6 +302,33 @@
                                 },
                                 "logic": {
                                     "value": "subsystem"
+                                }
+                            },
+                            "health.subsystem.tx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX Bytes R",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.tx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "tx_bytes-r"
+                                            },
+                                            "tx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": "tx_bytes-r"
                                 }
                             },
                             "health.subsystem.uptime": {
@@ -322,6 +382,60 @@
                                         ]
                                     },
                                     "value": "wan_ip"
+                                }
+                            },
+                            "health.subsystem.xput_down": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Download speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_down"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_down"
+                                            },
+                                            "xput_down",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_down"
+                                }
+                            },
+                            "health.subsystem.xput_up": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Upload speed",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "health.subsystem.xput_up"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "xput_up"
+                                            },
+                                            "xput_up",
+                                            null
+                                        ]
+                                    },
+                                    "value": "xput_up"
                                 }
                             }
                         }

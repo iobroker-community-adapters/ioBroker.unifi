@@ -10,18 +10,18 @@ This ioBroker adapter allows the monitoring and limited controlling of [UniFi de
 ## Configuration
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
-* IP address and port of your UniFi controller
-* Username and password
+* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UbiOS (e.g. UDM Pro))
+* Username and password (2FA is not supported)
 * Update interval
 
 By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is not recommended to further decrease the interval.
 
-### Blacklists
+### Filter objects
 The adapter updates as much information from your UniFi controller as possible, but offers the possibility to limit the updated information.
 
-It is possible to disable the update of selected information or blacklist specific items of that information.
+It is possible to disable the update of selected information or filter specific objects of that information.
 
-| Information | Items blacklistable by                  |
+| Information | Objects filterable by                   |
 |-------------|-----------------------------------------|
 | Clients     | Name, Hostname, IP address, MAC address |
 | Devices     | Name, IP address, MAC address           |
@@ -49,9 +49,58 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | Networks    | https://IP:PORT/api/s/SITE/rest/networkconf |
 | Health      | https://IP:PORT/api/s/SITE/stat/health      |
 | Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
+| DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
+| Alarms      | https://IP:PORT/api/s/SITE/stat/alarm       |
+
+### UbiOS endpoints
+
+| Information | API URL                                              |
+|-------------|------------------------------------------------------|
+| Sites       | https://IP/proxy/network/api/self/sites              |
+| SysInfo     | https://IP/proxy/network/api/s/SITE/stat/sysinfo     |
+| Clients     | https://IP/proxy/network/api/s/SITE/stat/sta         |
+| Devices     | https://IP/proxy/network/api/s/SITE/stat/device      |
+| WLANs       | https://IP/proxy/network/api/s/SITE/rest/wlanconf    |
+| Networks    | https://IP/proxy/network/api/s/SITE/rest/networkconf |
+| Health      | https://IP/proxy/network/api/s/SITE/stat/health      |
+| Vouchers    | https://IP/proxy/network/api/s/SITE/stat/voucher     |
+| DPI         | https://IP/proxy/network/api/s/SITE/stat/dpi         |
+| Alarms      | https://IP/proxy/network/api/s/SITE/stat/alarm       |
+
+## Known issues
+* The is_wired state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller and is not related to the adapter. (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1)
 
 ## Changelog
-### __WORK IN PROGRESS__
+<!--
+    Placeholder for the next version (at the beginning of the line):
+    ## __WORK IN PROGRESS__
+-->
+## __WORK IN PROGRESS__
+
+### 0.5.8 (2020-08-29)
+* (braindead1) Fixed problems related to unused sites
+* (braindead1) Fixed some errors reported via Sentry
+
+### 0.5.7 (2020-07-27)
+* (braindead1) Fixed Sentry errors caused by not updated configuration after update
+
+### 0.5.6 (2020-07-25)
+* (Scrounger, braindead1) Implemented Alarms, DPI & Gateway Traffic
+* (braindead1) Prevented creation of ghost clients caused by iOS MAC randomization
+* (dklinger) Implemented manual update trigger
+* (braindead1) Implemented deletion of used vouchers
+* (braindead1) Fixed some errors reported via Sentry
+
+### 0.5.5 (2020-06-13)
+* (braindead1) Fixed some errors reported via Sentry
+
+### 0.5.4 (2020-06-06)
+* (braindead1) Implemented offset for is_online
+* (braindead1) Fixed some issues related to is_online
+* (braindead1) Prepared whitelisting of clients etc.
+
+### 0.5.2 (2020-05-23)
+* (jens-maus) Implemented UniFiOS/UDM-Pro support
 * (braindead1) Implemented possibility to enable/disable WLANs
 * (braindead1) Implemented voucher creation
 * (braindead1) Implemented online state for clients

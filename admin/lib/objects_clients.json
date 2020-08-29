@@ -17,10 +17,18 @@
                     },
                     "logic": {
                         "_id": {
-                            "cat": [
+                            "ifNotNull": [
                                 {
-                                    "var": "mac"
-                                }
+                                    "var": "ip"
+                                },
+                                {
+                                    "cleanupForUseAsId": [
+                                        {
+                                            "var": "mac"
+                                        }
+                                    ]
+                                },
+                                null
                             ]
                         },
                         "common": {
@@ -312,7 +320,8 @@
                                     "role": "state",
                                     "read": true,
                                     "write": false,
-                                    "desc": ""
+                                    "desc": "",
+                                    "def": true
                                 },
                                 "native": {
                                     "object_id": "clients.client.is_online"

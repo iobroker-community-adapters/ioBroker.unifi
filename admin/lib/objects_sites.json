@@ -6,7 +6,13 @@
             "object_id": "site"
         },
         "logic": {
-            "_id": "name"
+            "_id": {
+                "cleanupForUseAsId": [
+                    {
+                        "var": "name"
+                    }
+                ]
+            }
         }
     }
 }

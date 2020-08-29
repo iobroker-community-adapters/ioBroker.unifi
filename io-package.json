@@ -1,8 +1,80 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.0",
+        "version": "0.5.8",
         "news": {
+            "0.5.8": {
+                "en": "* (braindead1) Fixed problems related to unused sites\r\n* (braindead1) Fixed some errors reported via Sentry",
+                "de": "* (braindead1) Probleme im Zusammenhang mit nicht verwendeten Sites wurden behoben\r\n* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
+                "ru": "* (braindead1) Исправлены проблемы, связанные с неиспользуемыми сайтами\r\n* (braindead1) Исправлены некоторые ошибки, о которых сообщалось через Sentry.",
+                "pt": "* (braindead1) Corrigido problemas relacionados a sites não utilizados\r\n* (braindead1) Corrigidos alguns erros relatados via Sentry",
+                "nl": "* (braindead1) Problemen opgelost met betrekking tot ongebruikte sites\r\n* (braindead1) Enkele fouten verholpen die via Sentry werden gerapporteerd",
+                "fr": "* (braindead1) Correction de problèmes liés aux sites inutilisés\r\n* (braindead1) Correction de certaines erreurs signalées via Sentry",
+                "it": "* (braindead1) Risolti i problemi relativi ai siti inutilizzati\r\n* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
+                "es": "* (braindead1) Se corrigieron problemas relacionados con sitios no utilizados\r\n* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
+                "pl": "* (braindead1) Naprawiono problemy związane z nieużywanymi witrynami\r\n* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
+                "zh-cn": "*（braindead1）修复了与未使用站点有关的问题\r\n*（braindead1）修复了通过哨兵报告的一些错误"
+            },
+            "0.5.7": {
+                "en": "* (braindead1) Fixed Sentry errors caused by not updated configuration after update",
+                "de": "* (braindead1) Sentry-Fehler wurden behoben, die durch nicht aktualisierte Konfiguration nach dem Update verursacht wurden",
+                "ru": "* (braindead1) Исправлены ошибки Sentry, вызванные не обновленной конфигурацией после обновления",
+                "pt": "* (braindead1) Corrigidos erros de sentinela causados por configurações não atualizadas após a atualização",
+                "nl": "* (braindead1) Vaste Sentry-fouten veroorzaakt door niet bijgewerkte configuratie na update",
+                "fr": "* (braindead1) Correction des erreurs Sentry causées par une configuration non mise à jour après la mise à jour",
+                "it": "* (braindead1) Risolti errori Sentry causati da una configurazione non aggiornata dopo l'aggiornamento",
+                "es": "* (braindead1) Se corrigieron los errores de Centinela causados por la configuración no actualizada después de la actualización",
+                "pl": "* (braindead1) Naprawiono błędy Sentry spowodowane niezaktualizowaną konfiguracją po aktualizacji",
+                "zh-cn": "*（braindead1）修复了更新后未更新配置导致的Sentry错误"
+            },
+            "0.5.6": {
+                "en": "* (Scrounger, braindead1) Implemented Alarms, DPI & Gateway Traffic\r\n* (braindead1) Prevented creation of ghost clients caused by iOS MAC randomization\r\n* (dklinger) Implemented manual update trigger\r\n* (braindead1) Implemented deletion of used vouchers\r\n* (braindead1) Fixed some errors reported via Sentry",
+                "de": "* (Scrounger, braindead1) Implementierte Alarme, DPI- und Gateway-Verkehr\r\n* (braindead1) Verhindert die Erstellung von Ghost-Clients durch iOS MAC-Randomisierung\r\n* (dklinger) Manueller Update-Trigger implementiert\r\n* (braindead1) Löschen gebrauchter Gutscheine implementiert\r\n* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
+                "ru": "* (Scrounger, braindead1) Реализованные сигналы тревоги, DPI и трафик шлюза\r\n* (braindead1) Запрещено создание клиентов-призраков из-за рандомизации iOS MAC\r\n* (dklinger) Реализован ручной запуск обновления\r\n* (braindead1) Реализовано удаление использованных ваучеров\r\n* (braindead1) Исправлены некоторые ошибки, сообщаемые через Sentry",
+                "pt": "* (Scrounger, braindead1) Alarmes implementados, DPI e tráfego de gateway\r\n* (braindead1) Impedida a criação de clientes fantasmas causada pela aleatorização do iOS MAC\r\n* (dklinger) Implementado gatilho de atualização manual\r\n* (braindead1) Exclusão implementada de comprovantes usados\r\n* (braindead1) Corrigidos alguns erros relatados via Sentry",
+                "nl": "* (Scrounger, braindead1) Geïmplementeerde alarmen, DPI en gateway-verkeer\r\n* (braindead1) Voorkom het maken van ghost-clients veroorzaakt door iOS MAC-randomisatie\r\n* (dklinger) Handmatige trigger voor handmatige update geïmplementeerd\r\n* (braindead1) Geïmplementeerde verwijdering van gebruikte vouchers\r\n* (braindead1) Enkele fouten opgelost die via Sentry zijn gemeld",
+                "fr": "* (Scrounger, braindead1) Alarmes implémentées, DPI et trafic de passerelle\r\n* (braindead1) Création de clients fantômes empêchée par la randomisation MAC iOS\r\n* (dklinger) Implémentation du déclencheur de mise à jour manuelle\r\n* (braindead1) Mise en œuvre de la suppression des bons utilisés\r\n* (braindead1) Correction de certaines erreurs signalées via Sentry",
+                "it": "* (Scrounger, braindead1) Allarmi implementati, DPI e traffico gateway\r\n* (braindead1) Ha impedito la creazione di client fantasma a causa della randomizzazione MAC iOS\r\n* (dklinger) Attivato trigger di aggiornamento manuale\r\n* (braindead1) Eliminazione implementata dei voucher usati\r\n* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
+                "es": "* (Scrounger, braindead1) Alarmas implementadas, DPI y tráfico de puerta de enlace\r\n* (braindead1) Creación evitada de clientes fantasma causada por la aleatorización MAC de iOS\r\n* (dklinger) Implementado activador de actualización manual\r\n* (braindead1) Eliminación implementada de comprobantes usados\r\n* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
+                "pl": "* (Scrounger, braindead1) Zaimplementowane alarmy, DPI i ruch bramy\r\n* (braindead1) Zapobiegnięto tworzeniu klientów-widm z powodu randomizacji MAC systemu iOS\r\n* (dklinger) Zaimplementowano wyzwalacz ręcznej aktualizacji\r\n* (braindead1) Wdrożono usuwanie używanych voucherów\r\n* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
+                "zh-cn": "*（Scrounger，braindead1）已实施的警报，DPI和网关流量\r\n*（braindead1）防止了由iOS MAC随机化导致的虚幻客户端的创建\r\n*（dklinger）实施了手动更新触发器\r\n*（braindead1）已实施已用凭证的删除\r\n*（braindead1）修复了通过哨兵报告的一些错误"
+            },
+            "0.5.5": {
+                "en": "* (braindead1) Fixed some errors reported via Sentry",
+                "de": "* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
+                "ru": "* (braindead1) Исправлены некоторые ошибки, сообщаемые через Sentry",
+                "pt": "* (braindead1) Corrigidos alguns erros relatados via Sentry",
+                "nl": "* (braindead1) Enkele fouten opgelost die via Sentry zijn gemeld",
+                "fr": "* (braindead1) Correction de certaines erreurs signalées via Sentry",
+                "it": "* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
+                "es": "* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
+                "pl": "* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
+                "zh-cn": "*（braindead1）修复了通过哨兵报告的一些错误"
+            },
+            "0.5.4": {
+                "en": "* (braindead1) Implemented offset for is_online\r\n* (braindead1) Fixed some issues related to is_online\r\n* (braindead1) Prepared whitelisting of clients etc.",
+                "de": "* (braindead1) Offset für is_online implementiert\r\n* (braindead1) Einige Probleme im Zusammenhang mit is_online wurden behoben\r\n* (braindead1) Vorbereitete Whitelist von Clients usw.",
+                "ru": "* (braindead1) Реализованное смещение для is_online\r\n* (braindead1) Исправлены некоторые проблемы, связанные с is_online\r\n* (braindead1) Подготовлен белый список клиентов и т. д.",
+                "pt": "* (braindead1) Deslocamento implementado para is_online\r\n* (braindead1) Corrigidos alguns problemas relacionados a is_online\r\n* (braindead1) Lista de permissões preparada de clientes etc.",
+                "nl": "* (braindead1) Geïmplementeerde offset voor is_online\r\n* (braindead1) Enkele problemen opgelost met betrekking tot is_online\r\n* (braindead1) Opgestelde whitelisting van klanten etc.",
+                "fr": "* (braindead1) Décalage implémenté pour is_online\r\n* (braindead1) Correction de certains problèmes liés à is_online\r\n* (braindead1) Préparation de la liste blanche des clients, etc.",
+                "it": "* (braindead1) Offset implementato per is_online\r\n* (braindead1) Risolti alcuni problemi relativi a is_online\r\n* (braindead1) Lista bianca preparata per clienti ecc.",
+                "es": "* (braindead1) Desplazamiento implementado para is_online\r\n* (braindead1) Se corrigieron algunos problemas relacionados con is_online\r\n* (braindead1) Lista blanca preparada de clientes, etc.",
+                "pl": "* (braindead1) Zaimplementowano przesunięcie dla is_online\r\n* (braindead1) Naprawiono niektóre problemy związane z is_online\r\n* (braindead1) Przygotowano białą listę klientów itp.",
+                "zh-cn": "*（braindead1）为is_online实现的偏移量\r\n*（braindead1）修复了与is_online相关的一些问题\r\n*（braindead1）准备客户的白名单等"
+            },
+            "0.5.2": {
+                "en": "* (jens-maus) Implemented UniFiOS/UDM-Pro support\r\n* (braindead1) Implemented possibility to enable/disable WLANs\r\n* (braindead1) Implemented voucher creation\r\n* (braindead1) Implemented online state for clients\r\n* (braindead1) Updated client states\r\n* (braindead1) Updated device states\r\n* (braindead1) Improved error messages",
+                "de": "* (jens-maus) UniFiOS / UDM-Pro-Unterstützung implementiert\r\n* (braindead1) Möglichkeit zum Aktivieren / Deaktivieren von WLANs implementiert\r\n* (braindead1) Die Erstellung von Gutscheinen wurde implementiert\r\n* (braindead1) Implementierter Online-Status für Clients\r\n* (braindead1) Aktualisierte Client-Status\r\n* (braindead1) Aktualisierte Gerätezustände\r\n* (braindead1) Verbesserte Fehlermeldungen",
+                "ru": "* (jens-maus) Реализована поддержка UniFiOS / UDM-Pro\r\n* (braindead1) Реализована возможность включения / отключения WLAN\r\n* (braindead1) Реализовано создание ваучеров\r\n* (braindead1) Реализовано онлайн состояние для клиентов\r\n* (braindead1) Обновлены состояния клиентов\r\n* (braindead1) Обновлены состояния устройства\r\n* (braindead1) Улучшены сообщения об ошибках",
+                "pt": "* (jens-maus) Implementado suporte a UniFiOS / UDM-Pro\r\n* (braindead1) Possibilidade implementada para ativar / desativar WLANs\r\n* (braindead1) Criação de comprovante implementada\r\n* (braindead1) Estado online implementado para clientes\r\n* (braindead1) Estados do cliente atualizados\r\n* (braindead1) Estados atualizados do dispositivo\r\n* (braindead1) Mensagens de erro aprimoradas",
+                "nl": "* (jens-maus) Implementatie van UniFiOS / UDM-Pro-ondersteuning\r\n* (braindead1) Geïmplementeerde mogelijkheid om WLAN's in / uit te schakelen\r\n* (braindead1) Implementatie van vouchers geïmplementeerd\r\n* (braindead1) Implementatie van online status voor klanten\r\n* (braindead1) Bijgewerkte klantstatussen\r\n* (braindead1) Bijgewerkte apparaatstatussen\r\n* (braindead1) Verbeterde foutmeldingen",
+                "fr": "* (jens-maus) Prise en charge UniFiOS / UDM-Pro implémentée\r\n* (braindead1) Possibilité implémentée d'activer / désactiver les WLAN\r\n* (braindead1) Création de bons de réduction implémentée\r\n* (braindead1) État en ligne implémenté pour les clients\r\n* (braindead1) États client mis à jour\r\n* (braindead1) États de l'appareil mis à jour\r\n* (braindead1) Amélioration des messages d'erreur",
+                "it": "* (jens-maus) Implementato il supporto UniFiOS / UDM-Pro\r\n* (braindead1) Possibilità implementata per abilitare / disabilitare le WLAN\r\n* (braindead1) Creazione del voucher implementata\r\n* (braindead1) Stato online implementato per i client\r\n* (braindead1) Stati client aggiornati\r\n* (braindead1) Stati aggiornati del dispositivo\r\n* (braindead1) Messaggi di errore migliorati",
+                "es": "* (jens-maus) Implementado soporte UniFiOS / UDM-Pro\r\n* (braindead1) Posibilidad implementada para habilitar / deshabilitar WLAN\r\n* (braindead1) Implementación de creación de cupones\r\n* (braindead1) Estado en línea implementado para clientes\r\n* (braindead1) Estados de cliente actualizados\r\n* (braindead1) Estados actualizados del dispositivo\r\n* (braindead1) Mensajes de error mejorados",
+                "pl": "* (jens-maus) Wdrożono obsługę UniFiOS / UDM-Pro\r\n* (braindead1) Wdrożona możliwość włączania / wyłączania sieci WLAN\r\n* (braindead1) Zaimplementowano tworzenie kuponów\r\n* (braindead1) Zaimplementowano stan online dla klientów\r\n* (braindead1) Zaktualizowano stany klienta\r\n* (braindead1) Zaktualizowano stany urządzeń\r\n* (braindead1) Poprawione komunikaty o błędach",
+                "zh-cn": "*（jens-maus）已实现UniFiOS / UDM-Pro支持\r\n*（braindead1）已实现启用/禁用WLAN的可能性\r\n*（braindead1）已创建凭证\r\n*（braindead1）为客户端实现了在线状态\r\n*（braindead1）更新了客户端状态\r\n*（braindead1）更新了设备状态\r\n*（braindead1）改进了错误消息"
+            },
             "0.5.0": {
                 "en": "* (braindead1) Implemented configuration of updates\r\n* (braindead1) Improved JsonLogic\r\n* (braindead1) Removed legacy code\r\n* (braindead1) Implemented Sentry",
                 "de": "* (braindead1) Konfiguration von Updates implementiert\r\n* (braindead1) JsonLogic wurde verbessert\r\n* (braindead1) Legacy-Code entfernt\r\n* (braindead1) Sentry implementiert",
@@ -140,7 +212,7 @@
         "type": "network",
         "compact": true,
         "materialize": true,
-        "supportCustoms": true,
+        "supportCustoms": false,
         "dependencies": [
             {
                 "js-controller": ">=1.4.2"
@@ -159,23 +231,33 @@
         "updateNetworks": true,
         "updateSysinfo": true,
         "updateVouchers": true,
+        "updateVouchersNoUsed": false,
         "updateWlans": true,
-        "blacklist": {
+        "updateAlarms": true,
+        "updateAlarmsNoArchived": false,
+        "updateDpi": false,
+        "updateGatewayTraffic": false,
+        "gatewayTrafficMaxDays": 7,
+        "objectsFilter": {
             "clients": [],
             "devices": [],
             "wlans": [],
             "networks": [],
             "health": []
         },
-        "whitelist": {
+        "statesFilter": {
             "sysinfo": [],
             "clients": [],
             "devices": [],
             "wlans": [],
             "networks": [],
             "health": [],
-            "vouchers": []
+            "vouchers": [],
+            "alarms": [],
+            "dpi": [],
+            "gateway_traffic": []
         },
+        "clientsIsOnlineOffset": 30,
         "createVouchersNumber": 1,
         "createVouchersDuration": 60,
         "createVouchersQuota": 1,
@@ -203,6 +285,19 @@
                 "type": "boolean",
                 "read": true,
                 "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "trigger_update",
+            "type": "state",
+            "common": {
+                "name": "Manually trigger an update",
+                "type": "boolean",
+                "role": "button",
+                "read": false,
+                "write": true,
                 "def": false
             },
             "native": {}

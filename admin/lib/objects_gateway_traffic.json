@@ -1,0 +1,139 @@
+{
+    "gateway_traffic": {
+        "_id": "gateway_traffic",
+        "type": "channel",
+        "common": {},
+        "native": {
+            "object_id": "gateway_traffic"
+        },
+        "logic": {
+            "has_key": "_self",
+            "has": {
+                "gateway_traffic.device": {
+                    "type": "device",
+                    "common": {},
+                    "native": {
+                        "object_id": "gateway_traffic.device"
+                    },
+                    "logic": {
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "gw"
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": "gw"
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "gateway_traffic.device.day": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "gateway_traffic.device.day"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "time"
+                                            },
+                                            {
+                                                "timestampDiffInDaysToNow": [
+                                                    "day_",
+                                                    {
+                                                        "var": "time"
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "var": "time"
+                                            }
+                                        ]
+                                    },
+                                    "common": {
+                                        "name": {
+                                            "timestampDiffInDaysToNow": [
+                                                "Day ",
+                                                {
+                                                    "var": "time"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "has_key": "_self",
+                                    "has": {
+                                        "gateway_traffic.device.day.date": {
+                                            "_id": "date",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Date of day",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "gateway_traffic.device.date"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "timestampToDate": [
+                                                        {
+                                                            "var": "time"
+                                                        }
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "gateway_traffic.device.day.sent": {
+                                            "_id": "sent",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Bytes sent",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "gateway_traffic.device.sent"
+                                            },
+                                            "logic": {
+                                                "value": "lan-rx_bytes"
+                                            }
+                                        },
+                                        "gateway_traffic.device.day.received": {
+                                            "_id": "received",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Bytes received",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Byte",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "gateway_traffic.device.received"
+                                            },
+                                            "logic": {
+                                                "value": "lan-tx_bytes"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
