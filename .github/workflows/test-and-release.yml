@@ -104,6 +104,22 @@ jobs:
           npm whoami
           npm publish
 
+      - name: Notify Sentry.io about the release
+        run: |
+          npm i -g @sentry/cli
+          export SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          export SENTRY_URL=https://sentry.iobroker.net
+          export SENTRY_ORG=iobroker
+          export SENTRY_PROJECT=iobroker-alexa2
+          export SENTRY_VERSION=iobroker.alexa2@${{ env.VERSION }}
+          sentry-cli releases new $SENTRY_VERSION
+          sentry-cli releases finalize $SENTRY_VERSION
+        # Add the following line BEFORE finalize if repositories are connected in Sentry
+        # sentry-cli releases set-commits $SENTRY_VERSION --auto
+
+        # Add the following line BEFORE finalize if sourcemap uploads are needed
+        # sentry-cli releases files $SENTRY_VERSION upload-sourcemaps build/
+
   # Dummy job for skipped builds - without this, github reports the build as failed
   skip-ci:
     if: contains(github.event.head_commit.message, '[skip ci]')
