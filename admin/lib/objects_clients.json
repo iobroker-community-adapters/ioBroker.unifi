@@ -107,7 +107,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Channel",
-                                    "type": "string",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
@@ -694,7 +694,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Switch port",
-                                    "type": "string",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
