@@ -73,9 +73,9 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 ## Changelog
 <!--
     Placeholder for the next version (at the beginning of the line):
-    ## __WORK IN PROGRESS__
+    ### **WORK IN PROGRESS**
 -->
-## __WORK IN PROGRESS__
+### **WORK IN PROGRESS**
 * (jens-maus) Fixes all js-controller 3.3 related state warnings
 * (jens-maus) Updated node-unifi to latest version
 * (jens-maus) Updated dependencies
