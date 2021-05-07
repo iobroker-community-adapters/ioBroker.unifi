@@ -9,11 +9,13 @@ gulpfile.js
 
 test/
 travis/
+.devcontainer/
 .travis.yml
 appveyor.yml
 .travis.yaml
 appveyor.yaml
 .gitignore
+.gitattributes
 .npmignore
 .github
 .snyk
