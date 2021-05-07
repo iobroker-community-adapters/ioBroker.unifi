@@ -1423,12 +1423,24 @@
                             "devices.device.state": {
                                 "type": "state",
                                 "common": {
-                                    "name": "State",
-                                    "type": "boolean",
+                                    "name": "Device state",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
-                                    "desc": ""
+                                    "desc": "Status of device",
+                                    "min": 0,
+                                    "states": {
+                                      "0": "offline",
+                                      "1": "connected",
+                                      "2": "pending adoption",
+                                      "4": "updating",
+                                      "5": "provisioning",
+                                      "6": "unreachable",
+                                      "7": "adopting",
+                                      "9": "adoption error",
+                                      "11": "isolated"
+                                    }
                                 },
                                 "native": {
                                     "object_id": "devices.device.state"
