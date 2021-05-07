@@ -1420,6 +1420,32 @@
                                     "value": "num_sta"
                                 }
                             },
+                            "devices.device.state": {
+                                "type": "state",
+                                "common": {
+                                    "name": "State",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.state"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "state"
+                                            },
+                                            "state",
+                                            null
+                                        ]
+                                    },
+                                    "value": "state"
+                                }
+                            },
                             "devices.device.overheating": {
                                 "type": "state",
                                 "common": {
