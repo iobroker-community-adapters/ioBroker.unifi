@@ -1238,7 +1238,11 @@ class Unifi extends utils.Adapter {
                             const oldState = await this.getStateAsync(obj._id);
 
                             if (oldState === null || oldState.val != obj.value) {
-                                await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                                if(typeof obj.value === 'object') {
+                                    await this.setStateAsync(obj._id, { ack: true, val: JSON.stringify(obj.value) });
+                                } else {
+                                    await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                                }
                             }
                         }
 
