@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.8",
+        "version": "0.5.9",
         "news": {
+            "0.5.9": {
+                "en": "Fixed all js-controller 3.3 related state warnings\nAdded device state object with dedicated states list.\nUpdated node-unifi to latest version\nUpdated dependencies",
+                "de": "Alle mit js-controller 3.3 verbundenen Statuswarnungen wurden behoben\nGerätestatusobjekt mit dedizierter Statusliste hinzugefügt.\nNode-Unifi auf die neueste Version aktualisiert\nAktualisierte Abhängigkeiten",
+                "ru": "Исправлены все предупреждения о состоянии, связанные с js-controller 3.3\nДобавлен объект состояния устройства с выделенным списком состояний.\nОбновлен node-unifi до последней версии\nОбновленные зависимости",
+                "pt": "Todos os avisos de estado relacionados ao js-controller 3.3 foram corrigidos\nAdicionado objeto de estado de dispositivo com lista de estados dedicados.\nNó-unifi atualizado para a versão mais recente\nDependências atualizadas",
+                "nl": "Alle js-controller 3.3 gerelateerde statuswaarschuwingen opgelost\nApparaatstatusobject toegevoegd met een speciale lijst met staten.\nBijgewerkte node-unifi naar de nieuwste versie\nBijgewerkte afhankelijkheden",
+                "fr": "Correction de tous les avertissements d'état liés à js-controller 3.3\nAjout d'un objet d'état de périphérique avec une liste d'états dédiée.\nMise à jour de node-unifi vers la dernière version\nDépendances mises à jour",
+                "it": "Risolti tutti gli avvisi di stato relativi a js-controller 3.3\nAggiunto oggetto di stato del dispositivo con elenco di stati dedicato.\nAggiornato node-unifi all'ultima versione\nDipendenze aggiornate",
+                "es": "Se corrigieron todas las advertencias de estado relacionadas con js-controller 3.3\nObjeto de estado de dispositivo agregado con lista de estados dedicada.\nNodo-unifi actualizado a la última versión\nDependencias actualizadas",
+                "pl": "Naprawiono wszystkie ostrzeżenia o stanie związane z kontrolerem js 3.3\nDodano obiekt stanu urządzenia z dedykowaną listą stanów.\nZaktualizowano node-unifi do najnowszej wersji\nZaktualizowane zależności",
+                "zh-cn": "修复了所有与js-controller 3.3相关的状态警告\n添加了带有专用状态列表的设备状态对象。\n将node-unifi更新到最新版本\n更新了依赖关系"
+            },
             "0.5.8": {
                 "en": "* (braindead1) Fixed problems related to unused sites\r\n* (braindead1) Fixed some errors reported via Sentry",
                 "de": "* (braindead1) Probleme im Zusammenhang mit nicht verwendeten Sites wurden behoben\r\n* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",

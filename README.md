@@ -75,7 +75,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.5.9 (2021-05-07)
 * (jens-maus) Fixed all js-controller 3.3 related state warnings
 * (kirovilya, jens-maus) Added device state object with dedicated states list.
 * (jens-maus) Updated node-unifi to latest version
