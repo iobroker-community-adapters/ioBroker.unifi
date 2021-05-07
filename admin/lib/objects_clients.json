@@ -694,7 +694,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Switch port",
-                                    "type": "string",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,

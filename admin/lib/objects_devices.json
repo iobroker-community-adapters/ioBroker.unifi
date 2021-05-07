@@ -361,7 +361,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Speed",
-                                                            "type": "string",
+                                                            "type": "number",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
