@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "unifi",
-        "version": "0.5.9",
+        "version": "0.5.10",
         "news": {
+            "0.5.10": {
+                "en": "Changed \"Update done\" output to be output as debug info.\nUpdated dependencies.",
+                "de": "Die Ausgabe \"Update erledigt\" wurde geändert, um als Debug-Information ausgegeben zu werden.\nAktualisierte Abhängigkeiten.",
+                "ru": "Изменен вывод «Обновление выполнено» для вывода как отладочная информация.\nОбновлены зависимости.",
+                "pt": "Alterada a saída de \"Atualização concluída\" para ser emitida como informações de depuração.\nDependências atualizadas.",
+                "nl": "\"Update voltooid\" uitvoer gewijzigd om als foutopsporingsinformatie te worden uitgevoerd.\nBijgewerkte afhankelijkheden.",
+                "fr": "La sortie \"Mise à jour terminée\" a été modifiée pour être sortie en tant qu'informations de débogage.\nDépendances mises à jour.",
+                "it": "Modificato l'output \"Aggiornamento completato\" per essere visualizzato come informazioni di debug.\nDipendenze aggiornate.",
+                "es": "Se modificó la salida de \"Actualización realizada\" para que se genere como información de depuración.\nDependencias actualizadas.",
+                "pl": "Zmieniono wyjście „Aktualizacja zakończona”, aby było wyświetlane jako informacje debugowania.\nZaktualizowane zależności.",
+                "zh-cn": "更改了“更新完成”输出，以作为调试信息输出。\n更新了依赖关系。"
+            },
             "0.5.9": {
                 "en": "Fixed all js-controller 3.3 related state warnings\nAdded device state object with dedicated states list.\nUpdated node-unifi to latest version\nUpdated dependencies",
                 "de": "Alle mit js-controller 3.3 verbundenen Statuswarnungen wurden behoben\nGerätestatusobjekt mit dedizierter Statusliste hinzugefügt.\nNode-Unifi auf die neueste Version aktualisiert\nAktualisierte Abhängigkeiten",
