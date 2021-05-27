@@ -279,7 +279,7 @@ class Unifi extends utils.Adapter {
                     this.controller.logout();
 
                     await this.setStateAsync('info.connection', { ack: true, val: true });
-                    this.log.info('Update done');
+                    this.log.debug('Update done');
 
                     return Promise.resolve(true);
                 })
