@@ -10,11 +10,11 @@ This ioBroker adapter allows the monitoring and limited controlling of [UniFi de
 ## Configuration
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
-* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UbiOS (e.g. UDM Pro))
-* Username and password (2FA is not supported)
+* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UbiOS (e.g. UDM-Pro))
+* Local username and password (2FA **cannot** be supported)
 * Update interval
 
-By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is not recommended to further decrease the interval.
+By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is recommended to keep this interval and refraid from further decreasing it.
 
 ### Filter objects
 The adapter updates as much information from your UniFi controller as possible, but offers the possibility to limit the updated information.
@@ -25,16 +25,16 @@ It is possible to disable the update of selected information or filter specific 
 |-------------|-----------------------------------------|
 | Clients     | Name, Hostname, IP address, MAC address |
 | Devices     | Name, IP address, MAC address           |
-| WLANs       | Name                                    |
+| WiFis       | Name                                    |
 | Networks    | Name                                    |
 | Health      | Subsystem                               |
 
 ## Control
-### Enable/disable WLANs
-By changing the 'enabled' state of a WLAN it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
+### Enable/disable WiFis
+By changing the 'enabled' state of a WiFi it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
 
 ### Voucher creation
-Using the 'vouchers.create_vouchers' button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
+Using the `vouchers.create_vouchers` button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
 
 ## Missing datapoints
 The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connect to your UniFi Controller. To simplify things, not all availble datapoints are pulled into your ioBroker. In case you're missing datapoints, use the following URLs to check the API. (Note: You have to replace IP, PORT and SITE with your settings)
@@ -45,14 +45,14 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | SysInfo     | https://IP:PORT/api/s/SITE/stat/sysinfo     |
 | Clients     | https://IP:PORT/api/s/SITE/stat/sta         |
 | Devices     | https://IP:PORT/api/s/SITE/stat/device      |
-| WLANs       | https://IP:PORT/api/s/SITE/rest/wlanconf    |
+| WiFis       | https://IP:PORT/api/s/SITE/rest/wlanconf    |
 | Networks    | https://IP:PORT/api/s/SITE/rest/networkconf |
 | Health      | https://IP:PORT/api/s/SITE/stat/health      |
 | Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
 | DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
 | Alarms      | https://IP:PORT/api/s/SITE/stat/alarm       |
 
-### UbiOS endpoints
+### UbiOS/UDM-Pro endpoints
 
 | Information | API URL                                              |
 |-------------|------------------------------------------------------|
@@ -60,7 +60,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | SysInfo     | https://IP/proxy/network/api/s/SITE/stat/sysinfo     |
 | Clients     | https://IP/proxy/network/api/s/SITE/stat/sta         |
 | Devices     | https://IP/proxy/network/api/s/SITE/stat/device      |
-| WLANs       | https://IP/proxy/network/api/s/SITE/rest/wlanconf    |
+| WiFis       | https://IP/proxy/network/api/s/SITE/rest/wlanconf    |
 | Networks    | https://IP/proxy/network/api/s/SITE/rest/networkconf |
 | Health      | https://IP/proxy/network/api/s/SITE/stat/health      |
 | Vouchers    | https://IP/proxy/network/api/s/SITE/stat/voucher     |
@@ -75,6 +75,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (jens-maus) Changed "Update done" output to be output as debug info.
+* (jens-maus) Updated dependencies.
+
 ### 0.5.9 (2021-05-07)
 * (jens-maus) Fixed all js-controller 3.3 related state warnings
 * (kirovilya, jens-maus) Added device state object with dedicated states list.
