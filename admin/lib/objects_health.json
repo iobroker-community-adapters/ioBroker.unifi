@@ -51,7 +51,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Speedtest lastrun",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
