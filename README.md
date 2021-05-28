@@ -1,4 +1,4 @@
-![Logo](admin/unifi.png)
+<img height="100px" src="admin/unifi.png" align="left"><br/>
 # ioBroker.unifi
 
 [![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.unifi/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/iobroker-community-adapters/ioBroker.unifi/actions/workflows/test-and-release.yml) ![Number of Installations](http://iobroker.live/badges/unifi-installed.svg) ![Number of Installations](http://iobroker.live/badges/unifi-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi) [![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
