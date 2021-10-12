@@ -80,7 +80,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Duration",
-                                    "type": "number",
+                                    "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,

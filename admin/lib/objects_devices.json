@@ -361,7 +361,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Speed",
-                                                            "type": "number",
+                                                            "type": "string",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -574,7 +574,7 @@
                                                         "logic": {
                                                             "value": "radio"
                                                         }
-                                                    }                                                    
+                                                    }
                                                 }
                                             }
                                         }
@@ -968,7 +968,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "memory buffer",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1393,7 +1393,7 @@
                                     },
                                     "value": "user-num_sta"
                                 }
-                            },                            
+                            },
                             "devices.device.num_sta": {
                                 "type": "state",
                                 "common": {
