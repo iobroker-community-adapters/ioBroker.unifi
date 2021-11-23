@@ -1642,7 +1642,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Upgradable",
-                                    "type": "boolean",
+                                    "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
