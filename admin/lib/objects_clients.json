@@ -623,7 +623,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Satisfaction",
-                                    "type": "string",
+                                    "type": "number",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
