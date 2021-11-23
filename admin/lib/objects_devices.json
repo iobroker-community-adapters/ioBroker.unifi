@@ -333,7 +333,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Satisfaction",
-                                                            "type": "string",
+                                                            "type": "number",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -968,7 +968,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "memory buffer",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1642,7 +1642,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Upgradable",
-                                    "type": "string",
+                                    "type": "boolean",
                                     "role": "state",
                                     "read": true,
                                     "write": false,

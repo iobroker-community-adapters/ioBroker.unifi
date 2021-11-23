@@ -551,7 +551,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Noted",
-                                    "type": "string",
+                                    "type": "boolean",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
