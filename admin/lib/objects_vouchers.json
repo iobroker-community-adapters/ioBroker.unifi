@@ -117,7 +117,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "QOS overwrite",
-                                    "type": "boolean",
+                                    "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
@@ -216,7 +216,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Quota",
-                                    "type": "number",
+                                    "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
@@ -252,7 +252,7 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Used",
-                                    "type": "number",
+                                    "type": "string",
                                     "role": "state",
                                     "read": true,
                                     "write": false,
