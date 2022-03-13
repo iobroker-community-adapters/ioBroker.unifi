@@ -55,7 +55,7 @@
   },
   "main": "main.js",
   "scripts": {
-    "test:js": "mocha --opts test/mocha.custom.opts",
+    "test:js": "mocha \"{!(node_modules|test)/**/*.test.js,*.test.js,test/**/test!(PackageFiles|Startup).js}\"",
     "test:package": "mocha test/package --exit",
     "test:unit": "mocha test/unit --exit",
     "test:integration": "mocha test/integration --exit",
@@ -63,6 +63,15 @@
     "lint": "eslint",
     "release": "release-script"
   },
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*).json",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "lib/",
+    "www/",
+    "io-package.json",
+    "LICENSE",
+    "main.js"
+  ],
   "bugs": {
     "url": "https://github.com/iobroker-community-adapters/ioBroker.unifi/issues"
   },

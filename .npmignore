@@ -3,25 +3,19 @@
 node_modules/
 nbproject/
 .vs*/
-*.code-workspace
 Thumbs.db
 gulpfile.js
 
 test/
 travis/
-.devcontainer/
 .travis.yml
 appveyor.yml
 .travis.yaml
 appveyor.yaml
-.gitignore
-.gitattributes
-.npmignore
-.github
-.snyk
+tsconfig.json
 
+tslint.json
 .eslintrc.json
-.eslintrc.js
 
 # npm package files
 iobroker.*.tgz
