@@ -35,14 +35,12 @@ markComment: >
   and tell us. Also check that all relevant details, logs and reproduction steps
   are included and update them if needed.
   Thank you for your contributions.
-
   Dieses Problem wurde automatisch als veraltet markiert, da es in letzter Zeit keine Aktivitäten gab.
   Es wird geschlossen, wenn nicht innerhalb der nächsten 7 Tage weitere Aktivitäten stattfinden.
   Bitte überprüft, ob das Problem auch in der aktuellsten Version des Adapters noch relevant ist,
   und teilt uns dies mit. Überprüft auch, ob alle relevanten Details, Logs und Reproduktionsschritte
   enthalten sind bzw. aktualisiert diese.
   Vielen Dank für Eure Unterstützung.
-
 # Comment to post when removing the stale label.
 # unmarkComment: >
 #   Your comment here.
@@ -53,12 +51,10 @@ closeComment: >
   issue if still relevant and make sure to include all relevant details, logs and
   reproduction steps.
   Thank you for your contributions.
-
   Dieses Problem wurde aufgrund von Inaktivität automatisch geschlossen. Bitte öffnet ein
   neues Issue, falls dies noch relevant ist und stellt sicher das alle relevanten Details,
   Logs und Reproduktionsschritte enthalten sind.
   Vielen Dank für Eure Unterstützung.
-
 # Limit the number of actions per hour, from 1-30. Default is 30
 limitPerRun: 30
 
