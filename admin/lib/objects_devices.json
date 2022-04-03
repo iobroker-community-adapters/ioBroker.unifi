@@ -169,6 +169,32 @@
                                                             "value": "poe_class"
                                                         }
                                                     },
+                                                    "devices.device.port_table.port.poe_mode": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE mode",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.poe_mode"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_mode"
+                                                                    },
+                                                                    "poe_mode",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_mode"
+                                                        }
+                                                    },
                                                     "devices.device.port_table.port.poe_current": {
                                                         "type": "state",
                                                         "common": {
@@ -400,6 +426,643 @@
                                                                 ]
                                                             },
                                                             "value": "tx_bytes"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "devices.device.port_overrides": {
+                                "_id": "port_overrides",
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "devices.device.port_overrides"
+                                },
+                                "logic": {
+                                    "has_key": "port_overrides",
+                                    "has": {
+                                        "devices.device.port_overrides.port": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {
+                                                "object_id": "devices.device.port_overrides.port"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "port_idx"
+                                                        },
+                                                        {
+                                                            "cleanupForUseAsId": [
+                                                                {
+                                                                    "cat": [
+                                                                        "port_",
+                                                                        {
+                                                                            "var": "port_idx"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
+                                                "common": {
+                                                    "name": "name"
+                                                },
+                                                "has_key": "_self",
+                                                "has": {
+                                                    "devices.device.port_overrides.port.port_idx": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "ID",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.port_idx"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_idx"
+                                                                    },
+                                                                    "port_idx",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_idx"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.name": {
+                                                        "_id": "name",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Name",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": true,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.name"
+                                                        },
+                                                        "logic": {
+                                                            "value": "name"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.portconf_id": {
+                                                        "_id": "portconf_id",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Portconf ID",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.portconf_id"
+                                                        },
+                                                        "logic": {
+                                                            "value": "portconf_id"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.op_mode": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Operation mode",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.op_mode"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "op_mode"
+                                                                    },
+                                                                    "op_mode",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "op_mode"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.port_security_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable MAC ID Filter Allow List",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.port_security_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_security_enabled"
+                                                                    },
+                                                                    "port_security_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_security_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.port_security_mac_address": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "MAC ID Filter Allow List",
+                                                            "type": "array",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": true,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.port_security_mac_address"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_security_mac_address"
+                                                                    },
+                                                                    "port_security_mac_address",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_security_mac_address"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.poe_mode": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "POE mode",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": true,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.poe_mode"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_mode"
+                                                                    },
+                                                                    "poe_mode",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "poe_mode"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.speed": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Link Speed",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "Mbps",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.speed"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "speed"
+                                                                    },
+                                                                    "speed",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "speed"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.full_duplex": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Full duplex",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.full_duplex"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "full_duplex"
+                                                                    },
+                                                                    "full_duplex",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "full_duplex"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.isolation": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Port isolation",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.isolation"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "isolation"
+                                                                    },
+                                                                    "isolation",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "isolation"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_ucast_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable Storm Control for Unicast",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_ucast_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_ucast_enabled"
+                                                                    },
+                                                                    "stormctrl_ucast_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_ucast_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_ucast_rate": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Storm Control Unicast Rate",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "pkts/s",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_ucast_rate"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_ucast_rate"
+                                                                    },
+                                                                    "stormctrl_ucast_rate",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_ucast_rate"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_mcast_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable Storm Control for Multicast",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_mcast_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_mcast_enabled"
+                                                                    },
+                                                                    "stormctrl_mcast_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_mcast_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_mcast_rate": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Storm Control Multicast Rate",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "pkts/s",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_mcast_rate"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_mcast_rate"
+                                                                    },
+                                                                    "stormctrl_mcast_rate",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_mcast_rate"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_bcast_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable Storm Control for Broadcast",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_bcast_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_bcast_enabled"
+                                                                    },
+                                                                    "stormctrl_bcast_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_bcast_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stormctrl_bcast_rate": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Storm Control Broadcast Rate",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "pkts/s",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stormctrl_bcast_rate"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stormctrl_bcast_rate"
+                                                                    },
+                                                                    "stormctrl_bcast_rate",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stormctrl_bcast_rate"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.lldpmed_notify_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable LLDP-MED",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": "Link Layer Discovery Protokoll - Media Endpoint Devices (for VoIP)"
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.lldpmed_notify_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "lldpmed_notify_enabled"
+                                                                    },
+                                                                    "lldpmed_notify_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "lldpmed_notify_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.autoneg": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Link negotiation",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.autoneg"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "autoneg"
+                                                                    },
+                                                                    "autoneg",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "autoneg"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.stp_port_mode": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable Spanning Tree Protocol",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.stp_port_mode"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "stp_port_mode"
+                                                                    },
+                                                                    "stp_port_mode",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "stp_port_mode"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.egress_rate_limit_kbps_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Enable Egress rate limit",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.egress_rate_limit_kbps_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "egress_rate_limit_kbps_enabled"
+                                                                    },
+                                                                    "egress_rate_limit_kbps_enabled",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "egress_rate_limit_kbps_enabled"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.egress_rate_limit_kbps": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Egress rate limit",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "unit": "kb/s",
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.egress_rate_limit_kbps"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "egress_rate_limit_kbps"
+                                                                    },
+                                                                    "egress_rate_limit_kbps",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "egress_rate_limit_kbps"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.aggregate_num_ports": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Aggregate ports",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.aggregate_num_ports"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "aggregate_num_ports"
+                                                                    },
+                                                                    "aggregate_num_ports",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "aggregate_num_ports"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.mirror_port_idx": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Mirroring Port",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.mirror_port_idx"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "mirror_port_idx"
+                                                                    },
+                                                                    "mirror_port_idx",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "mirror_port_idx"
                                                         }
                                                     }
                                                 }
