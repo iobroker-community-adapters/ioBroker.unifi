@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.0",
-    "node-unifi": "^1.4.2",
+    "node-unifi": "^2.0.4",
     "json-logic-js": "^2.0.0",
     "dateformat": "^4.4.1",
     "axios": "^0.26.1"
