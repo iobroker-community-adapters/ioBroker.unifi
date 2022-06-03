@@ -1,9 +1,15 @@
 <img height="100px" src="admin/unifi.png" align="left"><br/>
 # ioBroker.unifi
 
-[![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.unifi/actions/workflows/test-and-release.yml/badge.svg)](https://github.com/iobroker-community-adapters/ioBroker.unifi/actions/workflows/test-and-release.yml) ![Number of Installations](http://iobroker.live/badges/unifi-installed.svg) ![Number of Installations](http://iobroker.live/badges/unifi-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi) [![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
+![Number of Installations](http://iobroker.live/badges/unifi-installed.svg)
+![Number of Installations](http://iobroker.live/badges/unifi-stable.svg)
+[![NPM version](http://img.shields.io/npm/v/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
 
-[![NPM](https://nodei.co/npm/iobroker.unifi.png?downloads=true)](https://nodei.co/npm/iobroker.unifi/)
+![Test and Release](https://github.com/iobroker-community-adapters/ioBroker.unifi/workflows/Test%20and%20Release/badge.svg)
+[![Translation status](https://weblate.iobroker.net/widgets/adapters/-/unifi/svg-badge.svg)](https://weblate.iobroker.net/engage/adapters/?utm_source=widget)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.unifi.svg)](https://www.npmjs.com/package/iobroker.unifi)
+
+**This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
 This ioBroker adapter allows the monitoring and limited controlling of [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
 
@@ -76,8 +82,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (Apollon77) Migrate to new version of unifi library
+* (Apollon77) Add experimental support for Events
 * (jens-maus) Fixed more device state object definitions to get rid of state warnings.
-* (jens-maus) Updated dependencies.
+* (jens-maus/Apollon77) Updated dependencies.
 
 ### 0.5.10 (2021-05-27)
 * (jens-maus) Changed "Update done" output to be output as debug info.

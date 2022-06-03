@@ -290,6 +290,12 @@
         "createVouchersByteQuota": null,
         "createVouchersNote": ""
     },
+    "protectedNative": [
+        "controllerPassword"
+    ],
+    "encryptedNative": [
+        "controllerPassword"
+    ],
     "objects": [],
     "instanceObjects": [
         {
