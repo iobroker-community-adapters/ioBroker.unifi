@@ -194,7 +194,11 @@ class Unifi extends utils.Adapter {
         } else if (err.message.includes('Returned data is not in valid format')) {
             this.log.error(err.message);
         } else {
-
+            if (err.response && err.response.data) {
+                this.log.error(`Error site ${site} (data): ${JSON.stringify(err.response.data)}`);
+            }if (err.request) {
+                this.log.error(`Error site ${site} (request): ${JSON.stringify(err.request)}`);
+            }
             if (methodName) {
                 this.log.error(`[${methodName} site ${site}] error: ${err.message}, stack: ${err.stack}`);
             } else {
