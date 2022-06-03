@@ -85,6 +85,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 * IMPRTANT: js-controller 2.0 or higher is required
 * (Apollon77) Migrate to new version of unifi library
 * (Apollon77) Add experimental support for Events
+* (Apollon77) Allow to specify if SSL error should be ignored or not  (Default is to ignore errors as in former versions)
 * (jens-maus) Fixed more device state object definitions to get rid of state warnings.
 * (jens-maus/Apollon77) Updated dependencies.
 

@@ -291,7 +291,8 @@
         "createVouchersUploadLimit": null,
         "createVouchersDownloadLimit": null,
         "createVouchersByteQuota": null,
-        "createVouchersNote": ""
+        "createVouchersNote": "",
+        "ignoreSSLErrors": true
     },
     "protectedNative": [
         "controllerPassword"

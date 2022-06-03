@@ -58,6 +58,7 @@ class Unifi extends utils.Adapter {
             this.settings.controllerIp = this.config.controllerIp;
             this.settings.controllerPort = this.config.controllerPort;
             this.settings.controllerUsername = this.config.controllerUsername;
+            this.settings.ignoreSSLErrors = this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
             this.update.clients = this.config.updateClients;
             this.update.devices = this.config.updateDevices;
@@ -221,7 +222,7 @@ class Unifi extends utils.Adapter {
                 port: this.settings.controllerPort,
                 username: this.settings.controllerUsername,
                 password: this.settings.controllerPassword,
-                sslverify: false //TODO: make configurable
+                sslverify: this.settings.ignoreSSLErrors
             });
 
             await defaultController.login();
@@ -254,7 +255,7 @@ class Unifi extends utils.Adapter {
                                 username: this.settings.controllerUsername,
                                 password: this.settings.controllerPassword,
                                 site,
-                                sslverify: false //TODO: make configurable
+                                sslverify: this.settings.ignoreSSLErrors
                             });
                             await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
                         }
