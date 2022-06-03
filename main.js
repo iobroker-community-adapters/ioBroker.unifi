@@ -196,8 +196,6 @@ class Unifi extends utils.Adapter {
         } else {
             if (err.response && err.response.data) {
                 this.log.error(`Error site ${site} (data): ${JSON.stringify(err.response.data)}`);
-            }if (err.request) {
-                this.log.error(`Error site ${site} (request): ${JSON.stringify(err.request)}`);
             }
             if (methodName) {
                 this.log.error(`[${methodName} site ${site}] error: ${err.message}, stack: ${err.stack}`);
@@ -1017,6 +1015,9 @@ class Unifi extends utils.Adapter {
     async applyJsonLogic(objectTree, data, objects, statesFilter) {
         try {
             for (const key in objects) {
+                if (this.stopped) {
+                    return;
+                }
                 if (statesFilter === undefined || statesFilter.length === 0 || statesFilter.includes(key)) {
                     const obj = {
                         '_id': null,
