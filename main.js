@@ -222,7 +222,7 @@ class Unifi extends utils.Adapter {
                 port: this.settings.controllerPort,
                 username: this.settings.controllerUsername,
                 password: this.settings.controllerPassword,
-                sslverify: this.settings.ignoreSSLErrors
+                sslverify: !this.settings.ignoreSSLErrors
             });
 
             await defaultController.login();
@@ -255,7 +255,7 @@ class Unifi extends utils.Adapter {
                                 username: this.settings.controllerUsername,
                                 password: this.settings.controllerPassword,
                                 site,
-                                sslverify: this.settings.ignoreSSLErrors
+                                sslverify: !this.settings.ignoreSSLErrors
                             });
                             await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
                         }
