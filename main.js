@@ -183,7 +183,7 @@ class Unifi extends utils.Adapter {
             this.log.error(`Error site ${site}: Socket hang up: ${err.message}`);
         } else if (err.message.includes('socket disconnected')) {
             this.log.error(`Error site ${site}: Socket disconnected: ${err.message}`);
-        } else if (err.message.includes('SSL routines') || err.message.includes('ssl3_')) {
+        } else if (err.message.includes('SSL routines') || err.message.includes('ssl3_') || err.message.includes('certificate has expired')) {
             this.log.error(`Error site ${site}: SSL/Certificate issue: ${err.message}`);
         } else if (err.message === 'api.err.InvalidArgs' || err.message === 'api.err.IncorrectNumberRange') {
             this.log.error(`Parameters for this call are invalid (${err.message})! Please check the parameters`);
@@ -220,7 +220,8 @@ class Unifi extends utils.Adapter {
                 host: this.settings.controllerIp,
                 port: this.settings.controllerPort,
                 username: this.settings.controllerUsername,
-                password: this.settings.controllerPassword
+                password: this.settings.controllerPassword,
+                sslverify: false //TODO: make configurable
             });
 
             await defaultController.login();
@@ -252,7 +253,8 @@ class Unifi extends utils.Adapter {
                                 port: this.settings.controllerPort,
                                 username: this.settings.controllerUsername,
                                 password: this.settings.controllerPassword,
-                                site
+                                site,
+                                sslverify: false //TODO: make configurable
                             });
                             await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
                         }

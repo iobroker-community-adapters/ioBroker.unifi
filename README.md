@@ -82,6 +82,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* IMPRTANT: js-controller 2.0 or higher is required
 * (Apollon77) Migrate to new version of unifi library
 * (Apollon77) Add experimental support for Events
 * (jens-maus) Fixed more device state object definitions to get rid of state warnings.
@@ -173,8 +174,8 @@ This adapter uses functionality from the following third-party nodejs modules:
 ## License
 The MIT License (MIT)
 
+Copyright (c) 2016-2022 Jens Maus &lt;mail@jens-maus.de&gt;
 Copyright (c) 2020 braindead1 &lt;os.braindead1@gmail.com&gt;
-Copyright (c) 2016-2020 Jens Maus &lt;mail@jens-maus.de&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
