@@ -25,7 +25,7 @@
     "@iobroker/adapter-core": "^2.6.0",
     "node-unifi": "^2.0.4",
     "json-logic-js": "^2.0.2",
-    "dateformat": "^5.0.3",
+    "dateformat": "^4.6.3",
     "axios": "^0.27.2"
   },
   "devDependencies": {
