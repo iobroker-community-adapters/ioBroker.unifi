@@ -225,91 +225,100 @@ class Unifi extends utils.Adapter {
                 sslverify: !this.settings.ignoreSSLErrors
             });
 
-            await defaultController.login();
+            try {
+                await defaultController.login(null, null);
+            } catch (err) {
+                this.handleError(err, undefined,'updateUnifiData-login');
+                return;
+            }
             this.log.debug('Login successful');
 
-            const sites = await this.fetchSites(defaultController);
+            try {
+                const sites = await this.fetchSites(defaultController);
 
-            for (const site of sites) {
-                if (this.stopped) {
-                    return;
-                }
-                try {
-                    if (!this.controllers[site]) {
-                        if (site === 'default') {
-                            this.controllers[site] = defaultController;
+                for (const site of sites) {
+                    if (this.stopped) {
+                        return;
+                    }
+                    try {
+                        if (!this.controllers[site]) {
+                            if (site === 'default') {
+                                this.controllers[site] = defaultController;
 
-                            try {
-                                defaultController.onAny((event, data) => {
-                                    this.log.debug(`EVENT [${site}] ${event} : ${JSON.stringify(data)}`);
+                                try {
+                                    defaultController.onAny((event, data) => {
+                                        this.log.debug(`EVENT [${site}] ${event} : ${JSON.stringify(data)}`);
+                                    });
+
+                                    await defaultController.listen();
+                                } catch (err) {
+                                    this.handleError(err, site, 'subscribe Events');
+                                }
+                            } else {
+                                this.controllers[site] = new UnifiClass.Controller({
+                                    host: this.settings.controllerIp,
+                                    port: this.settings.controllerPort,
+                                    username: this.settings.controllerUsername,
+                                    password: this.settings.controllerPassword,
+                                    site,
+                                    sslverify: !this.settings.ignoreSSLErrors
                                 });
-
-                                await defaultController.listen();
-                            } catch (err) {
-                                this.handleError(err, site, 'subscribe Events');
+                                await this.controllers[site].login(null, null);
                             }
-                        } else {
-                            this.controllers[site] = new UnifiClass.Controller({
-                                host: this.settings.controllerIp,
-                                port: this.settings.controllerPort,
-                                username: this.settings.controllerUsername,
-                                password: this.settings.controllerPassword,
-                                site,
-                                sslverify: !this.settings.ignoreSSLErrors
-                            });
-                            await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
                         }
+
+                        this.log.debug(`Update site: ${site}`);
+
+                        if (this.update.sysinfo === true) {
+                            await this.fetchSiteSysinfo(site);
+                        }
+
+                        if (this.update.clients === true) {
+                            await this.fetchClients(site);
+                        }
+
+                        if (this.update.devices === true) {
+                            await this.fetchDevices(site);
+                        }
+
+                        if (this.update.wlans === true) {
+                            await this.fetchWlans(site);
+                        }
+
+                        if (this.update.networks === true) {
+                            await this.fetchNetworks(site);
+                        }
+
+                        if (this.update.health === true) {
+                            await this.fetchHealth(site);
+                        }
+
+                        if (this.update.vouchers === true) {
+                            await this.fetchVouchers(site);
+                        }
+
+                        if (this.update.dpi === true) {
+                            await this.fetchDpi(site);
+                        }
+
+                        if (this.update.gatewayTraffic === true) {
+                            await this.fetchGatewayTraffic(site);
+                        }
+
+                        if (this.update.alarms === true) {
+                            await this.fetchAlarms(site);
+                        }
+
+                        // finalize, logout and finish
+                        //await this.controllers[site].logout();
+                    } catch (err) {
+                        this.handleError(err, site, 'updateUnifiData');
                     }
-
-                    this.log.debug(`Update site: ${site}`);
-
-                    if (this.update.sysinfo === true) {
-                        await this.fetchSiteSysinfo(site);
-                    }
-
-                    if (this.update.clients === true) {
-                        await this.fetchClients(site);
-                    }
-
-                    if (this.update.devices === true) {
-                        await this.fetchDevices(site);
-                    }
-
-                    if (this.update.wlans === true) {
-                        await this.fetchWlans(site);
-                    }
-
-                    if (this.update.networks === true) {
-                        await this.fetchNetworks(site);
-                    }
-
-                    if (this.update.health === true) {
-                        await this.fetchHealth(site);
-                    }
-
-                    if (this.update.vouchers === true) {
-                        await this.fetchVouchers(site);
-                    }
-
-                    if (this.update.dpi === true) {
-                        await this.fetchDpi(site);
-                    }
-
-                    if (this.update.gatewayTraffic === true) {
-                        await this.fetchGatewayTraffic(site);
-                    }
-
-                    if (this.update.alarms === true) {
-                        await this.fetchAlarms(site);
-                    }
-
-                    // finalize, logout and finish
-                    //await this.controllers[site].logout();
-                } catch (err) {
-                    this.handleError(err, site, 'updateUnifiData');
                 }
+            } catch (err) {
+                this.handleError(err, undefined,'updateUnifiData-fetchSites');
+                return;
             }
-
             await this.setStateAsync('info.connection', {ack: true, val: true});
             this.log.debug('Update done');
         } catch (err) {
