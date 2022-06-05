@@ -1115,6 +1115,22 @@ class Unifi extends utils.Adapter {
                             }
                         }
 
+                        if (obj.common && obj.value !== undefined && obj.value !== null) {
+                            if (obj.common.type === 'number' && typeof obj.value !== 'number') {
+                                const val = parseFloat(obj.value);
+                                if (!isNaN(val)) {
+                                    obj.value = val;
+                                }
+                            } else if (obj.common.type === 'boolean' && typeof obj.value !== 'boolean') {
+                                if (obj.value === 'true' || obj.value === 'false') {
+                                    obj.value = obj.value === 'true';
+                                } else {
+                                    obj.value = !!obj.value;
+                                }
+                            } else if (obj.common.type === 'string' && typeof obj.value !== 'string') {
+                                obj.value = obj.value.toString();
+                            }
+                        }
                         // Update state if value changed
                         if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
                             const oldState = await this.getStateAsync(obj._id);

@@ -968,7 +968,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "memory buffer",
-                                                "type": "string",
+                                                "type": "number",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
