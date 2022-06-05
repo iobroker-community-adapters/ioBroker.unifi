@@ -248,6 +248,7 @@ class Unifi extends utils.Adapter {
                             if (site === 'default') {
                                 this.controllers[site] = defaultController;
 
+                                /*
                                 try {
                                     defaultController.onAny((event, data) => {
                                         this.log.debug(`EVENT [${site}] ${event} : ${JSON.stringify(data)}`);
@@ -256,7 +257,7 @@ class Unifi extends utils.Adapter {
                                     await defaultController.listen();
                                 } catch (err) {
                                     this.handleError(err, site, 'subscribe Events');
-                                }
+                                }*/
                             } else {
                                 this.controllers[site] = new UnifiClass.Controller({
                                     host: this.settings.controllerIp,
