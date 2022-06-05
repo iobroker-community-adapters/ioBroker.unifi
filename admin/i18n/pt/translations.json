@@ -80,6 +80,7 @@
     "POE": "POE",
     "Password": "Senha",
     "Port": "Porta",
+    "PortNotice": "Deixe a porta vazia caso seu controlador esteja rodando no UbiOS (por exemplo, UDM-Pro)!",
     "Previous version": "Versão anterior",
     "Purpose": "Objetivo",
     "QOS max download": "Download máximo do QOS",

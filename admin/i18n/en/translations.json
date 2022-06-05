@@ -80,6 +80,7 @@
     "POE": "POE",
     "Password": "Password",
     "Port": "Port",
+    "PortNotice": "Leave the port empty in case your controller is running on UbiOS (e.g. UDM-Pro)!",
     "Previous version": "Previous version",
     "Purpose": "Purpose",
     "QOS max download": "QOS max download",
