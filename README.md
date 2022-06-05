@@ -87,7 +87,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 * (Apollon77) Migrate to new version of unifi library
 * (Apollon77) Allow to specify if SSL error should be ignored or not  (Default is to ignore errors as in former versions)
 * (jens-maus) Fixed more device state object definitions to get rid of state warnings.
-* (jens-maus/Apollon77) Updated dependencies.
+* (jens-maus/Apollon77) Updated dependencies, make compatible to newest firmwares
 
 ### 0.5.10 (2021-05-27)
 * (jens-maus) Changed "Update done" output to be output as debug info.
