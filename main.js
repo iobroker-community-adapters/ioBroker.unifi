@@ -318,6 +318,10 @@ class Unifi extends utils.Adapter {
                         this.handleError(err, site, 'updateUnifiData');
                     }
                 }
+
+                // Update is_online of offline clients
+                await this.setClientOnlineStatus();
+
             } catch (err) {
                 this.handleError(err, undefined,'updateUnifiData-fetchSites');
                 return;
@@ -445,9 +449,6 @@ class Unifi extends utils.Adapter {
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
             }
-
-            // Update is_online of offline clients
-            await this.setClientOnlineStatus();
         }
     }
 
@@ -782,7 +783,6 @@ class Unifi extends utils.Adapter {
             }
         }
     }
-
 
     /**
      * Function to fetch daily gateway traffic
@@ -1119,7 +1119,7 @@ class Unifi extends utils.Adapter {
                         if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
                             const oldState = await this.getStateAsync(obj._id);
 
-                            if (oldState === null || oldState.val != obj.value) {
+                            if (oldState === null || oldState.val !== obj.value) {
                                 if(obj.value && typeof obj.value === 'object') {
                                     await this.setStateAsync(obj._id, { ack: true, val: JSON.stringify(obj.value) });
                                 } else {
