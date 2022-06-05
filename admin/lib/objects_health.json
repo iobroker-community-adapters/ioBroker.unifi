@@ -447,7 +447,14 @@
     "num_new_alarms": {
         "_id": "num_new_alarms",
         "type": "state",
-        "common": {},
+        "common": {
+            "name": "Number of new alarms",
+            "type": "number",
+            "role": "state",
+            "read": true,
+            "write": false,
+            "desc": ""
+        },
         "native": {
             "object_id": "num_new_alarms"
         },
