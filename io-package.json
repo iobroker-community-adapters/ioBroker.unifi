@@ -184,18 +184,18 @@
                 "zh-cn": "添加访问设备数据查询"
             }
         },
-        "title": "UniFi",
+        "title": "UniFi Network",
         "titleLang": {
-            "en": "UniFi",
-            "de": "UniFi",
-            "ru": "UniFi",
-            "pt": "UniFi",
-            "nl": "UniFi",
-            "fr": "UniFi",
-            "it": "UniFi",
-            "es": "UniFi",
-            "pl": "UniFi",
-            "zh-cn": "UniFi"
+            "en": "UniFi Network",
+            "de": "UniFi-Netzwerk",
+            "ru": "Сеть UniFi",
+            "pt": "Rede UniFi",
+            "nl": "UniFi-netwerk",
+            "fr": "Réseau UniFi",
+            "it": "Rete UniFi",
+            "es": "Red UniFi",
+            "pl": "Sieć Uni-Fi",
+            "zh-cn": "UniFi 网络"
         },
         "desc": {
             "en": "Communicates with a UniFi-Controller",
