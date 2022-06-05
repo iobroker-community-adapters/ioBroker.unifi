@@ -81,7 +81,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.0 (2022-06-05)
 * IMPORTANT: js-controller 2.0 or higher is required
 * IMPORTANT: If Login do not work please re-enter the password in the instance configuration
 * (Apollon77) Migrate to new version of unifi library
@@ -147,7 +147,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 
 ### 0.4.0 (2020-04-16)
 * (bluefox) Refactoring
-  
+
 ### 0.3.1
 * (jens-maus) added support for multi-site environments.
 
