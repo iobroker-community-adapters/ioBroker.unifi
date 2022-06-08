@@ -16,7 +16,7 @@ This ioBroker adapter allows the monitoring and limited controlling of [UniFi de
 ## Configuration
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
-* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UbiOS (e.g. UDM-Pro))
+* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UniFiOS (e.g. UDM-Pro))
 * Local username and password (2FA **cannot** be supported)
 * Update interval
 
@@ -58,7 +58,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 | DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
 | Alarms      | https://IP:PORT/api/s/SITE/stat/alarm       |
 
-### UbiOS/UDM-Pro endpoints
+### UniFiOS (UDM-Pro) endpoints
 
 | Information | API URL                                              |
 |-------------|------------------------------------------------------|
@@ -83,6 +83,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 -->
 ### **WORK IN PROGRESS**
 * (jens-maus) Bumped node-unifi to latest 2.1.0
+* (jens-maus) updated translations
 
 ### 0.6.0 (2022-06-05)
 * IMPORTANT: js-controller 2.0 or higher is required

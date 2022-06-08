@@ -80,7 +80,7 @@
     "POE": "POE",
     "Password": "Parola d'ordine",
     "Port": "Porta",
-    "PortNotice": "Lascia la porta vuota nel caso in cui il tuo controller sia in esecuzione su UbiOS (es. UDM-Pro)!",
+    "PortNotice": "Lascia la porta vuota nel caso in cui il tuo controller sia in esecuzione su UniFiOS (es. UDM-Pro)!",
     "Previous version": "Versione precedente",
     "Purpose": "Scopo",
     "QOS max download": "Download massimo QOS",

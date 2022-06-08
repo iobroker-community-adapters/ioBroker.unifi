@@ -80,7 +80,7 @@
     "POE": "POE",
     "Password": "密码",
     "Port": "港口",
-    "PortNotice": "如果您的控制器在 UbiOS（例如 UDM-Pro）上运行，请将端口留空！",
+    "PortNotice": "如果您的控制器在 UniFiOS（例如 UDM-Pro）上运行，请将端口留空！",
     "Previous version": "先前版本",
     "Purpose": "目的",
     "QOS max download": "QOS max下载",
