@@ -81,6 +81,9 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (jens-maus) Bumped node-unifi to latest 2.1.0
+
 ### 0.6.0 (2022-06-05)
 * IMPORTANT: js-controller 2.0 or higher is required
 * IMPORTANT: If Login do not work please re-enter the password in the instance configuration
