@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+    iobroker:
+        restart: always
+        build: .
+        container_name: iobroker-unifi
+        hostname: iobroker-unifi
+        ports:
+            - '8081:8081'
+        volumes:
+            - ./..:/workspace:cached
+            - iobrokerdata-unifi:/opt/iobroker
+        environment:
+            - LANG=en_US.UTF-8
+            - LANGUAGE=en_US:en
+            - LC_ALL=en_US.UTF-8
+            - TZ=Europe/Berlin
+            - SETGID=1000
+
+volumes:
+    iobrokerdata-unifi:

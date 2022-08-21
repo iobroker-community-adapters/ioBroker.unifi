@@ -1,6 +1,6 @@
 {
   "name": "iobroker.unifi",
-  "version": "0.5.6-beta.2",
+  "version": "0.6.1",
   "description": "UniFi Adapter for ioBroker",
   "author": "braindead1 <os.braindead1@gmail.com>",
   "contributors": [
@@ -22,32 +22,28 @@
     "url": "git+https://github.com/iobroker-community-adapters/ioBroker.unifi.git"
   },
   "dependencies": {
-    "node-unifi": "^1.3.6",
-    "@iobroker/adapter-core": "^2.3.1",
-    "json-logic-js": "^1.2.2",
-    "dateformat": "^3.0.3"
+    "@iobroker/adapter-core": "^2.6.0",
+    "node-unifi": "^2.1.0",
+    "json-logic-js": "^2.0.2",
+    "dateformat": "^4.6.3",
+    "axios": "^0.27.2"
   },
   "devDependencies": {
-    "@alcalzone/release-script": "^1.2.0",
-    "@iobroker/testing": "^2.0.0",
-    "@types/chai": "^4.2.7",
-    "@types/chai-as-promised": "^7.1.2",
-    "@types/gulp": "^4.0.6",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^14.0.1",
-    "@types/proxyquire": "^1.3.28",
-    "@types/sinon": "^7.5.1",
-    "@types/sinon-chai": "^3.2.3",
-    "axios": "^0.19.0",
-    "chai": "^4.2.0",
+    "@alcalzone/release-script": "^3.5.9",
+    "@alcalzone/release-script-plugin-iobroker": "^3.5.9",
+    "@alcalzone/release-script-plugin-license": "^3.5.9",
+    "@iobroker/adapter-dev": "^1.0.0",
+    "@iobroker/testing": "^3.0.2",
+    "chai": "^4.3.6",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^6.8.0",
-    "gulp": "^4.0.2",
+    "eslint": "^8.16.0",
+    "mocha": "^10.0.0",
     "proxyquire": "^2.1.3",
-    "sinon": "^8.0.1",
-    "sinon-chai": "^3.4.0",
-    "mocha": "^7.0.0",
-    "snyk": "^1.323.1"
+    "sinon": "^14.0.0",
+    "sinon-chai": "^3.7.0",
+    "hosted-git-info": "^5.0.0",
+    "glob-parent": "^6.0.2",
+    "json-schema": "^0.4.0"
   },
   "main": "main.js",
   "scripts": {
@@ -57,13 +53,20 @@
     "test:integration": "mocha test/integration --exit",
     "test": "npm run test:js && npm run test:package",
     "lint": "eslint",
-    "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect",
-    "release": "release-script"
+    "release": "release-script",
+    "translate": "translate-adapter"
   },
+  "files": [
+    "admin{,/!(src)/**}/!(tsconfig|tsconfig.*).json",
+    "admin{,/!(src)/**}/*.{html,css,png,svg,jpg,js}",
+    "lib/",
+    "www/",
+    "io-package.json",
+    "LICENSE",
+    "main.js"
+  ],
   "bugs": {
     "url": "https://github.com/iobroker-community-adapters/ioBroker.unifi/issues"
   },
-  "readmeFilename": "README.md",
-  "snyk": true
+  "readmeFilename": "README.md"
 }

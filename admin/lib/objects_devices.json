@@ -173,7 +173,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE current",
-                                                            "type": "number",
+                                                            "type": "string",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -200,7 +200,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE power",
-                                                            "type": "number",
+                                                            "type": "string",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -227,7 +227,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE voltage",
-                                                            "type": "number",
+                                                            "type": "string",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -333,7 +333,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Satisfaction",
-                                                            "type": "string",
+                                                            "type": "number",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -361,7 +361,7 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Speed",
-                                                            "type": "string",
+                                                            "type": "number",
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
@@ -574,7 +574,7 @@
                                                         "logic": {
                                                             "value": "radio"
                                                         }
-                                                    }                                                    
+                                                    }
                                                 }
                                             }
                                         }
@@ -914,7 +914,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 1m",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -932,7 +932,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 15m",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -950,7 +950,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 5m",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1046,7 +1046,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "CPU usage",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1065,7 +1065,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Memory usage",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1084,7 +1084,7 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Uptime",
-                                                "type": "number",
+                                                "type": "string",
                                                 "role": "state",
                                                 "read": true,
                                                 "write": false,
@@ -1393,7 +1393,7 @@
                                     },
                                     "value": "user-num_sta"
                                 }
-                            },                            
+                            },
                             "devices.device.num_sta": {
                                 "type": "state",
                                 "common": {
@@ -1418,6 +1418,44 @@
                                         ]
                                     },
                                     "value": "num_sta"
+                                }
+                            },
+                            "devices.device.state": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Device state",
+                                    "type": "number",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": "Status of device",
+                                    "min": 0,
+                                    "states": {
+                                      "0": "offline",
+                                      "1": "connected",
+                                      "2": "pending adoption",
+                                      "4": "updating",
+                                      "5": "provisioning",
+                                      "6": "unreachable",
+                                      "7": "adopting",
+                                      "9": "adoption error",
+                                      "11": "isolated"
+                                    }
+                                },
+                                "native": {
+                                    "object_id": "devices.device.state"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "state"
+                                            },
+                                            "state",
+                                            null
+                                        ]
+                                    },
+                                    "value": "state"
                                 }
                             },
                             "devices.device.overheating": {

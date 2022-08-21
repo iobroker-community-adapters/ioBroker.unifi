@@ -1,25 +1,4 @@
 /**
- * Encryption
- */
-let secret;
-
-function encrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}
-
-function decrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}
-
-/**
  * Chips
  */
 function list2chips(selector, list, onChange) {
@@ -57,8 +36,8 @@ function chips2list(selector) {
 
 /**
  * the function loadSettings has to exist ...
- * @param {*} settings 
- * @param {*} onChange 
+ * @param {*} settings
+ * @param {*} onChange
  */
 function loadHelper(settings, onChange) {
     // example: select elements with id=key and class=value and insert value
@@ -76,9 +55,6 @@ function loadHelper(settings, onChange) {
     $('.value').each(function () {
         const $key = $(this);
         const id = $key.attr('id');
-        if (id === 'controllerPassword') {
-            settings[id] = decrypt(secret, settings[id]);
-        }
 
         if ($key.attr('type') === 'checkbox') {
             // do not call onChange direct, because onChange could expect some arguments
@@ -101,16 +77,13 @@ function loadHelper(settings, onChange) {
 
 /**
  * Is called by the admin adapter when the settings page loads
- * @param {*} settings 
- * @param {*} onChange 
+ * @param {*} settings
+ * @param {*} onChange
  */
 async function load(settings, onChange) {
     console.log('Loading settings');
 
-    socket.emit('getObject', 'system.config', function (err, obj) {
-        secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
-        loadHelper(settings, onChange);
-    });
+    loadHelper(settings, onChange);
 
     await createChips(settings, onChange);
 
@@ -123,7 +96,7 @@ async function load(settings, onChange) {
 
 /**
  * Is called by the admin adapter when the user presses the save button
- * @param {*} callback 
+ * @param {*} callback
  */
 function save(callback) {
     // example: select elements with class=value and build settings object
@@ -138,10 +111,6 @@ function save(callback) {
             let value = $this.val();
 
             value = value.trim();
-
-            if (id === 'controllerPassword') {
-                value = encrypt(secret, value);
-            }
 
             obj[id] = value;
         }
@@ -197,8 +166,8 @@ function save(callback) {
 
 //#region Functions
 /**
- * @param {*} settings 
- * @param {*} onChange 
+ * @param {*} settings
+ * @param {*} onChange
  */
 async function createChips(settings, onChange) {
     for (const key of Object.keys(settings.objectsFilter)) {
@@ -212,8 +181,8 @@ async function createChips(settings, onChange) {
 }
 
 /**
- * @param {*} settings 
- * @param {*} onChange 
+ * @param {*} settings
+ * @param {*} onChange
  */
 async function createTreeViews(settings, onChange) {
     for (const key of Object.keys(settings.statesFilter)) {
@@ -280,7 +249,7 @@ async function createTreeViews(settings, onChange) {
                         var nodeLastSeenByUsw = data.tree.getNodeByKey('clients.client.last_seen_by_usw');
 
                         if (isOnlineNode && isOnlineNode.length === 1) {
-                            // is_online is selected 
+                            // is_online is selected
                             nodeLastSeenByUap.setSelected(true);
                             nodeLastSeenByUap.unselectable = true;
                             nodeLastSeenByUsw.setSelected(true);
@@ -314,10 +283,10 @@ async function createTreeViews(settings, onChange) {
 }
 
 /**
- * @param {*} name 
- * @param {*} obj 
- * @param {*} tree 
- * @param {*} settings 
+ * @param {*} name
+ * @param {*} obj
+ * @param {*} tree
+ * @param {*} settings
  */
 async function convertJsonToTreeObject(name, obj, tree, settings) {
     for (const [id, value] of Object.entries(obj)) {
@@ -372,7 +341,7 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
 }
 
 /**
- * @param {*} lib 
+ * @param {*} lib
  */
 async function getUnifiObjects(lib) {
     return new Promise((resolve, reject) => {
