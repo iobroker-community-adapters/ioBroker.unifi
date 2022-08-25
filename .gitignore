@@ -8,3 +8,5 @@ admin/i18n/*/flat.txt
 
 # ioBroker dev-server
 .dev-server/
+ioBroker.unifi.code-workspace
+unifi_api_infos/app.js

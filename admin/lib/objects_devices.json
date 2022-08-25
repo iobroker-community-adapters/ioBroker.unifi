@@ -408,6 +408,132 @@
                                     }
                                 }
                             },
+                            "devices.device.port_overrides": {
+                                "_id": "port_overrides",
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "devices.device.port_overrides"
+                                },
+                                "logic": {
+                                    "has_key": "port_overrides",
+                                    "has": {
+                                        "devices.device.port_overrides.port": {
+                                            "type": "channel",
+                                            "common": {},
+                                            "native": {
+                                                "object_id": "devices.device.port_overrides.port"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "port_idx"
+                                                        },
+                                                        {
+                                                            "cleanupForUseAsId": [
+                                                                {
+                                                                    "cat": [
+                                                                        "port_",
+                                                                        {
+                                                                            "var": "port_idx"
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "var": "name"
+                                                        }
+                                                    ]
+                                                },
+                                                "common": {
+                                                    "name": "name"
+                                                },
+                                                "has_key": "_self",
+                                                "has": {
+                                                    "devices.device.port_overrides.port.port_idx": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "ID",
+                                                            "type": "number",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.port_idx"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "port_idx"
+                                                                    },
+                                                                    "port_idx",
+                                                                    null
+                                                                ]
+                                                            },
+                                                            "value": "port_idx"
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.poe_enabled": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "switch poe power",
+                                                            "type": "boolean",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": true,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_overrides.port.poe_enabled"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNull": [
+                                                                    {
+                                                                        "var": "poe_mode"
+                                                                    },
+                                                                    "poe_enabled",
+                                                                    "poe_enabled"
+                                                                ]
+                                                            },
+                                                            "value": {
+                                                                "poeMode": [
+                                                                    {
+                                                                        "var": "poe_mode"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "devices.device.port_overrides.port.name": {
+                                                        "_id": "name",
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "Name",
+                                                            "type": "string",
+                                                            "role": "state",
+                                                            "read": true,
+                                                            "write": false,
+                                                            "desc": ""
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.name"
+                                                        },
+                                                        "logic": {
+                                                            "value": "name"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "devices.device.radio_table_stats": {
                                 "type": "channel",
                                 "common": {},
@@ -1431,15 +1557,15 @@
                                     "desc": "Status of device",
                                     "min": 0,
                                     "states": {
-                                      "0": "offline",
-                                      "1": "connected",
-                                      "2": "pending adoption",
-                                      "4": "updating",
-                                      "5": "provisioning",
-                                      "6": "unreachable",
-                                      "7": "adopting",
-                                      "9": "adoption error",
-                                      "11": "isolated"
+                                        "0": "offline",
+                                        "1": "connected",
+                                        "2": "pending adoption",
+                                        "4": "updating",
+                                        "5": "provisioning",
+                                        "6": "unreachable",
+                                        "7": "adopting",
+                                        "9": "adoption error",
+                                        "11": "isolated"
                                     }
                                 },
                                 "native": {

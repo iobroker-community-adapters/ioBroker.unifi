@@ -112,6 +112,19 @@ jsonLogic.add_operation('alarmPrepareMessage', function (msg, mac, name) {
     return msg;
 });
 
+/**
+ *  Convert timestamp to date
+ */
+jsonLogic.add_operation('poeMode', function (a) {
+    if (a === null) {
+        return false;
+    } else if (a === 'auto') {
+        return true;
+    } else {
+        return false;
+    }
+});
+
 
 /**
  * Translate category code to name
