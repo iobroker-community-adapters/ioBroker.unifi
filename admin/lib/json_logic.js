@@ -113,7 +113,7 @@ jsonLogic.add_operation('alarmPrepareMessage', function (msg, mac, name) {
 });
 
 /**
- *  Convert timestamp to date
+ *  translate poe mode (off / auto) to boolean
  */
 jsonLogic.add_operation('poeMode', function (a) {
     if (a === null) {

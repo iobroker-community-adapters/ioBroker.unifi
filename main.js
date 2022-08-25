@@ -1042,7 +1042,7 @@ class Unifi extends utils.Adapter {
                     if (indexOfPort > 0) {
                         port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
 
-                        await this.controllers[site]._request('/api/s/<SITE>/rest/device/' + deviceId.trim(), { port_overrides: port_overrides }, 'PUT');
+                        await this.controllers[site].setDeviceSettingsBase(deviceId, {port_overrides: port_overrides});
 
                         await this.fetchDevices(site);
                     } else {
