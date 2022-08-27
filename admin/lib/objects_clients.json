@@ -898,7 +898,6 @@
                                 }
                             },
                             "clients.client.reconnect": {
-                                "_id": "reconnect",
                                 "type": "state",
                                 "common": {
                                     "name": "reconnect",
@@ -912,7 +911,17 @@
                                 "native": {
                                     "object_id": "clients.client.reconnect"
                                 },
-                                "logic": {}
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "reconnect",
+                                            null
+                                        ]
+                                    }
+                                }
                             }
                         }
                     }
