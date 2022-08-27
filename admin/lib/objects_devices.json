@@ -566,10 +566,6 @@
                                                             "desc": ""
                                                         },
                                                         "native": {
-                                                            "object_id": "devices.device.port_table.port.name"
-                                                        },
-                                                        "logic": {
-                                                            "value": "name"
                                                             "object_id": "devices.device.port_overrides.port.portconf_id"
                                                         },
                                                         "logic": {
