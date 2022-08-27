@@ -1796,6 +1796,117 @@
                                     }
                                 }
                             },
+                            "devices.device.last_uplink": {
+                                "type": "channel",
+                                "common": {},
+                                "native": {
+                                    "object_id": "devices.device.last_uplink"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "last_uplink"
+                                            },
+                                            "last_uplink",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "last_uplink",
+                                    "has": {
+                                        "devices.device.last_uplink.mac": {
+                                            "_id": "mac",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Uplink MAC address",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.last_uplink.mac"
+                                            },
+                                            "logic": {
+                                                "value": "uplink_mac"
+                                            }
+                                        },
+                                        "devices.device.last_uplink.name": {
+                                            "_id": "name",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Uplink device name",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.last_uplink.name"
+                                            },
+                                            "logic": {
+                                                "value": "uplink_device_name"
+                                            }
+                                        },
+                                        "devices.device.last_uplink.remote_port": {
+                                            "_id": "remote_port",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Uplink remote port",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.last_uplink.remote_port"
+                                            },
+                                            "logic": {
+                                                "value": "uplink_remote_port"
+                                            }
+                                        },
+                                        "devices.device.last_uplink.port_idx": {
+                                            "_id": "port_idx",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "Uplink port",
+                                                "type": "number",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.last_uplink.port_idx"
+                                            },
+                                            "logic": {
+                                                "value": "port_idx"
+                                            }
+                                        },
+                                        "devices.device.last_uplink.type": {
+                                            "_id": "type",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "type of storage",
+                                                "type": "string",
+                                                "role": "state",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.last_uplink.type"
+                                            },
+                                            "logic": {
+                                                "value": "type"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "devices.device.vap_table": {
                                 "type": "channel",
                                 "common": {},
