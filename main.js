@@ -51,6 +51,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.vouchers.create_vouchers');
             this.subscribeStates('trigger_update');
             this.subscribeStates('*.port_overrides.port_*.poe_enabled');
+            this.subscribeStates('*.clients.*.reconnect');
 
             this.log.info('UniFi adapter is ready');
 
@@ -133,6 +134,8 @@ class Unifi extends utils.Adapter {
                     const mac = idParts[4];
 
                     this.switchPoeOfPort(site, mac, portNumber, state.val);
+                } else if (idParts[5] === 'reconnect') {
+                    await this.reconnectClient(id, idParts, site);
                 }
             } catch (err) {
                 this.handleError(err, site, 'onStateChange');
@@ -1042,7 +1045,7 @@ class Unifi extends utils.Adapter {
                     if (indexOfPort > 0) {
                         port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
 
-                        await this.controllers[site].setDeviceSettingsBase(deviceId, {port_overrides: port_overrides});
+                        await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
 
                         await this.fetchDevices(site);
                     } else {
@@ -1052,6 +1055,30 @@ class Unifi extends utils.Adapter {
                     this.log.debug(`switchPoeOfPort: no port_overrides object exists!`);
                 }
             }
+        } catch (err) {
+            this.handleError(err, undefined, 'switchPoeOfPort');
+        }
+    }
+
+    /**
+     * Function to reconnect a client
+     * @param {String} id
+     * @param {Array<String>} idParts
+     * @param {String} site
+     */
+    async reconnectClient(id, idParts, site) {
+        try {
+            const mac = idParts[4];
+            const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
+
+            if (name && name.val) {
+                this.log.info(`reconnectClient: reconnecting client '${name.val}' (mac: ${mac})'`);
+            } else {
+                this.log.info(`reconnectClient: reconnecting client '${mac}'`);
+            }
+
+            await this.controllers[site].reconnectClient(mac);
+
         } catch (err) {
             this.handleError(err, undefined, 'switchPoeOfPort');
         }
