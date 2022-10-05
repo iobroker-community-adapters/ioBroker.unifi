@@ -45,6 +45,17 @@ jsonLogic.add_operation('ifNotNull', function (a, b, c) {
 });
 
 /**
+ * Return value if not null and boolen is true
+ */
+jsonLogic.add_operation('ifNotNullBoolisTrue', function (a, b, c) {
+    if (a !== null && a) {
+        return b;
+    } else {
+        return c;
+    }
+});
+
+/**
  * Cleanup for use as ID
  */
 jsonLogic.add_operation('cleanupForUseAsId', function (a) {
