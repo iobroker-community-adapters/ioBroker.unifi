@@ -50,7 +50,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.wlans.*.enabled');
             this.subscribeStates('*.vouchers.create_vouchers');
             this.subscribeStates('trigger_update');
-            this.subscribeStates('*.port_overrides.port_*.poe_enabled');
+            this.subscribeStates('*.port_table.port_*.port_poe_enabled');
             this.subscribeStates('*.clients.*.reconnect');
 
             this.log.info('UniFi adapter is ready');
@@ -129,7 +129,7 @@ class Unifi extends utils.Adapter {
                     await this.createUnifiVouchers(site);
                 } else if (idParts[2] === 'trigger_update') {
                     await this.updateUnifiData(true);
-                } else if (idParts[7] === 'poe_enabled') {
+                } else if (idParts[7] === 'port_poe_enabled') {
                     const portNumber = idParts[6].split('_').pop();
                     const mac = idParts[4];
 
@@ -1042,15 +1042,18 @@ class Unifi extends utils.Adapter {
                 if (port_overrides && port_overrides.length > 0) {
                     const indexOfPort = port_overrides.findIndex(x => x.port_idx === parseInt(port));
 
-                    if (indexOfPort > 0) {
+                    if (indexOfPort !== -1) {
+                        // port_overrides has settings for this port
                         port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
-
-                        await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
-
-                        await this.fetchDevices(site);
                     } else {
-                        this.log.debug(`switchPoeOfPort: port ${port} not exists in port_overrides object!`);
+                        // port_overrides has no settings for this port
+                        this.log.debug(`switchPoeOfPort: port ${port} not exists in port_overrides object -> create item`);
+                        port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
                     }
+
+                    await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
+
+                    await this.fetchDevices(site);
                 } else {
                     this.log.debug(`switchPoeOfPort: no port_overrides object exists!`);
                 }
@@ -1080,7 +1083,7 @@ class Unifi extends utils.Adapter {
             await this.controllers[site].reconnectClient(mac);
 
         } catch (err) {
-            this.handleError(err, undefined, 'switchPoeOfPort');
+            this.handleError(err, undefined, 'reconnectClient');
         }
     }
 
