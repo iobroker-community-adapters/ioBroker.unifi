@@ -1,7 +1,7 @@
 /**
  * Chips
  */
-function list2chips(selector, list, onChange) {
+ function list2chips(selector, list, onChange) {
     const data = [];
 
     list.sort();
@@ -263,6 +263,48 @@ async function createTreeViews(settings, onChange) {
                         nodeLastSeenByUsw.applyPatch(nodeLastSeenByUsw);
                     }
 
+                    if (key === 'devices') {
+                        var portPoeEnabled = $.map(data.tree.getSelectedNodes(), function (node) {
+                            if (node.data.id === 'devices.device.port_table.port.port_poe_enabled') {
+                                return node;
+                            }
+                        });
+
+                        nodePortPoe = data.tree.getNodeByKey('devices.device.port_table.port.port_poe');
+                        treePortOverrides = data.tree.getNodeByKey('devices.device.port_overrides');
+                        treePortOverridesPort = data.tree.getNodeByKey('devices.device.port_overrides.port');
+
+                        if (portPoeEnabled && portPoeEnabled.length === 1) {
+                            // port_poe_enabled is selected
+                            nodePortPoe.setSelected(true);
+                            nodePortPoe.unselectable = true;
+                           
+                            for(const child of treePortOverridesPort.children){
+                                child.setSelected(true);
+                                child.unselectable = true;
+                                child.applyPatch(child);
+                            }
+
+                            treePortOverridesPort.setSelected(true);
+                            treePortOverridesPort.unselectable = true;
+
+                            treePortOverrides.setSelected(true);
+                            treePortOverrides.unselectable = true;
+                        } else {
+                            nodePortPoe.unselectable = false;
+
+                            for(const child of treePortOverridesPort.children){
+                                child.unselectable = false;
+                                child.applyPatch(child);
+                            }
+
+                            treePortOverridesPort.unselectable = false;
+                            treePortOverrides.unselectable = false;
+                        }
+
+                        nodePortPoe.applyPatch(nodePortPoe);
+                    }
+
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
                     // var selKeys = $.map(data.tree.getSelectedNodes(), function (node) {
                     //     if (node.children === null) {
@@ -299,6 +341,14 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
             if (value && value.type === 'state') {
                 if (settings.statesFilter[name] && settings.statesFilter[name].includes(id)) {
                     if ((id === 'clients.client.last_seen_by_uap' || id === 'clients.client.last_seen_by_usw') && settings.statesFilter[name].includes('clients.client.is_online')) {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true,
+                            unselectable: true
+                        });
+                    } else if ((id === 'devices.device.port_table.port.port_poe' || id.includes('devices.device.port_overrides')) && settings.statesFilter[name].includes('devices.device.port_table.port.port_poe_enabled')) {
                         tree.children.push({
                             title: title,
                             key: id,
