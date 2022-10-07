@@ -45,6 +45,17 @@ jsonLogic.add_operation('ifNotNull', function (a, b, c) {
 });
 
 /**
+ * Return value if not null and boolen is true
+ */
+jsonLogic.add_operation('ifNotNullBoolisTrue', function (a, b, c) {
+    if (a !== null && a) {
+        return b;
+    } else {
+        return c;
+    }
+});
+
+/**
  * Cleanup for use as ID
  */
 jsonLogic.add_operation('cleanupForUseAsId', function (a) {
@@ -110,6 +121,19 @@ jsonLogic.add_operation('alarmPrepareMessage', function (msg, mac, name) {
         }
     }
     return msg;
+});
+
+/**
+ *  translate poe mode (off / auto) to boolean
+ */
+jsonLogic.add_operation('poeMode', function (a) {
+    if (a === null) {
+        return false;
+    } else if (a === 'auto') {
+        return true;
+    } else {
+        return false;
+    }
 });
 
 

@@ -81,6 +81,11 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (maximilian-1) port-overrides structures added
+* (Scrounger) poe power switch added
+* (Scrounger) client reconnect added
+
 ### 0.6.1 (2022-06-08)
 * (jens-maus) Bumped node-unifi to latest 2.1.0
 * (jens-maus) updated translations

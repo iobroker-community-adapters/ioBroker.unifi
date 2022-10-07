@@ -896,6 +896,32 @@
                                     },
                                     "value": "wired-tx_bytes"
                                 }
+                            },
+                            "clients.client.reconnect": {
+                                "type": "state",
+                                "common": {
+                                    "name": "reconnect",
+                                    "type": "boolean",
+                                    "role": "button",
+                                    "read": false,
+                                    "write": true,
+                                    "desc": "",
+                                    "def": false
+                                },
+                                "native": {
+                                    "object_id": "clients.client.reconnect"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "reconnect",
+                                            null
+                                        ]
+                                    }
+                                }
                             }
                         }
                     }

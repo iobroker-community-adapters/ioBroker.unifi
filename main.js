@@ -50,6 +50,8 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.wlans.*.enabled');
             this.subscribeStates('*.vouchers.create_vouchers');
             this.subscribeStates('trigger_update');
+            this.subscribeStates('*.port_table.port_*.port_poe_enabled');
+            this.subscribeStates('*.clients.*.reconnect');
 
             this.log.info('UniFi adapter is ready');
 
@@ -105,15 +107,15 @@ class Unifi extends utils.Adapter {
                 this.setForeignState(`system.adapter.${this.namespace}.alive`, false);
             }
         } catch (err) {
-            this.handleError(err, undefined,'onReady');
+            this.handleError(err, undefined, 'onReady');
         }
     }
 
     /**
-	 * Is called if a subscribed state changes
-	 * @param {string} id
-	 * @param {ioBroker.State | null | undefined} state
-	 */
+     * Is called if a subscribed state changes
+     * @param {string} id
+     * @param {ioBroker.State | null | undefined} state
+     */
     async onStateChange(id, state) {
         if (state && !state.ack) {
             // The state was changed
@@ -127,6 +129,13 @@ class Unifi extends utils.Adapter {
                     await this.createUnifiVouchers(site);
                 } else if (idParts[2] === 'trigger_update') {
                     await this.updateUnifiData(true);
+                } else if (idParts[7] === 'port_poe_enabled') {
+                    const portNumber = idParts[6].split('_').pop();
+                    const mac = idParts[4];
+
+                    this.switchPoeOfPort(site, mac, portNumber, state.val);
+                } else if (idParts[5] === 'reconnect') {
+                    await this.reconnectClient(id, idParts, site);
                 }
             } catch (err) {
                 this.handleError(err, site, 'onStateChange');
@@ -231,7 +240,7 @@ class Unifi extends utils.Adapter {
             try {
                 await defaultController.login();
             } catch (err) {
-                this.handleError(err, undefined,'updateUnifiData-login');
+                this.handleError(err, undefined, 'updateUnifiData-login');
                 return;
             }
             this.log.debug('Login successful');
@@ -324,15 +333,15 @@ class Unifi extends utils.Adapter {
                 await this.setClientOnlineStatus();
 
             } catch (err) {
-                this.handleError(err, undefined,'updateUnifiData-fetchSites');
+                this.handleError(err, undefined, 'updateUnifiData-fetchSites');
                 return;
             }
-            await this.setStateAsync('info.connection', {ack: true, val: true});
+            await this.setStateAsync('info.connection', { ack: true, val: true });
             this.log.debug('Update done');
         } catch (err) {
             await this.setStateAsync('info.connection', { ack: true, val: false });
 
-            this.handleError(err, undefined,'updateUnifiData');
+            this.handleError(err, undefined, 'updateUnifiData');
         }
 
         if (preventReschedule === false) {
@@ -940,7 +949,7 @@ class Unifi extends utils.Adapter {
     async setWlanStatus(site, objId, state) {
         const obj = await this.getForeignObjectAsync(objId);
 
-        if (!obj|| !obj.native) {
+        if (!obj || !obj.native) {
             throw new Error(`setWlanStatus: Object ${objId} invalid, please restart adapter!`);
         }
 
@@ -1004,6 +1013,78 @@ class Unifi extends utils.Adapter {
         await this.processWlans(site, data);
 
         return data;
+    }
+
+    /**
+     * Function to switch poe power for port of device
+     * @param {String} site
+     * @param {String} deviceMac
+     * @param {String} port
+     * @param {Boolean} val
+     */
+    async switchPoeOfPort(site, deviceMac, port, val) {
+        try {
+            this.log.info(`switchPoeOfPort: switching poe power of port ${port} for device ${deviceMac} to ${val}`);
+
+            // we have to get whole data of 'port_overrides' to change poe power of single port.
+            // we must sent the 'port_overrides' for all ports, otherwise the other port will set to default settings
+
+            const result = await this.fetchDevices(site);
+
+            const dataDevice = result.filter(x => x.mac === deviceMac);
+
+            if (dataDevice && dataDevice.length) {
+                const deviceId = dataDevice[0].device_id;
+
+                // eslint-disable-next-line prefer-const
+                let port_overrides = dataDevice[0].port_overrides;
+
+                if (port_overrides && port_overrides.length > 0) {
+                    const indexOfPort = port_overrides.findIndex(x => x.port_idx === parseInt(port));
+
+                    if (indexOfPort !== -1) {
+                        // port_overrides has settings for this port
+                        port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
+                    } else {
+                        // port_overrides has no settings for this port
+                        this.log.debug(`switchPoeOfPort: port ${port} not exists in port_overrides object -> create item`);
+                        port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
+                    }
+
+                    await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
+
+                    await this.fetchDevices(site);
+                } else {
+                    this.log.debug(`switchPoeOfPort: no port_overrides object exists!`);
+                }
+            }
+        } catch (err) {
+            this.handleError(err, undefined, 'switchPoeOfPort');
+        }
+    }
+
+    /**
+     * Function to reconnect a client
+     * @param {String} id
+     * @param {Array<String>} idParts
+     * @param {String} site
+     */
+    async reconnectClient(id, idParts, site) {
+        try {
+            const mac = idParts[4];
+            const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
+
+            if (name && name.val) {
+                this.log.info(`reconnectClient: reconnecting client '${name.val}' (mac: ${mac})'`);
+            } else {
+                this.log.info(`reconnectClient: reconnecting client '${mac}'`);
+            }
+
+            await this.controllers[site].reconnectClient(mac);
+
+        } catch (err) {
+            this.handleError(err, undefined, 'reconnectClient');
+        }
     }
 
     /**
@@ -1137,7 +1218,7 @@ class Unifi extends utils.Adapter {
                             const oldState = await this.getStateAsync(obj._id);
 
                             if (oldState === null || oldState.val !== obj.value) {
-                                if(obj.value && typeof obj.value === 'object') {
+                                if (obj.value && typeof obj.value === 'object') {
                                     await this.setStateAsync(obj._id, { ack: true, val: JSON.stringify(obj.value) });
                                 } else {
                                     await this.setStateAsync(obj._id, { ack: true, val: obj.value });
@@ -1171,7 +1252,7 @@ class Unifi extends utils.Adapter {
                 }
             }
         } catch (err) {
-            this.handleError(err, undefined,'applyJsonLogic');
+            this.handleError(err, undefined, 'applyJsonLogic');
         }
     }
 
