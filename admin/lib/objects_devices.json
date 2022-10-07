@@ -922,7 +922,7 @@
                                                             "role": "state",
                                                             "read": true,
                                                             "write": false,
-                                                            "desc": "Link Layer Discovery Protokoll - Media Endpoint Devices (for VoIP)"
+                                                            "desc": "Link Layer Discovery Protocol - Media Endpoint Devices (for VoIP)"
                                                         },
                                                         "native": {
                                                             "object_id": "devices.device.port_overrides.port.lldpmed_notify_enabled"

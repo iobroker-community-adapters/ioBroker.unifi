@@ -1,7 +1,7 @@
 /**
  * Chips
  */
- function list2chips(selector, list, onChange) {
+function list2chips(selector, list, onChange) {
     const data = [];
 
     list.sort();
