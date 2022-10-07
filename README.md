@@ -82,6 +82,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (jens-maus) Bumped node-unifi to latest 2.2.0
 * (maximilian-1) port-overrides structures added
 * (Scrounger) poe power switch added
 * (Scrounger) client reconnect added
