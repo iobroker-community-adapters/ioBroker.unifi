@@ -23,10 +23,10 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.0",
-    "node-unifi": "^2.1.0",
+    "node-unifi": "^2.2.0",
     "json-logic-js": "^2.0.2",
     "dateformat": "^4.6.3",
-    "axios": "^0.27.2"
+    "axios": "^1.1.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.9",
