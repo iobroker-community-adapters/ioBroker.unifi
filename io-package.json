@@ -1,8 +1,20 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "news": {
+      "0.6.3": {
+        "en": "Bumped node-unifi to latest 2.2.1 (fixes #613)",
+        "de": "Knoten-unifi nach neuestem 2.2.1 (fixes #613)",
+        "ru": "Выброшенный node-unifi до последних 2.2.1 (фиксы #613)",
+        "pt": "Bumped node-unifi para o mais recente 2.2.1 (fixos #613)",
+        "nl": "Bomped node-unifi tot laatste 2.2.1 (fixes 613)",
+        "fr": "Bumped node-unifi to latest 2.2.1 (fixes #613)",
+        "it": "Nodo-unifi saltato alle ultime 2.2.1 (fissi #613)",
+        "es": "Bumped node-unifi to latest 2.2.1 (fixes #613)",
+        "pl": "Węzeł węzeł-unifii najnowsza 2,2.1 (oznaczenie #613)",
+        "zh-cn": "对最近2.1.1(第613号)的弃权"
+      },
       "0.6.2": {
         "en": "Bumped node-unifi to latest 2.2.0\nport-overrides structures added\npoe power switch added\nclient reconnect added",
         "de": "Übersprungenes Node-unifi bis spätestens 2.2.0\nport-overrides strukturen hinzugefügt\npoe power switch hinzugefügt\nclient reconnect hinzugefügt",
@@ -74,18 +86,6 @@
         "es": "* (braindead1) Se corrigieron problemas relacionados con sitios no utilizados\r\n* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
         "pl": "* (braindead1) Naprawiono problemy związane z nieużywanymi witrynami\r\n* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
         "zh-cn": "*（braindead1）修复了与未使用站点有关的问题\r\n*（braindead1）修复了通过哨兵报告的一些错误"
-      },
-      "0.5.7": {
-        "en": "* (braindead1) Fixed Sentry errors caused by not updated configuration after update",
-        "de": "* (braindead1) Sentry-Fehler wurden behoben, die durch nicht aktualisierte Konfiguration nach dem Update verursacht wurden",
-        "ru": "* (braindead1) Исправлены ошибки Sentry, вызванные не обновленной конфигурацией после обновления",
-        "pt": "* (braindead1) Corrigidos erros de sentinela causados por configurações não atualizadas após a atualização",
-        "nl": "* (braindead1) Vaste Sentry-fouten veroorzaakt door niet bijgewerkte configuratie na update",
-        "fr": "* (braindead1) Correction des erreurs Sentry causées par une configuration non mise à jour après la mise à jour",
-        "it": "* (braindead1) Risolti errori Sentry causati da una configurazione non aggiornata dopo l'aggiornamento",
-        "es": "* (braindead1) Se corrigieron los errores de Centinela causados por la configuración no actualizada después de la actualización",
-        "pl": "* (braindead1) Naprawiono błędy Sentry spowodowane niezaktualizowaną konfiguracją po aktualizacji",
-        "zh-cn": "*（braindead1）修复了更新后未更新配置导致的Sentry错误"
       }
     },
     "title": "UniFi Network",
