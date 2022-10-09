@@ -51,6 +51,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.vouchers.create_vouchers');
             this.subscribeStates('trigger_update');
             this.subscribeStates('*.port_table.port_*.port_poe_enabled');
+            this.subscribeStates('*.port_table.port_*.port_poe_cycle');
             this.subscribeStates('*.clients.*.reconnect');
 
             this.log.info('UniFi adapter is ready');
@@ -134,6 +135,13 @@ class Unifi extends utils.Adapter {
                     const mac = idParts[4];
 
                     this.switchPoeOfPort(site, mac, portNumber, state.val);
+                } else if (idParts[7] === 'port_poe_cycle') {
+                    const portNumber = idParts[6].split('_').pop();
+                    const mac = idParts[4];
+
+                    this.log.info(`onStateChange: port power cycle (port: ${portNumber}, device: ${mac})`);
+
+                    await this.controllers[site].powerCycleSwitchPort(mac, portNumber);
                 } else if (idParts[5] === 'reconnect') {
                     await this.reconnectClient(id, idParts, site);
                 }

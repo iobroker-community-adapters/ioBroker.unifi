@@ -359,7 +359,33 @@
                                                                 ]
                                                             }
                                                         }
-                                                    },                                                    
+                                                    },
+                                                    "devices.device.port_table.port.port_poe_cycle": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "port power cycle",
+                                                            "type": "boolean",
+                                                            "role": "button",
+                                                            "read": false,
+                                                            "write": true,
+                                                            "desc": "",
+                                                            "def": false
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_poe_cycle"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNullBoolisTrue": [
+                                                                    {
+                                                                        "var": "port_poe"
+                                                                    },
+                                                                    "port_poe_cycle",
+                                                                    null
+                                                                ]
+                                                            }
+                                                        }
+                                                    },                                                                                              
                                                     "devices.device.port_table.port.rx_bytes": {
                                                         "type": "state",
                                                         "common": {
