@@ -2102,6 +2102,47 @@
                                     "value": "guest-num_sta"
                                 }
                             },
+                            "devices.device.device_id": {
+                                "_id": "device_id",
+                                "type": "state",
+                                "common": {
+                                    "name": "Device Id",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.device_id"
+                                },
+                                "logic": {
+                                    "value": "device_id"
+                                }
+                            },
+                            "devices.device.led_override": {
+                                "_id": "led_override",
+                                "type": "state",
+                                "common": {
+                                    "name": "Led Override",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": true,
+                                    "states": {
+                                        "on": "on",
+                                        "off": "off",
+                                        "default": "default"
+                                    },
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.led_override"
+                                },
+                                "logic": {
+                                    "value": "led_override"
+                                }
+                            },
                             "devices.device.ip": {
                                 "_id": "ip",
                                 "type": "state",

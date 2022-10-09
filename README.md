@@ -82,6 +82,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+* (Scrounger) led override added
 * (Scrounger) port power cycle added
 
 ### 0.6.3 (2022-10-08)

@@ -1,7 +1,7 @@
 /**
  * Chips
  */
-function list2chips(selector, list, onChange) {
+ function list2chips(selector, list, onChange) {
     const data = [];
 
     list.sort();
@@ -238,7 +238,7 @@ async function createTreeViews(settings, onChange) {
                     tree
                 ],
                 select: function (event, data) {
-                    if (key === 'clients') {
+                    if (data.node.key === 'clients.client.is_online') {
                         var isOnlineNode = $.map(data.tree.getSelectedNodes(), function (node) {
                             if (node.data.id === 'clients.client.is_online') {
                                 return node;
@@ -263,23 +263,23 @@ async function createTreeViews(settings, onChange) {
                         nodeLastSeenByUsw.applyPatch(nodeLastSeenByUsw);
                     }
 
-                    if (key === 'devices') {
+                    if (data.node.key === 'devices.device.port_table.port.port_poe_enabled') {
                         var portPoeEnabled = $.map(data.tree.getSelectedNodes(), function (node) {
                             if (node.data.id === 'devices.device.port_table.port.port_poe_enabled') {
                                 return node;
                             }
                         });
 
-                        nodePortPoe = data.tree.getNodeByKey('devices.device.port_table.port.port_poe');
-                        treePortOverrides = data.tree.getNodeByKey('devices.device.port_overrides');
-                        treePortOverridesPort = data.tree.getNodeByKey('devices.device.port_overrides.port');
+                        let nodePortPoe = data.tree.getNodeByKey('devices.device.port_table.port.port_poe');
+                        let treePortOverrides = data.tree.getNodeByKey('devices.device.port_overrides');
+                        let treePortOverridesPort = data.tree.getNodeByKey('devices.device.port_overrides.port');
 
                         if (portPoeEnabled && portPoeEnabled.length === 1) {
                             // port_poe_enabled is selected
                             nodePortPoe.setSelected(true);
                             nodePortPoe.unselectable = true;
-                           
-                            for(const child of treePortOverridesPort.children){
+
+                            for (const child of treePortOverridesPort.children) {
                                 child.setSelected(true);
                                 child.unselectable = true;
                                 child.applyPatch(child);
@@ -293,7 +293,7 @@ async function createTreeViews(settings, onChange) {
                         } else {
                             nodePortPoe.unselectable = false;
 
-                            for(const child of treePortOverridesPort.children){
+                            for (const child of treePortOverridesPort.children) {
                                 child.unselectable = false;
                                 child.applyPatch(child);
                             }
@@ -303,6 +303,26 @@ async function createTreeViews(settings, onChange) {
                         }
 
                         nodePortPoe.applyPatch(nodePortPoe);
+                    }
+
+                    if (data.node.key === 'devices.device.led_override') {
+                        var ledOverrideEnabled = $.map(data.tree.getSelectedNodes(), function (node) {
+                            if (node.data.id === 'devices.device.led_override') {
+                                return node;
+                            }
+                        });
+
+                        let nodeDeviceId = data.tree.getNodeByKey('devices.device.device_id');
+
+                        if (ledOverrideEnabled && ledOverrideEnabled.length === 1) {
+                            // port_poe_enabled is selected
+                            nodeDeviceId.setSelected(true);
+                            nodeDeviceId.unselectable = true;
+                        } else {
+                            nodeDeviceId.unselectable = false;
+                        }
+
+                        nodeDeviceId.applyPatch(nodeDeviceId);
                     }
 
                     // Funktion um alle title auszulesen, kann für Übersetzung verwendet werden -> bitte drin lassen!
@@ -349,6 +369,14 @@ async function convertJsonToTreeObject(name, obj, tree, settings) {
                             unselectable: true
                         });
                     } else if ((id === 'devices.device.port_table.port.port_poe' || id.includes('devices.device.port_overrides')) && settings.statesFilter[name].includes('devices.device.port_table.port.port_poe_enabled')) {
+                        tree.children.push({
+                            title: title,
+                            key: id,
+                            id: id,
+                            selected: true,
+                            unselectable: true
+                        });
+                    } else if (id === 'devices.device.device_id' && settings.statesFilter[name].includes('devices.device.led_override')) {
                         tree.children.push({
                             title: title,
                             key: id,
