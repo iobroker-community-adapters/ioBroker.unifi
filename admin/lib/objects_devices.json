@@ -385,7 +385,7 @@
                                                                 ]
                                                             }
                                                         }
-                                                    },                                                                                              
+                                                    },
                                                     "devices.device.port_table.port.rx_bytes": {
                                                         "type": "state",
                                                         "common": {
@@ -2590,6 +2590,22 @@
                                 "logic": {
                                     "value": "version"
                                 }
+                            },
+                            "devices.device.restart": {
+                                "_id": "restart",
+                                "type": "state",
+                                "common": {
+                                    "name": "restart device",
+                                    "type": "boolean",
+                                    "role": "button",
+                                    "read": false,
+                                    "write": true,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.restart"
+                                },
+                                "logic": {}
                             }
                         }
                     }

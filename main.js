@@ -54,6 +54,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.port_table.port_*.port_poe_cycle');
             this.subscribeStates('*.clients.*.reconnect');
             this.subscribeStates('*.devices.*.led_override');
+            this.subscribeStates('*.devices.*.restart');
 
             this.log.info('UniFi adapter is ready');
 
@@ -151,8 +152,13 @@ class Unifi extends utils.Adapter {
                     this.log.info(`onStateChange: override led to '${state.val}' (device: ${deviceId.val})`);
 
                     await this.controllers[site].setLEDOverride(deviceId.val, state.val);
-                }
+                } else if (idParts[5] === 'restart') {
+                    const mac = idParts[4];
 
+                    this.log.info(`onStateChange: restart device '${mac}'`);
+
+                    await this.controllers[site].restartDevice(mac, 'soft');
+                }
             } catch (err) {
                 this.handleError(err, site, 'onStateChange');
             }
