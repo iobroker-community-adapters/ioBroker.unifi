@@ -359,7 +359,33 @@
                                                                 ]
                                                             }
                                                         }
-                                                    },                                                    
+                                                    },
+                                                    "devices.device.port_table.port.port_poe_cycle": {
+                                                        "type": "state",
+                                                        "common": {
+                                                            "name": "port power cycle",
+                                                            "type": "boolean",
+                                                            "role": "button",
+                                                            "read": false,
+                                                            "write": true,
+                                                            "desc": "",
+                                                            "def": false
+                                                        },
+                                                        "native": {
+                                                            "object_id": "devices.device.port_table.port.port_poe_cycle"
+                                                        },
+                                                        "logic": {
+                                                            "_id": {
+                                                                "ifNotNullBoolisTrue": [
+                                                                    {
+                                                                        "var": "port_poe"
+                                                                    },
+                                                                    "port_poe_cycle",
+                                                                    null
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
                                                     "devices.device.port_table.port.rx_bytes": {
                                                         "type": "state",
                                                         "common": {
@@ -2076,6 +2102,47 @@
                                     "value": "guest-num_sta"
                                 }
                             },
+                            "devices.device.device_id": {
+                                "_id": "device_id",
+                                "type": "state",
+                                "common": {
+                                    "name": "Device Id",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.device_id"
+                                },
+                                "logic": {
+                                    "value": "device_id"
+                                }
+                            },
+                            "devices.device.led_override": {
+                                "_id": "led_override",
+                                "type": "state",
+                                "common": {
+                                    "name": "Led Override",
+                                    "type": "string",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": true,
+                                    "states": {
+                                        "on": "on",
+                                        "off": "off",
+                                        "default": "default"
+                                    },
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.led_override"
+                                },
+                                "logic": {
+                                    "value": "led_override"
+                                }
+                            },
                             "devices.device.ip": {
                                 "_id": "ip",
                                 "type": "state",
@@ -2523,6 +2590,22 @@
                                 "logic": {
                                     "value": "version"
                                 }
+                            },
+                            "devices.device.restart": {
+                                "_id": "restart",
+                                "type": "state",
+                                "common": {
+                                    "name": "restart device",
+                                    "type": "boolean",
+                                    "role": "button",
+                                    "read": false,
+                                    "write": true,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "devices.device.restart"
+                                },
+                                "logic": {}
                             }
                         }
                     }
