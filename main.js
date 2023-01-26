@@ -431,6 +431,7 @@ class Unifi extends utils.Adapter {
         this.log.silly(`fetchClients ${site}: ${JSON.stringify(data)}`);
 
         await this.processClients(site, data);
+        await this.processBlockedClients(site);
 
         return data;
     }
@@ -458,6 +459,35 @@ class Unifi extends utils.Adapter {
 
             if (siteData.length > 0) {
                 await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+            }
+        }
+    }
+
+    /**
+     * Function to identify blocked clients and set the correct state
+     * @param {Object} site
+     */
+    async processBlockedClients(site) {
+        if (this.statesFilter.clients.includes('clients.client.blocked')) {
+            const blockedClients = await this.controllers[site].getBlockedUsers();
+
+            const allClients = await this.getStatesAsync(`*.clients.*.blocked`);
+            // this.log.warn(JSON.stringify(blockedClients));
+
+            for (const id in allClients) {
+                if (blockedClients && blockedClients.length > 0) {
+                    const clientMac = id.match(/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/)[0];
+                    const index = blockedClients.findIndex(x => x.mac === clientMac);
+
+                    if (index === -1) {
+                        await this.setStateAsync(id, false, true);
+                    } else {
+                        await this.setStateAsync(id, true, true);
+                        this.log.debug(`client '${clientMac}' is blocked`);
+                    }
+                } else {
+                    await this.setStateAsync(id, false, true);
+                }
             }
         }
     }
