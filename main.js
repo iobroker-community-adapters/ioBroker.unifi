@@ -63,6 +63,7 @@ class Unifi extends utils.Adapter {
             this.settings.controllerPassword = this.config.controllerPassword;
             this.settings.ignoreSSLErrors = this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
+            this.update.blacklist = this.config.blacklistClients;
             this.update.clients = this.config.updateClients;
             this.update.devices = this.config.updateDevices;
             this.update.health = this.config.updateHealth;
@@ -443,25 +444,44 @@ class Unifi extends utils.Adapter {
     async processClients(site, data) {
         const objects = require('./admin/lib/objects_clients.json');
 
-        if (data) {
+        if(this.update.blacklist === true){
+            if (data) {
             // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.clients.includes(item.mac) !== true &&
-                    this.objectsFilter.clients.includes(item.ip) !== true &&
-                    this.objectsFilter.clients.includes(item.name) !== true &&
-                    this.objectsFilter.clients.includes(item.hostname) !== true) {
-                    return item;
+                const siteData = data.filter((item) => {
+                    if (this.objectsFilter.clients.includes(item.mac) == true ||
+                        this.objectsFilter.clients.includes(item.ip) == true ||
+                        this.objectsFilter.clients.includes(item.name) == true ||
+                        this.objectsFilter.clients.includes(item.hostname) == true) {
+                        return item;
+                    }
+                });
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
                 }
-            });
+            }
+        }
+        if(this.update.blacklist === false){
+            if (data) {
+                // Process objectsFilter
+                const siteData = data.filter((item) => {
+                    if (this.objectsFilter.clients.includes(item.mac) !== true &&
+                        this.objectsFilter.clients.includes(item.ip) !== true &&
+                        this.objectsFilter.clients.includes(item.name) !== true &&
+                        this.objectsFilter.clients.includes(item.hostname) !== true) {
+                        return item;
+                    }
+                });
+            
+                this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
 
-            this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+                }
             }
         }
     }
-
+    
     /**
      * Update is_online of offline clients
      */
