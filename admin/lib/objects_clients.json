@@ -926,7 +926,7 @@
                             "clients.client.blocked": {
                                 "type": "state",
                                 "common": {
-                                    "name": "blocked",
+                                    "name": "client block / unblock",
                                     "type": "boolean",
                                     "role": "state",
                                     "read": true,

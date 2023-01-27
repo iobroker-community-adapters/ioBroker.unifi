@@ -52,6 +52,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('trigger_update');
             this.subscribeStates('*.port_table.port_*.port_poe_enabled');
             this.subscribeStates('*.clients.*.reconnect');
+            this.subscribeStates('*.clients.*.blocked');
 
             this.log.info('UniFi adapter is ready');
 
@@ -121,6 +122,7 @@ class Unifi extends utils.Adapter {
             // The state was changed
             const idParts = id.split('.');
             const site = idParts[2];
+            const mac = idParts[4];
 
             try {
                 if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
@@ -131,11 +133,11 @@ class Unifi extends utils.Adapter {
                     await this.updateUnifiData(true);
                 } else if (idParts[7] === 'port_poe_enabled') {
                     const portNumber = idParts[6].split('_').pop();
-                    const mac = idParts[4];
-
                     this.switchPoeOfPort(site, mac, portNumber, state.val);
                 } else if (idParts[5] === 'reconnect') {
                     await this.reconnectClient(id, idParts, site);
+                } else if (idParts[5] === 'blocked') {
+                    await this.blockClient(id, site, idParts, state.val);
                 }
             } catch (err) {
                 this.handleError(err, site, 'onStateChange');
@@ -1114,6 +1116,30 @@ class Unifi extends utils.Adapter {
 
         } catch (err) {
             this.handleError(err, undefined, 'reconnectClient');
+        }
+    }
+
+    /**
+     * Funtion to block / unblock client
+     * @param {String} id
+     * @param {String} site
+     * @param {Array<String>} idParts
+     * @param {Boolean} block
+     */
+    async blockClient(id, site, idParts, block) {
+        const mac = idParts[4];
+        const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
+
+        if (name && name.val) {
+            this.log.info(`${block ? 'block' : 'unblock'} client '${name.val}' (mac: ${mac})'`);
+        } else {
+            this.log.info(`${block ? 'block' : 'unblock'} client '${mac}'`);
+        }
+
+        if (block) {
+            await this.controllers[site].blockClient(mac);
+        } else {
+            await this.controllers[site].unblockClient(mac);
         }
     }
 
