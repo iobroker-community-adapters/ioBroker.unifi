@@ -178,7 +178,7 @@ class Unifi extends utils.Adapter {
             this.log.error(`Error site ${site}: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.`);
         } else if (err.message === 'api.err.ServerBusy') {
             this.log.error(`Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`);
-        } else if (err.message === 'api.err.NoPermission') {
+        } else if (err.message === 'api.err.NoPermission' || (err.response && err.response.data && err.response.data.meta && err.response.data.meta.msg && err.response.data.meta.msg === 'api.err.NoPermission')) {
             this.log.error(`Error site ${site}: Permission denied. Check access rights.`);
         } else if (err.message.includes('connect EHOSTUNREACH') || err.message.includes('connect ENETUNREACH')) {
             this.log.error(`Error site ${site}: Host or network cannot be reached.`);
