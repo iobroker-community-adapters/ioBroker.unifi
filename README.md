@@ -81,6 +81,12 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (Scrounger) restart device added
+* (Scrounger) led override added
+* (Scrounger) port power cycle added
+
 ### 0.6.3 (2022-10-08)
 * (jens-maus) Bumped node-unifi to latest 2.2.1 (fixes #613)
 
