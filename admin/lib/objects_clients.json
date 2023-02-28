@@ -922,7 +922,33 @@
                                         ]
                                     }
                                 }
-                            }
+                            },
+                            "clients.client.blocked": {
+                                "type": "state",
+                                "common": {
+                                    "name": "client block / unblock",
+                                    "type": "boolean",
+                                    "role": "state",
+                                    "read": true,
+                                    "write": true,
+                                    "desc": "",
+                                    "def": false
+                                },
+                                "native": {
+                                    "object_id": "clients.client.blocked"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "blocked",
+                                            null
+                                        ]
+                                    }
+                                }
+                            }                            
                         }
                     }
                 }

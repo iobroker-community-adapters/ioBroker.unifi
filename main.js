@@ -53,6 +53,7 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.port_table.port_*.port_poe_enabled');
             this.subscribeStates('*.port_table.port_*.port_poe_cycle');
             this.subscribeStates('*.clients.*.reconnect');
+            this.subscribeStates('*.clients.*.blocked');
             this.subscribeStates('*.devices.*.led_override');
             this.subscribeStates('*.devices.*.restart');
 
@@ -125,6 +126,7 @@ class Unifi extends utils.Adapter {
             // The state was changed
             const idParts = id.split('.');
             const site = idParts[2];
+            const mac = idParts[4];
 
             try {
                 if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
@@ -135,8 +137,6 @@ class Unifi extends utils.Adapter {
                     await this.updateUnifiData(true);
                 } else if (idParts[7] === 'port_poe_enabled') {
                     const portNumber = idParts[6].split('_').pop();
-                    const mac = idParts[4];
-
                     this.switchPoeOfPort(site, mac, portNumber, state.val);
                 } else if (idParts[7] === 'port_poe_cycle') {
                     const portNumber = idParts[6].split('_').pop();
@@ -147,6 +147,8 @@ class Unifi extends utils.Adapter {
                     await this.controllers[site].powerCycleSwitchPort(mac, portNumber);
                 } else if (idParts[5] === 'reconnect') {
                     await this.reconnectClient(id, idParts, site);
+                } else if (idParts[5] === 'blocked') {
+                    await this.blockClient(id, site, idParts, state.val);
                 } else if (idParts[5] === 'led_override') {
                     const deviceId = await this.getStateAsync(id.substring(0, id.lastIndexOf('.')) + '.device_id');
 
@@ -199,7 +201,7 @@ class Unifi extends utils.Adapter {
             this.log.error(`Error site ${site}: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.`);
         } else if (err.message === 'api.err.ServerBusy') {
             this.log.error(`Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`);
-        } else if (err.message === 'api.err.NoPermission') {
+        } else if (err.message === 'api.err.NoPermission' || (err.response && err.response.data && err.response.data.meta && err.response.data.meta.msg && err.response.data.meta.msg === 'api.err.NoPermission')) {
             this.log.error(`Error site ${site}: Permission denied. Check access rights.`);
         } else if (err.message.includes('connect EHOSTUNREACH') || err.message.includes('connect ENETUNREACH')) {
             this.log.error(`Error site ${site}: Host or network cannot be reached.`);
@@ -454,6 +456,7 @@ class Unifi extends utils.Adapter {
         this.log.silly(`fetchClients ${site}: ${JSON.stringify(data)}`);
 
         await this.processClients(site, data);
+        await this.processBlockedClients(site);
 
         return data;
     }
@@ -504,6 +507,35 @@ class Unifi extends utils.Adapter {
         }
     }
     
+    /**
+     * Function to identify blocked clients and set the correct state
+     * @param {Object} site
+     */
+    async processBlockedClients(site) {
+        if (this.statesFilter.clients.includes('clients.client.blocked')) {
+            const blockedClients = await this.controllers[site].getBlockedUsers();
+
+            const allClients = await this.getStatesAsync(`*.clients.*.blocked`);
+            // this.log.warn(JSON.stringify(blockedClients));
+
+            for (const id in allClients) {
+                if (blockedClients && blockedClients.length > 0) {
+                    const clientMac = id.match(/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/)[0];
+                    const index = blockedClients.findIndex(x => x.mac === clientMac);
+
+                    if (index === -1) {
+                        await this.setStateAsync(id, false, true);
+                    } else {
+                        await this.setStateAsync(id, true, true);
+                        this.log.debug(`client '${clientMac}' is blocked`);
+                    }
+                } else {
+                    await this.setStateAsync(id, false, true);
+                }
+            }
+        }
+    }
+
     /**
      * Update is_online of offline clients
      */
@@ -1126,6 +1158,30 @@ class Unifi extends utils.Adapter {
 
         } catch (err) {
             this.handleError(err, undefined, 'reconnectClient');
+        }
+    }
+
+    /**
+     * Funtion to block / unblock client
+     * @param {String} id
+     * @param {String} site
+     * @param {Array<String>} idParts
+     * @param {Boolean} block
+     */
+    async blockClient(id, site, idParts, block) {
+        const mac = idParts[4];
+        const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
+
+        if (name && name.val) {
+            this.log.info(`${block ? 'block' : 'unblock'} client '${name.val}' (mac: ${mac})'`);
+        } else {
+            this.log.info(`${block ? 'block' : 'unblock'} client '${mac}'`);
+        }
+
+        if (block) {
+            await this.controllers[site].blockClient(mac);
+        } else {
+            await this.controllers[site].unblockClient(mac);
         }
     }
 
