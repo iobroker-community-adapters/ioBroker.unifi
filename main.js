@@ -51,8 +51,11 @@ class Unifi extends utils.Adapter {
             this.subscribeStates('*.vouchers.create_vouchers');
             this.subscribeStates('trigger_update');
             this.subscribeStates('*.port_table.port_*.port_poe_enabled');
+            this.subscribeStates('*.port_table.port_*.port_poe_cycle');
             this.subscribeStates('*.clients.*.reconnect');
             this.subscribeStates('*.clients.*.blocked');
+            this.subscribeStates('*.devices.*.led_override');
+            this.subscribeStates('*.devices.*.restart');
 
             this.log.info('UniFi adapter is ready');
 
@@ -64,6 +67,7 @@ class Unifi extends utils.Adapter {
             this.settings.controllerPassword = this.config.controllerPassword;
             this.settings.ignoreSSLErrors = this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
+            this.update.blacklist = this.config.blacklistClients;
             this.update.clients = this.config.updateClients;
             this.update.devices = this.config.updateDevices;
             this.update.health = this.config.updateHealth;
@@ -134,10 +138,29 @@ class Unifi extends utils.Adapter {
                 } else if (idParts[7] === 'port_poe_enabled') {
                     const portNumber = idParts[6].split('_').pop();
                     this.switchPoeOfPort(site, mac, portNumber, state.val);
+                } else if (idParts[7] === 'port_poe_cycle') {
+                    const portNumber = idParts[6].split('_').pop();
+                    const mac = idParts[4];
+
+                    this.log.info(`onStateChange: port power cycle (port: ${portNumber}, device: ${mac})`);
+
+                    await this.controllers[site].powerCycleSwitchPort(mac, portNumber);
                 } else if (idParts[5] === 'reconnect') {
                     await this.reconnectClient(id, idParts, site);
                 } else if (idParts[5] === 'blocked') {
                     await this.blockClient(id, site, idParts, state.val);
+                } else if (idParts[5] === 'led_override') {
+                    const deviceId = await this.getStateAsync(id.substring(0, id.lastIndexOf('.')) + '.device_id');
+
+                    this.log.info(`onStateChange: override led to '${state.val}' (device: ${deviceId.val})`);
+
+                    await this.controllers[site].setLEDOverride(deviceId.val, state.val);
+                } else if (idParts[5] === 'restart') {
+                    const mac = idParts[4];
+
+                    this.log.info(`onStateChange: restart device '${mac}'`);
+
+                    await this.controllers[site].restartDevice(mac, 'soft');
                 }
             } catch (err) {
                 this.handleError(err, site, 'onStateChange');
@@ -446,25 +469,44 @@ class Unifi extends utils.Adapter {
     async processClients(site, data) {
         const objects = require('./admin/lib/objects_clients.json');
 
-        if (data) {
+        if(this.update.blacklist === true){
+            if (data) {
             // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.clients.includes(item.mac) !== true &&
-                    this.objectsFilter.clients.includes(item.ip) !== true &&
-                    this.objectsFilter.clients.includes(item.name) !== true &&
-                    this.objectsFilter.clients.includes(item.hostname) !== true) {
-                    return item;
+                const siteData = data.filter((item) => {
+                    if (this.objectsFilter.clients.includes(item.mac) == true ||
+                        this.objectsFilter.clients.includes(item.ip) == true ||
+                        this.objectsFilter.clients.includes(item.name) == true ||
+                        this.objectsFilter.clients.includes(item.hostname) == true) {
+                        return item;
+                    }
+                });
+
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
                 }
-            });
+            }
+        }
+        if(this.update.blacklist === false){
+            if (data) {
+                // Process objectsFilter
+                const siteData = data.filter((item) => {
+                    if (this.objectsFilter.clients.includes(item.mac) !== true &&
+                        this.objectsFilter.clients.includes(item.ip) !== true &&
+                        this.objectsFilter.clients.includes(item.name) !== true &&
+                        this.objectsFilter.clients.includes(item.hostname) !== true) {
+                        return item;
+                    }
+                });
+            
+                this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
 
-            this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
-
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+                if (siteData.length > 0) {
+                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
+                }
             }
         }
     }
-
+    
     /**
      * Function to identify blocked clients and set the correct state
      * @param {Object} site
