@@ -1030,7 +1030,7 @@ class Unifi extends utils.Adapter {
         const wlanId = obj.native.wlan_id;
         const disable = !state.val;
 
-        const data = await this.controllers[site].disableWLan(site, wlanId, disable);
+        const data = await this.controllers[site].disableWLan(wlanId, disable);
         if (!Array.isArray(data)) {
             throw new Error(`setWlanStatus: Returned data is not in valid format: ${JSON.stringify(data)}`);
         }
