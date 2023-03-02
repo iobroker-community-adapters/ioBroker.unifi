@@ -83,6 +83,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 -->
 
 ### **WORK IN PROGRESS**
+* (wuliwux) fixed issue in setWlanStatus not working (#665, #601)
 * (jens-maus) Bumped node-unifi to latest 2.3.0
 * (pafade89) New feature for whitelisting client objects (#651)
 * (Scrounger) client block / unblock added
