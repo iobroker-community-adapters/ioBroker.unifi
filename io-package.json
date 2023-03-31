@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.3",
+    "version": "0.6.4",
     "news": {
+      "0.6.4": {
+        "en": "Bumped node-unifi to latest 2.4.0\nfixed issue in setWlanStatus not working (#665, #601)\nNew feature for whitelisting client objects (#651)\nclient block / unblock added\nrestart device added\nled override added\nport power cycle added",
+        "de": "Knoten-unifi nach neuesten 2.4.0\nfeste Ausgabe im Set WlanStatus funktioniert nicht (#665, #601)\nNeues Feature für Whitelisting-Client-Objekte (#651)\nclient-block / freischaltung hinzugefügt\nneustart-gerät hinzugefügt\nled override hinzugefügt\nport power zyklus hinzugefügt",
+        "ru": "Обрезанный node-unifi до последних 2.4.0\nфиксированная проблема в наборе WlanStatus не работает (#665, #601)\nНовая функция для Whitelisting клиентских объектов (#651)\nклиент блок / разблокировать добавлено\nперезагрузить устройство добавлено\nled override добавлен\nпортовый цикл добавлен",
+        "pt": "Node-unifi tocado para o mais recente 2.4.0\nproblema fixo em conjunto WlanStatus não funciona (#665, #601)\nNovo recurso para whitelisting objetos cliente (#651)\nbloco cliente / desbloquear adicionado\ndispositivo de reinício adicionado\nadicionado de substituição de led\nciclo de energia da porta adicionado",
+        "nl": "Vertaling:\nin de set WlanStatus werkt niet\nNieuwe kenmerk voor witlijstende klanten objecten (651)\ncliëntenblok\nherstart apparaat toegevoegd\ngeleid override toegevoegd\nde haven elektriciteit voegt toe",
+        "fr": "Bumped node-unifi to latest 2.4.0\nproblème fixe dans la série WlanStatus not working (#665, #601)\nNouvelle fonctionnalité pour les objets clients de liste blanche (#651)\nbloc client / débloquer ajouté\ndispositif de redémarrage ajouté\nled override added\ncycle de puissance portuaire ajouté",
+        "it": "Nodo Bumped-unifi al più recente 2.4.0\nproblema fisso in set WlanStatus non funziona (#665, #601)\nNuova funzionalità per la whitelist di oggetti client (#651)\nblocco client / sbloccare aggiunto\ndispositivo di riavvio aggiunto\noverride led aggiunto\nciclo di potenza della porta aggiunto",
+        "es": "Bumped node-unifi to latest 2.4.0\ncuestiones fijas WlanStatus no funciona (#665, #601)\nNueva función para los objetos de cliente de lista blanca (#651)\nbloque cliente / desbloqueo añadido\ndispositivo de reinicio añadido\noverride led añadido\nciclo de energía del puerto añadido",
+        "pl": "Węzeł węzełowym do najnowszego 2.4.0\nustalony problem WlanStatus nie pracuje (#665, #601)\nNowa cecha dla obiektów klienta białego (#651)\nblok klienta / unblock dodał\nrestart\ndodać\nłączność portu",
+        "uk": "Bumped node-unifi до останньої 2.4.0\nфіксована проблема в комплекті Не працює (#665, #601)\nНова функція для відбілювання об'єктів клієнтів (#651)\nблок клієнта / розблокування\nдодано перезарядний пристрій\nдодано суперрайд\nдодано цикл живлення порту",
+        "zh-cn": "最近2.4.0的弃权\n固定问题 未工作(第665号,第601)号\n白色客户物品的新特点(第651)\n客户堵塞/无锁加\n其余装置\n女王\n港口动力循环"
+      },
       "0.6.3": {
         "en": "Bumped node-unifi to latest 2.2.1 (fixes #613)",
         "de": "Knoten-unifi nach neuestem 2.2.1 (fixes #613)",
@@ -74,18 +87,6 @@
         "es": "Se corrigieron todas las advertencias de estado relacionadas con js-controller 3.3\nObjeto de estado de dispositivo agregado con lista de estados dedicada.\nNodo-unifi actualizado a la última versión\nDependencias actualizadas",
         "pl": "Naprawiono wszystkie ostrzeżenia o stanie związane z kontrolerem js 3.3\nDodano obiekt stanu urządzenia z dedykowaną listą stanów.\nZaktualizowano node-unifi do najnowszej wersji\nZaktualizowane zależności",
         "zh-cn": "修复了所有与js-controller 3.3相关的状态警告\n添加了带有专用状态列表的设备状态对象。\n将node-unifi更新到最新版本\n更新了依赖关系"
-      },
-      "0.5.8": {
-        "en": "* (braindead1) Fixed problems related to unused sites\r\n* (braindead1) Fixed some errors reported via Sentry",
-        "de": "* (braindead1) Probleme im Zusammenhang mit nicht verwendeten Sites wurden behoben\r\n* (braindead1) Einige über Sentry gemeldete Fehler wurden behoben",
-        "ru": "* (braindead1) Исправлены проблемы, связанные с неиспользуемыми сайтами\r\n* (braindead1) Исправлены некоторые ошибки, о которых сообщалось через Sentry.",
-        "pt": "* (braindead1) Corrigido problemas relacionados a sites não utilizados\r\n* (braindead1) Corrigidos alguns erros relatados via Sentry",
-        "nl": "* (braindead1) Problemen opgelost met betrekking tot ongebruikte sites\r\n* (braindead1) Enkele fouten verholpen die via Sentry werden gerapporteerd",
-        "fr": "* (braindead1) Correction de problèmes liés aux sites inutilisés\r\n* (braindead1) Correction de certaines erreurs signalées via Sentry",
-        "it": "* (braindead1) Risolti i problemi relativi ai siti inutilizzati\r\n* (braindead1) Risolti alcuni errori segnalati tramite Sentry",
-        "es": "* (braindead1) Se corrigieron problemas relacionados con sitios no utilizados\r\n* (braindead1) Se corrigieron algunos errores informados a través de Sentry",
-        "pl": "* (braindead1) Naprawiono problemy związane z nieużywanymi witrynami\r\n* (braindead1) Naprawiono niektóre błędy zgłaszane przez Sentry",
-        "zh-cn": "*（braindead1）修复了与未使用站点有关的问题\r\n*（braindead1）修复了通过哨兵报告的一些错误"
       }
     },
     "title": "UniFi Network",
