@@ -198,7 +198,7 @@ This adapter uses functionality from the following third-party nodejs modules:
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2016-2022 Jens Maus &lt;mail@jens-maus.de&gt;
+Copyright (c) 2016-2023 Jens Maus &lt;mail@jens-maus.de&gt;
 Copyright (c) 2020 braindead1 &lt;os.braindead1@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
