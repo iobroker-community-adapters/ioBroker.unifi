@@ -81,6 +81,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+
+### **WORK IN PROGRESS**
+* (pafade89) fixed broken client status updates (#672)
+
 ### 0.6.5 (2023-06-20)
 * (jens-maus) Bumped node-unifi to latest 2.4.1
 
