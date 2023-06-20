@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.4",
+    "version": "0.6.5",
     "news": {
+      "0.6.5": {
+        "en": "Bumped node-unifi to latest 2.4.1",
+        "de": "Knoten-unifi nach neuesten 2.4.1",
+        "ru": "Bumped node-unifi до последних 2.4.1",
+        "pt": "Node-unifi tocado para o mais recente 2.4.1",
+        "nl": "Vertaling:",
+        "fr": "Bumped node-unifi to latest 2.4.1",
+        "it": "Nodo-unifi bumped al più recente 2.4.1",
+        "es": "Bumped node-unifi to latest 2.4.1",
+        "pl": "Węzeł węzeł-unifii do najnowszych 2.4.1",
+        "uk": "Bumped node-unifi до останньої 2.4.1",
+        "zh-cn": "废除了对最近2.4.1的不法性"
+      },
       "0.6.4": {
         "en": "Bumped node-unifi to latest 2.4.0\nfixed issue in setWlanStatus not working (#665, #601)\nNew feature for whitelisting client objects (#651)\nclient block / unblock added\nrestart device added\nled override added\nport power cycle added",
         "de": "Knoten-unifi nach neuesten 2.4.0\nfeste Ausgabe im Set WlanStatus funktioniert nicht (#665, #601)\nNeues Feature für Whitelisting-Client-Objekte (#651)\nclient-block / freischaltung hinzugefügt\nneustart-gerät hinzugefügt\nled override hinzugefügt\nport power zyklus hinzugefügt",
@@ -75,18 +88,6 @@
         "es": "Se modificó la salida de \"Actualización realizada\" para que se genere como información de depuración.\nDependencias actualizadas.",
         "pl": "Zmieniono wyjście „Aktualizacja zakończona”, aby było wyświetlane jako informacje debugowania.\nZaktualizowane zależności.",
         "zh-cn": "更改了“更新完成”输出，以作为调试信息输出。\n更新了依赖关系。"
-      },
-      "0.5.9": {
-        "en": "Fixed all js-controller 3.3 related state warnings\nAdded device state object with dedicated states list.\nUpdated node-unifi to latest version\nUpdated dependencies",
-        "de": "Alle mit js-controller 3.3 verbundenen Statuswarnungen wurden behoben\nGerätestatusobjekt mit dedizierter Statusliste hinzugefügt.\nNode-Unifi auf die neueste Version aktualisiert\nAktualisierte Abhängigkeiten",
-        "ru": "Исправлены все предупреждения о состоянии, связанные с js-controller 3.3\nДобавлен объект состояния устройства с выделенным списком состояний.\nОбновлен node-unifi до последней версии\nОбновленные зависимости",
-        "pt": "Todos os avisos de estado relacionados ao js-controller 3.3 foram corrigidos\nAdicionado objeto de estado de dispositivo com lista de estados dedicados.\nNó-unifi atualizado para a versão mais recente\nDependências atualizadas",
-        "nl": "Alle js-controller 3.3 gerelateerde statuswaarschuwingen opgelost\nApparaatstatusobject toegevoegd met een speciale lijst met staten.\nBijgewerkte node-unifi naar de nieuwste versie\nBijgewerkte afhankelijkheden",
-        "fr": "Correction de tous les avertissements d'état liés à js-controller 3.3\nAjout d'un objet d'état de périphérique avec une liste d'états dédiée.\nMise à jour de node-unifi vers la dernière version\nDépendances mises à jour",
-        "it": "Risolti tutti gli avvisi di stato relativi a js-controller 3.3\nAggiunto oggetto di stato del dispositivo con elenco di stati dedicato.\nAggiornato node-unifi all'ultima versione\nDipendenze aggiornate",
-        "es": "Se corrigieron todas las advertencias de estado relacionadas con js-controller 3.3\nObjeto de estado de dispositivo agregado con lista de estados dedicada.\nNodo-unifi actualizado a la última versión\nDependencias actualizadas",
-        "pl": "Naprawiono wszystkie ostrzeżenia o stanie związane z kontrolerem js 3.3\nDodano obiekt stanu urządzenia z dedykowaną listą stanów.\nZaktualizowano node-unifi do najnowszej wersji\nZaktualizowane zależności",
-        "zh-cn": "修复了所有与js-controller 3.3相关的状态警告\n添加了带有专用状态列表的设备状态对象。\n将node-unifi更新到最新版本\n更新了依赖关系"
       }
     },
     "title": "UniFi Network",
