@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.5",
+    "version": "0.6.6",
     "news": {
+      "0.6.6": {
+        "en": "fixed broken client status updates (#672)",
+        "de": "feste defekte client-status-updates #(672)",
+        "ru": "фиксированные сломанные обновления статуса клиента #(672)",
+        "pt": "atualizações de status do cliente quebrado fixo #(672)",
+        "nl": "vertaling:",
+        "fr": "mises à jour de statut de client cassée fixe #(672)",
+        "it": "aggiornamenti di stato del cliente rotti fissi #(672)",
+        "es": "actualizaciones de estado de cliente rotas fijas #(672)",
+        "pl": "złamany status klienta #(672)",
+        "uk": "виправлені оновлення статусу клієнта #(672)",
+        "zh-cn": "固定用户身份更新表(672)"
+      },
       "0.6.5": {
         "en": "Bumped node-unifi to latest 2.4.1",
         "de": "Knoten-unifi nach neuesten 2.4.1",
@@ -76,18 +89,6 @@
         "es": "IMPORTANTE: se requiere js-controller 2.0 o superior\nIMPORTANTE: si el inicio de sesión no funciona, vuelva a ingresar la contraseña en la configuración de la instancia\nMigrar a la nueva versión de la biblioteca unifi\nPermitir especificar si el error SSL debe ignorarse o no (el valor predeterminado es ignorar los errores como en versiones anteriores)\nSe corrigieron más definiciones de objetos de estado del dispositivo para deshacerse de las advertencias de estado.\nDependencias actualizadas, compatibilidad con los firmwares más nuevos",
         "pl": "WAŻNE: wymagany jest kontroler js-controller 2.0 lub nowszy\nWAŻNE: Jeśli logowanie nie działa, wprowadź ponownie hasło w konfiguracji instancji\nMigracja do nowej wersji biblioteki unifi\nZezwalaj na określenie, czy błąd SSL powinien być ignorowany, czy nie (domyślnie ignorowane są błędy, jak w poprzednich wersjach)\nNaprawiono więcej definicji obiektów stanu urządzenia, aby pozbyć się ostrzeżeń o stanie.\nZaktualizowane zależności, kompatybilne z najnowszym oprogramowaniem",
         "zh-cn": "重要提示：需要 js-controller 2.0 或更高版本\n重要提示：如果登录不起作用，请在实例配置中重新输入密码\n迁移到新版本的 unifi 库\n允许指定是否应忽略 SSL 错误（默认为忽略以前版本中的错误）\n修复了更多设备状态对象定义以消除状态警告。\n更新依赖，兼容最新固件"
-      },
-      "0.5.10": {
-        "en": "Changed \"Update done\" output to be output as debug info.\nUpdated dependencies.",
-        "de": "Die Ausgabe \"Update erledigt\" wurde geändert, um als Debug-Information ausgegeben zu werden.\nAktualisierte Abhängigkeiten.",
-        "ru": "Изменен вывод «Обновление выполнено» для вывода как отладочная информация.\nОбновлены зависимости.",
-        "pt": "Alterada a saída de \"Atualização concluída\" para ser emitida como informações de depuração.\nDependências atualizadas.",
-        "nl": "\"Update voltooid\" uitvoer gewijzigd om als foutopsporingsinformatie te worden uitgevoerd.\nBijgewerkte afhankelijkheden.",
-        "fr": "La sortie \"Mise à jour terminée\" a été modifiée pour être sortie en tant qu'informations de débogage.\nDépendances mises à jour.",
-        "it": "Modificato l'output \"Aggiornamento completato\" per essere visualizzato come informazioni di debug.\nDipendenze aggiornate.",
-        "es": "Se modificó la salida de \"Actualización realizada\" para que se genere como información de depuración.\nDependencias actualizadas.",
-        "pl": "Zmieniono wyjście „Aktualizacja zakończona”, aby było wyświetlane jako informacje debugowania.\nZaktualizowane zależności.",
-        "zh-cn": "更改了“更新完成”输出，以作为调试信息输出。\n更新了依赖关系。"
       }
     },
     "title": "UniFi Network",
