@@ -159,6 +159,7 @@
     "controllerPassword": "",
     "updateInterval": 60,
     "updateClients": true,
+    "blacklistClients": false,
     "updateDevices": true,
     "updateHealth": true,
     "updateNetworks": true,
