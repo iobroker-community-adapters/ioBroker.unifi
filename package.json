@@ -34,7 +34,7 @@
     "@alcalzone/release-script-plugin-license": "^3.5.9",
     "@iobroker/adapter-dev": "^1.0.0",
     "@iobroker/testing": "^4.1.0",
-    "chai": "^4.3.6",
+    "chai": "^4.3.8",
     "chai-as-promised": "^7.1.1",
     "eslint": "^8.48.0",
     "mocha": "^10.0.0",
