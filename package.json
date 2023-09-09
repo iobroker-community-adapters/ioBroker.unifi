@@ -21,6 +21,9 @@
     "type": "git",
     "url": "git+https://github.com/iobroker-community-adapters/ioBroker.unifi.git"
   },
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "dependencies": {
     "@iobroker/adapter-core": "^3.0.3",
     "node-unifi": "^2.4.1",
