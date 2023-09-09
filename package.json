@@ -22,7 +22,7 @@
     "url": "git+https://github.com/iobroker-community-adapters/ioBroker.unifi.git"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.0",
+    "@iobroker/adapter-core": "^3.0.3",
     "node-unifi": "^2.4.1",
     "json-logic-js": "^2.0.2",
     "dateformat": "^4.6.3",
