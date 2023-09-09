@@ -29,7 +29,7 @@
     "node-unifi": "^2.4.1",
     "json-logic-js": "^2.0.2",
     "dateformat": "^4.6.3",
-    "axios": "1.4.0"
+    "axios": "1.5.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.6.0",
