@@ -259,13 +259,22 @@ class Unifi extends utils.Adapter {
                 port: this.settings.controllerPort,
                 username: this.settings.controllerUsername,
                 password: this.settings.controllerPassword,
-                sslverify: !this.settings.ignoreSSLErrors
+                sslverify: !this.settings.ignoreSSLErrors,
+                timeout: 10000
             });
 
             try {
                 await defaultController.login();
             } catch (err) {
                 this.handleError(err, undefined, 'updateUnifiData-login');
+
+                // In case of connection timeout, try again later
+                if (err.code === 'ECONNABORTED') {
+                    this.queryTimeout = setTimeout(() => {
+                        this.updateUnifiData();
+                    }, this.settings.updateInterval);
+                }
+
                 return;
             }
             this.log.debug('Login successful');
