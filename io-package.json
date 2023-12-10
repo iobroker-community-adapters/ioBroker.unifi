@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.6",
+    "version": "0.6.7",
     "news": {
+      "0.6.7": {
+        "en": "updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues\nupdated dependencies",
+        "de": "aktualisierte node-unifi auf 2.5.1 um UDMpro v3.2.x Auth Probleme zu beheben\naktualisierte abhängigkeiten",
+        "ru": "обновленный node-unifi до 2.5.1 для исправления UDMpro v3.2.x auth вопросов\nобновленные зависимости",
+        "pt": "atualizado node-unifi para 2.5.1 para corrigir UDMpro v3.2.x problemas de auth\ndependências atualizadas",
+        "nl": "quality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
+        "fr": "mise à jour node-unifi à 2.5.1 pour résoudre les problèmes d'UDMpro v3.2.x auth\ndépendances actualisées",
+        "it": "nodo-unifi aggiornato a 2.5.1 per risolvere i problemi UDMpro v3.2.x auth\ndipendenze aggiornate",
+        "es": "actualizado node-unifi a 2.5.1 para solucionar problemas de UDMpro v3.2.x auth\ndependencias actualizadas",
+        "pl": "uaktualnianie węzła-unifiego do 2,5.1 w celu naprawienia problemów UDMpro v3.2.x\nzależności aktualizacji",
+        "uk": "оновлений вузол-unifi до 2.5.1 для виправлення UDMpro v3.2.x auth проблеми\nоновлені залежності",
+        "zh-cn": "对2.5.1至ix UDMpro诉3.2.x uth问题的最新不法\n二. 最新依赖"
+      },
       "0.6.6": {
         "en": "fixed broken client status updates (#672)",
         "de": "feste defekte client-status-updates #(672)",
@@ -77,18 +90,6 @@
         "es": "Bumped node-unifi to latest 2.1.0\ntraducciones actualizadas",
         "pl": "Węzeł węzeł-unifii do najnowszych 2.1.0\ntłumaczenia aktualizowane",
         "zh-cn": "最近2.0%的弃权\n最新翻译"
-      },
-      "0.6.0": {
-        "en": "IMPORTANT: js-controller 2.0 or higher is required\nIMPORTANT: If Login do not work please re-enter the password in the instance configuration\nMigrate to new version of unifi library\nAllow to specify if SSL error should be ignored or not  (Default is to ignore errors as in former versions)\nFixed more device state object definitions to get rid of state warnings.\nUpdated dependencies, make compatible to newest firmwares",
-        "de": "WICHTIG: js-controller 2.0 oder höher ist erforderlich\nWICHTIG: Wenn die Anmeldung nicht funktioniert, geben Sie das Passwort in der Instanzkonfiguration erneut ein\nMigrieren Sie auf eine neue Version der Unifi-Bibliothek\nGeben Sie an, ob SSL-Fehler ignoriert werden sollen oder nicht (Standard ist, Fehler wie in früheren Versionen zu ignorieren)\nWeitere Definitionen von Gerätezustandsobjekten wurden korrigiert, um Zustandswarnungen loszuwerden.\nAktualisierte Abhängigkeiten, kompatibel mit den neuesten Firmwares",
-        "ru": "ВАЖНО: требуется js-controller 2.0 или выше\nВАЖНО: Если вход в систему не работает, повторно введите пароль в конфигурации инстанса.\nПереход на новую версию библиотеки unifi\nРазрешить указать, следует ли игнорировать ошибку SSL или нет (по умолчанию ошибки игнорируются, как в предыдущих версиях)\nИсправлено больше определений объектов состояния устройства, чтобы избавиться от предупреждений о состоянии.\nОбновлены зависимости, сделана совместимость с новейшими прошивками",
-        "pt": "IMPORTANTE: é necessário js-controller 2.0 ou superior\nIMPORTANTE: Se o Login não funcionar, digite novamente a senha na configuração da instância\nMigrar para a nova versão da biblioteca unifi\nPermitir especificar se o erro SSL deve ser ignorado ou não (o padrão é ignorar erros como nas versões anteriores)\nCorrigidas mais definições de objeto de estado do dispositivo para se livrar dos avisos de estado.\nDependências atualizadas, compatíveis com os firmwares mais recentes",
-        "nl": "BELANGRIJK: js-controller 2.0 of hoger is vereist\nBELANGRIJK: als inloggen niet werkt, voer dan het wachtwoord opnieuw in de instantieconfiguratie in\nMigreren naar nieuwe versie van unifi-bibliotheek\nToestaan om te specificeren of SSL-fout moet worden genegeerd of niet (standaard is om fouten te negeren zoals in eerdere versies)\nMeer apparaatstatusobjectdefinities opgelost om statuswaarschuwingen te verwijderen.\nBijgewerkte afhankelijkheden, compatibel maken met de nieuwste firmware",
-        "fr": "IMPORTANT: js-controller 2.0 ou supérieur est requis\nIMPORTANT : Si la connexion ne fonctionne pas, veuillez ressaisir le mot de passe dans la configuration de l'instance\nMigrer vers la nouvelle version de la bibliothèque unifi\nPermet de spécifier si l'erreur SSL doit être ignorée ou non (la valeur par défaut est d'ignorer les erreurs comme dans les versions précédentes)\nCorrection de plusieurs définitions d'objets d'état de périphérique pour se débarrasser des avertissements d'état.\nDépendances mises à jour, rendre compatible avec les derniers firmwares",
-        "it": "IMPORTANTE: è richiesto js-controller 2.0 o successivo\nIMPORTANTE: se l'accesso non funziona, reinserire la password nella configurazione dell'istanza\nMigra alla nuova versione della libreria unifi\nConsenti di specificare se l'errore SSL deve essere ignorato o meno (l'impostazione predefinita è ignorare gli errori come nelle versioni precedenti)\nRisolte più definizioni di oggetti dello stato del dispositivo per eliminare gli avvisi di stato.\nDipendenze aggiornate, compatibili con i firmware più recenti",
-        "es": "IMPORTANTE: se requiere js-controller 2.0 o superior\nIMPORTANTE: si el inicio de sesión no funciona, vuelva a ingresar la contraseña en la configuración de la instancia\nMigrar a la nueva versión de la biblioteca unifi\nPermitir especificar si el error SSL debe ignorarse o no (el valor predeterminado es ignorar los errores como en versiones anteriores)\nSe corrigieron más definiciones de objetos de estado del dispositivo para deshacerse de las advertencias de estado.\nDependencias actualizadas, compatibilidad con los firmwares más nuevos",
-        "pl": "WAŻNE: wymagany jest kontroler js-controller 2.0 lub nowszy\nWAŻNE: Jeśli logowanie nie działa, wprowadź ponownie hasło w konfiguracji instancji\nMigracja do nowej wersji biblioteki unifi\nZezwalaj na określenie, czy błąd SSL powinien być ignorowany, czy nie (domyślnie ignorowane są błędy, jak w poprzednich wersjach)\nNaprawiono więcej definicji obiektów stanu urządzenia, aby pozbyć się ostrzeżeń o stanie.\nZaktualizowane zależności, kompatybilne z najnowszym oprogramowaniem",
-        "zh-cn": "重要提示：需要 js-controller 2.0 或更高版本\n重要提示：如果登录不起作用，请在实例配置中重新输入密码\n迁移到新版本的 unifi 库\n允许指定是否应忽略 SSL 错误（默认为忽略以前版本中的错误）\n修复了更多设备状态对象定义以消除状态警告。\n更新依赖，兼容最新固件"
       }
     },
     "title": "UniFi Network",

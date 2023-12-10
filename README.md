@@ -81,7 +81,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.6.7 (2023-12-10)
 * (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues
 * (jens-maus) updated dependencies
 
