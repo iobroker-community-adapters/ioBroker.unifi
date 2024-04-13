@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "0.6.7",
+    "version": "0.7.0",
     "news": {
+      "0.7.0": {
+        "en": "Adapter requires node.js 18 and js-controller >= 5 now\nDependencies have been updated",
+        "de": "Adapter benötigt node.js 18 und js-controller >= 5 jetzt\nAbhängigkeiten wurden aktualisiert",
+        "ru": "Адаптер требует node.js 18 и js-controller >= 5 сейчас\nЗависимость обновлена",
+        "pt": "Adapter requer node.js 18 e js-controller >= 5 agora\nAs dependências foram atualizadas",
+        "nl": "Adapter vereist node.js 18 en js-controller Nu 5\nAfhankelijkheden zijn bijgewerkt",
+        "fr": "Adaptateur nécessite node.js 18 et js-controller >= 5 maintenant\nLes dépendances ont été actualisées",
+        "it": "Adattatore richiede node.js 18 e js-controller >= 5 ora\nLe dipendenze sono state aggiornate",
+        "es": "Adaptador requiere node.js 18 y js-controller √= 5 ahora\nSe han actualizado las dependencias",
+        "pl": "Adapter wymaga node.js 18 i sterownika js- > = 5 teraz\nZaktualizowano zależności",
+        "uk": "Адаптер вимагає node.js 18 і js-controller >= 5 тепер\nЗалежність було оновлено",
+        "zh-cn": "适配器需要节点.js 18和js控制器 QQ 现在5号\n依赖关系已更新"
+      },
       "0.6.7": {
         "en": "updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues\nupdated dependencies",
         "de": "aktualisierte node-unifi auf 2.5.1 um UDMpro v3.2.x Auth Probleme zu beheben\naktualisierte abhängigkeiten",
@@ -78,18 +91,6 @@
         "es": "Bumped node-unifi to latest 2.2.0\nestructuras port-overrides añadidos\ninterruptor de potencia de poe añadido\nnuevo cliente",
         "pl": "Węzeł węzeł-unifii najnowsze 2.2.0\nkonstrukcje przejazdu dodano do użytku\nprzełączniki do ruchu\nreconnecta",
         "zh-cn": "最近2.2.0条的弃权\n港口考试结构增加了\n资本转换\n客户重新连接"
-      },
-      "0.6.1": {
-        "en": "Bumped node-unifi to latest 2.1.0\nupdated translations",
-        "de": "Knoten-unifi nach neuestem 2.1.0\naktualisierung der übersetzungen",
-        "ru": "Обрезанный node-unifi до последней 2.1.0\nобновленные переводы",
-        "pt": "Bumped node-unifi para o mais recente 2.1.0\ntraduções atualizadas",
-        "nl": "Vertaling:\nvertaling:",
-        "fr": "Bumped node-unifi to latest 2.1.0\ntraductions mises à jour",
-        "it": "Nodo Bumped-unifi all'ultimo 2.1.0\ntraduzioni aggiornate",
-        "es": "Bumped node-unifi to latest 2.1.0\ntraducciones actualizadas",
-        "pl": "Węzeł węzeł-unifii do najnowszych 2.1.0\ntłumaczenia aktualizowane",
-        "zh-cn": "最近2.0%的弃权\n最新翻译"
       }
     },
     "titleLang": {
