@@ -81,6 +81,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
+* (mcm1957) Dependencies have been updated
+
 ### 0.6.7 (2023-12-10)
 * (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues
 * (jens-maus) updated dependencies
@@ -207,6 +211,7 @@ This adapter uses functionality from the following third-party nodejs modules:
 ## License
 The MIT License (MIT)
 
+Copyright (c) 2024 iobroker-community-adapters <iobroker-community-adapters@gmx.de>
 Copyright (c) 2016-2023 Jens Maus &lt;mail@jens-maus.de&gt;
 Copyright (c) 2020 braindead1 &lt;os.braindead1@gmail.com&gt;
 

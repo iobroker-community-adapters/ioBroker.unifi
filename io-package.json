@@ -92,7 +92,6 @@
         "zh-cn": "最近2.0%的弃权\n最新翻译"
       }
     },
-    "title": "UniFi Network",
     "titleLang": {
       "en": "UniFi Network",
       "de": "UniFi-Netzwerk",
@@ -126,7 +125,10 @@
       "wifi",
       "network"
     ],
-    "license": "MIT",
+    "licenseInformation": {
+      "license": "MIT",
+      "type": "free"
+    },
     "platform": "Javascript/Node.js",
     "main": "main.js",
     "icon": "unifi.png",
@@ -140,6 +142,7 @@
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
     "loglevel": "info",
+    "tier": 2,
     "mode": "daemon",
     "type": "network",
     "compact": true,
@@ -147,10 +150,14 @@
     "supportCustoms": false,
     "connectionType": "local",
     "dataSource": "push",
-    "tier": 2,
     "dependencies": [
       {
-        "js-controller": ">=2.0.0"
+        "js-controller": ">=5.0.0"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
       }
     ]
   },
