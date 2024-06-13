@@ -266,7 +266,6 @@ class Unifi extends utils.Adapter {
             try {
                 await defaultController.login();
             } catch (err) {
-                this.log.debug('Login error: ' + err.code);
                 this.handleError(err, undefined, 'updateUnifiData-login');
 
                 // In case of connection timeout, try again later
