@@ -260,7 +260,7 @@ class Unifi extends utils.Adapter {
                 username: this.settings.controllerUsername,
                 password: this.settings.controllerPassword,
                 sslverify: !this.settings.ignoreSSLErrors,
-                timeout: 10000
+                timeout: 30000
             });
 
             try {
