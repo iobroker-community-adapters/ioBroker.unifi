@@ -10,3 +10,6 @@ admin/i18n/*/flat.txt
 .dev-server/
 ioBroker.unifi.code-workspace
 unifi_api_infos/app.js
+
+#ignore .commitinfo created by ioBroker release script
+.commitinfo
