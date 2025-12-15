@@ -131,7 +131,6 @@
       "type": "free"
     },
     "platform": "Javascript/Node.js",
-    "main": "main.js",
     "icon": "unifi.png",
     "enabled": false,
     "plugins": {
