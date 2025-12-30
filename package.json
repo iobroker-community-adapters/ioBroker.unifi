@@ -6,7 +6,8 @@
   "contributors": [
     "braindead1 <os.braindead1@gmail.com>",
     "Jens Maus <mail@jens-maus.de>",
-    "Scrounger <scrounger@gmx.net>"
+    "Scrounger <scrounger@gmx.net>",
+    "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
   ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.unifi",
   "license": "MIT",
