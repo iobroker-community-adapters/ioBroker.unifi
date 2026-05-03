@@ -208,6 +208,8 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 ### 0.0.1
 * (jens-maus) initial checkin of non-working development version
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## References
 This adapter uses functionality from the following third-party nodejs modules:
 
