@@ -148,7 +148,6 @@
     "mode": "daemon",
     "type": "network",
     "compact": true,
-    "materialize": true,
     "supportCustoms": false,
     "connectionType": "local",
     "dataSource": "push",
@@ -161,7 +160,10 @@
       {
         "admin": ">=7.7.22"
       }
-    ]
+    ],
+    "adminUI": {
+      "config": "materialize"
+    }
   },
   "native": {
     "controllerIp": "",
