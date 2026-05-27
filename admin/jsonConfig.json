@@ -1,0 +1,541 @@
+{
+  "i18n": true,
+  "type": "tabs",
+  "items": {
+    "tab_general": {
+      "type": "panel",
+      "label": "General",
+      "items": {
+        "_network_header": {
+          "type": "header",
+          "text": "Network settings",
+          "size": 2,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "_port_notice": {
+          "type": "staticText",
+          "text": "PortNotice",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "controllerIp": {
+          "type": "text",
+          "label": "IP address",
+          "placeholder": "127.0.0.1",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "controllerPort": {
+          "type": "text",
+          "label": "Port",
+          "placeholder": "8443",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "_login_header": {
+          "newLine": true,
+          "type": "header",
+          "text": "Login",
+          "size": 2,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "controllerUsername": {
+          "type": "text",
+          "label": "Username",
+          "placeholder": "Admin",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "controllerPassword": {
+          "type": "password",
+          "label": "Password",
+          "placeholder": "Password",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "_connection_header": {
+          "newLine": true,
+          "type": "header",
+          "text": "Connection",
+          "size": 2,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "ignoreSSLErrors": {
+          "type": "checkbox",
+          "label": "Ignore SSL errors and expired certificates",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "_update_header": {
+          "newLine": true,
+          "type": "header",
+          "text": "Update",
+          "size": 2,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "updateInterval": {
+          "type": "number",
+          "label": "Update interval",
+          "min": 0,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        }
+      }
+    },
+    "tab_sysinfo": {
+      "type": "panel",
+      "label": "Sysinfo",
+      "items": {
+        "updateSysinfo": {
+          "type": "checkbox",
+          "label": "Update system information",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.sysinfo": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_clients": {
+      "type": "panel",
+      "label": "Clients",
+      "items": {
+        "updateClients": {
+          "type": "checkbox",
+          "label": "Update clients",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "blacklistClients": {
+          "type": "checkbox",
+          "label": "Change Blacklist to Whitelist",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "objectsFilter.clients": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.clients": {
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "_clients_is_online_hint": {
+          "type": "staticText",
+          "text": "Hint: To calculate is_online, last_seen_by_uap and last_seen_by_usw need to be activated additionally.",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "clientsIsOnlineOffset": {
+          "type": "number",
+          "label": "Offset for is_online",
+          "min": 0,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        }
+      }
+    },
+    "tab_devices": {
+      "type": "panel",
+      "label": "Devices",
+      "items": {
+        "updateDevices": {
+          "type": "checkbox",
+          "label": "Update devices",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "objectsFilter.devices": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.devices": {
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_wlans": {
+      "type": "panel",
+      "label": "WLANs",
+      "items": {
+        "updateWlans": {
+          "type": "checkbox",
+          "label": "Update WLANs",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "objectsFilter.wlans": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.wlans": {
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_networks": {
+      "type": "panel",
+      "label": "Networks",
+      "items": {
+        "updateNetworks": {
+          "type": "checkbox",
+          "label": "Update networks",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "objectsFilter.networks": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.networks": {
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_health": {
+      "type": "panel",
+      "label": "Health",
+      "items": {
+        "updateHealth": {
+          "type": "checkbox",
+          "label": "Update health",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "objectsFilter.health": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.health": {
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_vouchers": {
+      "type": "panel",
+      "label": "Vouchers",
+      "items": {
+        "updateVouchers": {
+          "type": "checkbox",
+          "label": "Update vouchers",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.vouchers": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "updateVouchersNoUsed": {
+          "type": "checkbox",
+          "label": "Update only unused vouchers",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "createVouchersNumber": {
+          "newLine": true,
+          "type": "number",
+          "label": "Number of vouchers",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersDuration": {
+          "type": "number",
+          "label": "Duration in minutes",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersQuota": {
+          "type": "number",
+          "label": "Usage quota",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersUploadLimit": {
+          "newLine": true,
+          "type": "number",
+          "label": "Upload limit in Kbps",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersDownloadLimit": {
+          "type": "number",
+          "label": "Download limit in Kbps",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersByteQuota": {
+          "type": "number",
+          "label": "MB quota",
+          "xs": 12,
+          "sm": 6,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "createVouchersNote": {
+          "newLine": true,
+          "type": "text",
+          "label": "Note",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_alarms": {
+      "type": "panel",
+      "label": "Alarms",
+      "items": {
+        "updateAlarms": {
+          "type": "checkbox",
+          "label": "Update alarms",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.alarms": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "updateAlarmsNoArchived": {
+          "type": "checkbox",
+          "label": "Update only new alarms",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_dpi": {
+      "type": "panel",
+      "label": "DPI",
+      "items": {
+        "updateDpi": {
+          "type": "checkbox",
+          "label": "Update DPI",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.dpi": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    },
+    "tab_gateway_traffic": {
+      "type": "panel",
+      "label": "Gateway traffic",
+      "items": {
+        "updateGatewayTraffic": {
+          "type": "checkbox",
+          "label": "Update Gateway Traffic",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "statesFilter.gateway_traffic": {
+          "newLine": true,
+          "type": "chips",
+          "label": "Filter states",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "gatewayTrafficMaxDays": {
+          "type": "number",
+          "label": "Get data for x Days (0 = all available data)",
+          "min": 0,
+          "max": 365,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        }
+      }
+    }
+  }
+}
