@@ -244,6 +244,71 @@
       "native": {}
     },
     {
+      "_id": "info.lastRefreshAttempt",
+      "type": "state",
+      "common": {
+        "name": "Last refresh attempt",
+        "type": "number",
+        "role": "value.time",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastSuccessfulRefresh",
+      "type": "state",
+      "common": {
+        "name": "Last successful refresh",
+        "type": "number",
+        "role": "value.time",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.lastError",
+      "type": "state",
+      "common": {
+        "name": "Last refresh error",
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": ""
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.consecutiveErrors",
+      "type": "state",
+      "common": {
+        "name": "Consecutive refresh errors",
+        "type": "number",
+        "role": "value",
+        "read": true,
+        "write": false,
+        "def": 0
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.refreshInProgress",
+      "type": "state",
+      "common": {
+        "name": "Refresh in progress",
+        "type": "boolean",
+        "role": "indicator.working",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    },
+    {
       "_id": "trigger_update",
       "type": "state",
       "common": {
