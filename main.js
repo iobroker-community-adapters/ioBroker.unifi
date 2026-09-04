@@ -35,6 +35,8 @@ class Unifi extends utils.Adapter {
         this.dpi = {};
         this.statesFilter = {};
         this.queryTimeout = null;
+        this.updateInProgress = false;
+        this.consecutiveErrors = 0;
 
         this.ownObjects = {};
 
@@ -187,6 +189,141 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Schedule the next automatic refresh. Existing timers are always replaced,
+     * so a failed request cannot accidentally create parallel refresh loops.
+     *
+     * @param {number} delay
+     */
+    scheduleNextUpdate(delay = this.settings.updateInterval) {
+        if (this.queryTimeout) {
+            clearTimeout(this.queryTimeout);
+        }
+
+        this.queryTimeout = setTimeout(() => {
+            this.queryTimeout = null;
+            this.updateUnifiData();
+        }, delay);
+    }
+
+    /**
+     * Create and authenticate a controller only when it is needed. The session
+     * is reused between refreshes to avoid hitting the controller login limit.
+     *
+     * @param {string} site
+     * @returns {Promise<UnifiClass.Controller>}
+     */
+    async getController(site = 'default') {
+        if (this.controllers[site]) {
+            return this.controllers[site];
+        }
+
+        const options = {
+            host: this.settings.controllerIp,
+            port: this.settings.controllerPort,
+            username: this.settings.controllerUsername,
+            password: this.settings.controllerPassword,
+            sslverify: !this.settings.ignoreSSLErrors,
+            timeout: 10000
+        };
+
+        if (site !== 'default') {
+            options.site = site;
+        }
+
+        const controller = new UnifiClass.Controller(options);
+        await controller.login();
+        this.controllers[site] = controller;
+        this.log.debug(`Login successful for site '${site}'`);
+
+        return controller;
+    }
+
+    /** Reset cached sessions before a single re-authentication attempt. */
+    resetControllers() {
+        this.controllers = {};
+    }
+
+    /**
+     * Diagnostic states must never interrupt the refresh loop itself.
+     *
+     * @param {string} id
+     * @param {ioBroker.StateValue} val
+     */
+    async setDiagnosticState(id, val) {
+        try {
+            await this.setStateAsync(id, { ack: true, val });
+        } catch (err) {
+            this.log.warn(`Could not update diagnostic state '${id}': ${err.message || err}`);
+        }
+    }
+
+    /**
+     * @param {Error & {response?: {status?: number}}} err
+     * @returns {boolean}
+     */
+    isAuthenticationError(err) {
+        const status = err.response && err.response.status;
+        return status === 401 || status === 403 ||
+            err.message === 'api.err.LoginRequired' ||
+            err.message === 'api.err.Invalid';
+    }
+
+    /**
+     * Execute one complete refresh using the cached controller sessions.
+     */
+    async performUpdate() {
+        const defaultController = await this.getController();
+        const sites = await this.fetchSites(defaultController);
+
+        for (const site of sites) {
+            if (this.stopped) {
+                return;
+            }
+
+            if (site === 'default') {
+                this.controllers[site] = defaultController;
+            } else {
+                await this.getController(site);
+            }
+
+            this.log.debug(`Update site: ${site}`);
+
+            if (this.update.sysinfo === true) {
+                await this.fetchSiteSysinfo(site);
+            }
+            if (this.update.clients === true) {
+                await this.fetchClients(site);
+            }
+            if (this.update.devices === true) {
+                await this.fetchDevices(site);
+            }
+            if (this.update.wlans === true) {
+                await this.fetchWlans(site);
+            }
+            if (this.update.networks === true) {
+                await this.fetchNetworks(site);
+            }
+            if (this.update.health === true) {
+                await this.fetchHealth(site);
+            }
+            if (this.update.vouchers === true) {
+                await this.fetchVouchers(site);
+            }
+            if (this.update.dpi === true) {
+                await this.fetchDpi(site);
+            }
+            if (this.update.gatewayTraffic === true) {
+                await this.fetchGatewayTraffic(site);
+            }
+            if (this.update.alarms === true) {
+                await this.fetchAlarms(site);
+            }
+        }
+
+        await this.setClientOnlineStatus();
+    }
+
+    /**
      * Function to handle error messages
      * @param {Object} err
      * @param {String} site
@@ -251,138 +388,56 @@ class Unifi extends utils.Adapter {
      * the responses afterwards
      */
     async updateUnifiData(preventReschedule = false) {
+        if (this.updateInProgress) {
+            this.log.warn('Skipping update because the previous refresh is still running.');
+            return;
+        }
+
+        this.updateInProgress = true;
+        await this.setDiagnosticState('info.lastRefreshAttempt', Date.now());
+        await this.setDiagnosticState('info.refreshInProgress', true);
+
+        let successful = false;
         try {
             this.log.debug('Update started');
 
-            const defaultController = new UnifiClass.Controller({
-                host: this.settings.controllerIp,
-                port: this.settings.controllerPort,
-                username: this.settings.controllerUsername,
-                password: this.settings.controllerPassword,
-                sslverify: !this.settings.ignoreSSLErrors,
-                timeout: 10000
-            });
-
-            try {
-                await defaultController.login();
-            } catch (err) {
-                this.handleError(err, undefined, 'updateUnifiData-login');
-
-                // In case of connection timeout, try again later
-                if (err.code === 'ECONNABORTED') {
-                    this.queryTimeout = setTimeout(() => {
-                        this.updateUnifiData();
-                    }, this.settings.updateInterval);
-                }
-
-                return;
-            }
-            this.log.debug('Login successful');
-
-            try {
-                const sites = await this.fetchSites(defaultController);
-
-                for (const site of sites) {
-                    if (this.stopped) {
-                        return;
+            for (let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    await this.performUpdate();
+                    break;
+                } catch (err) {
+                    if (attempt === 0 && this.isAuthenticationError(err)) {
+                        this.log.warn('UniFi session expired. Re-authenticating once.');
+                        this.resetControllers();
+                        continue;
                     }
-                    try {
-                        if (!this.controllers[site]) {
-                            if (site === 'default') {
-                                this.controllers[site] = defaultController;
-
-                                /*
-                                try {
-                                    defaultController.onAny((event, data) => {
-                                        this.log.debug(`EVENT [${site}] ${event} : ${JSON.stringify(data)}`);
-                                    });
-
-                                    await defaultController.listen();
-                                } catch (err) {
-                                    this.handleError(err, site, 'subscribe Events');
-                                }*/
-                            } else {
-                                this.controllers[site] = new UnifiClass.Controller({
-                                    host: this.settings.controllerIp,
-                                    port: this.settings.controllerPort,
-                                    username: this.settings.controllerUsername,
-                                    password: this.settings.controllerPassword,
-                                    site,
-                                    sslverify: !this.settings.ignoreSSLErrors
-                                });
-                                await this.controllers[site].login();
-                            }
-                        }
-
-                        this.log.debug(`Update site: ${site}`);
-
-                        if (this.update.sysinfo === true) {
-                            await this.fetchSiteSysinfo(site);
-                        }
-
-                        if (this.update.clients === true) {
-                            await this.fetchClients(site);
-                        }
-
-                        if (this.update.devices === true) {
-                            await this.fetchDevices(site);
-                        }
-
-                        if (this.update.wlans === true) {
-                            await this.fetchWlans(site);
-                        }
-
-                        if (this.update.networks === true) {
-                            await this.fetchNetworks(site);
-                        }
-
-                        if (this.update.health === true) {
-                            await this.fetchHealth(site);
-                        }
-
-                        if (this.update.vouchers === true) {
-                            await this.fetchVouchers(site);
-                        }
-
-                        if (this.update.dpi === true) {
-                            await this.fetchDpi(site);
-                        }
-
-                        if (this.update.gatewayTraffic === true) {
-                            await this.fetchGatewayTraffic(site);
-                        }
-
-                        if (this.update.alarms === true) {
-                            await this.fetchAlarms(site);
-                        }
-
-                        // finalize, logout and finish
-                        //await this.controllers[site].logout();
-                    } catch (err) {
-                        this.handleError(err, site, 'updateUnifiData');
-                    }
+                    throw err;
                 }
-
-                // Update is_online of offline clients
-                await this.setClientOnlineStatus();
-
-            } catch (err) {
-                this.handleError(err, undefined, 'updateUnifiData-fetchSites');
-                return;
             }
-            await this.setStateAsync('info.connection', { ack: true, val: true });
+
+            successful = true;
+            this.consecutiveErrors = 0;
+            await this.setDiagnosticState('info.connection', true);
+            await this.setDiagnosticState('info.lastSuccessfulRefresh', Date.now());
+            await this.setDiagnosticState('info.lastError', '');
+            await this.setDiagnosticState('info.consecutiveErrors', 0);
             this.log.debug('Update done');
         } catch (err) {
-            await this.setStateAsync('info.connection', { ack: true, val: false });
+            this.consecutiveErrors++;
+            await this.setDiagnosticState('info.connection', false);
+            await this.setDiagnosticState('info.lastError', err.message || String(err));
+            await this.setDiagnosticState('info.consecutiveErrors', this.consecutiveErrors);
 
-            this.handleError(err, undefined, 'updateUnifiData');
-        }
+            await this.handleError(err, undefined, 'updateUnifiData');
+        } finally {
+            this.updateInProgress = false;
+            await this.setDiagnosticState('info.refreshInProgress', false);
 
-        if (preventReschedule === false) {
-            // schedule a new execution of updateUnifiData in X seconds
-            this.queryTimeout = setTimeout(() => {
-                this.updateUnifiData();
-            }, this.settings.updateInterval);
+            if (preventReschedule === false && !this.stopped) {
+                const backoffFactor = successful ? 1 : Math.pow(2, Math.min(this.consecutiveErrors, 4));
+                const delay = Math.min(this.settings.updateInterval * backoffFactor, 15 * 60 * 1000);
+                this.scheduleNextUpdate(delay);
+            }
         }
     }
 
@@ -506,7 +561,7 @@ class Unifi extends utils.Adapter {
                         return item;
                     }
                 });
-            
+
                 this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
 
                 if (siteData.length > 0) {
@@ -515,7 +570,7 @@ class Unifi extends utils.Adapter {
             }
         }
     }
-    
+
     /**
      * Function to identify blocked clients and set the correct state
      * @param {Object} site
@@ -554,7 +609,7 @@ class Unifi extends utils.Adapter {
 
         // Workaround for UniFi bug "wireless clients shown as wired clients"
         // https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1
-        for (const [key, value] of Object.entries(wlanStates)) {
+        for (const key of Object.keys(wlanStates)) {
             const wiredStateId = key.replace('last_seen_by_uap', 'last_seen_by_usw');
 
             if (Object.prototype.hasOwnProperty.call(wiredStates, wiredStateId)) {
@@ -1261,6 +1316,8 @@ class Unifi extends utils.Adapter {
                         }
 
                         // Cleanup _id
+                        // Escaping both brackets keeps the ioBroker object-ID blacklist easy to audit.
+                        // eslint-disable-next-line no-useless-escape
                         const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
                         let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
                         tempId = tempId.toLowerCase();
