@@ -12,6 +12,23 @@ const utils = require('@iobroker/adapter-core');
 const UnifiClass = require('node-unifi');
 const jsonLogic = require('./admin/lib/json_logic.js');
 
+// Data requested for every site, in this order: [update setting, fetch method]
+const FETCH_METHODS = [
+    ['sysinfo', 'fetchSiteSysinfo'],
+    ['clients', 'fetchClients'],
+    ['devices', 'fetchDevices'],
+    ['wlans', 'fetchWlans'],
+    ['networks', 'fetchNetworks'],
+    ['health', 'fetchHealth'],
+    ['vouchers', 'fetchVouchers'],
+    ['dpi', 'fetchDpi'],
+    ['gatewayTraffic', 'fetchGatewayTraffic'],
+    ['alarms', 'fetchAlarms']
+];
+
+// Upper limit for the delay between refreshes after consecutive failures
+const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
+
 class Unifi extends utils.Adapter {
 
     /**
@@ -244,83 +261,101 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Diagnostic states must never interrupt the refresh loop itself.
+     * Diagnostic states must never interrupt the refresh loop itself. Only
+     * changed values are written to avoid a state update on every refresh.
      *
      * @param {string} id
      * @param {ioBroker.StateValue} val
      */
     async setDiagnosticState(id, val) {
         try {
-            await this.setStateAsync(id, { ack: true, val });
+            await this.setStateChangedAsync(id, { ack: true, val });
         } catch (err) {
             this.log.warn(`Could not update diagnostic state '${id}': ${err.message || err}`);
         }
     }
 
     /**
+     * Detect a rejected session. A 403 is not included on purpose: the controller
+     * answers with 403 (api.err.NoPermission) when the user lacks the rights for a
+     * single endpoint, and logging in again cannot fix that.
+     *
      * @param {Error & {response?: {status?: number}}} err
      * @returns {boolean}
      */
     isAuthenticationError(err) {
         const status = err.response && err.response.status;
-        return status === 401 || status === 403 ||
-            err.message === 'api.err.LoginRequired' ||
-            err.message === 'api.err.Invalid';
+        return status === 401 || err.message === 'api.err.LoginRequired';
     }
 
     /**
-     * Execute one complete refresh using the cached controller sessions.
+     * Execute one complete refresh. A failing site or endpoint is logged and
+     * skipped, so it cannot block the remaining data. If cached sessions are used,
+     * an authentication error is passed on instead, because the session may have
+     * expired and the caller logs in again.
+     *
+     * @param {boolean} sessionReused
+     * @returns {Promise<string[]>} descriptions of the failed requests
      */
-    async performUpdate() {
+    async performUpdate(sessionReused = false) {
+        const failures = [];
+        let clientsIncomplete = false;
+
+        const handleFailure = async (err, site, methodName) => {
+            if (sessionReused && this.isAuthenticationError(err)) {
+                throw err;
+            }
+            failures.push(`${methodName} (${site}): ${err.message || err}`);
+            await this.handleError(err, site, methodName);
+        };
+
         const defaultController = await this.getController();
         const sites = await this.fetchSites(defaultController);
 
         for (const site of sites) {
             if (this.stopped) {
-                return;
+                return failures;
             }
 
             if (site === 'default') {
                 this.controllers[site] = defaultController;
             } else {
-                await this.getController(site);
+                try {
+                    await this.getController(site);
+                } catch (err) {
+                    clientsIncomplete = clientsIncomplete || this.update.clients === true;
+                    await handleFailure(err, site, 'getController');
+                    continue;
+                }
             }
 
             this.log.debug(`Update site: ${site}`);
 
-            if (this.update.sysinfo === true) {
-                await this.fetchSiteSysinfo(site);
-            }
-            if (this.update.clients === true) {
-                await this.fetchClients(site);
-            }
-            if (this.update.devices === true) {
-                await this.fetchDevices(site);
-            }
-            if (this.update.wlans === true) {
-                await this.fetchWlans(site);
-            }
-            if (this.update.networks === true) {
-                await this.fetchNetworks(site);
-            }
-            if (this.update.health === true) {
-                await this.fetchHealth(site);
-            }
-            if (this.update.vouchers === true) {
-                await this.fetchVouchers(site);
-            }
-            if (this.update.dpi === true) {
-                await this.fetchDpi(site);
-            }
-            if (this.update.gatewayTraffic === true) {
-                await this.fetchGatewayTraffic(site);
-            }
-            if (this.update.alarms === true) {
-                await this.fetchAlarms(site);
+            for (const [updateKey, methodName] of FETCH_METHODS) {
+                if (this.stopped) {
+                    return failures;
+                }
+                if (this.update[updateKey] !== true) {
+                    continue;
+                }
+
+                try {
+                    await this[methodName](site);
+                } catch (err) {
+                    clientsIncomplete = clientsIncomplete || updateKey === 'clients';
+                    await handleFailure(err, site, methodName);
+                }
             }
         }
 
-        await this.setClientOnlineStatus();
+        // Without fresh client data every client would be marked as offline
+        if (clientsIncomplete) {
+            this.log.debug('Skipping client online status because not all clients could be fetched');
+        } else {
+            await this.setClientOnlineStatus();
+        }
+
+        return failures;
     }
 
     /**
@@ -389,7 +424,12 @@ class Unifi extends utils.Adapter {
      */
     async updateUnifiData(preventReschedule = false) {
         if (this.updateInProgress) {
-            this.log.warn('Skipping update because the previous refresh is still running.');
+            this.log.debug('Skipping update because the previous refresh is still running.');
+
+            // The running refresh may come from trigger_update, which does not reschedule
+            if (preventReschedule === false && !this.stopped) {
+                this.scheduleNextUpdate();
+            }
             return;
         }
 
@@ -401,27 +441,27 @@ class Unifi extends utils.Adapter {
         try {
             this.log.debug('Update started');
 
-            for (let attempt = 0; attempt < 2; attempt++) {
-                try {
-                    await this.performUpdate();
-                    break;
-                } catch (err) {
-                    if (attempt === 0 && this.isAuthenticationError(err)) {
-                        this.log.warn('UniFi session expired. Re-authenticating once.');
-                        this.resetControllers();
-                        continue;
-                    }
+            // Without cached sessions every login is fresh, so logging in again cannot help
+            const sessionReused = Object.keys(this.controllers).length > 0;
+            let failures;
+            try {
+                failures = await this.performUpdate(sessionReused);
+            } catch (err) {
+                if (!sessionReused || !this.isAuthenticationError(err)) {
                     throw err;
                 }
+                this.log.info('UniFi session expired. Re-authenticating.');
+                this.resetControllers();
+                failures = await this.performUpdate(false);
             }
 
             successful = true;
             this.consecutiveErrors = 0;
             await this.setDiagnosticState('info.connection', true);
             await this.setDiagnosticState('info.lastSuccessfulRefresh', Date.now());
-            await this.setDiagnosticState('info.lastError', '');
+            await this.setDiagnosticState('info.lastError', failures.join('; '));
             await this.setDiagnosticState('info.consecutiveErrors', 0);
-            this.log.debug('Update done');
+            this.log.debug(failures.length ? `Update done with ${failures.length} failed request(s)` : 'Update done');
         } catch (err) {
             this.consecutiveErrors++;
             await this.setDiagnosticState('info.connection', false);
@@ -434,8 +474,10 @@ class Unifi extends utils.Adapter {
             await this.setDiagnosticState('info.refreshInProgress', false);
 
             if (preventReschedule === false && !this.stopped) {
-                const backoffFactor = successful ? 1 : Math.pow(2, Math.min(this.consecutiveErrors, 4));
-                const delay = Math.min(this.settings.updateInterval * backoffFactor, 15 * 60 * 1000);
+                // Backoff 1x, 2x, 4x, 8x, 16x: capped, but never shorter than the configured interval
+                const interval = this.settings.updateInterval;
+                const backoffFactor = successful ? 1 : Math.pow(2, Math.min(this.consecutiveErrors - 1, 4));
+                const delay = Math.max(interval, Math.min(interval * backoffFactor, MAX_BACKOFF_DELAY));
                 this.scheduleNextUpdate(delay);
             }
         }
