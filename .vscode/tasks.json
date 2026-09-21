@@ -11,7 +11,7 @@
         {
             "label": "Debug node",
             "type": "shell",
-            "command": "node --inspect-brk /opt/iobroker/node_modules/iobroker.unifi/main.js --force --logs"
+            "command": "node --inspect-brk /opt/iobroker/node_modules/iobroker.unifi/build/main.js --force --logs"
         }
     ]
 }

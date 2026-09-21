@@ -1,19 +1,55 @@
-'use strict';
-
 /*
  * Created with @iobroker/create-adapter v1.17.0
  */
+import * as utils from '@iobroker/adapter-core';
+import { Controller, type ControllerOptions } from 'node-unifi';
 
-// The adapter-core module gives you access to the core ioBroker functions
-// you need to create an adapter
-const utils = require('@iobroker/adapter-core');
+import { applyRule } from './lib/jsonLogic';
+import { collectStateIds, loadObjectDefinitions } from './lib/objectDefinitions';
+import type {
+    CreatedObject,
+    ObjectDefinitions,
+    StatesFilterCategory,
+    UnifiAlarm,
+    UnifiBlockedClient,
+    UnifiClient,
+    UnifiDevice,
+    UnifiDpiStats,
+    UnifiError,
+    UnifiHealth,
+    UnifiNamedItem,
+    UnifiObjectsFilter,
+    UnifiSite,
+    UnifiStatesFilter,
+    UnifiVoucher,
+} from './lib/types';
 
-// Load your modules here
-const UnifiClass = require('node-unifi');
-const jsonLogic = require('./admin/lib/json_logic.js');
+type UpdateKey =
+    | 'sysinfo'
+    | 'clients'
+    | 'devices'
+    | 'wlans'
+    | 'networks'
+    | 'health'
+    | 'vouchers'
+    | 'dpi'
+    | 'gatewayTraffic'
+    | 'alarms';
+
+type FetchMethod =
+    | 'fetchSiteSysinfo'
+    | 'fetchClients'
+    | 'fetchDevices'
+    | 'fetchWlans'
+    | 'fetchNetworks'
+    | 'fetchHealth'
+    | 'fetchVouchers'
+    | 'fetchDpi'
+    | 'fetchGatewayTraffic'
+    | 'fetchAlarms';
 
 // Data requested for every site, in this order: [update setting, fetch method]
-const FETCH_METHODS = [
+const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
     ['sysinfo', 'fetchSiteSysinfo'],
     ['clients', 'fetchClients'],
     ['devices', 'fetchDevices'],
@@ -23,101 +59,187 @@ const FETCH_METHODS = [
     ['vouchers', 'fetchVouchers'],
     ['dpi', 'fetchDpi'],
     ['gatewayTraffic', 'fetchGatewayTraffic'],
-    ['alarms', 'fetchAlarms']
+    ['alarms', 'fetchAlarms'],
 ];
 
 // Upper limit for the delay between refreshes after consecutive failures
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
 
 // Categories of the state filter, defined in admin/lib/objects_<category>.json
-const STATES_FILTER_CATEGORIES = ['sysinfo', 'clients', 'devices', 'wlans', 'networks', 'health', 'vouchers', 'alarms', 'dpi', 'gateway_traffic'];
-
-/**
- * States that are always selected together with another state: [state, required states or channels]
- *
- * @type {[string, string[]][]}
- */
-const STATE_DEPENDENCIES = [
-    // is_online is calculated from the last seen timestamps
-    ['clients.client.is_online', ['clients.client.last_seen_by_uap', 'clients.client.last_seen_by_usw']],
-    ['devices.device.port_table.port.port_poe_enabled', ['devices.device.port_table.port.port_poe', 'devices.device.port_overrides']],
-    // the LED override is sent with the device ID
-    ['devices.device.led_override', ['devices.device.device_id']]
+const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
+    'sysinfo',
+    'clients',
+    'devices',
+    'wlans',
+    'networks',
+    'health',
+    'vouchers',
+    'alarms',
+    'dpi',
+    'gateway_traffic',
 ];
 
-class Unifi extends utils.Adapter {
+// States that are always selected together with another state: [state, required states or channels]
+const STATE_DEPENDENCIES: [string, string[]][] = [
+    // is_online is calculated from the last seen timestamps
+    ['clients.client.is_online', ['clients.client.last_seen_by_uap', 'clients.client.last_seen_by_usw']],
+    [
+        'devices.device.port_table.port.port_poe_enabled',
+        ['devices.device.port_table.port.port_poe', 'devices.device.port_overrides'],
+    ],
+    // the LED override is sent with the device ID
+    ['devices.device.led_override', ['devices.device.device_id']],
+];
 
-    /**
-     * @param {Partial<utils.AdapterOptions>} [options={}]
-     */
-    constructor(options) {
+// Characters that are replaced in the IDs of the created objects
+const FORBIDDEN_CHARS = /[\][*,;'"`<>\\?\s]/g;
+
+const MAC_ADDRESS = /([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/;
+
+interface Settings {
+    /** In ms */
+    updateInterval: number;
+    controllerIp: string;
+    controllerPort: string | number;
+    controllerUsername: string;
+    controllerPassword: string;
+    ignoreSSLErrors: boolean;
+}
+
+type UpdateSettings = Record<UpdateKey, boolean> & {
+    /** Use the objects filter of the clients as whitelist */
+    blacklist: boolean;
+    vouchersNoUsed: boolean;
+    alarmsNoArchived: boolean;
+    gatewayTrafficMaxDays: number;
+};
+
+interface VoucherSettings {
+    number: number | string | null;
+    duration: number | string | null;
+    quota: number | string | null;
+    uploadLimit: number | string | null;
+    downloadLimit: number | string | null;
+    byteQuota: number | string | null;
+    note: string;
+}
+
+/**
+ * True if one of the values is in the list
+ *
+ * @param list filter list
+ * @param values values of the item
+ */
+function isInList(list: string[], ...values: (string | undefined)[]): boolean {
+    return values.some(value => value !== undefined && list.includes(value));
+}
+
+class Unifi extends utils.Adapter {
+    private controllers: Record<string, Controller> = {};
+    private objectsFilter: UnifiObjectsFilter = { clients: [], devices: [], wlans: [], networks: [], health: [] };
+    private settings: Settings = {
+        updateInterval: 60 * 1000,
+        controllerIp: '',
+        controllerPort: '',
+        controllerUsername: '',
+        controllerPassword: '',
+        ignoreSSLErrors: true,
+    };
+    private update: UpdateSettings = {
+        blacklist: false,
+        sysinfo: false,
+        clients: false,
+        devices: false,
+        wlans: false,
+        networks: false,
+        health: false,
+        vouchers: false,
+        vouchersNoUsed: false,
+        dpi: false,
+        gatewayTraffic: false,
+        gatewayTrafficMaxDays: 0,
+        alarms: false,
+        alarmsNoArchived: false,
+    };
+    private clients = { isOnlineOffset: 60 * 1000 };
+    private vouchers: VoucherSettings = {
+        number: null,
+        duration: null,
+        quota: null,
+        uploadLimit: null,
+        downloadLimit: null,
+        byteQuota: null,
+        note: '',
+    };
+    private statesFilter: UnifiStatesFilter = {
+        sysinfo: [],
+        clients: [],
+        devices: [],
+        wlans: [],
+        networks: [],
+        health: [],
+        vouchers: [],
+        alarms: [],
+        dpi: [],
+        gateway_traffic: [],
+    };
+    private queryTimeout: ioBroker.Timeout | undefined = undefined;
+    private updateInProgress = false;
+    private consecutiveErrors = 0;
+    /** Created objects without the namespace, to write only changed objects */
+    private ownObjects: Record<string, CreatedObject> = {};
+    private stopped = false;
+
+    public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
             name: 'unifi',
         });
-        this.on('ready', this.onReady.bind(this));
-        this.on('stateChange', this.onStateChange.bind(this));
-        this.on('unload', this.onUnload.bind(this));
-
-        this.controllers = {};
-        this.objectsFilter = {};
-        this.settings = {};
-        this.update = {};
-        this.clients = {};
-        this.vouchers = {};
-        this.dpi = {};
-        this.statesFilter = {};
-        this.queryTimeout = null;
-        this.updateInProgress = false;
-        this.consecutiveErrors = 0;
-
-        this.ownObjects = {};
-
-        this.stopped = false;
+        this.on('ready', () => this.onReady());
+        this.on('stateChange', (id, state) => this.onStateChange(id, state));
+        this.on('unload', callback => this.onUnload(callback));
     }
 
     /**
      * Is called when adapter received configuration.
      */
-    async onReady() {
+    private async onReady(): Promise<void> {
         try {
             // subscribe to all state changes
-            this.subscribeStates('*.wlans.*.enabled');
-            this.subscribeStates('*.vouchers.create_vouchers');
-            this.subscribeStates('trigger_update');
-            this.subscribeStates('*.port_table.port_*.port_poe_enabled');
-            this.subscribeStates('*.port_table.port_*.port_poe_cycle');
-            this.subscribeStates('*.clients.*.reconnect');
-            this.subscribeStates('*.clients.*.blocked');
-            this.subscribeStates('*.devices.*.led_override');
-            this.subscribeStates('*.devices.*.restart');
+            await this.subscribeStatesAsync('*.wlans.*.enabled');
+            await this.subscribeStatesAsync('*.vouchers.create_vouchers');
+            await this.subscribeStatesAsync('trigger_update');
+            await this.subscribeStatesAsync('*.port_table.port_*.port_poe_enabled');
+            await this.subscribeStatesAsync('*.port_table.port_*.port_poe_cycle');
+            await this.subscribeStatesAsync('*.clients.*.reconnect');
+            await this.subscribeStatesAsync('*.clients.*.blocked');
+            await this.subscribeStatesAsync('*.devices.*.led_override');
+            await this.subscribeStatesAsync('*.devices.*.restart');
 
             this.log.info('UniFi adapter is ready');
 
             // blacklist and whitelist were renamed in v0.5.3. The old admin page migrated them on save.
-            // @ts-ignore
             if (this.config.blacklist || this.config.whitelist) {
                 this.log.info('Migrating the filter settings of versions < 0.5.3');
                 await this.updateConfig({
-                    // @ts-ignore
                     objectsFilter: this.config.blacklist || this.config.objectsFilter,
-                    // @ts-ignore
                     statesFilter: this.config.whitelist || this.config.statesFilter,
                     blacklist: null,
-                    whitelist: null
+                    whitelist: null,
                 });
                 // The adapter is restarted with the new configuration
                 return;
             }
 
             // Load configuration
-            this.settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
+            this.settings.updateInterval = parseInt(String(this.config.updateInterval), 10) * 1000 || 60 * 1000;
             this.settings.controllerIp = this.config.controllerIp;
             // An empty port is used for UniFi OS. The admin page may store it as null.
             this.settings.controllerPort = this.config.controllerPort || '';
             this.settings.controllerUsername = this.config.controllerUsername;
             this.settings.controllerPassword = this.config.controllerPassword;
-            this.settings.ignoreSSLErrors = this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
+            this.settings.ignoreSSLErrors =
+                this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
             this.update.blacklist = this.config.blacklistClients;
             this.update.clients = this.config.updateClients;
@@ -132,36 +254,41 @@ class Unifi extends utils.Adapter {
             this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
             this.update.dpi = this.config.updateDpi;
             this.update.gatewayTraffic = this.config.updateGatewayTraffic;
-            this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
+            this.update.gatewayTrafficMaxDays = Number(this.config.gatewayTrafficMaxDays);
 
-            // @ts-ignore
             this.objectsFilter = this.config.objectsFilter;
-            // @ts-ignore
             this.statesFilter = this.normalizeStatesFilter(this.config.statesFilter);
 
-            // @ts-ignore
-            this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
+            this.clients.isOnlineOffset = parseInt(String(this.config.clientsIsOnlineOffset), 10) * 1000 || 60 * 1000;
 
             this.vouchers.number = this.config.createVouchersNumber;
             this.vouchers.duration = this.config.createVouchersDuration;
             this.vouchers.quota = this.config.createVouchersQuota;
-            this.vouchers.uploadLimit = !this.config.createVouchersUploadLimit ? null : this.config.createVouchersUploadLimit;
-            this.vouchers.downloadLimit = !this.config.createVouchersDownloadLimit ? null : this.config.createVouchersDownloadLimit;
+            this.vouchers.uploadLimit = !this.config.createVouchersUploadLimit
+                ? null
+                : this.config.createVouchersUploadLimit;
+            this.vouchers.downloadLimit = !this.config.createVouchersDownloadLimit
+                ? null
+                : this.config.createVouchersDownloadLimit;
             this.vouchers.byteQuota = !this.config.createVouchersByteQuota ? null : this.config.createVouchersByteQuota;
             this.vouchers.note = this.config.createVouchersNote;
 
-            if (this.settings.controllerIp !== '' && this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '') {
+            if (
+                this.settings.controllerIp !== '' &&
+                this.settings.controllerUsername !== '' &&
+                this.settings.controllerPassword !== ''
+            ) {
                 // Send some log messages
                 this.log.debug(`controller = ${this.settings.controllerIp}:${this.settings.controllerPort}`);
                 this.log.debug(`updateInterval = ${this.settings.updateInterval / 1000}`);
 
                 // Start main function
-                this.updateUnifiData();
+                void this.updateUnifiData();
             } else {
                 this.log.error('Adapter deactivated due to missing configuration.');
 
                 await this.setStateAsync('info.connection', { ack: true, val: false });
-                this.setForeignState(`system.adapter.${this.namespace}.alive`, false);
+                await this.setForeignStateAsync(`system.adapter.${this.namespace}.alive`, false);
             }
         } catch (err) {
             this.handleError(err, undefined, 'onReady');
@@ -170,10 +297,11 @@ class Unifi extends utils.Adapter {
 
     /**
      * Is called if a subscribed state changes
-     * @param {string} id
-     * @param {ioBroker.State | null | undefined} state
+     *
+     * @param id ID of the state
+     * @param state the new state
      */
-    async onStateChange(id, state) {
+    private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
         if (state && !state.ack) {
             // The state was changed
             const idParts = id.split('.');
@@ -188,11 +316,10 @@ class Unifi extends utils.Adapter {
                 } else if (idParts[2] === 'trigger_update') {
                     await this.updateUnifiData(true);
                 } else if (idParts[7] === 'port_poe_enabled') {
-                    const portNumber = idParts[6].split('_').pop();
-                    this.switchPoeOfPort(site, mac, portNumber, state.val);
+                    const portNumber = idParts[6].split('_').pop() || '';
+                    void this.switchPoeOfPort(site, mac, portNumber, state.val);
                 } else if (idParts[7] === 'port_poe_cycle') {
-                    const portNumber = idParts[6].split('_').pop();
-                    const mac = idParts[4];
+                    const portNumber = idParts[6].split('_').pop() || '';
 
                     this.log.info(`onStateChange: port power cycle (port: ${portNumber}, device: ${mac})`);
 
@@ -202,14 +329,15 @@ class Unifi extends utils.Adapter {
                 } else if (idParts[5] === 'blocked') {
                     await this.blockClient(id, site, idParts, state.val);
                 } else if (idParts[5] === 'led_override') {
-                    const deviceId = await this.getStateAsync(id.substring(0, id.lastIndexOf('.')) + '.device_id');
+                    const deviceId = await this.getStateAsync(`${id.substring(0, id.lastIndexOf('.'))}.device_id`);
+                    if (!deviceId) {
+                        throw new Error(`onStateChange: device_id of ${id} not found`);
+                    }
 
                     this.log.info(`onStateChange: override led to '${state.val}' (device: ${deviceId.val})`);
 
-                    await this.controllers[site].setLEDOverride(deviceId.val, state.val);
+                    await this.controllers[site].setLEDOverride(String(deviceId.val), String(state.val));
                 } else if (idParts[5] === 'restart') {
-                    const mac = idParts[4];
-
                     this.log.info(`onStateChange: restart device '${mac}'`);
 
                     await this.controllers[site].restartDevice(mac, 'soft');
@@ -222,18 +350,20 @@ class Unifi extends utils.Adapter {
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
-     * @param {() => void} callback
+     *
+     * @param callback to call when done
      */
-    onUnload(callback) {
+    private onUnload(callback: () => void): void {
         try {
             this.stopped = true;
             if (this.queryTimeout) {
-                clearTimeout(this.queryTimeout);
+                this.clearTimeout(this.queryTimeout);
+                this.queryTimeout = undefined;
             }
 
             this.log.info('cleaned everything up...');
             callback();
-        } catch (e) {
+        } catch {
             callback();
         }
     }
@@ -243,27 +373,14 @@ class Unifi extends utils.Adapter {
      * every level of the object tree, the channels above them are added, as well as
      * the states they depend on. Nothing selected means: create all states.
      *
-     * @param {Record<string, string[]>} statesFilter
-     * @returns {Record<string, string[]>}
+     * @param statesFilter filter from the configuration
      */
-    normalizeStatesFilter(statesFilter) {
-        /** @type {Record<string, string[]>} */
-        const result = {};
+    private normalizeStatesFilter(statesFilter: Partial<UnifiStatesFilter> | undefined): UnifiStatesFilter {
+        const result = {} as UnifiStatesFilter;
 
         for (const category of STATES_FILTER_CATEGORIES) {
             const selected = statesFilter && Array.isArray(statesFilter[category]) ? statesFilter[category] : [];
-
-            const stateIds = [];
-            const collectStates = has => {
-                for (const [id, obj] of Object.entries(has)) {
-                    if (obj.type === 'state') {
-                        stateIds.push(id);
-                    } else if (obj.logic && obj.logic.has) {
-                        collectStates(obj.logic.has);
-                    }
-                }
-            };
-            collectStates(require(`./admin/lib/objects_${category}.json`)[category].logic.has);
+            const stateIds = collectStateIds(loadObjectDefinitions(category)[category].logic.has || {});
 
             // Older versions also stored the channels, which are not needed to find the selection
             const states = selected.filter(id => stateIds.includes(id));
@@ -273,7 +390,7 @@ class Unifi extends utils.Adapter {
                 }
             }
 
-            const ids = new Set();
+            const ids = new Set<string>();
             for (const id of states) {
                 const parts = id.split('.');
                 for (let i = 1; i <= parts.length; i++) {
@@ -290,16 +407,16 @@ class Unifi extends utils.Adapter {
      * Schedule the next automatic refresh. Existing timers are always replaced,
      * so a failed request cannot accidentally create parallel refresh loops.
      *
-     * @param {number} delay
+     * @param delay in ms
      */
-    scheduleNextUpdate(delay = this.settings.updateInterval) {
+    private scheduleNextUpdate(delay = this.settings.updateInterval): void {
         if (this.queryTimeout) {
-            clearTimeout(this.queryTimeout);
+            this.clearTimeout(this.queryTimeout);
         }
 
-        this.queryTimeout = setTimeout(() => {
-            this.queryTimeout = null;
-            this.updateUnifiData();
+        this.queryTimeout = this.setTimeout(() => {
+            this.queryTimeout = undefined;
+            void this.updateUnifiData();
         }, delay);
     }
 
@@ -307,28 +424,27 @@ class Unifi extends utils.Adapter {
      * Create and authenticate a controller only when it is needed. The session
      * is reused between refreshes to avoid hitting the controller login limit.
      *
-     * @param {string} site
-     * @returns {Promise<UnifiClass.Controller>}
+     * @param site name of the site
      */
-    async getController(site = 'default') {
+    private async getController(site = 'default'): Promise<Controller> {
         if (this.controllers[site]) {
             return this.controllers[site];
         }
 
-        const options = {
+        const options: ControllerOptions = {
             host: this.settings.controllerIp,
             port: this.settings.controllerPort,
             username: this.settings.controllerUsername,
             password: this.settings.controllerPassword,
             sslverify: !this.settings.ignoreSSLErrors,
-            timeout: 10000
+            timeout: 10000,
         };
 
         if (site !== 'default') {
             options.site = site;
         }
 
-        const controller = new UnifiClass.Controller(options);
+        const controller = new Controller(options);
         await controller.login();
         this.controllers[site] = controller;
         this.log.debug(`Login successful for site '${site}'`);
@@ -337,7 +453,7 @@ class Unifi extends utils.Adapter {
     }
 
     /** Reset cached sessions before a single re-authentication attempt. */
-    resetControllers() {
+    private resetControllers(): void {
         this.controllers = {};
     }
 
@@ -345,14 +461,14 @@ class Unifi extends utils.Adapter {
      * Diagnostic states must never interrupt the refresh loop itself. Only
      * changed values are written to avoid a state update on every refresh.
      *
-     * @param {string} id
-     * @param {ioBroker.StateValue} val
+     * @param id ID of the state
+     * @param val value to write
      */
-    async setDiagnosticState(id, val) {
+    private async setDiagnosticState(id: string, val: ioBroker.StateValue): Promise<void> {
         try {
             await this.setStateChangedAsync(id, { ack: true, val });
         } catch (err) {
-            this.log.warn(`Could not update diagnostic state '${id}': ${err.message || err}`);
+            this.log.warn(`Could not update diagnostic state '${id}': ${(err as Error).message || err}`);
         }
     }
 
@@ -361,10 +477,9 @@ class Unifi extends utils.Adapter {
      * answers with 403 (api.err.NoPermission) when the user lacks the rights for a
      * single endpoint, and logging in again cannot fix that.
      *
-     * @param {Error & {response?: {status?: number}}} err
-     * @returns {boolean}
+     * @param err error of node-unifi
      */
-    isAuthenticationError(err) {
+    private isAuthenticationError(err: UnifiError): boolean {
         const status = err.response && err.response.status;
         return status === 401 || err.message === 'api.err.LoginRequired';
     }
@@ -375,19 +490,19 @@ class Unifi extends utils.Adapter {
      * an authentication error is passed on instead, because the session may have
      * expired and the caller logs in again.
      *
-     * @param {boolean} sessionReused
-     * @returns {Promise<string[]>} descriptions of the failed requests
+     * @param sessionReused cached sessions are used
+     * @returns descriptions of the failed requests
      */
-    async performUpdate(sessionReused = false) {
-        const failures = [];
+    private async performUpdate(sessionReused = false): Promise<string[]> {
+        const failures: string[] = [];
         let clientsIncomplete = false;
 
-        const handleFailure = async (err, site, methodName) => {
+        const handleFailure = (err: UnifiError, site: string, methodName: string): void => {
             if (sessionReused && this.isAuthenticationError(err)) {
                 throw err;
             }
-            failures.push(`${methodName} (${site}): ${err.message || err}`);
-            await this.handleError(err, site, methodName);
+            failures.push(`${methodName} (${site}): ${err.message || String(err)}`);
+            this.handleError(err, site, methodName);
         };
 
         const defaultController = await this.getController();
@@ -405,7 +520,7 @@ class Unifi extends utils.Adapter {
                     await this.getController(site);
                 } catch (err) {
                     clientsIncomplete = clientsIncomplete || this.update.clients === true;
-                    await handleFailure(err, site, 'getController');
+                    handleFailure(err, site, 'getController');
                     continue;
                 }
             }
@@ -424,7 +539,7 @@ class Unifi extends utils.Adapter {
                     await this[methodName](site);
                 } catch (err) {
                     clientsIncomplete = clientsIncomplete || updateKey === 'clients';
-                    await handleFailure(err, site, methodName);
+                    handleFailure(err, site, methodName);
                 }
             }
         }
@@ -441,20 +556,25 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to handle error messages
-     * @param {Object} err
-     * @param {String} site
-     * @param {String | undefined} methodName
+     *
+     * @param err error to log
+     * @param site site of the request
+     * @param methodName method that failed
      */
-    async handleError(err, site, methodName = undefined) {
+    private handleError(err: UnifiError, site: string | undefined, methodName?: string): void {
         if (err.message === 'api.err.Invalid') {
             this.log.error(`Error site ${site}: Incorrect username or password.`);
         } else if (err.message === 'api.err.LoginRequired') {
             this.log.error(`Error site ${site}: Login required. Check username and password.`);
         } else if (err.message === 'api.err.Ubic2faTokenRequired') {
-            this.log.error(`Error site ${site}: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.`);
+            this.log.error(
+                `Error site ${site}: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.`,
+            );
         } else if (err.message === 'api.err.ServerBusy') {
-            this.log.error(`Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`);
-        } else if (err.message === 'api.err.NoPermission' || (err.response && err.response.data && err.response.data.meta && err.response.data.meta.msg && err.response.data.meta.msg === 'api.err.NoPermission')) {
+            this.log.error(
+                `Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`,
+            );
+        } else if (err.message === 'api.err.NoPermission' || err.response?.data?.meta?.msg === 'api.err.NoPermission') {
             this.log.error(`Error site ${site}: Permission denied. Check access rights.`);
         } else if (err.message.includes('connect EHOSTUNREACH') || err.message.includes('connect ENETUNREACH')) {
             this.log.error(`Error site ${site}: Host or network cannot be reached.`);
@@ -465,14 +585,20 @@ class Unifi extends utils.Adapter {
         } else if (err.message.includes('read ECONNRESET')) {
             this.log.error(`Error site ${site}: Connection was closed by the UniFi controller.`);
         } else if (err.message.includes('getaddrinfo EAI_AGAIN')) {
-            this.log.error(`Error site ${site}: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.`);
+            this.log.error(
+                `Error site ${site}: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.`,
+            );
         } else if (err.message.includes('getaddrinfo ENOTFOUND')) {
             this.log.error(`Error site ${site}: Host not found. Incorrect IP or port.`);
         } else if (err.message.includes('socket hang up')) {
             this.log.error(`Error site ${site}: Socket hang up: ${err.message}`);
         } else if (err.message.includes('socket disconnected')) {
             this.log.error(`Error site ${site}: Socket disconnected: ${err.message}`);
-        } else if (err.message.includes('SSL routines') || err.message.includes('ssl3_') || err.message.includes('certificate has expired')) {
+        } else if (
+            err.message.includes('SSL routines') ||
+            err.message.includes('ssl3_') ||
+            err.message.includes('certificate has expired')
+        ) {
             this.log.error(`Error site ${site}: SSL/Certificate issue: ${err.message}`);
         } else if (err.message === 'api.err.InvalidArgs' || err.message === 'api.err.IncorrectNumberRange') {
             this.log.error(`Parameters for this call are invalid (${err.message})! Please check the parameters`);
@@ -490,10 +616,10 @@ class Unifi extends utils.Adapter {
                 this.log.error(`Error site ${site}: ${err.message}, stack: ${err.stack}`);
             }
 
-            if (this.supportsFeature && this.supportsFeature('PLUGINS')) {
+            if (this.supportsFeature?.('PLUGINS')) {
                 const sentryInstance = this.getPluginInstance('sentry');
                 if (sentryInstance) {
-                    sentryInstance.getSentryObject().captureException(err);
+                    sentryInstance.getSentryObject()?.captureException(err);
                 }
             }
         }
@@ -502,8 +628,10 @@ class Unifi extends utils.Adapter {
     /**
      * Function that takes care of the API calls and processes
      * the responses afterwards
+     *
+     * @param preventReschedule do not schedule the next refresh (trigger_update)
      */
-    async updateUnifiData(preventReschedule = false) {
+    private async updateUnifiData(preventReschedule = false): Promise<void> {
         if (this.updateInProgress) {
             this.log.debug('Skipping update because the previous refresh is still running.');
 
@@ -524,7 +652,7 @@ class Unifi extends utils.Adapter {
 
             // Without cached sessions every login is fresh, so logging in again cannot help
             const sessionReused = Object.keys(this.controllers).length > 0;
-            let failures;
+            let failures: string[];
             try {
                 failures = await this.performUpdate(sessionReused);
             } catch (err) {
@@ -546,10 +674,10 @@ class Unifi extends utils.Adapter {
         } catch (err) {
             this.consecutiveErrors++;
             await this.setDiagnosticState('info.connection', false);
-            await this.setDiagnosticState('info.lastError', err.message || String(err));
+            await this.setDiagnosticState('info.lastError', (err as Error).message || String(err));
             await this.setDiagnosticState('info.consecutiveErrors', this.consecutiveErrors);
 
-            await this.handleError(err, undefined, 'updateUnifiData');
+            this.handleError(err, undefined, 'updateUnifiData');
         } finally {
             this.updateInProgress = false;
             await this.setDiagnosticState('info.refreshInProgress', false);
@@ -565,19 +693,18 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to fetch site{Object} siteController
+     * Function to fetch the sites
      *
-     * @param {UnifiClass} siteController
+     * @param siteController controller of the default site
+     * @returns the names of the sites
      */
-    async fetchSites(siteController) {
-        const data = await siteController.getSites();
+    private async fetchSites(siteController: Controller): Promise<string[]> {
+        const data = (await siteController.getSites()) as UnifiSite[] | undefined;
         if (data === undefined) {
             throw new Error(`fetchSites: Returned data is not in valid format: ${JSON.stringify(data)}`);
         }
-        const sites = data.map((s) => {
-            return s.name;
-        });
-        this.log.debug(`fetchSites: ${sites}`);
+        const sites = data.map(s => s.name);
+        this.log.debug(`fetchSites: ${sites.join(',')}`);
 
         await this.processSites(sites, data);
 
@@ -586,11 +713,12 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function that receives the sites as a JSON data array
-     * @param {String[]} sites
-     * @param {Object[]} data
+     *
+     * @param sites names of the sites
+     * @param data data of the sites
      */
-    async processSites(sites, data) {
-        const objects = require('./admin/lib/objects_sites.json');
+    private async processSites(sites: string[], data: UnifiSite[]): Promise<void> {
+        const objects = loadObjectDefinitions('sites');
 
         for (const site of sites) {
             const x = sites.indexOf(site);
@@ -604,10 +732,11 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to fetch site sysinfo
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchSiteSysinfo(site) {
-        const data = await this.controllers[site].getSiteSysinfo();
+    private async fetchSiteSysinfo(site: string): Promise<unknown[]> {
+        const data = (await this.controllers[site].getSiteSysinfo()) as unknown[] | undefined;
         if (data === undefined) {
             throw new Error(`fetchSiteSysinfo ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
         }
@@ -621,20 +750,22 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function that receives the site sysinfo as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data sysinfo of the site
      */
-    async processSiteSysinfo(site, data) {
-        const objects = require('./admin/lib/objects_sysinfo.json');
+    private async processSiteSysinfo(site: string, data: unknown[]): Promise<void> {
+        const objects = loadObjectDefinitions('sysinfo');
 
         await this.applyJsonLogic(site, data, objects, this.statesFilter.sysinfo);
     }
 
     /**
      * Function to fetch clients
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchClients(site) {
+    private async fetchClients(site: string): Promise<UnifiClient[]> {
         const data = await this.controllers[site].getClientDevices();
         if (!Array.isArray(data)) {
             throw new Error(`fetchClients ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -642,72 +773,55 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchClients ${site}: ${data.length}`);
         this.log.silly(`fetchClients ${site}: ${JSON.stringify(data)}`);
 
-        await this.processClients(site, data);
+        await this.processClients(site, data as UnifiClient[]);
         await this.processBlockedClients(site);
 
-        return data;
+        return data as UnifiClient[];
     }
 
     /**
      * Function that receives the clients as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data clients of the site
      */
-    async processClients(site, data) {
-        const objects = require('./admin/lib/objects_clients.json');
+    private async processClients(site: string, data: UnifiClient[]): Promise<void> {
+        const objects = loadObjectDefinitions('clients');
+        const filter = this.objectsFilter.clients;
 
-        if(this.update.blacklist === true){
-            if (data) {
-            // Process objectsFilter
-                const siteData = data.filter((item) => {
-                    if (this.objectsFilter.clients.includes(item.mac) == true ||
-                        this.objectsFilter.clients.includes(item.ip) == true ||
-                        this.objectsFilter.clients.includes(item.name) == true ||
-                        this.objectsFilter.clients.includes(item.hostname) == true) {
-                        return item;
-                    }
-                });
+        if (this.update.blacklist === true) {
+            // Whitelist: only the listed clients
+            const siteData = data.filter(item => isInList(filter, item.mac, item.ip, item.name, item.hostname));
 
-                if (siteData.length > 0) {
-                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
-                }
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
             }
         }
-        if(this.update.blacklist === false){
-            if (data) {
-                // Process objectsFilter
-                const siteData = data.filter((item) => {
-                    if (this.objectsFilter.clients.includes(item.mac) !== true &&
-                        this.objectsFilter.clients.includes(item.ip) !== true &&
-                        this.objectsFilter.clients.includes(item.name) !== true &&
-                        this.objectsFilter.clients.includes(item.hostname) !== true) {
-                        return item;
-                    }
-                });
+        if (this.update.blacklist === false) {
+            const siteData = data.filter(item => !isInList(filter, item.mac, item.ip, item.name, item.hostname));
 
-                this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
+            this.log.silly(`processClients: filtered data: ${JSON.stringify(siteData)}`);
 
-                if (siteData.length > 0) {
-                    await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
-                }
+            if (siteData.length > 0) {
+                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.clients);
             }
         }
     }
 
     /**
      * Function to identify blocked clients and set the correct state
-     * @param {Object} site
+     *
+     * @param site name of the site
      */
-    async processBlockedClients(site) {
+    private async processBlockedClients(site: string): Promise<void> {
         if (this.statesFilter.clients.includes('clients.client.blocked')) {
-            const blockedClients = await this.controllers[site].getBlockedUsers();
+            const blockedClients = (await this.controllers[site].getBlockedUsers()) as UnifiBlockedClient[] | undefined;
 
             const allClients = await this.getStatesAsync(`*.clients.*.blocked`);
-            // this.log.warn(JSON.stringify(blockedClients));
 
             for (const id in allClients) {
                 if (blockedClients && blockedClients.length > 0) {
-                    const clientMac = id.match(/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/)[0];
+                    const clientMac = id.match(MAC_ADDRESS)?.[0];
                     const index = blockedClients.findIndex(x => x.mac === clientMac);
 
                     if (index === -1) {
@@ -726,7 +840,7 @@ class Unifi extends utils.Adapter {
     /**
      * Update is_online of offline clients
      */
-    async setClientOnlineStatus() {
+    private async setClientOnlineStatus(): Promise<void> {
         const wlanStates = await this.getStatesAsync('*.clients.*.last_seen_by_uap');
         const wiredStates = await this.getStatesAsync('*.clients.*.last_seen_by_usw');
 
@@ -742,7 +856,7 @@ class Unifi extends utils.Adapter {
 
         const states = {
             ...wlanStates,
-            ...wiredStates
+            ...wiredStates,
         };
 
         const now = Math.floor(Date.now() / 1000) * 1000;
@@ -750,19 +864,19 @@ class Unifi extends utils.Adapter {
         for (const [key, value] of Object.entries(states)) {
             if (value !== null && typeof value.val === 'string') {
                 const lastSeen = Date.parse(value.val.replace(' ', 'T'));
-                const isOnline = (lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) >= 0);
+                const isOnline = lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) >= 0;
                 const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
                 const oldState = await this.getStateAsync(stateId);
 
-                if (oldState === null) {
+                if (!oldState) {
                     // This is the case if the client is new to the adapter with older JS-Controller versions
                     // Check if object is available and set the value
                     const oldObject = await this.getForeignObjectAsync(stateId);
 
-                    if (oldObject !== null) {
+                    if (oldObject) {
                         await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
                     }
-                } else if (oldState.val != isOnline) {
+                } else if (oldState.val !== isOnline) {
                     await this.setForeignStateAsync(stateId, { ack: true, val: isOnline });
                 }
             }
@@ -771,9 +885,10 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to fetch devices
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchDevices(site) {
+    private async fetchDevices(site: string): Promise<UnifiDevice[]> {
         const data = await this.controllers[site].getAccessDevices();
         if (!Array.isArray(data)) {
             throw new Error(`fetchDevices ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -781,42 +896,36 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchDevices ${site}: ${data.length}`);
         this.log.silly(`fetchDevices ${site}: ${JSON.stringify(data)}`);
 
-        await this.processDevices(site, data);
+        await this.processDevices(site, data as UnifiDevice[]);
 
-        return data;
+        return data as UnifiDevice[];
     }
 
     /**
      * Function that receives the devices as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data devices of the site
      */
-    async processDevices(site, data) {
-        const objects = require('./admin/lib/objects_devices.json');
+    private async processDevices(site: string, data: UnifiDevice[]): Promise<void> {
+        const objects = loadObjectDefinitions('devices');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.devices.includes(item.mac) !== true &&
-                    this.objectsFilter.devices.includes(item.ip) !== true &&
-                    this.objectsFilter.devices.includes(item.name) !== true) {
-                    return item;
-                }
-            });
+        // Process objectsFilter
+        const siteData = data.filter(item => !isInList(this.objectsFilter.devices, item.mac, item.ip, item.name));
 
-            this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.devices);
         }
     }
 
     /**
      * Function to fetch WLANs
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchWlans(site) {
+    private async fetchWlans(site: string): Promise<UnifiNamedItem[]> {
         const data = await this.controllers[site].getWLanSettings();
         if (!Array.isArray(data)) {
             throw new Error(`fetchWlans ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -824,40 +933,36 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchWlans ${site}: ${data.length}`);
         this.log.silly(`fetchWlans ${site}: ${JSON.stringify(data)}`);
 
-        await this.processWlans(site, data);
+        await this.processWlans(site, data as UnifiNamedItem[]);
 
-        return data;
+        return data as UnifiNamedItem[];
     }
 
     /**
      * Function that receives the WLANs as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data WLANs of the site
      */
-    async processWlans(site, data) {
-        const objects = require('./admin/lib/objects_wlans.json');
+    private async processWlans(site: string, data: UnifiNamedItem[]): Promise<void> {
+        const objects = loadObjectDefinitions('wlans');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.wlans.includes(item.name) !== true) {
-                    return item;
-                }
-            });
+        // Process objectsFilter
+        const siteData = data.filter(item => !isInList(this.objectsFilter.wlans, item.name));
 
-            this.log.silly(`processWlans: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processWlans: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.wlans);
         }
     }
 
     /**
      * Function to fetch networks
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchNetworks(site) {
+    private async fetchNetworks(site: string): Promise<UnifiNamedItem[]> {
         const data = await this.controllers[site].getNetworkConf();
         if (!Array.isArray(data)) {
             throw new Error(`fetchNetworks ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -865,40 +970,36 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchNetworks ${site}: ${data.length}`);
         this.log.silly(`fetchNetworks ${site}: ${JSON.stringify(data)}`);
 
-        await this.processNetworks(site, data);
+        await this.processNetworks(site, data as UnifiNamedItem[]);
 
-        return data;
+        return data as UnifiNamedItem[];
     }
 
     /**
      * Function that receives the networks as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data networks of the site
      */
-    async processNetworks(site, data) {
-        const objects = require('./admin/lib/objects_networks.json');
+    private async processNetworks(site: string, data: UnifiNamedItem[]): Promise<void> {
+        const objects = loadObjectDefinitions('networks');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.networks.includes(item.name) !== true) {
-                    return item;
-                }
-            });
+        // Process objectsFilter
+        const siteData = data.filter(item => !isInList(this.objectsFilter.networks, item.name));
 
-            this.log.silly(`processNetworks: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processNetworks: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.networks);
         }
     }
 
     /**
      * Function to fetch health
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchHealth(site) {
+    private async fetchHealth(site: string): Promise<UnifiHealth[]> {
         const data = await this.controllers[site].getHealth();
         if (!Array.isArray(data)) {
             throw new Error(`fetchHealth ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -906,40 +1007,36 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchHealth ${site}: ${data.length}`);
         this.log.silly(`fetchHealth ${site}: ${JSON.stringify(data)}`);
 
-        await this.processHealth(site, data);
+        await this.processHealth(site, data as UnifiHealth[]);
 
-        return data;
+        return data as UnifiHealth[];
     }
 
     /**
      * Function that receives the health as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data health of the site
      */
-    async processHealth(site, data) {
-        const objects = require('./admin/lib/objects_health.json');
+    private async processHealth(site: string, data: UnifiHealth[]): Promise<void> {
+        const objects = loadObjectDefinitions('health');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                if (this.objectsFilter.health.includes(item.subsystem) !== true) {
-                    return item;
-                }
-            });
+        // Process objectsFilter
+        const siteData = data.filter(item => !isInList(this.objectsFilter.health, item.subsystem));
 
-            this.log.silly(`processHealth: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processHealth: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.health);
         }
     }
 
     /**
      * Function to fetch vouchers
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchVouchers(site) {
+    private async fetchVouchers(site: string): Promise<UnifiVoucher[]> {
         const data = await this.controllers[site].getVouchers();
         if (!Array.isArray(data)) {
             throw new Error(`fetchVouchers ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -947,121 +1044,113 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchVouchers ${site}: ${data.length}`);
         this.log.silly(`fetchVouchers ${site}: ${JSON.stringify(data)}`);
 
-        await this.processVouchers(site, data);
+        await this.processVouchers(site, data as UnifiVoucher[]);
 
-        return data;
+        return data as UnifiVoucher[];
     }
 
     /**
      * Function that receives the vouchers as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data vouchers of the site
      */
-    async processVouchers(site, data) {
-        const objects = require('./admin/lib/objects_vouchers.json');
+    private async processVouchers(site: string, data: UnifiVoucher[]): Promise<void> {
+        const objects = loadObjectDefinitions('vouchers');
 
-        if (data) {
-            let siteData = data;
+        let siteData = data;
 
-            if (this.update.vouchersNoUsed) {
-                // Remove used vouchers
-                siteData = siteData.filter((item) => {
-                    if (item.used === 0) {
-                        return item;
+        if (this.update.vouchersNoUsed) {
+            // Remove used vouchers
+            siteData = siteData.filter(item => item.used === 0);
+
+            this.log.silly(`processVouchers: filtered data: ${JSON.stringify(siteData)}`);
+
+            const existingVouchers = await this.getForeignObjectsAsync(
+                `${this.namespace}.${site}.vouchers.voucher_*`,
+                'channel',
+            );
+
+            for (const voucher in existingVouchers) {
+                const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
+
+                if (!siteData.find(item => item.code === voucherId)) {
+                    const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
+
+                    this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
+
+                    // voucher id not exist in api request result -> get dps and delete them
+                    const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
+
+                    for (const id in dpsOfVoucherId) {
+                        // delete datapoint
+                        await this.delObjectAsync(id);
+
+                        // remove from own objects if exist
+                        delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
                     }
-                });
 
-                this.log.silly(`processVouchers: filtered data: ${JSON.stringify(siteData)}`);
-
-                const existingVouchers = await this.getForeignObjectsAsync(`${this.namespace}.${site}.vouchers.voucher_*`, 'channel');
-
-                for (const voucher in existingVouchers) {
-                    const voucherId = voucher.replace(`${this.namespace}.${site}.vouchers.voucher_`, '');
-
-                    if (!siteData.find(item => item.code === voucherId)) {
-                        const voucherChannelId = `${this.namespace}.${site}.vouchers.voucher_${voucherId}`;
-
-                        this.log.debug(`deleting data points of voucher with id '${voucherId}'`);
-
-                        // voucher id not exist in api request result -> get dps and delete them
-                        const dpsOfVoucherId = await this.getForeignObjectsAsync(`${voucherChannelId}.*`);
-
-                        for (const id in dpsOfVoucherId) {
-                            // delete datapoint
-                            await this.delObjectAsync(id);
-
-                            if (this.ownObjects[id.replace(`${this.namespace}.`, '')]) {
-                                // remove from own objects if exist
-                                await delete this.ownObjects[id.replace(`${this.namespace}.`, '')];
-                            }
-                        }
-
-                        // delete voucher channel
-                        await this.delObjectAsync(`${voucherChannelId}`);
-                        if (this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')]) {
-                            // remove from own objects if exist
-                            await delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
-                        }
-                    }
+                    // delete voucher channel
+                    await this.delObjectAsync(voucherChannelId);
+                    delete this.ownObjects[voucherChannelId.replace(`${this.namespace}.`, '')];
                 }
             }
-
-            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
         }
+
+        await this.applyJsonLogic(site, siteData, objects, this.statesFilter.vouchers);
     }
 
     /**
      * Function to fetch dpi
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchDpi(site) {
-        const data = await this.controllers[site].getDPIStats(site);
+    private async fetchDpi(site: string): Promise<UnifiDpiStats[]> {
+        const data = await this.controllers[site].getDPIStats();
         if (!Array.isArray(data)) {
-            throw new Error(`fetchDpi ${site}: Returned data is not in valid format. This option is only available for gateways!: ${JSON.stringify(data)}`);
+            throw new Error(
+                `fetchDpi ${site}: Returned data is not in valid format. This option is only available for gateways!: ${JSON.stringify(data)}`,
+            );
         }
-        if (data[0] && data[0].by_cat && data[0].by_app) {
-            this.log.debug(`fetchDpi ${site}: categories: ${data[0].by_cat.length}, apps: ${data[0].by_app.length}`);
+        const stats = data as UnifiDpiStats[];
+        if (stats[0] && stats[0].by_cat && stats[0].by_app) {
+            this.log.debug(`fetchDpi ${site}: categories: ${stats[0].by_cat.length}, apps: ${stats[0].by_app.length}`);
         }
 
         this.log.silly(`fetchDpi ${site}: ${JSON.stringify(data)}`);
 
-        await this.processDpi(site, data);
+        await this.processDpi(site, stats);
 
-        return data;
+        return stats;
     }
 
     /**
      * Function that receives the dpi as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data DPI statistics of the site
      */
-    async processDpi(site, data) {
-        const objects = require('./admin/lib/objects_dpi.json');
+    private async processDpi(site: string, data: UnifiDpiStats[]): Promise<void> {
+        const objects = loadObjectDefinitions('dpi');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+        // DPI data has no objects filter
+        const siteData = data.filter(item => item);
 
-            this.log.silly(`processDpi: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processDpi: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.dpi);
         }
     }
 
     /**
      * Function to fetch daily gateway traffic
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchGatewayTraffic(site) {
-        let start = undefined;
-        let end = undefined;
+    private async fetchGatewayTraffic(site: string): Promise<unknown[]> {
+        let start: number | undefined = undefined;
+        let end: number | undefined = undefined;
         if (this.update.gatewayTrafficMaxDays > 0) {
             const now = new Date();
             end = now.getTime();
@@ -1069,12 +1158,16 @@ class Unifi extends utils.Adapter {
             now.setDate(now.getDate() - this.update.gatewayTrafficMaxDays);
             start = now.getTime();
 
-            this.log.silly(`fetchGatewayTraffic: start: ${new Date(start).toLocaleDateString()}, end: ${new Date(end).toLocaleDateString()}`);
+            this.log.silly(
+                `fetchGatewayTraffic: start: ${new Date(start).toLocaleDateString()}, end: ${new Date(end).toLocaleDateString()}`,
+            );
         }
 
         const data = await this.controllers[site].getDailyGatewayStats(start, end, ['lan-rx_bytes', 'lan-tx_bytes']);
         if (!Array.isArray(data)) {
-            throw new Error(`fetchGatewayTraffic ${site}: Returned data is not in valid format. This option is only available for gateways!: ${JSON.stringify(data)}`);
+            throw new Error(
+                `fetchGatewayTraffic ${site}: Returned data is not in valid format. This option is only available for gateways!: ${JSON.stringify(data)}`,
+            );
         }
         this.log.debug(`fetchGatewayTraffic ${site}: ${data.length}`);
         this.log.silly(`fetchGatewayTraffic ${site}: ${JSON.stringify(data)}`);
@@ -1086,34 +1179,29 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function that receives the daily gateway traffic as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data traffic of the site
      */
-    async processGatewayTraffic(site, data) {
-        const objects = require('./admin/lib/objects_gateway_traffic.json');
+    private async processGatewayTraffic(site: string, data: unknown[]): Promise<void> {
+        const objects = loadObjectDefinitions('gateway_traffic');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+        // Gateway traffic has no objects filter
+        const siteData = data.filter(item => item);
 
-            this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
         }
     }
 
     /**
      * Function to fetch alarms
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async fetchAlarms(site) {
+    private async fetchAlarms(site: string): Promise<UnifiAlarm[]> {
         const data = await this.controllers[site].getAlarms();
         if (!Array.isArray(data)) {
             throw new Error(`fetchAlarms ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
@@ -1121,77 +1209,67 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchAlarms ${site}: ${data.length}`);
         this.log.silly(`fetchAlarms ${site}: ${JSON.stringify(data)}`);
 
-        await this.processAlarms(site, data);
+        await this.processAlarms(site, data as UnifiAlarm[]);
 
-        return data;
+        return data as UnifiAlarm[];
     }
 
     /**
      * Function that receives the alarms as a JSON data array
-     * @param {String} site
-     * @param {Object} data
+     *
+     * @param site name of the site
+     * @param data alarms of the site
      */
-    async processAlarms(site, data) {
-        const objects = require('./admin/lib/objects_alarms.json');
+    private async processAlarms(site: string, data: UnifiAlarm[]): Promise<void> {
+        const objects = loadObjectDefinitions('alarms');
 
-        if (data) {
-            // Process objectsFilter
-            const siteData = data.filter((item) => {
-                // if (this.objectsFilter.dpi.includes(item.subsystem) !== true) {
-                //     return item;
-                // }
-                return item;
-            });
+        // Alarms have no objects filter
+        const siteData = data.filter(item => item);
 
-            this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
+        this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
 
-            if (this.update.alarmsNoArchived) {
-                const existingAlarms = await this.getForeignObjectsAsync(`${this.namespace}.${site}.alarms.alarm_*`, 'channel');
-                const alarmDatapoints = await this.getUnifiObjectsLibIds('alarms');
+        if (this.update.alarmsNoArchived) {
+            const existingAlarms = await this.getForeignObjectsAsync(
+                `${this.namespace}.${site}.alarms.alarm_*`,
+                'channel',
+            );
+            const alarmDatapoints = this.getUnifiObjectsLibIds('alarms');
 
-                for (const alarm in existingAlarms) {
-                    const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
+            for (const alarm in existingAlarms) {
+                const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
 
-                    if (!siteData.find(item => item._id === alarmId)) {
-                        this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
+                if (!siteData.find(item => item._id === alarmId)) {
+                    this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
 
-                        for (const dp of alarmDatapoints) {
-                            const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
+                    for (const dp of alarmDatapoints) {
+                        const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
 
-                            if (await this.getObjectAsync(dpId)) {
-                                await this.delObjectAsync(dpId);
-                            }
-
-                            if (this.ownObjects[dpId]) {
-                                // remove from own objects if exist
-                                await delete this.ownObjects[dpId];
-                            }
+                        if (await this.getObjectAsync(dpId)) {
+                            await this.delObjectAsync(dpId);
                         }
+
+                        // remove from own objects if exist
+                        delete this.ownObjects[dpId];
                     }
                 }
             }
+        }
 
-            if (siteData.length > 0) {
-                await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
-            }
+        if (siteData.length > 0) {
+            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
         }
     }
 
     /**
      * Disable or enable a WLAN
-     * @param {*} site
-     * @param {*} objId
-     * @param {*} state
+     *
+     * @param site name of the site
+     * @param objId ID of the enabled state
+     * @param state the new state
      */
-    async updateWlanStatus(site, objId, state) {
+    private async updateWlanStatus(site: string, objId: string, state: ioBroker.State): Promise<boolean | undefined> {
         try {
-            //await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
-            //this.log.debug('Login successful');
-
             await this.setWlanStatus(site, objId, state);
-
-            // finalize, logout and finish
-            //await this.controllers[site].logout();
 
             this.log.info(`WLAN status set to ${state.val}`);
 
@@ -1202,19 +1280,20 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to fetch vouchers
-     * @param {String} site
-     * @param {Object} objId
-     * @param {Object} state
+     * Function to enable or disable a WLAN
+     *
+     * @param site name of the site
+     * @param objId ID of the enabled state
+     * @param state the new state
      */
-    async setWlanStatus(site, objId, state) {
+    private async setWlanStatus(site: string, objId: string, state: ioBroker.State): Promise<UnifiNamedItem[]> {
         const obj = await this.getForeignObjectAsync(objId);
 
         if (!obj || !obj.native) {
             throw new Error(`setWlanStatus: Object ${objId} invalid, please restart adapter!`);
         }
 
-        const wlanId = obj.native.wlan_id;
+        const wlanId = obj.native.wlan_id as string;
         const disable = !state.val;
 
         const data = await this.controllers[site].disableWLan(wlanId, disable);
@@ -1223,25 +1302,20 @@ class Unifi extends utils.Adapter {
         }
         this.log.debug(`setWlanStatus: ${data.length}`);
 
-        await this.processWlans(site, data);
+        await this.processWlans(site, data as UnifiNamedItem[]);
 
-        return data;
+        return data as UnifiNamedItem[];
     }
 
     /**
      * Create vouchers
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async createUnifiVouchers(site) {
+    private async createUnifiVouchers(site: string): Promise<boolean> {
         try {
-            //await this.controllers[site].login(this.settings.controllerUsername, this.settings.controllerPassword);
-            //this.log.debug('Login successful');
-
             await this.createVouchers(site);
             await this.fetchVouchers(site);
-
-            // finalize, logout and finish
-            //await this.controllers[site].logout();
 
             this.log.info('Vouchers created');
 
@@ -1254,16 +1328,18 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to create vouchers
-     * @param {String} site
+     *
+     * @param site name of the site
      */
-    async createVouchers(site) {
-        const minutes = this.vouchers.duration || 60;
-        const count = this.vouchers.number || 1;
-        const quota = this.vouchers.quota || 1;
+    private async createVouchers(site: string): Promise<unknown[]> {
+        // The old admin page stored the numbers as text
+        const minutes = Number(this.vouchers.duration) || 60;
+        const count = Number(this.vouchers.number) || 1;
+        const quota = Number(this.vouchers.quota) || 1;
         const note = this.vouchers.note || '';
-        const up = this.vouchers.uploadLimit || 0;
-        const down = this.vouchers.downloadLimit || 0;
-        const mbytes = this.vouchers.byteQuota || 0;
+        const up = Number(this.vouchers.uploadLimit) || 0;
+        const down = Number(this.vouchers.downloadLimit) || 0;
+        const mbytes = Number(this.vouchers.byteQuota) || 0;
 
         // node-unifi 2 takes the site from the controller, it is not a parameter anymore
         const data = await this.controllers[site].createVouchers(minutes, count, quota, note, up, down, mbytes);
@@ -1277,12 +1353,18 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to switch poe power for port of device
-     * @param {String} site
-     * @param {String} deviceMac
-     * @param {String} port
-     * @param {Boolean} val
+     *
+     * @param site name of the site
+     * @param deviceMac MAC address of the switch
+     * @param port number of the port
+     * @param val switch on
      */
-    async switchPoeOfPort(site, deviceMac, port, val) {
+    private async switchPoeOfPort(
+        site: string,
+        deviceMac: string,
+        port: string,
+        val: ioBroker.StateValue,
+    ): Promise<void> {
         try {
             this.log.info(`switchPoeOfPort: switching poe power of port ${port} for device ${deviceMac} to ${val}`);
 
@@ -1296,20 +1378,21 @@ class Unifi extends utils.Adapter {
             if (dataDevice && dataDevice.length) {
                 const deviceId = dataDevice[0].device_id;
 
-                // eslint-disable-next-line prefer-const
-                let port_overrides = dataDevice[0].port_overrides;
+                const port_overrides = dataDevice[0].port_overrides;
 
                 if (port_overrides && port_overrides.length > 0) {
                     const indexOfPort = port_overrides.findIndex(x => x.port_idx === parseInt(port));
 
-                    if (indexOfPort !== -1) {
-                        // port_overrides has settings for this port
-                        port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
-                    } else {
-                        // port_overrides has no settings for this port
-                        this.log.debug(`switchPoeOfPort: port ${port} not exists in port_overrides object -> create item`);
-                        port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
+                    if (indexOfPort === -1) {
+                        // Known issue: creating the missing override was never implemented, so this failed before too
+                        this.log.debug(
+                            `switchPoeOfPort: port ${port} not exists in port_overrides object -> create item`,
+                        );
+                        throw new Error(`switchPoeOfPort: port ${port} has no port_overrides entry`);
                     }
+
+                    // port_overrides has settings for this port
+                    port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
 
                     await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
 
@@ -1325,11 +1408,12 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to reconnect a client
-     * @param {String} id
-     * @param {Array<String>} idParts
-     * @param {String} site
+     *
+     * @param id ID of the reconnect state
+     * @param idParts parts of the ID
+     * @param site name of the site
      */
-    async reconnectClient(id, idParts, site) {
+    private async reconnectClient(id: string, idParts: string[], site: string): Promise<void> {
         try {
             const mac = idParts[4];
             const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
@@ -1341,20 +1425,20 @@ class Unifi extends utils.Adapter {
             }
 
             await this.controllers[site].reconnectClient(mac);
-
         } catch (err) {
             this.handleError(err, undefined, 'reconnectClient');
         }
     }
 
     /**
-     * Funtion to block / unblock client
-     * @param {String} id
-     * @param {String} site
-     * @param {Array<String>} idParts
-     * @param {Boolean} block
+     * Function to block / unblock client
+     *
+     * @param id ID of the blocked state
+     * @param site name of the site
+     * @param idParts parts of the ID
+     * @param block block the client
      */
-    async blockClient(id, site, idParts, block) {
+    private async blockClient(id: string, site: string, idParts: string[], block: ioBroker.StateValue): Promise<void> {
         const mac = idParts[4];
         const name = await this.getStateAsync(id.replace(idParts[5], 'name'));
 
@@ -1373,119 +1457,106 @@ class Unifi extends utils.Adapter {
 
     /**
      * Function to apply JSON logic to API responses
-     * @param {*} objectTree
-     * @param {*} data
-     * @param {*} objects
-     * @param {*} statesFilter
+     *
+     * @param objectTree ID of the parent object, empty for the root
+     * @param data data from the controller
+     * @param objects definitions of the objects
+     * @param statesFilter IDs of the definitions to create, empty or undefined for all
      */
-    async applyJsonLogic(objectTree, data, objects, statesFilter) {
+    private async applyJsonLogic(
+        objectTree: string,
+        data: unknown,
+        objects: ObjectDefinitions,
+        statesFilter: string[] | undefined,
+    ): Promise<void> {
         try {
             for (const key in objects) {
                 if (this.stopped) {
                     return;
                 }
                 if (statesFilter === undefined || statesFilter.length === 0 || statesFilter.includes(key)) {
-                    const obj = {
-                        '_id': null,
-                        'type': null,
-                        'common': {},
-                        'native': {}
+                    const definition = objects[key];
+                    const obj: CreatedObject = {
+                        _id: null,
+                        type: null,
+                        common: {},
+                        native: {},
                     };
 
                     // Process object id
-                    if (Object.prototype.hasOwnProperty.call(objects[key], '_id')) {
-                        obj._id = objects[key]._id;
+                    if (Object.prototype.hasOwnProperty.call(definition, '_id')) {
+                        obj._id = definition._id ?? null;
                     } else {
-                        obj._id = await this.applyRule(objects[key].logic._id, data);
+                        obj._id = applyRule(definition.logic._id!, data) as string | null;
                     }
 
-                    if (obj._id !== null && obj._id.slice(-1) !== -1) {
+                    // Only null skips the object. The check was `_id.slice(-1) !== -1` before, which is always true.
+                    if (typeof obj._id === 'string') {
                         if (objectTree !== '') {
                             obj._id = `${objectTree}.${obj._id}`;
                         }
 
                         // Process type
-                        if (Object.prototype.hasOwnProperty.call(objects[key], 'type')) {
-                            obj.type = objects[key].type;
+                        if (Object.prototype.hasOwnProperty.call(definition, 'type')) {
+                            obj.type = definition.type ?? null;
                         } else {
-                            obj.type = await this.applyRule(objects[key].logic.type, data);
+                            obj.type = applyRule(definition.logic.type!, data) as ioBroker.ObjectType;
                         }
 
                         // Process common
-                        if (Object.prototype.hasOwnProperty.call(objects[key], 'common')) {
-                            obj.common = JSON.parse(JSON.stringify(objects[key].common));
+                        if (definition.common) {
+                            obj.common = JSON.parse(JSON.stringify(definition.common)) as Record<string, unknown>;
                         }
 
-                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'common')) {
-                            const common = objects[key].logic.common;
+                        if (definition.logic.common) {
+                            const common = definition.logic.common;
 
                             for (const commonKey in common) {
-                                obj.common[commonKey] = await this.applyRule(common[commonKey], data);
+                                obj.common[commonKey] = applyRule(common[commonKey], data);
                             }
                         }
 
                         // Process native
-                        if (Object.prototype.hasOwnProperty.call(objects[key], 'native')) {
-                            obj.native = JSON.parse(JSON.stringify(objects[key].native));
+                        if (definition.native) {
+                            obj.native = JSON.parse(JSON.stringify(definition.native)) as Record<string, unknown>;
                         }
 
-                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'native')) {
-                            const native = objects[key].logic.native;
+                        if (definition.logic.native) {
+                            const native = definition.logic.native;
 
                             for (const nativeKey in native) {
-                                obj.native[nativeKey] = await this.applyRule(native[nativeKey], data);
+                                obj.native[nativeKey] = applyRule(native[nativeKey], data);
                             }
                         }
 
                         // Cleanup _id
-                        // Escaping both brackets keeps the ioBroker object-ID blacklist easy to audit.
-                        // eslint-disable-next-line no-useless-escape
-                        const FORBIDDEN_CHARS = /[\]\[*,;'"`<>\\?\s]/g;
-                        let tempId = obj._id.replace(FORBIDDEN_CHARS, '_');
-                        tempId = tempId.toLowerCase();
-                        obj._id = tempId;
-
-                        //this.log.debug(JSON.stringify(obj));
+                        obj._id = obj._id.replace(FORBIDDEN_CHARS, '_').toLowerCase();
+                        const objId = obj._id;
 
                         // Update object if changed
-                        if (!Object.prototype.hasOwnProperty.call(this.ownObjects, obj._id)) {
-                            await this.extendObjectAsync(obj._id, {
+                        const ownObj = this.ownObjects[objId];
+                        if (!ownObj || JSON.stringify(ownObj) !== JSON.stringify(obj)) {
+                            await this.extendObjectAsync(objId, {
                                 type: obj.type,
                                 common: JSON.parse(JSON.stringify(obj.common)),
-                                native: JSON.parse(JSON.stringify(obj.native))
-                            });
+                                native: JSON.parse(JSON.stringify(obj.native)),
+                            } as ioBroker.PartialObject);
 
-                            this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
-
-                            //this.log.debug('Object ' + obj._id + ' updated');
-                        } else {
-                            const ownObj = this.ownObjects[obj._id];
-
-                            if (JSON.stringify(ownObj) !== JSON.stringify(obj)) {
-                                await this.extendObjectAsync(obj._id, {
-                                    type: obj.type,
-                                    common: JSON.parse(JSON.stringify(obj.common)),
-                                    native: JSON.parse(JSON.stringify(obj.native))
-                                });
-
-                                this.ownObjects[obj._id] = JSON.parse(JSON.stringify(obj));
-
-                                //this.log.debug('Object ' + obj._id + ' updated');
-                            }
+                            this.ownObjects[objId] = JSON.parse(JSON.stringify(obj)) as CreatedObject;
                         }
 
                         // Process value
-                        if (Object.prototype.hasOwnProperty.call(objects[key], 'value')) {
-                            obj.value = objects[key].value;
-                        } else {
-                            if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'value')) {
-                                obj.value = await this.applyRule(objects[key].logic.value, data);
-                            }
+                        if (Object.prototype.hasOwnProperty.call(definition, 'value')) {
+                            obj.value = definition.value;
+                        } else if (definition.logic.value !== undefined) {
+                            obj.value = applyRule(definition.logic.value, data);
                         }
 
+                        // Values of other types are converted with toString(), as before
                         if (obj.common && obj.value !== undefined && obj.value !== null) {
                             if (obj.common.type === 'number' && typeof obj.value !== 'number') {
-                                const val = parseFloat(obj.value);
+                                // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                                const val = parseFloat(String(obj.value));
                                 if (!isNaN(val)) {
                                     obj.value = val;
                                 }
@@ -1496,41 +1567,39 @@ class Unifi extends utils.Adapter {
                                     obj.value = !!obj.value;
                                 }
                             } else if (obj.common.type === 'string' && typeof obj.value !== 'string') {
-                                obj.value = obj.value.toString();
+                                // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                                obj.value = String(obj.value);
                             }
                         }
                         // Update state if value changed
                         if (Object.prototype.hasOwnProperty.call(obj, 'value')) {
-                            const oldState = await this.getStateAsync(obj._id);
+                            const oldState = await this.getStateAsync(objId);
 
-                            if (oldState === null || oldState.val !== obj.value) {
+                            if (!oldState || oldState.val !== obj.value) {
                                 if (obj.value && typeof obj.value === 'object') {
-                                    await this.setStateAsync(obj._id, { ack: true, val: JSON.stringify(obj.value) });
+                                    await this.setStateAsync(objId, { ack: true, val: JSON.stringify(obj.value) });
                                 } else {
-                                    await this.setStateAsync(obj._id, { ack: true, val: obj.value });
+                                    await this.setStateAsync(objId, {
+                                        ack: true,
+                                        val: obj.value as ioBroker.StateValue,
+                                    });
                                 }
                             }
                         }
 
                         // Process has
-                        if (Object.prototype.hasOwnProperty.call(objects[key].logic, 'has')) {
-                            const hasKey = objects[key].logic.has_key;
-                            const has = objects[key].logic.has;
-
+                        const has = definition.logic.has;
+                        const hasKey = definition.logic.has_key;
+                        if (has && hasKey !== undefined) {
                             if (hasKey === '_self' || Object.prototype.hasOwnProperty.call(data, hasKey)) {
-                                let tempData;
-                                if (hasKey === '_self') {
-                                    tempData = data;
-                                } else {
-                                    tempData = data[hasKey];
-                                }
+                                const tempData = hasKey === '_self' ? data : (data as Record<string, unknown>)[hasKey];
 
                                 if (Array.isArray(tempData) && tempData.length > 0) {
                                     for (const element of tempData) {
-                                        await this.applyJsonLogic(obj._id, element, has, statesFilter);
+                                        await this.applyJsonLogic(objId, element, has, statesFilter);
                                     }
                                 } else {
-                                    await this.applyJsonLogic(obj._id, tempData, has, statesFilter);
+                                    await this.applyJsonLogic(objId, tempData, has, statesFilter);
                                 }
                             }
                         }
@@ -1543,64 +1612,41 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to apply a JSON logic rule to data
-     * @param {*} rule
-     * @param {*} data
+     * IDs of all states and channels of admin/lib/objects_<libName>.json, children first
+     *
+     * @param libName e.g. 'alarms'
      */
-    async applyRule(rule, data) {
-        let _rule;
-
-        if (typeof (rule) === 'string') {
-            _rule = { 'var': [rule] };
-        } else {
-            _rule = rule;
-        }
-
-        return jsonLogic.apply(
-            _rule,
-            data
-        );
-    }
-
-    /**
-     * @param {String} libName
-     */
-    async getUnifiObjectsLibIds(libName) {
-        const objects = require(`./admin/lib/objects_${libName}.json`);
-
-        const idList = [];
-        await this.extractsIds(objects, idList, libName);
+    private getUnifiObjectsLibIds(libName: string): string[] {
+        const idList: string[] = [];
+        this.extractsIds(loadObjectDefinitions(libName), idList, libName);
 
         return idList.reverse();
     }
 
     /**
-     * @param {Object} obj
-     * @param {Array} idList
+     * @param obj definitions
+     * @param idList list to add the IDs to
+     * @param libName name of the root, which is not added
      */
-    async extractsIds(obj, idList, libName) {
+    private extractsIds(obj: ObjectDefinitions, idList: string[], libName: string): void {
         for (const [id, value] of Object.entries(obj)) {
-            if (value && value.type === 'state') {
+            if (value.type === 'state') {
                 idList.push(id);
-            } else if (value && value.type === 'channel' || value.type === 'device') {
+            } else if (value.type === 'channel' || value.type === 'device') {
                 if (id !== libName) {
                     // ignore root id
                     idList.push(id);
                 }
-                this.extractsIds(value.logic.has, idList, libName);
+                this.extractsIds(value.logic.has || {}, idList, libName);
             }
         }
     }
 }
 
-// @ts-ignore parent is a valid property on module
-if (module.parent) {
+if (require.main !== module) {
     // Export the constructor in compact mode
-    /**
-     * @param {Partial<ioBroker.AdapterOptions>} [options={}]
-     */
-    module.exports = (options) => new Unifi(options);
+    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new Unifi(options);
 } else {
     // otherwise start the instance directly
-    new Unifi();
+    (() => new Unifi())();
 }

@@ -13,3 +13,7 @@ unifi_api_infos/app.js
 
 #ignore .commitinfo created by ioBroker release script
 .commitinfo
+
+# TypeScript build output
+build
+*.tsbuildinfo

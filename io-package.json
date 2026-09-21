@@ -147,6 +147,7 @@
     "mode": "daemon",
     "type": "network",
     "compact": true,
+    "nogit": true,
     "supportCustoms": false,
     "connectionType": "local",
     "dataSource": "push",

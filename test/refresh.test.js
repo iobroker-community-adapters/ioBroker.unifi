@@ -1,9 +1,9 @@
 'use strict';
 
-const EventEmitter = require('events');
+const assert = require('node:assert');
+const EventEmitter = require('node:events');
 const proxyquire = require('proxyquire').noCallThru();
 const sinon = require('sinon');
-const { expect } = require('chai');
 
 class AdapterMock extends EventEmitter {
     constructor(options) {
@@ -16,10 +16,12 @@ class AdapterMock extends EventEmitter {
             info: sinon.stub(),
             warn: sinon.stub(),
             error: sinon.stub(),
-            silly: sinon.stub()
+            silly: sinon.stub(),
         };
         this.setStateAsync = sinon.stub().resolves();
         this.setStateChangedAsync = sinon.stub().resolves();
+        this.setTimeout = (cb, ms) => setTimeout(cb, ms);
+        this.clearTimeout = timer => clearTimeout(timer);
     }
 }
 
@@ -29,7 +31,6 @@ class AdapterMock extends EventEmitter {
  */
 function httpError(status, msg) {
     const err = new Error(`Request failed with status code ${status}`);
-    // @ts-ignore
     err.response = { status, data: msg ? { meta: { rc: 'error', msg } } : {} };
     return err;
 }
@@ -40,9 +41,9 @@ describe('refresh reliability', () => {
 
     beforeEach(() => {
         Controller = sinon.stub();
-        createAdapter = proxyquire('./main', {
+        createAdapter = proxyquire('../build/main', {
             '@iobroker/adapter-core': { Adapter: AdapterMock },
-            'node-unifi': { Controller }
+            'node-unifi': { Controller },
         });
     });
 
@@ -55,13 +56,13 @@ describe('refresh reliability', () => {
             controllerPort: '8443',
             controllerUsername: 'user',
             controllerPassword: 'secret',
-            ignoreSSLErrors: true
+            ignoreSSLErrors: true,
         };
 
-        expect(await adapter.getController()).to.equal(controller);
-        expect(await adapter.getController()).to.equal(controller);
-        expect(Controller).to.have.been.calledOnce;
-        expect(controller.login).to.have.been.calledOnce;
+        assert.strictEqual(await adapter.getController(), controller);
+        assert.strictEqual(await adapter.getController(), controller);
+        sinon.assert.calledOnce(Controller);
+        sinon.assert.calledOnce(controller.login);
     });
 
     it('re-authenticates once after an expired session', async () => {
@@ -75,13 +76,13 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData(true);
 
-        expect(adapter.performUpdate).to.have.been.calledTwice;
-        expect(adapter.performUpdate.firstCall).to.have.been.calledWith(true);
-        expect(adapter.performUpdate.secondCall).to.have.been.calledWith(false);
-        expect(resetControllers).to.have.been.calledOnce;
-        expect(adapter.consecutiveErrors).to.equal(0);
-        expect(adapter.updateInProgress).to.equal(false);
-        expect(adapter.setStateChangedAsync).to.have.been.calledWith('info.connection', { ack: true, val: true });
+        sinon.assert.calledTwice(adapter.performUpdate);
+        assert.deepStrictEqual(adapter.performUpdate.firstCall.args, [true]);
+        assert.deepStrictEqual(adapter.performUpdate.secondCall.args, [false]);
+        sinon.assert.calledOnce(resetControllers);
+        assert.strictEqual(adapter.consecutiveErrors, 0);
+        assert.strictEqual(adapter.updateInProgress, false);
+        sinon.assert.calledWith(adapter.setStateChangedAsync, 'info.connection', { ack: true, val: true });
     });
 
     it('does not log in again when the first login is rejected', async () => {
@@ -93,18 +94,18 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData(true);
 
-        expect(adapter.performUpdate).to.have.been.calledOnceWith(false);
-        expect(resetControllers).not.to.have.been.called;
-        expect(adapter.consecutiveErrors).to.equal(1);
+        sinon.assert.calledOnceWithExactly(adapter.performUpdate, false);
+        sinon.assert.notCalled(resetControllers);
+        assert.strictEqual(adapter.consecutiveErrors, 1);
     });
 
     it('does not treat a missing permission as an expired session', () => {
         const adapter = createAdapter();
 
-        expect(adapter.isAuthenticationError(httpError(401))).to.equal(true);
-        expect(adapter.isAuthenticationError(new Error('api.err.LoginRequired'))).to.equal(true);
-        expect(adapter.isAuthenticationError(httpError(403, 'api.err.NoPermission'))).to.equal(false);
-        expect(adapter.isAuthenticationError(new Error('connect ECONNREFUSED'))).to.equal(false);
+        assert.strictEqual(adapter.isAuthenticationError(httpError(401)), true);
+        assert.strictEqual(adapter.isAuthenticationError(new Error('api.err.LoginRequired')), true);
+        assert.strictEqual(adapter.isAuthenticationError(httpError(403, 'api.err.NoPermission')), false);
+        assert.strictEqual(adapter.isAuthenticationError(new Error('connect ECONNREFUSED')), false);
     });
 
     it('keeps scheduling updates with backoff after a failure', async () => {
@@ -116,17 +117,17 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData();
 
-        expect(adapter.consecutiveErrors).to.equal(1);
-        expect(adapter.updateInProgress).to.equal(false);
-        expect(adapter.scheduleNextUpdate).to.have.been.calledOnceWith(20000);
-        expect(adapter.setStateChangedAsync).to.have.been.calledWith('info.connection', { ack: true, val: false });
-        expect(adapter.setStateChangedAsync).to.have.been.calledWith('info.refreshInProgress', { ack: true, val: false });
+        assert.strictEqual(adapter.consecutiveErrors, 1);
+        assert.strictEqual(adapter.updateInProgress, false);
+        sinon.assert.calledOnceWithExactly(adapter.scheduleNextUpdate, 20000);
+        sinon.assert.calledWith(adapter.setStateChangedAsync, 'info.connection', { ack: true, val: false });
+        sinon.assert.calledWith(adapter.setStateChangedAsync, 'info.refreshInProgress', { ack: true, val: false });
 
         await adapter.updateUnifiData();
         await adapter.updateUnifiData();
 
-        expect(adapter.consecutiveErrors).to.equal(3);
-        expect(adapter.scheduleNextUpdate.lastCall).to.have.been.calledWith(80000);
+        assert.strictEqual(adapter.consecutiveErrors, 3);
+        assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [80000]);
     });
 
     it('caps the backoff but never goes below the configured interval', async () => {
@@ -138,11 +139,11 @@ describe('refresh reliability', () => {
         adapter.settings.updateInterval = 60000;
         adapter.consecutiveErrors = 10;
         await adapter.updateUnifiData();
-        expect(adapter.scheduleNextUpdate.lastCall).to.have.been.calledWith(15 * 60 * 1000);
+        assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [15 * 60 * 1000]);
 
         adapter.settings.updateInterval = 30 * 60 * 1000;
         await adapter.updateUnifiData();
-        expect(adapter.scheduleNextUpdate.lastCall).to.have.been.calledWith(30 * 60 * 1000);
+        assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [30 * 60 * 1000]);
     });
 
     it('does not start overlapping refreshes', async () => {
@@ -153,17 +154,20 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData(true);
 
-        expect(adapter.performUpdate).not.to.have.been.called;
-        expect(adapter.scheduleNextUpdate).not.to.have.been.called;
+        sinon.assert.notCalled(adapter.performUpdate);
+        sinon.assert.notCalled(adapter.scheduleNextUpdate);
     });
 
     it('keeps polling when a scheduled refresh collides with trigger_update', async () => {
         const adapter = createAdapter();
         adapter.settings.updateInterval = 20000;
         let finishManualUpdate;
-        adapter.performUpdate = sinon.stub().callsFake(() => new Promise(resolve => {
-            finishManualUpdate = () => resolve([]);
-        }));
+        adapter.performUpdate = sinon.stub().callsFake(
+            () =>
+                new Promise(resolve => {
+                    finishManualUpdate = () => resolve([]);
+                }),
+        );
         adapter.scheduleNextUpdate = sinon.stub();
 
         const manualUpdate = adapter.updateUnifiData(true);
@@ -174,8 +178,8 @@ describe('refresh reliability', () => {
         finishManualUpdate();
         await manualUpdate;
 
-        expect(adapter.performUpdate).to.have.been.calledOnce;
-        expect(adapter.scheduleNextUpdate).to.have.been.calledOnce;
+        sinon.assert.calledOnce(adapter.performUpdate);
+        sinon.assert.calledOnce(adapter.scheduleNextUpdate);
     });
 
     it('keeps the refresh loop alive when a diagnostic state cannot be written', async () => {
@@ -187,10 +191,10 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData();
 
-        expect(adapter.performUpdate).to.have.been.calledOnce;
-        expect(adapter.updateInProgress).to.equal(false);
-        expect(adapter.scheduleNextUpdate).to.have.been.calledOnceWith(20000);
-        expect(adapter.log.warn).to.have.been.called;
+        sinon.assert.calledOnce(adapter.performUpdate);
+        assert.strictEqual(adapter.updateInProgress, false);
+        sinon.assert.calledOnceWithExactly(adapter.scheduleNextUpdate, 20000);
+        sinon.assert.called(adapter.log.warn);
     });
 
     it('reports failed requests without failing the whole refresh', async () => {
@@ -201,10 +205,13 @@ describe('refresh reliability', () => {
 
         await adapter.updateUnifiData();
 
-        expect(adapter.consecutiveErrors).to.equal(0);
-        expect(adapter.scheduleNextUpdate).to.have.been.calledOnceWith(20000);
-        expect(adapter.setStateChangedAsync).to.have.been.calledWith('info.connection', { ack: true, val: true });
-        expect(adapter.setStateChangedAsync).to.have.been.calledWith('info.lastError', { ack: true, val: 'fetchDpi (default): invalid data' });
+        assert.strictEqual(adapter.consecutiveErrors, 0);
+        sinon.assert.calledOnceWithExactly(adapter.scheduleNextUpdate, 20000);
+        sinon.assert.calledWith(adapter.setStateChangedAsync, 'info.connection', { ack: true, val: true });
+        sinon.assert.calledWith(adapter.setStateChangedAsync, 'info.lastError', {
+            ack: true,
+            val: 'fetchDpi (default): invalid data',
+        });
     });
 
     describe('performUpdate', () => {
@@ -220,7 +227,7 @@ describe('refresh reliability', () => {
             adapter.fetchDpi = sinon.stub().resolves();
             adapter.fetchAlarms = sinon.stub().resolves();
             adapter.setClientOnlineStatus = sinon.stub().resolves();
-            adapter.handleError = sinon.stub().resolves();
+            adapter.handleError = sinon.stub();
         });
 
         it('requests only the enabled data of every site', async () => {
@@ -228,23 +235,25 @@ describe('refresh reliability', () => {
 
             const failures = await adapter.performUpdate();
 
-            expect(failures).to.deep.equal([]);
-            expect(adapter.fetchClients).to.have.been.calledTwice;
-            expect(adapter.fetchAlarms).to.have.been.calledWith('office');
-            expect(adapter.fetchDpi).not.to.have.been.called;
-            expect(adapter.setClientOnlineStatus).to.have.been.calledOnce;
+            assert.deepStrictEqual(failures, []);
+            sinon.assert.calledTwice(adapter.fetchClients);
+            sinon.assert.calledWith(adapter.fetchAlarms, 'office');
+            sinon.assert.notCalled(adapter.fetchDpi);
+            sinon.assert.calledOnce(adapter.setClientOnlineStatus);
         });
 
         it('continues with the remaining data when one request fails', async () => {
-            adapter.fetchDpi.withArgs('default').rejects(new Error('fetchDpi default: Returned data is not in valid format'));
+            adapter.fetchDpi
+                .withArgs('default')
+                .rejects(new Error('fetchDpi default: Returned data is not in valid format'));
 
             const failures = await adapter.performUpdate(true);
 
-            expect(failures).to.have.length(1);
-            expect(failures[0]).to.contain('fetchDpi (default)');
-            expect(adapter.fetchAlarms).to.have.been.calledTwice;
-            expect(adapter.handleError).to.have.been.calledOnceWith(sinon.match.instanceOf(Error), 'default', 'fetchDpi');
-            expect(adapter.setClientOnlineStatus).to.have.been.calledOnce;
+            assert.strictEqual(failures.length, 1);
+            assert.ok(failures[0].includes('fetchDpi (default)'));
+            sinon.assert.calledTwice(adapter.fetchAlarms);
+            sinon.assert.calledOnceWithExactly(adapter.handleError, sinon.match.instanceOf(Error), 'default', 'fetchDpi');
+            sinon.assert.calledOnce(adapter.setClientOnlineStatus);
         });
 
         it('continues with the remaining sites when a site login fails', async () => {
@@ -252,9 +261,9 @@ describe('refresh reliability', () => {
 
             const failures = await adapter.performUpdate();
 
-            expect(failures).to.have.length(1);
-            expect(adapter.fetchClients).to.have.been.calledOnceWith('default');
-            expect(adapter.setClientOnlineStatus).not.to.have.been.called;
+            assert.strictEqual(failures.length, 1);
+            sinon.assert.calledOnceWithExactly(adapter.fetchClients, 'default');
+            sinon.assert.notCalled(adapter.setClientOnlineStatus);
         });
 
         it('does not update the client online status when clients are incomplete', async () => {
@@ -262,16 +271,16 @@ describe('refresh reliability', () => {
 
             await adapter.performUpdate();
 
-            expect(adapter.setClientOnlineStatus).not.to.have.been.called;
+            sinon.assert.notCalled(adapter.setClientOnlineStatus);
         });
 
         it('passes on an authentication error only for a reused session', async () => {
             adapter.fetchDevices.rejects(httpError(401));
 
-            await expect(adapter.performUpdate(true)).to.be.rejectedWith('status code 401');
+            await assert.rejects(adapter.performUpdate(true), /status code 401/);
 
             const failures = await adapter.performUpdate(false);
-            expect(failures).to.have.length(2);
+            assert.strictEqual(failures.length, 2);
         });
 
         it('keeps going when the user lacks the permission for one endpoint', async () => {
@@ -279,8 +288,8 @@ describe('refresh reliability', () => {
 
             const failures = await adapter.performUpdate(true);
 
-            expect(failures).to.have.length(2);
-            expect(adapter.fetchAlarms).to.have.been.calledTwice;
+            assert.strictEqual(failures.length, 2);
+            sinon.assert.calledTwice(adapter.fetchAlarms);
         });
     });
 });
