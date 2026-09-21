@@ -29,6 +29,22 @@ const FETCH_METHODS = [
 // Upper limit for the delay between refreshes after consecutive failures
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
 
+// Categories of the state filter, defined in admin/lib/objects_<category>.json
+const STATES_FILTER_CATEGORIES = ['sysinfo', 'clients', 'devices', 'wlans', 'networks', 'health', 'vouchers', 'alarms', 'dpi', 'gateway_traffic'];
+
+/**
+ * States that are always selected together with another state: [state, required states or channels]
+ *
+ * @type {[string, string[]][]}
+ */
+const STATE_DEPENDENCIES = [
+    // is_online is calculated from the last seen timestamps
+    ['clients.client.is_online', ['clients.client.last_seen_by_uap', 'clients.client.last_seen_by_usw']],
+    ['devices.device.port_table.port.port_poe_enabled', ['devices.device.port_table.port.port_poe', 'devices.device.port_overrides']],
+    // the LED override is sent with the device ID
+    ['devices.device.led_override', ['devices.device.device_id']]
+];
+
 class Unifi extends utils.Adapter {
 
     /**
@@ -78,10 +94,27 @@ class Unifi extends utils.Adapter {
 
             this.log.info('UniFi adapter is ready');
 
+            // blacklist and whitelist were renamed in v0.5.3. The old admin page migrated them on save.
+            // @ts-ignore
+            if (this.config.blacklist || this.config.whitelist) {
+                this.log.info('Migrating the filter settings of versions < 0.5.3');
+                await this.updateConfig({
+                    // @ts-ignore
+                    objectsFilter: this.config.blacklist || this.config.objectsFilter,
+                    // @ts-ignore
+                    statesFilter: this.config.whitelist || this.config.statesFilter,
+                    blacklist: null,
+                    whitelist: null
+                });
+                // The adapter is restarted with the new configuration
+                return;
+            }
+
             // Load configuration
             this.settings.updateInterval = (parseInt(this.config.updateInterval, 10) * 1000) || (60 * 1000);
             this.settings.controllerIp = this.config.controllerIp;
-            this.settings.controllerPort = this.config.controllerPort;
+            // An empty port is used for UniFi OS. The admin page may store it as null.
+            this.settings.controllerPort = this.config.controllerPort || '';
             this.settings.controllerUsername = this.config.controllerUsername;
             this.settings.controllerPassword = this.config.controllerPassword;
             this.settings.ignoreSSLErrors = this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
@@ -102,9 +135,9 @@ class Unifi extends utils.Adapter {
             this.update.gatewayTrafficMaxDays = this.config.gatewayTrafficMaxDays;
 
             // @ts-ignore
-            this.objectsFilter = this.config.blacklist || this.config.objectsFilter; // blacklist was renamed to objectsFilter in v0.5.3
+            this.objectsFilter = this.config.objectsFilter;
             // @ts-ignore
-            this.statesFilter = this.config.whitelist || this.config.statesFilter; // blacklist was renamed to statesFilter in v0.5.3
+            this.statesFilter = this.normalizeStatesFilter(this.config.statesFilter);
 
             // @ts-ignore
             this.clients.isOnlineOffset = (parseInt(this.config.clientsIsOnlineOffset, 10) * 1000) || (60 * 1000);
@@ -203,6 +236,54 @@ class Unifi extends utils.Adapter {
         } catch (e) {
             callback();
         }
+    }
+
+    /**
+     * The admin page stores only the selected states. As the filter is checked on
+     * every level of the object tree, the channels above them are added, as well as
+     * the states they depend on. Nothing selected means: create all states.
+     *
+     * @param {Record<string, string[]>} statesFilter
+     * @returns {Record<string, string[]>}
+     */
+    normalizeStatesFilter(statesFilter) {
+        /** @type {Record<string, string[]>} */
+        const result = {};
+
+        for (const category of STATES_FILTER_CATEGORIES) {
+            const selected = statesFilter && Array.isArray(statesFilter[category]) ? statesFilter[category] : [];
+
+            const stateIds = [];
+            const collectStates = has => {
+                for (const [id, obj] of Object.entries(has)) {
+                    if (obj.type === 'state') {
+                        stateIds.push(id);
+                    } else if (obj.logic && obj.logic.has) {
+                        collectStates(obj.logic.has);
+                    }
+                }
+            };
+            collectStates(require(`./admin/lib/objects_${category}.json`)[category].logic.has);
+
+            // Older versions also stored the channels, which are not needed to find the selection
+            const states = selected.filter(id => stateIds.includes(id));
+            for (const [state, required] of STATE_DEPENDENCIES) {
+                if (states.includes(state)) {
+                    states.push(...stateIds.filter(id => required.some(req => id === req || id.startsWith(`${req}.`))));
+                }
+            }
+
+            const ids = new Set();
+            for (const id of states) {
+                const parts = id.split('.');
+                for (let i = 1; i <= parts.length; i++) {
+                    ids.add(parts.slice(0, i).join('.'));
+                }
+            }
+            result[category] = [...ids];
+        }
+
+        return result;
     }
 
     /**

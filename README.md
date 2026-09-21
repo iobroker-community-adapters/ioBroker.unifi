@@ -35,6 +35,9 @@ It is possible to disable the update of selected information or filter specific 
 | Networks    | Name                                    |
 | Health      | Subsystem                               |
 
+### Filter states
+For every kind of information, the created states can be selected. If nothing is selected, all states are created. States needed by a selected state are added automatically, e.g. `last_seen_by_uap` and `last_seen_by_usw` for `is_online`.
+
 ## Control
 ### Enable/disable WiFis
 By changing the 'enabled' state of a WiFi it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
@@ -89,6 +92,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 - (@FiraSenax) Controller sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]
 - (@GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
 - (@GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
+- (@GermanBluefox) Migrated the settings page to JSON config
 
 ### 0.7.0 (2024-04-13)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now

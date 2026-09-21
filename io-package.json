@@ -161,7 +161,7 @@
       }
     ],
     "adminUI": {
-      "config": "materialize"
+      "config": "json"
     }
   },
   "native": {

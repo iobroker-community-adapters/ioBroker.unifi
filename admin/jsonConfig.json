@@ -1,0 +1,1840 @@
+{
+    "i18n": true,
+    "type": "tabs",
+    "items": {
+        "_general": {
+            "type": "panel",
+            "label": "General",
+            "items": {
+                "_logo": {
+                    "type": "staticImage",
+                    "src": "unifi.svg",
+                    "xs": 4,
+                    "sm": 2,
+                    "md": 1.5,
+                    "lg": 1,
+                    "xl": 1
+                },
+                "_networkHeader": {
+                    "type": "header",
+                    "text": "Network settings",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_portNotice": {
+                    "type": "staticText",
+                    "text": "PortNotice",
+                    "newLine": true,
+                    "xs": 12,
+                    "style": {
+                        "fontWeight": "bold"
+                    }
+                },
+                "controllerIp": {
+                    "type": "text",
+                    "label": "IP address",
+                    "placeholder": "127.0.0.1",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6
+                },
+                "controllerPort": {
+                    "type": "number",
+                    "label": "Port",
+                    "placeholder": "8443",
+                    "max": 65535,
+                    "xs": 12,
+                    "sm": 6
+                },
+                "_loginHeader": {
+                    "type": "header",
+                    "text": "Login",
+                    "size": 5,
+                    "newLine": true
+                },
+                "controllerUsername": {
+                    "type": "text",
+                    "label": "Username",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6
+                },
+                "controllerPassword": {
+                    "type": "password",
+                    "label": "Password",
+                    "xs": 12,
+                    "sm": 6
+                },
+                "_connectionHeader": {
+                    "type": "header",
+                    "text": "Connection",
+                    "size": 5,
+                    "newLine": true
+                },
+                "ignoreSSLErrors": {
+                    "type": "checkbox",
+                    "label": "Ignore SSL errors and expired certificates",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_updateHeader": {
+                    "type": "header",
+                    "text": "Update",
+                    "size": 5,
+                    "newLine": true
+                },
+                "updateInterval": {
+                    "type": "number",
+                    "label": "Update interval",
+                    "unit": "s",
+                    "min": 0,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6
+                }
+            }
+        },
+        "_sysinfo": {
+            "type": "panel",
+            "label": "Sysinfo",
+            "items": {
+                "updateSysinfo": {
+                    "type": "checkbox",
+                    "label": "Update system information",
+                    "xs": 12
+                },
+                "_sysinfoStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_sysinfoStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.sysinfo": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateSysinfo",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "hostname",
+                            "value": "sysinfo.hostname",
+                            "description": "Hostname"
+                        },
+                        {
+                            "label": "name",
+                            "value": "sysinfo.name",
+                            "description": "Name"
+                        },
+                        {
+                            "label": "previous_version",
+                            "value": "sysinfo.previous_version",
+                            "description": "Previous version"
+                        },
+                        {
+                            "label": "update_available",
+                            "value": "sysinfo.update_available",
+                            "description": "Update available"
+                        },
+                        {
+                            "label": "update_downloaded",
+                            "value": "sysinfo.update_downloaded",
+                            "description": "Update downloaded"
+                        },
+                        {
+                            "label": "version",
+                            "value": "sysinfo.version",
+                            "description": "Version"
+                        }
+                    ]
+                }
+            }
+        },
+        "_clients": {
+            "type": "panel",
+            "label": "Clients",
+            "items": {
+                "updateClients": {
+                    "type": "checkbox",
+                    "label": "Update clients",
+                    "xs": 12,
+                    "sm": 6
+                },
+                "blacklistClients": {
+                    "type": "checkbox",
+                    "label": "Change Blacklist to Whitelist",
+                    "disabled": "!data.updateClients",
+                    "xs": 12,
+                    "sm": 6
+                },
+                "_clientsObjectsHeader": {
+                    "type": "header",
+                    "text": "Filter objects",
+                    "size": 5,
+                    "newLine": true
+                },
+                "objectsFilter.clients": {
+                    "type": "chips",
+                    "disabled": "!data.updateClients",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_clientsStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_clientsStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.clients": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateClients",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "ap_mac",
+                            "value": "clients.client.ap_mac",
+                            "description": "Access Point MAC address"
+                        },
+                        {
+                            "label": "bssid",
+                            "value": "clients.client.bssid",
+                            "description": "BSSID"
+                        },
+                        {
+                            "label": "channel",
+                            "value": "clients.client.channel",
+                            "description": "Channel"
+                        },
+                        {
+                            "label": "essid",
+                            "value": "clients.client.essid",
+                            "description": "ESSID"
+                        },
+                        {
+                            "label": "first_seen",
+                            "value": "clients.client.first_seen",
+                            "description": "First seen"
+                        },
+                        {
+                            "label": "hostname",
+                            "value": "clients.client.hostname",
+                            "description": "Hostname"
+                        },
+                        {
+                            "label": "ip",
+                            "value": "clients.client.ip",
+                            "description": "IP address"
+                        },
+                        {
+                            "label": "is_guest",
+                            "value": "clients.client.is_guest",
+                            "description": "Is guest"
+                        },
+                        {
+                            "label": "is_guest_by_uap",
+                            "value": "clients.client.is_guest_by_uap",
+                            "description": "Is guest by UAP"
+                        },
+                        {
+                            "label": "is_guest_by_ugw",
+                            "value": "clients.client.is_guest_by_ugw",
+                            "description": "Is guest by UGW"
+                        },
+                        {
+                            "label": "is_guest_by_usw",
+                            "value": "clients.client.is_guest_by_usw",
+                            "description": "Is guest by USW"
+                        },
+                        {
+                            "label": "is_online",
+                            "value": "clients.client.is_online",
+                            "description": "Is online"
+                        },
+                        {
+                            "label": "is_wired",
+                            "value": "clients.client.is_wired",
+                            "description": "Is wired"
+                        },
+                        {
+                            "label": "last_seen",
+                            "value": "clients.client.last_seen",
+                            "description": "Last seen"
+                        },
+                        {
+                            "label": "last_seen_by_uap",
+                            "value": "clients.client.last_seen_by_uap",
+                            "description": "Last seen by UAP"
+                        },
+                        {
+                            "label": "last_seen_by_ugw",
+                            "value": "clients.client.last_seen_by_ugw",
+                            "description": "Last seen by UGW"
+                        },
+                        {
+                            "label": "last_seen_by_usw",
+                            "value": "clients.client.last_seen_by_usw",
+                            "description": "Last seen by USW"
+                        },
+                        {
+                            "label": "mac",
+                            "value": "clients.client.mac",
+                            "description": "MAC address"
+                        },
+                        {
+                            "label": "name",
+                            "value": "clients.client.name",
+                            "description": "Name"
+                        },
+                        {
+                            "label": "network",
+                            "value": "clients.client.network",
+                            "description": "Network"
+                        },
+                        {
+                            "label": "note",
+                            "value": "clients.client.note",
+                            "description": "Note"
+                        },
+                        {
+                            "label": "noted",
+                            "value": "clients.client.noted",
+                            "description": "Noted"
+                        },
+                        {
+                            "label": "rssi",
+                            "value": "clients.client.rssi",
+                            "description": "RSSI"
+                        },
+                        {
+                            "label": "rx_bytes",
+                            "value": "clients.client.rx_bytes",
+                            "description": "RX"
+                        },
+                        {
+                            "label": "satisfaction",
+                            "value": "clients.client.satisfaction",
+                            "description": "Satisfaction"
+                        },
+                        {
+                            "label": "signal",
+                            "value": "clients.client.signal",
+                            "description": "Signal"
+                        },
+                        {
+                            "label": "sw_mac",
+                            "value": "clients.client.sw_mac",
+                            "description": "Switch MAC address"
+                        },
+                        {
+                            "label": "sw_port",
+                            "value": "clients.client.sw_port",
+                            "description": "Switch port"
+                        },
+                        {
+                            "label": "tx_bytes",
+                            "value": "clients.client.tx_bytes",
+                            "description": "TX"
+                        },
+                        {
+                            "label": "uptime",
+                            "value": "clients.client.uptime",
+                            "description": "Uptime"
+                        },
+                        {
+                            "label": "uptime_by_uap",
+                            "value": "clients.client.uptime_by_uap",
+                            "description": "Uptime by UAP"
+                        },
+                        {
+                            "label": "uptime_by_ugw",
+                            "value": "clients.client.uptime_by_ugw",
+                            "description": "Uptime by UGW"
+                        },
+                        {
+                            "label": "uptime_by_usw",
+                            "value": "clients.client.uptime_by_usw",
+                            "description": "Uptime by USW"
+                        },
+                        {
+                            "label": "wired-rx_bytes",
+                            "value": "clients.client.wired-rx_bytes",
+                            "description": "Wired RX"
+                        },
+                        {
+                            "label": "wired-tx_bytes",
+                            "value": "clients.client.wired-tx_bytes",
+                            "description": "Wired TX"
+                        },
+                        {
+                            "label": "reconnect",
+                            "value": "clients.client.reconnect",
+                            "description": "reconnect"
+                        },
+                        {
+                            "label": "blocked",
+                            "value": "clients.client.blocked",
+                            "description": "client block / unblock"
+                        }
+                    ]
+                },
+                "_clientsSettingsHeader": {
+                    "type": "header",
+                    "text": "Settings for clients",
+                    "size": 5,
+                    "newLine": true
+                },
+                "clientsIsOnlineOffset": {
+                    "type": "number",
+                    "label": "Offset for is_online",
+                    "unit": "s",
+                    "placeholder": "30",
+                    "disabled": "!data.updateClients",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6
+                }
+            }
+        },
+        "_devices": {
+            "type": "panel",
+            "label": "Devices",
+            "items": {
+                "updateDevices": {
+                    "type": "checkbox",
+                    "label": "Update devices",
+                    "xs": 12
+                },
+                "_devicesObjectsHeader": {
+                    "type": "header",
+                    "text": "Filter objects",
+                    "size": 5,
+                    "newLine": true
+                },
+                "objectsFilter.devices": {
+                    "type": "chips",
+                    "disabled": "!data.updateDevices",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_devicesStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_devicesStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.devices": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateDevices",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "device",
+                            "items": [
+                                {
+                                    "label": "general_temperature",
+                                    "value": "devices.device.general_temperature",
+                                    "description": "General temperature"
+                                },
+                                {
+                                    "label": "guest-num_sta",
+                                    "value": "devices.device.guest-num_sta",
+                                    "description": "Number of guests"
+                                },
+                                {
+                                    "label": "device_id",
+                                    "value": "devices.device.device_id",
+                                    "description": "Device Id"
+                                },
+                                {
+                                    "label": "led_override",
+                                    "value": "devices.device.led_override",
+                                    "description": "Led Override"
+                                },
+                                {
+                                    "label": "ip",
+                                    "value": "devices.device.ip",
+                                    "description": "IP address"
+                                },
+                                {
+                                    "label": "mac",
+                                    "value": "devices.device.mac",
+                                    "description": "MAC address"
+                                },
+                                {
+                                    "label": "model",
+                                    "value": "devices.device.model",
+                                    "description": "Model"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "devices.device.name",
+                                    "description": "Name"
+                                },
+                                {
+                                    "label": "num_guest",
+                                    "value": "devices.device.num_guest",
+                                    "description": "Number of guests"
+                                },
+                                {
+                                    "label": "user-num_sta",
+                                    "value": "devices.device.user-num_sta",
+                                    "description": "Number of clients"
+                                },
+                                {
+                                    "label": "num_sta",
+                                    "value": "devices.device.num_sta",
+                                    "description": "Number of users"
+                                },
+                                {
+                                    "label": "state",
+                                    "value": "devices.device.state",
+                                    "description": "Device state"
+                                },
+                                {
+                                    "label": "overheating",
+                                    "value": "devices.device.overheating",
+                                    "description": "Overheating"
+                                },
+                                {
+                                    "label": "rx_bytes",
+                                    "value": "devices.device.rx_bytes",
+                                    "description": "RX"
+                                },
+                                {
+                                    "label": "rx_bytes-d",
+                                    "value": "devices.device.rx_bytes-d",
+                                    "description": "RX dropped"
+                                },
+                                {
+                                    "label": "satisfaction",
+                                    "value": "devices.device.satisfaction",
+                                    "description": "Satisfaction"
+                                },
+                                {
+                                    "label": "type",
+                                    "value": "devices.device.type",
+                                    "description": "Type"
+                                },
+                                {
+                                    "label": "tx_bytes",
+                                    "value": "devices.device.tx_bytes",
+                                    "description": "TX"
+                                },
+                                {
+                                    "label": "tx_bytes-d",
+                                    "value": "devices.device.tx_bytes-d",
+                                    "description": "TX dropped"
+                                },
+                                {
+                                    "label": "upgradable",
+                                    "value": "devices.device.upgradable",
+                                    "description": "Upgradable"
+                                },
+                                {
+                                    "label": "upgrade_to_firmware",
+                                    "value": "devices.device.upgrade_to_firmware",
+                                    "description": "Upgrade to firmware"
+                                },
+                                {
+                                    "label": "uptime",
+                                    "value": "devices.device.uptime",
+                                    "description": "Uptime"
+                                },
+                                {
+                                    "label": "version",
+                                    "value": "devices.device.version",
+                                    "description": "Version"
+                                },
+                                {
+                                    "label": "restart",
+                                    "value": "devices.device.restart",
+                                    "description": "restart device"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › port_table › port",
+                            "items": [
+                                {
+                                    "label": "enable",
+                                    "value": "devices.device.port_table.port.enable",
+                                    "description": "Enable"
+                                },
+                                {
+                                    "label": "is_uplink",
+                                    "value": "devices.device.port_table.port.is_uplink",
+                                    "description": "Is uplink"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "devices.device.port_table.port.name",
+                                    "description": "Name"
+                                },
+                                {
+                                    "label": "poe_class",
+                                    "value": "devices.device.port_table.port.poe_class",
+                                    "description": "POE class"
+                                },
+                                {
+                                    "label": "poe_mode",
+                                    "value": "devices.device.port_table.port.poe_mode",
+                                    "description": "POE mode"
+                                },
+                                {
+                                    "label": "poe_current",
+                                    "value": "devices.device.port_table.port.poe_current",
+                                    "description": "POE current"
+                                },
+                                {
+                                    "label": "poe_power",
+                                    "value": "devices.device.port_table.port.poe_power",
+                                    "description": "POE power"
+                                },
+                                {
+                                    "label": "poe_voltage",
+                                    "value": "devices.device.port_table.port.poe_voltage",
+                                    "description": "POE voltage"
+                                },
+                                {
+                                    "label": "port_idx",
+                                    "value": "devices.device.port_table.port.port_idx",
+                                    "description": "ID"
+                                },
+                                {
+                                    "label": "port_poe",
+                                    "value": "devices.device.port_table.port.port_poe",
+                                    "description": "POE"
+                                },
+                                {
+                                    "label": "port_poe_enabled",
+                                    "value": "devices.device.port_table.port.port_poe_enabled",
+                                    "description": "switch poe power"
+                                },
+                                {
+                                    "label": "port_poe_cycle",
+                                    "value": "devices.device.port_table.port.port_poe_cycle",
+                                    "description": "port power cycle"
+                                },
+                                {
+                                    "label": "rx_bytes",
+                                    "value": "devices.device.port_table.port.rx_bytes",
+                                    "description": "RX Bytes"
+                                },
+                                {
+                                    "label": "satisfaction",
+                                    "value": "devices.device.port_table.port.satisfaction",
+                                    "description": "Satisfaction"
+                                },
+                                {
+                                    "label": "speed",
+                                    "value": "devices.device.port_table.port.speed",
+                                    "description": "Speed"
+                                },
+                                {
+                                    "label": "tx_bytes",
+                                    "value": "devices.device.port_table.port.tx_bytes",
+                                    "description": "TX Bytes"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › port_overrides › port",
+                            "items": [
+                                {
+                                    "label": "port_idx",
+                                    "value": "devices.device.port_overrides.port.port_idx",
+                                    "description": "ID"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "devices.device.port_overrides.port.name",
+                                    "description": "Name"
+                                },
+                                {
+                                    "label": "portconf_id",
+                                    "value": "devices.device.port_overrides.port.portconf_id",
+                                    "description": "Portconf ID"
+                                },
+                                {
+                                    "label": "op_mode",
+                                    "value": "devices.device.port_overrides.port.op_mode",
+                                    "description": "Operation mode"
+                                },
+                                {
+                                    "label": "port_security_enabled",
+                                    "value": "devices.device.port_overrides.port.port_security_enabled",
+                                    "description": "Enable MAC ID Filter Allow List"
+                                },
+                                {
+                                    "label": "port_security_mac_address",
+                                    "value": "devices.device.port_overrides.port.port_security_mac_address",
+                                    "description": "MAC ID Filter Allow List"
+                                },
+                                {
+                                    "label": "poe_mode",
+                                    "value": "devices.device.port_overrides.port.poe_mode",
+                                    "description": "POE mode"
+                                },
+                                {
+                                    "label": "speed",
+                                    "value": "devices.device.port_overrides.port.speed",
+                                    "description": "Link Speed"
+                                },
+                                {
+                                    "label": "full_duplex",
+                                    "value": "devices.device.port_overrides.port.full_duplex",
+                                    "description": "Full duplex"
+                                },
+                                {
+                                    "label": "isolation",
+                                    "value": "devices.device.port_overrides.port.isolation",
+                                    "description": "Port isolation"
+                                },
+                                {
+                                    "label": "stormctrl_ucast_enabled",
+                                    "value": "devices.device.port_overrides.port.stormctrl_ucast_enabled",
+                                    "description": "Enable Storm Control for Unicast"
+                                },
+                                {
+                                    "label": "stormctrl_ucast_rate",
+                                    "value": "devices.device.port_overrides.port.stormctrl_ucast_rate",
+                                    "description": "Storm Control Unicast Rate"
+                                },
+                                {
+                                    "label": "stormctrl_mcast_enabled",
+                                    "value": "devices.device.port_overrides.port.stormctrl_mcast_enabled",
+                                    "description": "Enable Storm Control for Multicast"
+                                },
+                                {
+                                    "label": "stormctrl_mcast_rate",
+                                    "value": "devices.device.port_overrides.port.stormctrl_mcast_rate",
+                                    "description": "Storm Control Multicast Rate"
+                                },
+                                {
+                                    "label": "stormctrl_bcast_enabled",
+                                    "value": "devices.device.port_overrides.port.stormctrl_bcast_enabled",
+                                    "description": "Enable Storm Control for Broadcast"
+                                },
+                                {
+                                    "label": "stormctrl_bcast_rate",
+                                    "value": "devices.device.port_overrides.port.stormctrl_bcast_rate",
+                                    "description": "Storm Control Broadcast Rate"
+                                },
+                                {
+                                    "label": "lldpmed_notify_enabled",
+                                    "value": "devices.device.port_overrides.port.lldpmed_notify_enabled",
+                                    "description": "Enable LLDP-MED"
+                                },
+                                {
+                                    "label": "autoneg",
+                                    "value": "devices.device.port_overrides.port.autoneg",
+                                    "description": "Link negotiation"
+                                },
+                                {
+                                    "label": "stp_port_mode",
+                                    "value": "devices.device.port_overrides.port.stp_port_mode",
+                                    "description": "Enable Spanning Tree Protocol"
+                                },
+                                {
+                                    "label": "egress_rate_limit_kbps_enabled",
+                                    "value": "devices.device.port_overrides.port.egress_rate_limit_kbps_enabled",
+                                    "description": "Enable Egress rate limit"
+                                },
+                                {
+                                    "label": "egress_rate_limit_kbps",
+                                    "value": "devices.device.port_overrides.port.egress_rate_limit_kbps",
+                                    "description": "Egress rate limit"
+                                },
+                                {
+                                    "label": "aggregate_num_ports",
+                                    "value": "devices.device.port_overrides.port.aggregate_num_ports",
+                                    "description": "Aggregate ports"
+                                },
+                                {
+                                    "label": "mirror_port_idx",
+                                    "value": "devices.device.port_overrides.port.mirror_port_idx",
+                                    "description": "Mirroring Port"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › radio_table_stats › stat",
+                            "items": [
+                                {
+                                    "label": "cu_self_rx",
+                                    "value": "devices.device.radio_table_stats.stat.cu_self_rx",
+                                    "description": "RX channel utilization"
+                                },
+                                {
+                                    "label": "cu_self_tx",
+                                    "value": "devices.device.radio_table_stats.stat.cu_self_tx",
+                                    "description": "TX channel utilization"
+                                },
+                                {
+                                    "label": "cu_total",
+                                    "value": "devices.device.radio_table_stats.stat.cu_total",
+                                    "description": "Total channel utilization"
+                                },
+                                {
+                                    "label": "tx_power",
+                                    "value": "devices.device.radio_table_stats.stat.tx_power",
+                                    "description": "TX power"
+                                },
+                                {
+                                    "label": "channel",
+                                    "value": "devices.device.radio_table_stats.stat.channel",
+                                    "description": "Channel"
+                                },
+                                {
+                                    "label": "satisfaction",
+                                    "value": "devices.device.radio_table_stats.stat.satisfaction",
+                                    "description": "Satisfaction"
+                                },
+                                {
+                                    "label": "radio",
+                                    "value": "devices.device.radio_table_stats.stat.radio",
+                                    "description": "radio"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › temperatures › loc",
+                            "items": [
+                                {
+                                    "label": "type",
+                                    "value": "devices.device.temperatures.loc.type",
+                                    "description": "type of temperature"
+                                },
+                                {
+                                    "label": "value",
+                                    "value": "devices.device.temperatures.loc.value",
+                                    "description": "temperature value"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › storage › stat",
+                            "items": [
+                                {
+                                    "label": "mount_point",
+                                    "value": "devices.device.storage.stat.mount_point",
+                                    "description": "moiting point of storage"
+                                },
+                                {
+                                    "label": "size",
+                                    "value": "devices.device.storage.stat.size",
+                                    "description": "size of storage"
+                                },
+                                {
+                                    "label": "type",
+                                    "value": "devices.device.storage.stat.type",
+                                    "description": "type of storage"
+                                },
+                                {
+                                    "label": "used",
+                                    "value": "devices.device.storage.stat.used",
+                                    "description": "using of storage size"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › speedtest-status",
+                            "items": [
+                                {
+                                    "label": "latency",
+                                    "value": "devices.device.speedtest-status.latency",
+                                    "description": "Latency"
+                                },
+                                {
+                                    "label": "rundate",
+                                    "value": "devices.device.speedtest-status.rundate",
+                                    "description": "Run date"
+                                },
+                                {
+                                    "label": "runtime",
+                                    "value": "devices.device.speedtest-status.runtime",
+                                    "description": "Run time"
+                                },
+                                {
+                                    "label": "xput_download",
+                                    "value": "devices.device.speedtest-status.xput_download",
+                                    "description": "Download"
+                                },
+                                {
+                                    "label": "xput_upload",
+                                    "value": "devices.device.speedtest-status.xput_upload",
+                                    "description": "Upload"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › sys_stats",
+                            "items": [
+                                {
+                                    "label": "loadavg_1",
+                                    "value": "devices.device.sys_stats.loadavg_1",
+                                    "description": "Load average 1m"
+                                },
+                                {
+                                    "label": "loadavg_15",
+                                    "value": "devices.device.sys_stats.loadavg_15",
+                                    "description": "Load average 15m"
+                                },
+                                {
+                                    "label": "loadavg_5",
+                                    "value": "devices.device.sys_stats.loadavg_5",
+                                    "description": "Load average 5m"
+                                },
+                                {
+                                    "label": "mem_buffer",
+                                    "value": "devices.device.sys_stats.mem_buffer",
+                                    "description": "memory buffer"
+                                },
+                                {
+                                    "label": "mem_total",
+                                    "value": "devices.device.sys_stats.mem_total",
+                                    "description": "memory total"
+                                },
+                                {
+                                    "label": "mem_used",
+                                    "value": "devices.device.sys_stats.mem_used",
+                                    "description": "memory used"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › system-stats",
+                            "items": [
+                                {
+                                    "label": "cpu",
+                                    "value": "devices.device.system-stats.cpu",
+                                    "description": "CPU usage"
+                                },
+                                {
+                                    "label": "mem",
+                                    "value": "devices.device.system-stats.mem",
+                                    "description": "Memory usage"
+                                },
+                                {
+                                    "label": "uptime",
+                                    "value": "devices.device.system-stats.uptime",
+                                    "description": "Uptime"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › last_uplink",
+                            "items": [
+                                {
+                                    "label": "mac",
+                                    "value": "devices.device.last_uplink.mac",
+                                    "description": "Uplink MAC address"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "devices.device.last_uplink.name",
+                                    "description": "Uplink device name"
+                                },
+                                {
+                                    "label": "remote_port",
+                                    "value": "devices.device.last_uplink.remote_port",
+                                    "description": "Uplink remote port"
+                                },
+                                {
+                                    "label": "port_idx",
+                                    "value": "devices.device.last_uplink.port_idx",
+                                    "description": "Uplink port"
+                                },
+                                {
+                                    "label": "type",
+                                    "value": "devices.device.last_uplink.type",
+                                    "description": "type of storage"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › vap_table › vap",
+                            "items": [
+                                {
+                                    "label": "satisfaction",
+                                    "value": "devices.device.vap_table.vap.satisfaction",
+                                    "description": "Satisfaction"
+                                },
+                                {
+                                    "label": "channel",
+                                    "value": "devices.device.vap_table.vap.channel",
+                                    "description": "Channel"
+                                },
+                                {
+                                    "label": "num_sta",
+                                    "value": "devices.device.vap_table.vap.num_sta",
+                                    "description": "Number of users"
+                                },
+                                {
+                                    "label": "essid",
+                                    "value": "devices.device.vap_table.vap.essid",
+                                    "description": "SSID"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "_wlans": {
+            "type": "panel",
+            "label": "WLANs",
+            "items": {
+                "updateWlans": {
+                    "type": "checkbox",
+                    "label": "Update WLANs",
+                    "xs": 12
+                },
+                "_wlansObjectsHeader": {
+                    "type": "header",
+                    "text": "Filter objects",
+                    "size": 5,
+                    "newLine": true
+                },
+                "objectsFilter.wlans": {
+                    "type": "chips",
+                    "disabled": "!data.updateWlans",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_wlansStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_wlansStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.wlans": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateWlans",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "enabled",
+                            "value": "wlans.wlan.enabled",
+                            "description": "Enabled"
+                        },
+                        {
+                            "label": "name",
+                            "value": "wlans.wlan.name",
+                            "description": "Name"
+                        },
+                        {
+                            "label": "security",
+                            "value": "wlans.wlan.security",
+                            "description": "Security"
+                        },
+                        {
+                            "label": "vlan",
+                            "value": "wlans.wlan.vlan",
+                            "description": "VLAN"
+                        },
+                        {
+                            "label": "vlan_enabled",
+                            "value": "wlans.wlan.vlan_enabled",
+                            "description": "VLAN enabled"
+                        }
+                    ]
+                }
+            }
+        },
+        "_networks": {
+            "type": "panel",
+            "label": "Networks",
+            "items": {
+                "updateNetworks": {
+                    "type": "checkbox",
+                    "label": "Update networks",
+                    "xs": 12
+                },
+                "_networksObjectsHeader": {
+                    "type": "header",
+                    "text": "Filter objects",
+                    "size": 5,
+                    "newLine": true
+                },
+                "objectsFilter.networks": {
+                    "type": "chips",
+                    "disabled": "!data.updateNetworks",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_networksStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_networksStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.networks": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateNetworks",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "dhcpd_dns_enabled",
+                            "value": "networks.network.dhcpd_dns_enabled",
+                            "description": "DHCP DNS enabled"
+                        },
+                        {
+                            "label": "dhcpd_enabled",
+                            "value": "networks.network.dhcpd_enabled",
+                            "description": "DHCP enabled"
+                        },
+                        {
+                            "label": "dhcpd_leasetime",
+                            "value": "networks.network.dhcpd_leasetime",
+                            "description": "DHCP leasetime"
+                        },
+                        {
+                            "label": "dhcpd_start",
+                            "value": "networks.network.dhcpd_start",
+                            "description": "DHCP start"
+                        },
+                        {
+                            "label": "dhcpd_stop",
+                            "value": "networks.network.dhcpd_stop",
+                            "description": "DHCP stop"
+                        },
+                        {
+                            "label": "enabled",
+                            "value": "networks.network.enabled",
+                            "description": "Enabled"
+                        },
+                        {
+                            "label": "ip_subnet",
+                            "value": "networks.network.ip_subnet",
+                            "description": "IP subnet"
+                        },
+                        {
+                            "label": "name",
+                            "value": "networks.network.name",
+                            "description": "Name"
+                        },
+                        {
+                            "label": "networkgroup",
+                            "value": "networks.network.networkgroup",
+                            "description": "Network group"
+                        },
+                        {
+                            "label": "purpose",
+                            "value": "networks.network.purpose",
+                            "description": "Purpose"
+                        },
+                        {
+                            "label": "vlan",
+                            "value": "networks.network.vlan",
+                            "description": "VLAN"
+                        },
+                        {
+                            "label": "vlan_enabled",
+                            "value": "networks.network.vlan_enabled",
+                            "description": "VLAN enabled"
+                        },
+                        {
+                            "label": "vpn_type",
+                            "value": "networks.network.vpn_type",
+                            "description": "VPN type"
+                        },
+                        {
+                            "label": "wan_ip",
+                            "value": "networks.network.wan_ip",
+                            "description": "WAN IP"
+                        }
+                    ]
+                }
+            }
+        },
+        "_health": {
+            "type": "panel",
+            "label": "Health",
+            "items": {
+                "updateHealth": {
+                    "type": "checkbox",
+                    "label": "Update health",
+                    "xs": 12
+                },
+                "_healthObjectsHeader": {
+                    "type": "header",
+                    "text": "Filter objects",
+                    "size": 5,
+                    "newLine": true
+                },
+                "objectsFilter.health": {
+                    "type": "chips",
+                    "disabled": "!data.updateHealth",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_healthStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_healthStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.health": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateHealth",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "subsystem",
+                            "items": [
+                                {
+                                    "label": "lan_ip",
+                                    "value": "health.subsystem.lan_ip",
+                                    "description": "LAN IP"
+                                },
+                                {
+                                    "label": "latency",
+                                    "value": "health.subsystem.latency",
+                                    "description": "Latency"
+                                },
+                                {
+                                    "label": "num_guest",
+                                    "value": "health.subsystem.num_guest",
+                                    "description": "Number of guests"
+                                },
+                                {
+                                    "label": "num_iot",
+                                    "value": "health.subsystem.num_iot",
+                                    "description": "Number of IOT"
+                                },
+                                {
+                                    "label": "num_user",
+                                    "value": "health.subsystem.num_user",
+                                    "description": "Number of users"
+                                },
+                                {
+                                    "label": "rx_bytes-r",
+                                    "value": "health.subsystem.rx_bytes-r",
+                                    "description": "RX Bytes R"
+                                },
+                                {
+                                    "label": "status",
+                                    "value": "health.subsystem.status",
+                                    "description": "Status"
+                                },
+                                {
+                                    "label": "subsystem",
+                                    "value": "health.subsystem.subsystem",
+                                    "description": "Subsystem"
+                                },
+                                {
+                                    "label": "tx_bytes-r",
+                                    "value": "health.subsystem.tx_bytes-r",
+                                    "description": "TX Bytes R"
+                                },
+                                {
+                                    "label": "uptime",
+                                    "value": "health.subsystem.uptime",
+                                    "description": "Uptime"
+                                },
+                                {
+                                    "label": "wan_ip",
+                                    "value": "health.subsystem.wan_ip",
+                                    "description": "WAN IP"
+                                },
+                                {
+                                    "label": "xput_down",
+                                    "value": "health.subsystem.xput_down",
+                                    "description": "Download speed"
+                                },
+                                {
+                                    "label": "xput_up",
+                                    "value": "health.subsystem.xput_up",
+                                    "description": "Upload speed"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "subsystem › speedtest",
+                            "items": [
+                                {
+                                    "label": "lastrun",
+                                    "value": "health.subsystem.speedtest.lastrun",
+                                    "description": "Speedtest lastrun"
+                                },
+                                {
+                                    "label": "ping",
+                                    "value": "health.subsystem.speedtest.ping",
+                                    "description": "Speedtest ping"
+                                },
+                                {
+                                    "label": "status",
+                                    "value": "health.subsystem.speedtest.status",
+                                    "description": "Speedtest status"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "_vouchers": {
+            "type": "panel",
+            "label": "Vouchers",
+            "items": {
+                "updateVouchers": {
+                    "type": "checkbox",
+                    "label": "Update vouchers",
+                    "xs": 12
+                },
+                "_vouchersStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_vouchersStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.vouchers": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateVouchers",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "vouchers",
+                            "items": [
+                                {
+                                    "label": "create_vouchers",
+                                    "value": "vouchers.create_vouchers",
+                                    "description": "Create new vouchers"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "voucher",
+                            "items": [
+                                {
+                                    "label": "code",
+                                    "value": "vouchers.voucher.code",
+                                    "description": "Code"
+                                },
+                                {
+                                    "label": "create_time",
+                                    "value": "vouchers.voucher.create_time",
+                                    "description": "Create time"
+                                },
+                                {
+                                    "label": "duration",
+                                    "value": "vouchers.voucher.duration",
+                                    "description": "Duration"
+                                },
+                                {
+                                    "label": "note",
+                                    "value": "vouchers.voucher.note",
+                                    "description": "Note"
+                                },
+                                {
+                                    "label": "qos_overwrite",
+                                    "value": "vouchers.voucher.qos_overwrite",
+                                    "description": "QOS overwrite"
+                                },
+                                {
+                                    "label": "qos_rate_max_down",
+                                    "value": "vouchers.voucher.qos_rate_max_down",
+                                    "description": "QOS max download"
+                                },
+                                {
+                                    "label": "qos_rate_max_up",
+                                    "value": "vouchers.voucher.qos_rate_max_up",
+                                    "description": "QOS max upload"
+                                },
+                                {
+                                    "label": "qos_usage_quota",
+                                    "value": "vouchers.voucher.qos_usage_quota",
+                                    "description": "QOS usage quota"
+                                },
+                                {
+                                    "label": "quota",
+                                    "value": "vouchers.voucher.quota",
+                                    "description": "Quota"
+                                },
+                                {
+                                    "label": "status",
+                                    "value": "vouchers.voucher.status",
+                                    "description": "Status"
+                                },
+                                {
+                                    "label": "used",
+                                    "value": "vouchers.voucher.used",
+                                    "description": "Used"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "_vouchersSettingsHeader": {
+                    "type": "header",
+                    "text": "Settings for vouchers",
+                    "size": 5,
+                    "newLine": true
+                },
+                "updateVouchersNoUsed": {
+                    "type": "checkbox",
+                    "label": "Update only unused vouchers",
+                    "disabled": "!data.updateVouchers",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "_vouchersCreationHeader": {
+                    "type": "header",
+                    "text": "Settings for voucher creation",
+                    "size": 5,
+                    "newLine": true
+                },
+                "createVouchersNumber": {
+                    "type": "number",
+                    "label": "Number of vouchers",
+                    "placeholder": "1",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersDuration": {
+                    "type": "number",
+                    "label": "Duration in minutes",
+                    "placeholder": "60",
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersQuota": {
+                    "type": "number",
+                    "label": "Usage quota",
+                    "placeholder": "1",
+                    "min": 0,
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersUploadLimit": {
+                    "type": "number",
+                    "label": "Upload limit in Kbps",
+                    "placeholder": "0",
+                    "min": 0,
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersDownloadLimit": {
+                    "type": "number",
+                    "label": "Download limit in Kbps",
+                    "placeholder": "0",
+                    "min": 0,
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersByteQuota": {
+                    "type": "number",
+                    "label": "MB quota",
+                    "placeholder": "0",
+                    "min": 0,
+                    "xs": 12,
+                    "sm": 4
+                },
+                "createVouchersNote": {
+                    "type": "text",
+                    "label": "Note",
+                    "newLine": true,
+                    "xs": 12
+                }
+            }
+        },
+        "_alarms": {
+            "type": "panel",
+            "label": "Alarms",
+            "items": {
+                "updateAlarms": {
+                    "type": "checkbox",
+                    "label": "Update alarms",
+                    "xs": 12
+                },
+                "_alarmsStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_alarmsStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.alarms": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateAlarms",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "alarm",
+                            "items": [
+                                {
+                                    "label": "archived",
+                                    "value": "alarms.alarm.archived",
+                                    "description": "Archived"
+                                },
+                                {
+                                    "label": "time",
+                                    "value": "alarms.alarm.time",
+                                    "description": "Time"
+                                },
+                                {
+                                    "label": "message",
+                                    "value": "alarms.alarm.message",
+                                    "description": "Message"
+                                },
+                                {
+                                    "label": "event",
+                                    "value": "alarms.alarm.event",
+                                    "description": "Event"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "alarm › device",
+                            "items": [
+                                {
+                                    "label": "mac",
+                                    "value": "alarms.alarm.device.mac",
+                                    "description": "MAC Address"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "alarms.alarm.device.name",
+                                    "description": "Name"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "alarm › client",
+                            "items": [
+                                {
+                                    "label": "mac",
+                                    "value": "alarms.alarm.client.mac",
+                                    "description": "MAC Address"
+                                },
+                                {
+                                    "label": "ip",
+                                    "value": "alarms.alarm.client.ip",
+                                    "description": "IP"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "_alarmsSettingsHeader": {
+                    "type": "header",
+                    "text": "Settings for alarms",
+                    "size": 5,
+                    "newLine": true
+                },
+                "updateAlarmsNoArchived": {
+                    "type": "checkbox",
+                    "label": "Update only new alarms",
+                    "disabled": "!data.updateAlarms",
+                    "newLine": true,
+                    "xs": 12
+                }
+            }
+        },
+        "_dpi": {
+            "type": "panel",
+            "label": "DPI",
+            "items": {
+                "updateDpi": {
+                    "type": "checkbox",
+                    "label": "Update DPI",
+                    "xs": 12
+                },
+                "_dpiStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_dpiStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.dpi": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateDpi",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "dpi",
+                            "items": [
+                                {
+                                    "label": "last_updated",
+                                    "value": "dpi.last_updated",
+                                    "description": "Last updated"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "by_app › app",
+                            "items": [
+                                {
+                                    "label": "app",
+                                    "value": "dpi.by_app.app.app",
+                                    "description": "Application Id"
+                                },
+                                {
+                                    "label": "cat",
+                                    "value": "dpi.by_app.app.cat",
+                                    "description": "Category Id"
+                                },
+                                {
+                                    "label": "name",
+                                    "value": "dpi.by_app.app.name",
+                                    "description": "Name of Application"
+                                },
+                                {
+                                    "label": "known_clients",
+                                    "value": "dpi.by_app.app.known_clients",
+                                    "description": "Known clients"
+                                },
+                                {
+                                    "label": "rx_bytes",
+                                    "value": "dpi.by_app.app.rx_bytes",
+                                    "description": "RX"
+                                },
+                                {
+                                    "label": "rx_packets",
+                                    "value": "dpi.by_app.app.rx_packets",
+                                    "description": "RX packets"
+                                },
+                                {
+                                    "label": "tx_bytes",
+                                    "value": "dpi.by_app.app.tx_bytes",
+                                    "description": "TX"
+                                },
+                                {
+                                    "label": "tx_packets",
+                                    "value": "dpi.by_app.app.tx_packets",
+                                    "description": "TX packets"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "by_app › app › clients › client",
+                            "items": [
+                                {
+                                    "label": "mac",
+                                    "value": "dpi.by_app.app.clients.client.mac",
+                                    "description": "MAC address"
+                                },
+                                {
+                                    "label": "rx_bytes",
+                                    "value": "dpi.by_app.app.clients.client.rx_bytes",
+                                    "description": "RX"
+                                },
+                                {
+                                    "label": "rx_packets",
+                                    "value": "dpi.by_app.app.clients.client.rx_packets",
+                                    "description": "RX packets"
+                                },
+                                {
+                                    "label": "tx_bytes",
+                                    "value": "dpi.by_app.app.clients.client.tx_bytes",
+                                    "description": "TX"
+                                },
+                                {
+                                    "label": "tx_packets",
+                                    "value": "dpi.by_app.app.clients.client.tx_packets",
+                                    "description": "TX packets"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "by_cat › cat",
+                            "items": [
+                                {
+                                    "label": "name",
+                                    "value": "dpi.by_cat.cat.name",
+                                    "description": "Name of Category"
+                                },
+                                {
+                                    "label": "apps",
+                                    "value": "dpi.by_cat.cat.apps",
+                                    "description": "List of Application Ids"
+                                },
+                                {
+                                    "label": "cat",
+                                    "value": "dpi.by_cat.cat.cat",
+                                    "description": "Category Id"
+                                },
+                                {
+                                    "label": "rx_bytes",
+                                    "value": "dpi.by_cat.cat.rx_bytes",
+                                    "description": "RX"
+                                },
+                                {
+                                    "label": "rx_packets",
+                                    "value": "dpi.by_cat.cat.rx_packets",
+                                    "description": "RX packets"
+                                },
+                                {
+                                    "label": "tx_bytes",
+                                    "value": "dpi.by_cat.cat.tx_bytes",
+                                    "description": "TX"
+                                },
+                                {
+                                    "label": "tx_packets",
+                                    "value": "dpi.by_cat.cat.tx_packets",
+                                    "description": "TX packets"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "_gatewayTraffic": {
+            "type": "panel",
+            "label": "Gateway traffic",
+            "items": {
+                "updateGatewayTraffic": {
+                    "type": "checkbox",
+                    "label": "Update Gateway Traffic",
+                    "xs": 12
+                },
+                "_gatewayTrafficStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_gatewayTrafficStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12
+                },
+                "statesFilter.gateway_traffic": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateGatewayTraffic",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "date",
+                            "value": "gateway_traffic.device.day.date",
+                            "description": "Date of day"
+                        },
+                        {
+                            "label": "sent",
+                            "value": "gateway_traffic.device.day.sent",
+                            "description": "Bytes sent"
+                        },
+                        {
+                            "label": "received",
+                            "value": "gateway_traffic.device.day.received",
+                            "description": "Bytes received"
+                        }
+                    ]
+                },
+                "_gatewayTrafficSettingsHeader": {
+                    "type": "header",
+                    "text": "Settings for Gateway Traffic",
+                    "size": 5,
+                    "newLine": true
+                },
+                "gatewayTrafficMaxDays": {
+                    "type": "number",
+                    "label": "Get data for x Days (0 = all available data)",
+                    "placeholder": "7",
+                    "min": 0,
+                    "max": 365,
+                    "disabled": "!data.updateGatewayTraffic",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 6
+                }
+            }
+        }
+    }
+}
