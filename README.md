@@ -93,6 +93,8 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 - (@GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
 - (@GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
 - (@GermanBluefox) Migrated the settings page to JSON config
+- (@GermanBluefox) Fixed creating vouchers: the settings were passed in the wrong order since node-unifi 2
+- (@GermanBluefox) The adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub
 
 ### 0.7.0 (2024-04-13)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
