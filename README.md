@@ -1,4 +1,4 @@
-<img height="100px" src="admin/unifi.png" align="left"><br/>
+<img height="100px" src="admin/unifi.svg" align="left"><br/>
 # ioBroker.unifi
 
 ![Number of Installations](http://iobroker.live/badges/unifi-installed.svg)
@@ -86,9 +86,9 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 - (copilot) Adapter requires node.js >= 22 now
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now
-- (FiraSenax) Controller sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]
-- (GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
-- (GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
+- (@FiraSenax) Controller sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]
+- (@GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
+- (@GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
 
 ### 0.7.0 (2024-04-13)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now

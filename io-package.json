@@ -132,7 +132,7 @@
       "type": "free"
     },
     "platform": "Javascript/Node.js",
-    "icon": "unifi.png",
+    "icon": "unifi.svg",
     "enabled": false,
     "plugins": {
       "sentry": {
@@ -140,7 +140,7 @@
       }
     },
     "localLink": "https://%controllerIp%:%controllerPort%",
-    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.png",
+    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.svg",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
     "loglevel": "info",
     "tier": 2,
