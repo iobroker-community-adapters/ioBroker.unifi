@@ -1265,13 +1265,12 @@ class Unifi extends utils.Adapter {
         const down = this.vouchers.downloadLimit || 0;
         const mbytes = this.vouchers.byteQuota || 0;
 
-        const data = await this.controllers[site].createVouchers(site, minutes, count, quota, note, up, down, mbytes);
+        // node-unifi 2 takes the site from the controller, it is not a parameter anymore
+        const data = await this.controllers[site].createVouchers(minutes, count, quota, note, up, down, mbytes);
         if (!Array.isArray(data)) {
             throw new Error(`createVouchers: Returned data is not in valid format: ${JSON.stringify(data)}`);
         }
         this.log.debug(`createVouchers: ${data.length}`);
-
-        await this.processWlans(site, data);
 
         return data;
     }
