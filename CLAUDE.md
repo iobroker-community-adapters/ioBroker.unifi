@@ -90,6 +90,22 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1, values of unexpected types are converted with `toString()` in `applyJsonLogic()`, and `switchPoeOfPort()` fails for ports without a `port_overrides` entry (creating one was never implemented).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 
+## Tests
+
+The unit tests in `test/*.test.js` load the compiled `build/main.js` with `proxyquire` (build first):
+
+| File | Content |
+| --- | --- |
+| `test/lib/adapterMock.js` | `AdapterMock`: replaces `utils.Adapter` with an in-memory database of objects and states (all methods are sinon spies, `adapter.val(id)` reads a state); `createAdapter(config, stubs)` |
+| `test/lib/fakeController.js` | HTTPS server that answers like a UniFi OS console, used with the **real** node-unifi. `responses['stat/sta'] = [...]` sets the data of a path, `requestsTo(path)` returns the received requests, `expireSession()` invalidates the login. The certificate in `test/fixtures` is a self-signed test certificate for 127.0.0.1. |
+| `test/controller.test.js` | end-to-end against the fake controller: objects/states, re-login, vouchers, WLAN switch |
+| `test/objects.test.js` | object creation from `admin/lib/objects_*.json`, filters, deleting vouchers/alarms, `is_online`, blocked clients |
+| `test/control.test.js` | the writable states (`onStateChange`), PoE, vouchers |
+| `test/refresh.test.js` | refresh loop: re-login, backoff, overlapping refreshes, failure isolation |
+| `test/startup.test.js` | `onReady` (old text configs, migration, missing login), `handleError`, validation of the controller data |
+| `test/config.test.js` | jsonConfig ↔ `native`, generated options, states filter normalization |
+| `test/jsonLogic.test.js` | the json-logic operations and the option generator |
+
 ## Release flow
 
 Changelog lives in `README.md` under the `### **WORK IN PROGRESS**` placeholder comment; `release-script` (config in `.releaseconfig.json`) moves it into `io-package.json` `common.news`. CI (`.github/workflows/test-and-release.yml`, ioBroker testing actions) type-checks, lints and runs `test:package`, then builds and runs `test:unit` and `test:integration` on Node 22/24/26 × Linux/Windows/macOS, and publishes to npm on version tags.

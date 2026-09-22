@@ -140,29 +140,3 @@ describe('states filter', () => {
         assert.deepStrictEqual(filter.clients, []);
     });
 });
-
-describe('json-logic operations', () => {
-    const { applyRule } = require('../build/lib/jsonLogic');
-
-    it('formats dates like before', () => {
-        const date = new Date(2024, 0, 2, 3, 4, 5);
-
-        assert.strictEqual(applyRule({ timestampToDate: [date.getTime()] }), '2024-01-02');
-        assert.strictEqual(applyRule({ timestampToDateTime: [date.getTime()] }), '2024-01-02 03:04:05');
-        assert.strictEqual(
-            applyRule({ secondsToDateTime: [Math.floor(date.getTime() / 1000)] }),
-            '2024-01-02 03:04:05',
-        );
-        assert.throws(() => applyRule({ timestampToDate: ['no date'] }), /Invalid date/);
-    });
-
-    it('translates DPI codes', () => {
-        assert.strictEqual(applyRule({ translateCatCodeToName: [0] }), 'Instant messengers');
-        assert.strictEqual(applyRule({ translateAppCodeToName: [0, 41] }), 'WhatsApp');
-        assert.strictEqual(applyRule({ translateAppCodeToName: [99, 99] }), 'unknown');
-    });
-
-    it('reads a property by its name', () => {
-        assert.strictEqual(applyRule('mac', { mac: 'aa:bb' }), 'aa:bb');
-    });
-});

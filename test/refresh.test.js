@@ -252,7 +252,12 @@ describe('refresh reliability', () => {
             assert.strictEqual(failures.length, 1);
             assert.ok(failures[0].includes('fetchDpi (default)'));
             sinon.assert.calledTwice(adapter.fetchAlarms);
-            sinon.assert.calledOnceWithExactly(adapter.handleError, sinon.match.instanceOf(Error), 'default', 'fetchDpi');
+            sinon.assert.calledOnceWithExactly(
+                adapter.handleError,
+                sinon.match.instanceOf(Error),
+                'default',
+                'fetchDpi',
+            );
             sinon.assert.calledOnce(adapter.setClientOnlineStatus);
         });
 
