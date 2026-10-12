@@ -570,6 +570,11 @@ class Unifi extends utils.Adapter {
             this.log.error(
                 `Error site ${site}: 2-Factor-Authentication required by UniFi controller. 2FA is not supported by this adapter.`,
             );
+        } else if (err.response?.data?.code === 'MFA_AUTH_REQUIRED') {
+            // UI.com (SSO) account: the response contains the MFA challenge and cookie, so it is not logged
+            this.log.error(
+                `Error site ${site}: Multi-factor authentication (MFA) required. This is a UI.com account, which is not supported. Please use a local UniFi OS user (Admins & Users → "Restrict to local access only").`,
+            );
         } else if (err.message === 'api.err.ServerBusy') {
             this.log.error(
                 `Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`,

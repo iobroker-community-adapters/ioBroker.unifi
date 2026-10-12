@@ -139,6 +139,20 @@ describe('error handling', () => {
         assert.deepStrictEqual(loggedError(err), ['Error site default: Permission denied. Check access rights.']);
     });
 
+    it('explains a required MFA without logging the response', () => {
+        const err = new Error('Request failed with status code 499');
+        err.response = {
+            status: 499,
+            data: { code: 'MFA_AUTH_REQUIRED', data: { mfaCookie: 'UBIC_2FA=secret' } },
+        };
+
+        const logged = loggedError(err);
+
+        assert.strictEqual(logged.length, 1);
+        assert.ok(logged[0].includes('local UniFi OS user'));
+        assert.ok(!logged[0].includes('UBIC_2FA'));
+    });
+
     it('logs unknown errors with stack and reports them to Sentry', () => {
         const captureException = sinon.spy();
         adapter.supportsFeature.withArgs('PLUGINS').returns(true);

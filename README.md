@@ -89,6 +89,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 -->
 ### **WORK IN PROGRESS**
 - (@hdering) Added a hint to the settings that a local UniFi OS user is required, as UI.com accounts require MFA
+- (@hdering) A login rejected with `MFA_AUTH_REQUIRED` (UI.com account) is explained in the log instead of logging the response with the MFA cookie
 
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now
