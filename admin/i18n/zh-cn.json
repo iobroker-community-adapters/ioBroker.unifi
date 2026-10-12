@@ -220,5 +220,6 @@
     "temperature value": "温度值",
     "type of storage": "储存类型",
     "type of temperature": "温度类型",
-    "using of storage size": "使用存储空间"
+    "using of storage size": "使用存储空间",
+    "Please use a local UniFi OS user (Admins & Users → \"Restrict to local access only\"). UI.com cloud accounts require MFA, which the adapter cannot handle.": "请使用 UniFi OS 本地用户（Admins & Users → \"Restrict to local access only\"）。UI.com 云账户需要 MFA，适配器不支持。"
 }
