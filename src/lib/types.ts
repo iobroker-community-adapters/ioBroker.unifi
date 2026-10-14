@@ -76,6 +76,8 @@ export interface UnifiError extends Error {
     response?: {
         status?: number;
         data?: {
+            /** error code of UniFi OS, e.g. MFA_AUTH_REQUIRED */
+            code?: string;
             meta?: {
                 msg?: string;
             };

@@ -65,6 +65,12 @@
                     "xs": 12,
                     "sm": 6
                 },
+                "_localUserNotice": {
+                    "type": "staticText",
+                    "text": "Please use a local UniFi OS user (Admins & Users → \"Restrict to local access only\"). UI.com cloud accounts require MFA, which the adapter cannot handle.",
+                    "newLine": true,
+                    "xs": 12
+                },
                 "_connectionHeader": {
                     "type": "header",
                     "text": "Connection",
