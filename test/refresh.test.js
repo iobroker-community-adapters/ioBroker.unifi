@@ -296,5 +296,27 @@ describe('refresh reliability', () => {
             assert.strictEqual(failures.length, 2);
             sinon.assert.calledTwice(adapter.fetchAlarms);
         });
+
+        it('warns once and skips an endpoint the controller does not provide', async () => {
+            adapter.fetchAlarms.withArgs('default').rejects(httpError(404, 'api.err.NotFound'));
+
+            const failures = await adapter.performUpdate(true);
+            await adapter.performUpdate(true);
+
+            assert.deepStrictEqual(failures, []);
+            sinon.assert.calledOnceWithExactly(adapter.log.warn, sinon.match('fetchAlarms (site default)'));
+            sinon.assert.notCalled(adapter.handleError);
+            assert.strictEqual(adapter.fetchAlarms.withArgs('default').callCount, 1);
+            assert.strictEqual(adapter.fetchAlarms.withArgs('office').callCount, 2);
+        });
+
+        it('does not update the client online status when clients are not provided', async () => {
+            adapter.fetchClients.withArgs('office').rejects(httpError(404, 'api.err.NotFound'));
+
+            await adapter.performUpdate();
+            await adapter.performUpdate();
+
+            sinon.assert.notCalled(adapter.setClientOnlineStatus);
+        });
     });
 });
