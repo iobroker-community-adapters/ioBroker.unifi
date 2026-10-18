@@ -105,7 +105,8 @@
       "it": "Rete UniFi",
       "es": "Red UniFi",
       "pl": "Sieć Uni-Fi",
-      "zh-cn": "UniFi 网络"
+      "zh-cn": "UniFi 网络",
+      "uk": "Мережа UniFi"
     },
     "desc": {
       "en": "Communicates with a UniFi-Controller",
@@ -117,7 +118,8 @@
       "it": "Comunica con un controller UniFi",
       "es": "Se comunica con un controlador UniFi",
       "pl": "Komunikuje się z kontrolerem UniFi",
-      "zh-cn": "与UniFi控制器通信"
+      "zh-cn": "与UniFi控制器通信",
+      "uk": "Зв'язується з UniFi-контролером"
     },
     "authors": [
       "braindead1 <os.braindead1@gmail.com>",
