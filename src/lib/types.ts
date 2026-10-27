@@ -21,6 +21,7 @@ export interface UnifiStatesFilter {
     alarms: string[];
     dpi: string[];
     gateway_traffic: string[];
+    wan: string[];
 }
 
 export type StatesFilterCategory = keyof UnifiStatesFilter;

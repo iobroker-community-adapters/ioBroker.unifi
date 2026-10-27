@@ -5,6 +5,7 @@ import * as utils from '@iobroker/adapter-core';
 import { applyRule } from './lib/jsonLogic';
 import { collectStateIds, loadObjectDefinitions } from './lib/objectDefinitions';
 import { Controller, type AuthMode, type ControllerOptions } from './lib/unifiController';
+import { summarizeWan, WAN_HISTORY_SECONDS, type AggregatedDashboard, type WanSummary } from './lib/wan';
 import type {
     CreatedObject,
     ObjectDefinitions,
@@ -33,6 +34,7 @@ type UpdateKey =
     | 'vouchers'
     | 'dpi'
     | 'gatewayTraffic'
+    | 'wan'
     | 'alarms';
 
 type FetchMethod =
@@ -45,6 +47,7 @@ type FetchMethod =
     | 'fetchVouchers'
     | 'fetchDpi'
     | 'fetchGatewayTraffic'
+    | 'fetchWan'
     | 'fetchAlarms';
 
 // Data requested for every site, in this order: [update setting, fetch method]
@@ -58,6 +61,7 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
     ['vouchers', 'fetchVouchers'],
     ['dpi', 'fetchDpi'],
     ['gatewayTraffic', 'fetchGatewayTraffic'],
+    ['wan', 'fetchWan'],
     ['alarms', 'fetchAlarms'],
 ];
 
@@ -76,6 +80,7 @@ const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
     'alarms',
     'dpi',
     'gateway_traffic',
+    'wan',
 ];
 
 // States that are always selected together with another state: [state, required states or channels]
@@ -164,6 +169,7 @@ class Unifi extends utils.Adapter {
         dpi: false,
         gatewayTraffic: false,
         gatewayTrafficMaxDays: 0,
+        wan: false,
         alarms: false,
         alarmsNoArchived: false,
     };
@@ -188,12 +194,15 @@ class Unifi extends utils.Adapter {
         alarms: [],
         dpi: [],
         gateway_traffic: [],
+        wan: [],
     };
     private queryTimeout: ioBroker.Timeout | undefined = undefined;
     private updateInProgress = false;
     private consecutiveErrors = 0;
     /** Created objects without the namespace, to write only changed objects */
     private ownObjects: Record<string, CreatedObject> = {};
+    /** Sites for which the empty gateway statistics were reported, once per start */
+    private emptyGatewayTrafficWarned = new Set<string>();
     private stopped = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -264,6 +273,8 @@ class Unifi extends utils.Adapter {
             this.update.dpi = this.config.updateDpi;
             this.update.gatewayTraffic = this.config.updateGatewayTraffic;
             this.update.gatewayTrafficMaxDays = Number(this.config.gatewayTrafficMaxDays);
+            // Missing in instances of versions < 1.1.0
+            this.update.wan = this.config.updateWan === true;
 
             this.objectsFilter = this.config.objectsFilter;
             this.statesFilter = this.normalizeStatesFilter(this.config.statesFilter);
@@ -1211,6 +1222,15 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchGatewayTraffic ${site}: ${data.length}`);
         this.log.silly(`fetchGatewayTraffic ${site}: ${JSON.stringify(data)}`);
 
+        // @KI_HINWEIS: UniFi Network 11 cleared the statistics and answers with an empty list since then. Without this
+        // warning gateway_traffic silently stops updating.
+        if (data.length === 0 && !this.emptyGatewayTrafficWarned.has(site)) {
+            this.emptyGatewayTrafficWarned.add(site);
+            this.log.warn(
+                `fetchGatewayTraffic ${site}: the controller returned no gateway statistics. UniFi Network 11 and newer do not provide them anymore, use the WAN statistics instead (setting "Update WAN statistics").`,
+            );
+        }
+
         await this.processGatewayTraffic(site, data);
 
         return data;
@@ -1233,6 +1253,30 @@ class Unifi extends utils.Adapter {
         if (siteData.length > 0) {
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
         }
+    }
+
+    /**
+     * Function to fetch the WAN statistics (UniFi Network 11 and newer)
+     *
+     * @param site name of the site
+     */
+    private async fetchWan(site: string): Promise<WanSummary[]> {
+        const data = (await this.controllers[site].customApiRequest(
+            `/v2/api/site/<SITE>/aggregated-dashboard?historySeconds=${WAN_HISTORY_SECONDS}`,
+        )) as AggregatedDashboard | undefined;
+        if (!data || typeof data !== 'object' || Array.isArray(data)) {
+            throw new Error(`fetchWan ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
+        }
+
+        const summaries = summarizeWan(data);
+        this.log.debug(`fetchWan ${site}: ${summaries.length}`);
+        this.log.silly(`fetchWan ${site}: ${JSON.stringify(summaries)}`);
+
+        if (summaries.length > 0) {
+            await this.applyJsonLogic(site, summaries, loadObjectDefinitions('wan'), this.statesFilter.wan);
+        }
+
+        return summaries;
     }
 
     /**

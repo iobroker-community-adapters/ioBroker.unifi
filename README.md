@@ -51,6 +51,23 @@ It is possible to disable the update of selected information or filter specific 
 ### Filter states
 For every kind of information, the created states can be selected. If nothing is selected, all states are created. States needed by a selected state are added automatically, e.g. `last_seen_by_uap` and `last_seen_by_usw` for `is_online`.
 
+### WAN statistics (UniFi Network 11 and newer)
+UniFi Network 11 moved to a new statistics engine and cleared the statistics history. Since then the gateway report used for `gateway_traffic` returns no data (the adapter logs a warning once). The setting **Update WAN statistics** reads the data of the dashboard of the network application instead (`/v2/api/site/<site>/aggregated-dashboard`) and creates `<site>.wan.<connection>` for every internet connection (`WAN`, `WAN2`, ...):
+
+| State | Content |
+|-------|---------|
+| `today_rx_bytes`, `today_tx_bytes` | received / sent since midnight (local time of the ioBroker host) |
+| `yesterday_rx_bytes`, `yesterday_tx_bytes` | received / sent yesterday |
+| `last24h_rx_bytes`, `last24h_tx_bytes` | received / sent in the last 24 hours |
+| `monthly_bytes` | traffic of the current month, as counted by the console |
+| `rx_rate`, `tx_rate` | current rates in bytes per second |
+| `up`, `active`, `interface`, `uptime` | state of the connection, availability in % |
+| `latency`, `packet_loss` | of the last hour |
+| `isp_name`, `isp_asn`, `capacity_download`, `capacity_upload` | provider and its bandwidth in Mbit/s |
+| `speedtest_download`, `speedtest_upload`, `speedtest_latency`, `speedtest_time` | last speed test of the console |
+
+The traffic values are summed from hourly values of the console, so they are accurate to about one hour. In contrast to `gateway_traffic` (LAN side of the gateway) they count the internet traffic.
+
 ## Control
 ### Enable/disable WiFis
 By changing the 'enabled' state of a WiFi it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
@@ -103,6 +120,8 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 - (@Schimi1983) node-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)
 - (@Schimi1983) The session of the local user is ended when the adapter stops
 - (@Schimi1983) The default port is empty (UniFi OS) and `common.dataSource` is `poll`
+- (@Schimi1983) WAN statistics for UniFi Network 11 and newer: traffic today, yesterday and in the last 24 hours, monthly traffic, state, availability, latency, provider and last speed test of every internet connection [#696]
+- (@Schimi1983) Warning when the controller returns no gateway statistics (UniFi Network 11 cleared them)
 
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now

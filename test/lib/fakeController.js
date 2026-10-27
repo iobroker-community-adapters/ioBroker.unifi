@@ -12,6 +12,8 @@ const FIXTURES = join(__dirname, '..', 'fixtures');
  *
  * - `GET /` with status 200 marks the console as UniFi OS
  * - `POST /api/auth/login` sets the session cookie, `GET /api/users/self` checks it, `POST /api/auth/logout` ends it
+ * - `/proxy/network/v2/api/site/<site>/<path>` answers with `responses['v2/<path>']` (without query, without meta),
+ *   404 if not set
  * - the header `X-API-KEY` with `apiKey` authenticates every request without a session (answers 401 like
  *   UniFi OS 6 for a wrong key)
  * - `/proxy/network/api/self/sites` and `/proxy/network/api/s/<site>/<path>` answer with `{ meta: { rc: 'ok' }, data }`
@@ -91,6 +93,21 @@ class FakeController {
                 send(200, {});
             } else if (req.url === '/api/users/self') {
                 send(loggedIn ? 200 : 401, {});
+            } else if (req.url.startsWith('/proxy/network/v2/api/site/')) {
+                if (!loggedIn) {
+                    send(401, { code: 'api.err.LoginRequired' });
+                    return;
+                }
+                // v2/<path below the site> without query, answered without meta like the v2 API
+                const [path, query] = req.url.substring('/proxy/network/v2/api/site/'.length).split('?');
+                const v2Path = `v2/${path.split('/').slice(1).join('/')}`;
+                this.requests.push({ method: req.method, path: v2Path, query, body });
+                const response = this.responses[v2Path];
+                if (response === undefined) {
+                    send(404, { code: 'api.err.NotFound' });
+                    return;
+                }
+                send(200, typeof response === 'function' ? response(body, req.method) : response);
             } else if (req.url.startsWith('/proxy/network/api/')) {
                 if (!loggedIn) {
                     send(401, { meta: { rc: 'error', msg: 'api.err.LoginRequired' }, data: [] });

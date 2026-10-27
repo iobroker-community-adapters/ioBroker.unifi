@@ -54,6 +54,7 @@ describe('adapter with a UniFi OS controller', function () {
             updateHealth: false,
             updateVouchers: false,
             updateAlarms: false,
+            updateWan: false,
             ...config,
         });
         adapter.updateUnifiData = async () => {};
@@ -173,6 +174,34 @@ describe('adapter with a UniFi OS controller', function () {
 
             assert.strictEqual(controller.logouts, 0);
         });
+    });
+
+    it('creates the WAN statistics from the dashboard of UniFi Network 11', async () => {
+        const { DASHBOARD } = require('./wan.test');
+        controller.responses['v2/aggregated-dashboard'] = DASHBOARD;
+        await startAdapter({ updateWan: true });
+
+        await adapter.updateUnifiData(true);
+
+        const [request] = controller.requestsTo('v2/aggregated-dashboard');
+        assert.strictEqual(request.query, 'historySeconds=180000');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan').common.name, 'Internet 1');
+        assert.strictEqual(adapter.val('default.wan.wan.isp_name'), 'Deutsche Telekom AG');
+        assert.strictEqual(adapter.val('default.wan.wan.up'), true);
+        assert.strictEqual(adapter.val('default.wan.wan.capacity_download'), 642);
+        assert.strictEqual(typeof adapter.val('default.wan.wan.today_rx_bytes'), 'number');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan.speedtest_time').common.role, 'value.time');
+        assertNoErrors(adapter);
+    });
+
+    it('warns once when the gateway statistics are empty (UniFi Network 11)', async () => {
+        controller.responses['stat/report/daily.gw'] = [];
+        await startAdapter({ updateGatewayTraffic: true });
+
+        await adapter.updateUnifiData(true);
+        await adapter.updateUnifiData(true);
+
+        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no gateway statistics/)));
     });
 
     it('creates vouchers with the configured settings', async () => {

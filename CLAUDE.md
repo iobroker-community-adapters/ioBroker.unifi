@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) with its own HTTPS client (`src/lib/unifiController.ts`, local user or API key) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics, gateway traffic and alarms into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
+`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) with its own HTTPS client (`src/lib/unifiController.ts`, local user or API key) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics, gateway traffic, WAN statistics and alarms into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
 
 TypeScript (CommonJS output). Sources live in `src/`, the published/runnable code is the compiled `build/` (`package.json` `main` is `build/main.js`). `build/` is gitignored — always run the build before starting the adapter or the tests.
 
@@ -40,6 +40,7 @@ There is deliberately **no `prepare` script** — `npm ci`/`npm install` does no
 | `src/lib/dpiNames.ts` | names of the DPI categories and applications (generated from the old `json_logic.js`) |
 | `src/lib/types.ts` | object definitions, UniFi data, filters |
 | `src/lib/adapter-config.d.ts` | augments `ioBroker.AdapterConfig` |
+| `src/lib/wan.ts` | WAN statistics of UniFi Network 11+: `summarizeWan()` sums the hourly buckets of `aggregated-dashboard` per WAN group (today/yesterday in local time, last 24 h) |
 | `src/lib/unifiController.ts` | HTTPS client of the network application, replaces node-unifi with the same method names |
 | `admin/lib/objects_*.json` | **the object definitions** — which objects/states exist and how their values are computed |
 | `admin/jsonConfig.json` | the configuration dialog |
@@ -89,6 +90,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - `onUnload()` logs the local user out (max. 2 s, global timer on purpose), otherwise every restart leaves a session open on the console.
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1, values of unexpected types are converted with `toString()` in `applyJsonLogic()`, and `switchPoeOfPort()` fails for ports without a `port_overrides` entry (creating one was never implemented).
+- Network 11 answers `stat/report/*.gw` with an empty list; `fetchGatewayTraffic()` warns once per site. The rates `avg_*_rate_bps` of the dashboard are bytes per second despite the name (their sum times the bucket length equals `summary.rx_bytes`).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 
 ## Tests
@@ -106,6 +108,7 @@ The unit tests in `test/*.test.js` load the compiled `build/main.js` with `proxy
 | `test/startup.test.js` | `onReady` (old text configs, migration, missing login), `handleError`, validation of the controller data |
 | `test/config.test.js` | jsonConfig ↔ `native`, generated options, states filter normalization |
 | `test/jsonLogic.test.js` | the json-logic operations and the option generator |
+| `test/wan.test.js` | `summarizeWan()`: day boundaries, last 24 h, several WAN groups, missing data |
 | `test/unifiController.test.js` | the client: controller detection, paths, CSRF/cookies, API key, errors, timeout, IPv6 |
 
 ## Release flow
