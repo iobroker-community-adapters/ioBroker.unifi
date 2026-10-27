@@ -14,14 +14,24 @@
 
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
-This ioBroker adapter allows the monitoring and limited controlling of [UniFi devices](http://www.ubnt.com/), such as UniFi WiFi Access Points using the public UniFi Controller Web-API.
+This ioBroker adapter allows the monitoring and limited controlling of [UniFi devices](https://ui.com/), such as UniFi WiFi Access Points, using the API of the UniFi Network application.
 
 ## Configuration
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
 * IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UniFiOS (e.g. UDM-Pro))
-* Local username and password (2FA **cannot** be supported)
+* An API key (UniFi OS only, recommended) or a local username and password (2FA **cannot** be supported)
 * Update interval
+
+### Authentication
+| Method | Available on | Notes |
+|--------|--------------|-------|
+| API key | UniFi OS consoles (UDM, UCG, Cloud Key Gen2+, UniFi OS Server) | No login, no session, no 2FA prompt. Tested with UniFi OS 6.0.15 / UniFi Network 11.0.97 |
+| Local user | All controllers | A user with "Restrict to local access only". Logs in once and reuses the session |
+
+To create an API key, open UniFi Network → **Integrations** (in Network 11 a page of its own in the left navigation, before in Settings → Control Plane → Integrations) → **Create New API Key**. The key is shown only once. API keys can expire: the adapter then logs `The API key was rejected` and `info.connection` becomes `false`.
+
+The key is accepted by the same API that the local user uses, so the adapter offers the same features with both methods (tested: reading data, client and device commands).
 
 By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is recommended to keep this interval and refraid from further decreasing it.
 
@@ -49,7 +59,7 @@ By changing the 'enabled' state of a WiFi it is possible to enable/disable it. S
 Using the `vouchers.create_vouchers` button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
 
 ## Missing datapoints
-The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connect to your UniFi Controller. To simplify things, not all availble datapoints are pulled into your ioBroker. In case you're missing datapoints, use the following URLs to check the API. (Note: You have to replace IP, PORT and SITE with your settings)
+To simplify things, not all availble datapoints are pulled into your ioBroker. In case you're missing datapoints, use the following URLs to check the API. (Note: You have to replace IP, PORT and SITE with your settings)
 
 | Information | API URL                                     |
 |-------------|---------------------------------------------|
@@ -89,6 +99,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 -->
 ### **WORK IN PROGRESS**
 - (@Schimi1983) Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)
+- (@Schimi1983) Authentication with an API key (UniFi OS), as alternative to the local user
+- (@Schimi1983) node-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)
+- (@Schimi1983) The session of the local user is ended when the adapter stops
+- (@Schimi1983) The default port is empty (UniFi OS) and `common.dataSource` is `poll`
 
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now
@@ -121,7 +135,6 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 ## References
 This adapter uses functionality from the following third-party nodejs modules:
 
-* [node-unifi](https://github.com/jens-maus/node-unifi)
 * [json-logic-js](https://github.com/jwadhams/json-logic-js)
 
 ## License

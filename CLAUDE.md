@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) via [node-unifi](https://github.com/jens-maus/node-unifi) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics, gateway traffic and alarms into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
+`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) with its own HTTPS client (`src/lib/unifiController.ts`, local user or API key) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics, gateway traffic and alarms into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
 
 TypeScript (CommonJS output). Sources live in `src/`, the published/runnable code is the compiled `build/` (`package.json` `main` is `build/main.js`). `build/` is gitignored — always run the build before starting the adapter or the tests.
 
@@ -40,7 +40,7 @@ There is deliberately **no `prepare` script** — `npm ci`/`npm install` does no
 | `src/lib/dpiNames.ts` | names of the DPI categories and applications (generated from the old `json_logic.js`) |
 | `src/lib/types.ts` | object definitions, UniFi data, filters |
 | `src/lib/adapter-config.d.ts` | augments `ioBroker.AdapterConfig` |
-| `src/types/node-unifi.d.ts` | typings for node-unifi (only the methods used) |
+| `src/lib/unifiController.ts` | HTTPS client of the network application, replaces node-unifi with the same method names |
 | `admin/lib/objects_*.json` | **the object definitions** — which objects/states exist and how their values are computed |
 | `admin/jsonConfig.json` | the configuration dialog |
 | `tasks.ts` | build steps (run by `tsx`) |
@@ -61,7 +61,7 @@ The custom operations (`cleanupForUseAsId`, `timestampToDateTime`, `translateApp
 
 `updateUnifiData()` → `performUpdate()`:
 
-1. `getController('default')` logs in once and caches the `Controller` per site in `controllers`. node-unifi's own re-login is a no-op for an initialised controller, so an expired session is detected by `isAuthenticationError()` (401 or `api.err.LoginRequired`, **not** 403 = missing permission) and handled by `resetControllers()` + one retry — only if cached sessions were used.
+1. `getController('default')` logs in once and caches the `Controller` per site in `controllers`. The client does not log in again by itself, so an expired session is detected by `isAuthenticationError()` (401 or `api.err.LoginRequired`, **not** 403 = missing permission) and handled by `resetControllers()` + one retry — only if cached sessions were used and only for `authMode: 'credentials'`. With an API key (`authMode: 'apiKey'`, header `X-API-KEY`, UniFi OS only) there is no session: a 401 means the key is invalid, expired or deleted.
 2. `fetchSites()`, then for every site the fetch methods in `FETCH_METHODS` whose `update.*` flag is set. A failing site or endpoint is logged and skipped (reported in `info.lastError`), it does not abort the refresh.
 3. `setClientOnlineStatus()` computes `is_online` from `last_seen_by_uap/usw` — skipped when client data is incomplete, otherwise every client would go offline.
 
@@ -85,7 +85,8 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 
 ### Misc conventions
 
-- node-unifi 2 takes the site from the controller options; its methods have **no site parameter** (the adapter passed one to `createVouchers()` until this was fixed).
+- The client takes the site from the controller options; its methods have **no site parameter** (same as node-unifi 2). Errors have the shape of the former axios errors (`Request failed with status code <n>` + `response.status/data`, or `meta.msg` as message), `handleError()` relies on it.
+- `onUnload()` logs the local user out (max. 2 s, global timer on purpose), otherwise every restart leaves a session open on the console.
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1, values of unexpected types are converted with `toString()` in `applyJsonLogic()`, and `switchPoeOfPort()` fails for ports without a `port_overrides` entry (creating one was never implemented).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
@@ -97,7 +98,7 @@ The unit tests in `test/*.test.js` load the compiled `build/main.js` with `proxy
 | File | Content |
 | --- | --- |
 | `test/lib/adapterMock.js` | `AdapterMock`: replaces `utils.Adapter` with an in-memory database of objects and states (all methods are sinon spies, `adapter.val(id)` reads a state); `createAdapter(config, stubs)` |
-| `test/lib/fakeController.js` | HTTPS server that answers like a UniFi OS console, used with the **real** node-unifi. `responses['stat/sta'] = [...]` sets the data of a path, `requestsTo(path)` returns the received requests, `expireSession()` invalidates the login. The certificate in `test/fixtures` is a self-signed test certificate for 127.0.0.1. |
+| `test/lib/fakeController.js` | HTTPS server that answers like a UniFi OS console, used with the **real** client. `apiKey` enables the header `X-API-KEY`, `logouts` counts the logouts. `responses['stat/sta'] = [...]` sets the data of a path, `requestsTo(path)` returns the received requests, `expireSession()` invalidates the login. The certificate in `test/fixtures` is a self-signed test certificate for 127.0.0.1. |
 | `test/controller.test.js` | end-to-end against the fake controller: objects/states, re-login, vouchers, WLAN switch |
 | `test/objects.test.js` | object creation from `admin/lib/objects_*.json`, filters, deleting vouchers/alarms, `is_online`, blocked clients |
 | `test/control.test.js` | the writable states (`onStateChange`), PoE, vouchers |
@@ -105,6 +106,7 @@ The unit tests in `test/*.test.js` load the compiled `build/main.js` with `proxy
 | `test/startup.test.js` | `onReady` (old text configs, migration, missing login), `handleError`, validation of the controller data |
 | `test/config.test.js` | jsonConfig ↔ `native`, generated options, states filter normalization |
 | `test/jsonLogic.test.js` | the json-logic operations and the option generator |
+| `test/unifiController.test.js` | the client: controller detection, paths, CSRF/cookies, API key, errors, timeout, IPv6 |
 
 ## Release flow
 

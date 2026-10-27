@@ -2,10 +2,9 @@
  * Created with @iobroker/create-adapter v1.17.0
  */
 import * as utils from '@iobroker/adapter-core';
-import { Controller, type ControllerOptions } from 'node-unifi';
-
 import { applyRule } from './lib/jsonLogic';
 import { collectStateIds, loadObjectDefinitions } from './lib/objectDefinitions';
+import { Controller, type AuthMode, type ControllerOptions } from './lib/unifiController';
 import type {
     CreatedObject,
     ObjectDefinitions,
@@ -101,10 +100,15 @@ interface Settings {
     updateInterval: number;
     controllerIp: string;
     controllerPort: string | number;
+    authMode: AuthMode;
     controllerUsername: string;
     controllerPassword: string;
+    apiKey: string;
     ignoreSSLErrors: boolean;
 }
+
+// Time to end the sessions of the local user when the adapter stops
+const LOGOUT_TIMEOUT = 2000;
 
 type UpdateSettings = Record<UpdateKey, boolean> & {
     /** Use the objects filter of the clients as whitelist */
@@ -141,8 +145,10 @@ class Unifi extends utils.Adapter {
         updateInterval: 60 * 1000,
         controllerIp: '',
         controllerPort: '',
+        authMode: 'credentials',
         controllerUsername: '',
         controllerPassword: '',
+        apiKey: '',
         ignoreSSLErrors: true,
     };
     private update: UpdateSettings = {
@@ -236,8 +242,11 @@ class Unifi extends utils.Adapter {
             this.settings.controllerIp = this.config.controllerIp;
             // An empty port is used for UniFi OS. The admin page may store it as null.
             this.settings.controllerPort = this.config.controllerPort || '';
-            this.settings.controllerUsername = this.config.controllerUsername;
-            this.settings.controllerPassword = this.config.controllerPassword;
+            // Instances of versions < 1.1.0 have no authMode and log in with a user
+            this.settings.authMode = this.config.authMode === 'apiKey' ? 'apiKey' : 'credentials';
+            this.settings.controllerUsername = this.config.controllerUsername || '';
+            this.settings.controllerPassword = this.config.controllerPassword || '';
+            this.settings.apiKey = (this.config.apiKey || '').trim();
             this.settings.ignoreSSLErrors =
                 this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
@@ -273,13 +282,15 @@ class Unifi extends utils.Adapter {
             this.vouchers.byteQuota = !this.config.createVouchersByteQuota ? null : this.config.createVouchersByteQuota;
             this.vouchers.note = this.config.createVouchersNote;
 
-            if (
-                this.settings.controllerIp !== '' &&
-                this.settings.controllerUsername !== '' &&
-                this.settings.controllerPassword !== ''
-            ) {
+            const loginConfigured =
+                this.settings.authMode === 'apiKey'
+                    ? this.settings.apiKey !== ''
+                    : this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '';
+
+            if (this.settings.controllerIp && loginConfigured) {
                 // Send some log messages
                 this.log.debug(`controller = ${this.settings.controllerIp}:${this.settings.controllerPort}`);
+                this.log.debug(`authentication = ${this.settings.authMode}`);
                 this.log.debug(`updateInterval = ${this.settings.updateInterval / 1000}`);
 
                 // Start main function
@@ -361,8 +372,26 @@ class Unifi extends utils.Adapter {
                 this.queryTimeout = undefined;
             }
 
-            this.log.info('cleaned everything up...');
-            callback();
+            // End the sessions, otherwise every restart leaves one open on the console
+            const controllers = [...new Set(Object.values(this.controllers))];
+            this.controllers = {};
+            let done = false;
+            let timer: NodeJS.Timeout | undefined = undefined;
+            const finish = (): void => {
+                if (!done) {
+                    done = true;
+                    clearTimeout(timer);
+                    this.log.info('cleaned everything up...');
+                    callback();
+                }
+            };
+            if (controllers.length === 0) {
+                finish();
+                return;
+            }
+            // @KI_HINWEIS: a global timer on purpose, the adapter timers may already be cleared during unload
+            timer = setTimeout(finish, LOGOUT_TIMEOUT);
+            void Promise.allSettled(controllers.map(controller => controller.logout())).then(finish);
         } catch {
             callback();
         }
@@ -434,8 +463,10 @@ class Unifi extends utils.Adapter {
         const options: ControllerOptions = {
             host: this.settings.controllerIp,
             port: this.settings.controllerPort,
+            authMode: this.settings.authMode,
             username: this.settings.controllerUsername,
             password: this.settings.controllerPassword,
+            apiKey: this.settings.apiKey,
             sslverify: !this.settings.ignoreSSLErrors,
             timeout: 10000,
         };
@@ -477,9 +508,13 @@ class Unifi extends utils.Adapter {
      * answers with 403 (api.err.NoPermission) when the user lacks the rights for a
      * single endpoint, and logging in again cannot fix that.
      *
-     * @param err error of node-unifi
+     * @param err error of the UniFi client
      */
     private isAuthenticationError(err: UnifiError): boolean {
+        // An API key has no session: logging in again cannot help, the key is invalid, expired or deleted
+        if (this.settings.authMode === 'apiKey') {
+            return false;
+        }
         const status = err.response && err.response.status;
         return status === 401 || err.message === 'api.err.LoginRequired';
     }
@@ -562,7 +597,11 @@ class Unifi extends utils.Adapter {
      * @param methodName method that failed
      */
     private handleError(err: UnifiError, site: string | undefined, methodName?: string): void {
-        if (err.message === 'api.err.Invalid') {
+        if (this.settings.authMode === 'apiKey' && err.response?.status === 401) {
+            this.log.error(
+                `Error site ${site}: The API key was rejected. It may be invalid, expired or deleted. Create a new one in UniFi Network → Integrations.`,
+            );
+        } else if (err.message === 'api.err.Invalid') {
             this.log.error(`Error site ${site}: Incorrect username or password.`);
         } else if (err.message === 'api.err.LoginRequired') {
             this.log.error(`Error site ${site}: Login required. Check username and password.`);
@@ -1341,7 +1380,7 @@ class Unifi extends utils.Adapter {
         const down = Number(this.vouchers.downloadLimit) || 0;
         const mbytes = Number(this.vouchers.byteQuota) || 0;
 
-        // node-unifi 2 takes the site from the controller, it is not a parameter anymore
+        // The client takes the site from the controller options, it is not a parameter
         const data = await this.controllers[site].createVouchers(minutes, count, quota, note, up, down, mbytes);
         if (!Array.isArray(data)) {
             throw new Error(`createVouchers: Returned data is not in valid format: ${JSON.stringify(data)}`);
