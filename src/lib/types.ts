@@ -70,7 +70,7 @@ export interface StateOptionGroup {
     items: StateOption[];
 }
 
-/** Error of node-unifi: an axios error or an error with the `meta.msg` of the controller as message */
+/** Error of the UniFi client (UnifiApiError, same shape as the former axios errors) or a network error */
 export interface UnifiError extends Error {
     code?: string;
     response?: {

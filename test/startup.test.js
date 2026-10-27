@@ -95,6 +95,28 @@ describe('start', () => {
         sinon.assert.notCalled(adapter.updateUnifiData);
     });
 
+    it('logs in with a user if the instance has no authMode (versions < 1.1.0)', async () => {
+        const adapter = await start({ ...LOGIN, authMode: undefined, apiKey: undefined });
+
+        assert.strictEqual(adapter.settings.authMode, 'credentials');
+        assert.strictEqual(adapter.settings.apiKey, '');
+        sinon.assert.calledOnce(adapter.updateUnifiData);
+    });
+
+    it('starts with an API key and without user', async () => {
+        const adapter = await start({ controllerIp: '192.168.1.1', authMode: 'apiKey', apiKey: ' key ' });
+
+        assert.strictEqual(adapter.settings.apiKey, 'key');
+        sinon.assert.calledOnce(adapter.updateUnifiData);
+    });
+
+    it('deactivates itself if the API key is missing', async () => {
+        const adapter = await start({ ...LOGIN, authMode: 'apiKey', apiKey: '' });
+
+        sinon.assert.calledWith(adapter.log.error, 'Adapter deactivated due to missing configuration.');
+        sinon.assert.notCalled(adapter.updateUnifiData);
+    });
+
     it('stops the scheduled refresh on unload', () => {
         const adapter = createAdapter();
         adapter.scheduleNextUpdate(60000);
@@ -123,6 +145,16 @@ describe('error handling', () => {
     it('explains the known errors of the controller', () => {
         assert.deepStrictEqual(loggedError(new Error('api.err.Invalid')), [
             'Error site default: Incorrect username or password.',
+        ]);
+    });
+
+    it('explains a rejected API key', () => {
+        adapter.settings.authMode = 'apiKey';
+        const err = new Error('Request failed with status code 401');
+        err.response = { status: 401, data: { error: { code: 401, message: 'Unauthorized' } } };
+
+        assert.deepStrictEqual(loggedError(err), [
+            'Error site default: The API key was rejected. It may be invalid, expired or deleted. Create a new one in UniFi Network → Integrations.',
         ]);
     });
 
