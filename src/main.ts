@@ -309,6 +309,13 @@ class Unifi extends utils.Adapter {
             const mac = idParts[4];
 
             try {
+                // @KI_HINWEIS: the controllers are cached by the refresh. A command before the first refresh, or after
+                // resetControllers() (expired session), found no controller and failed with "Cannot read properties
+                // of undefined" (#725). trigger_update is no site.
+                if (idParts[2] !== 'trigger_update') {
+                    await this.getController(site);
+                }
+
                 if (idParts[3] === 'wlans' && idParts[5] === 'enabled') {
                     await this.updateWlanStatus(site, id, state);
                 } else if (idParts[3] === 'vouchers' && idParts[4] === 'create_vouchers') {
@@ -814,24 +821,27 @@ class Unifi extends utils.Adapter {
      * @param site name of the site
      */
     private async processBlockedClients(site: string): Promise<void> {
-        if (this.statesFilter.clients.includes('clients.client.blocked')) {
-            const blockedClients = (await this.controllers[site].getBlockedUsers()) as UnifiBlockedClient[] | undefined;
+        // An empty states filter means: all states, the blocked state included
+        const filter = this.statesFilter.clients;
+        if (filter.length > 0 && !filter.includes('clients.client.blocked')) {
+            return;
+        }
 
-            const allClients = await this.getStatesAsync(`*.clients.*.blocked`);
+        const blockedClients = (await this.controllers[site].getBlockedUsers()) as UnifiBlockedClient[] | undefined;
+        const blockedMacs = new Set((blockedClients || []).map(client => String(client.mac).toLowerCase()));
 
-            for (const id in allClients) {
-                if (blockedClients && blockedClients.length > 0) {
-                    const clientMac = id.match(MAC_ADDRESS)?.[0];
-                    const index = blockedClients.findIndex(x => x.mac === clientMac);
+        // @KI_HINWEIS: only the clients of this site. The pattern '*.clients.*.blocked' matched all sites,
+        // so with several sites the blocked clients of one site were reset by the refresh of the next one.
+        const clientStates = await this.getStatesAsync(`${site}.clients.*.blocked`);
 
-                    if (index === -1) {
-                        await this.setStateAsync(id, false, true);
-                    } else {
-                        await this.setStateAsync(id, true, true);
-                        this.log.debug(`client '${clientMac}' is blocked`);
-                    }
-                } else {
-                    await this.setStateAsync(id, false, true);
+        for (const id of Object.keys(clientStates)) {
+            const clientMac = id.match(MAC_ADDRESS)?.[0]?.toLowerCase();
+            const blocked = clientMac !== undefined && blockedMacs.has(clientMac);
+
+            if (clientStates[id]?.val !== blocked || clientStates[id]?.ack !== true) {
+                await this.setStateAsync(id, blocked, true);
+                if (blocked) {
+                    this.log.debug(`client '${clientMac}' is blocked`);
                 }
             }
         }
@@ -1377,29 +1387,25 @@ class Unifi extends utils.Adapter {
 
             if (dataDevice && dataDevice.length) {
                 const deviceId = dataDevice[0].device_id;
+                const portIdx = parseInt(port, 10);
+                const poeMode = val ? 'auto' : 'off';
+                const portOverrides = Array.isArray(dataDevice[0].port_overrides) ? dataDevice[0].port_overrides : [];
+                const override = portOverrides.find(x => x.port_idx === portIdx);
 
-                const port_overrides = dataDevice[0].port_overrides;
-
-                if (port_overrides && port_overrides.length > 0) {
-                    const indexOfPort = port_overrides.findIndex(x => x.port_idx === parseInt(port));
-
-                    if (indexOfPort === -1) {
-                        // Known issue: creating the missing override was never implemented, so this failed before too
-                        this.log.debug(
-                            `switchPoeOfPort: port ${port} not exists in port_overrides object -> create item`,
-                        );
-                        throw new Error(`switchPoeOfPort: port ${port} has no port_overrides entry`);
-                    }
-
-                    // port_overrides has settings for this port
-                    port_overrides[indexOfPort].poe_mode = val ? 'auto' : 'off';
-
-                    await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: port_overrides });
-
-                    await this.fetchDevices(site);
+                if (override) {
+                    override.poe_mode = poeMode;
                 } else {
-                    this.log.debug(`switchPoeOfPort: no port_overrides object exists!`);
+                    // @KI_HINWEIS: a port without override uses the settings of the site. The new entry contains only
+                    // the PoE mode, the other settings of the port stay the defaults (#658, #759).
+                    this.log.debug(`switchPoeOfPort: port ${port} has no port_overrides entry, creating one`);
+                    portOverrides.push({ port_idx: portIdx, poe_mode: poeMode });
                 }
+
+                await this.controllers[site].setDeviceSettingsBase(deviceId, { port_overrides: portOverrides });
+
+                await this.fetchDevices(site);
+            } else {
+                this.log.warn(`switchPoeOfPort: device ${deviceMac} not found`);
             }
         } catch (err) {
             this.handleError(err, undefined, 'switchPoeOfPort');
