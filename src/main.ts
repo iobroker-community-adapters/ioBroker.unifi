@@ -186,6 +186,8 @@ class Unifi extends utils.Adapter {
     private queryTimeout: ioBroker.Timeout | undefined = undefined;
     private updateInProgress = false;
     private consecutiveErrors = 0;
+    /** Endpoints the controller answered with 404 (`<site>:<method>`), skipped until the adapter restarts */
+    private unsupportedEndpoints = new Set<string>();
     /** Created objects without the namespace, to write only changed objects */
     private ownObjects: Record<string, CreatedObject> = {};
     private stopped = false;
@@ -485,6 +487,16 @@ class Unifi extends utils.Adapter {
     }
 
     /**
+     * Detect an endpoint the controller does not provide (any more). Newer UniFi
+     * Network versions removed e.g. `stat/alarm` and answer with 404 (api.err.NotFound).
+     *
+     * @param err error of node-unifi
+     */
+    private isNotFoundError(err: UnifiError): boolean {
+        return err.response?.status === 404 || err.response?.data?.meta?.msg === 'api.err.NotFound';
+    }
+
+    /**
      * Execute one complete refresh. A failing site or endpoint is logged and
      * skipped, so it cannot block the remaining data. If cached sessions are used,
      * an authentication error is passed on instead, because the session may have
@@ -534,11 +546,22 @@ class Unifi extends utils.Adapter {
                 if (this.update[updateKey] !== true) {
                     continue;
                 }
+                if (this.unsupportedEndpoints.has(`${site}:${methodName}`)) {
+                    clientsIncomplete = clientsIncomplete || updateKey === 'clients';
+                    continue;
+                }
 
                 try {
                     await this[methodName](site);
                 } catch (err) {
                     clientsIncomplete = clientsIncomplete || updateKey === 'clients';
+                    if (this.isNotFoundError(err)) {
+                        this.unsupportedEndpoints.add(`${site}:${methodName}`);
+                        this.log.warn(
+                            `${methodName} (site ${site}): not supported by this UniFi Network version (404). Skipped until the adapter restarts. Disable the ${updateKey} in the adapter settings to remove this warning.`,
+                        );
+                        continue;
+                    }
                     handleFailure(err, site, methodName);
                 }
             }
