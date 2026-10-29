@@ -195,7 +195,7 @@
     "updateDpi": false,
     "updateGatewayTraffic": false,
     "gatewayTrafficMaxDays": 7,
-    "updateWan": true,
+    "updateWan": false,
     "objectsFilter": {
       "clients": [],
       "devices": [],

@@ -66,7 +66,7 @@ UniFi Network 11 moved to a new statistics engine and cleared the statistics his
 | `isp_name`, `isp_asn`, `capacity_download`, `capacity_upload` | provider and its bandwidth in Mbit/s |
 | `speedtest_download`, `speedtest_upload`, `speedtest_latency`, `speedtest_time` | last speed test of the console |
 
-The traffic values are summed from hourly values of the console, so they are accurate to about one hour. In contrast to `gateway_traffic` (LAN side of the gateway) they count the internet traffic.
+The setting is off by default. The traffic values are summed from hourly values of the console, so they are accurate to about one hour. A value stays empty (`null`) as long as the console has no data for the whole interval, e.g. `yesterday_*` on the day of the update to UniFi Network 11, which cleared the history. In contrast to `gateway_traffic` (LAN side of the gateway) they count the internet traffic. Controllers without this dashboard answer with 404; the adapter then logs a warning and skips the WAN statistics until it restarts.
 
 ## Control
 ### Enable/disable WiFis
