@@ -133,6 +133,33 @@ describe('WAN statistics', () => {
         assert.strictEqual(wans[1].speedtest_download, null);
     });
 
+    it('has no values for intervals before the start of the history (e.g. after the update to Network 11)', () => {
+        const dashboard = structuredClone(DASHBOARD);
+        dashboard.wan_activity.activity_by_network_group.WAN.history = hourly(TODAY, 15, 10, 1);
+
+        const [wan] = summarizeWan(dashboard, NOW);
+
+        assert.strictEqual(wan.today_rx_bytes, 15 * 3600 * 10);
+        assert.strictEqual(wan.yesterday_rx_bytes, null);
+        assert.strictEqual(wan.yesterday_tx_bytes, null);
+        assert.strictEqual(wan.last24h_rx_bytes, null);
+    });
+
+    it('has no value for a direction without rates, but 0 for measured zero rates', () => {
+        const dashboard = structuredClone(DASHBOARD);
+        for (const bucket of dashboard.wan_activity.activity_by_network_group.WAN.history) {
+            delete bucket.avg_tx_rate_bps;
+            bucket.avg_rx_rate_bps = 0;
+        }
+
+        const [wan] = summarizeWan(dashboard, NOW);
+
+        assert.strictEqual(wan.today_rx_bytes, 0);
+        assert.strictEqual(wan.yesterday_rx_bytes, 0);
+        assert.strictEqual(wan.today_tx_bytes, null);
+        assert.strictEqual(wan.yesterday_tx_bytes, null);
+    });
+
     it('has no traffic values without history (instead of 0)', () => {
         const dashboard = structuredClone(DASHBOARD);
         delete dashboard.wan_activity;

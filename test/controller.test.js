@@ -177,8 +177,14 @@ describe('adapter with a UniFi OS controller', function () {
     });
 
     it('creates the WAN statistics from the dashboard of UniFi Network 11', async () => {
-        const { DASHBOARD } = require('./wan.test');
-        controller.responses['v2/aggregated-dashboard'] = DASHBOARD;
+        const { DASHBOARD, NOW } = require('./wan.test');
+        // the history of the test data, moved to the current time
+        const dashboard = structuredClone(DASHBOARD);
+        const shift = Date.now() - NOW;
+        for (const bucket of dashboard.wan_activity.activity_by_network_group.WAN.history) {
+            bucket.timestamp += shift;
+        }
+        controller.responses['v2/aggregated-dashboard'] = dashboard;
         await startAdapter({ updateWan: true });
 
         await adapter.updateUnifiData(true);
@@ -191,6 +197,18 @@ describe('adapter with a UniFi OS controller', function () {
         assert.strictEqual(adapter.val('default.wan.wan.capacity_download'), 642);
         assert.strictEqual(typeof adapter.val('default.wan.wan.today_rx_bytes'), 'number');
         assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan.speedtest_time').common.role, 'value.time');
+        assertNoErrors(adapter);
+    });
+
+    it('skips the WAN statistics after a 404 of an older controller', async () => {
+        await startAdapter({ updateWan: true });
+
+        await adapter.updateUnifiData(true);
+        await adapter.updateUnifiData(true);
+
+        assert.strictEqual(controller.requestsTo('v2/aggregated-dashboard').length, 1);
+        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no WAN dashboard \(404\)/)));
+        assert.strictEqual(adapter.val('info.lastError'), '');
         assertNoErrors(adapter);
     });
 

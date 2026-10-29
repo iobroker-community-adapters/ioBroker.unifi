@@ -90,6 +90,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - `onUnload()` logs the local user out (max. 2 s, global timer on purpose), otherwise every restart leaves a session open on the console.
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1, values of unexpected types are converted with `toString()` in `applyJsonLogic()`, and `switchPoeOfPort()` fails for ports without a `port_overrides` entry (creating one was never implemented).
+- `updateWan` is `false` in `io-package.json` on purpose: js-controller adds missing native keys on upgrade, a default of `true` would switch it on for existing instances. `fetchWan()` skips a site after a 404 until the next start. `summarizeWan()` returns `null` for an interval the history does not cover from its start and for a direction without rates.
 - Network 11 answers `stat/report/*.gw` with an empty list; `fetchGatewayTraffic()` warns once per site. The rates `avg_*_rate_bps` of the dashboard are bytes per second despite the name (their sum times the bucket length equals `summary.rx_bytes`).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 

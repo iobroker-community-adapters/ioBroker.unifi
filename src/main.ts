@@ -203,6 +203,8 @@ class Unifi extends utils.Adapter {
     private ownObjects: Record<string, CreatedObject> = {};
     /** Sites for which the empty gateway statistics were reported, once per start */
     private emptyGatewayTrafficWarned = new Set<string>();
+    /** Sites whose controller answered the WAN dashboard with 404, skipped until the next start */
+    private wanUnavailable = new Set<string>();
     private stopped = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -273,7 +275,7 @@ class Unifi extends utils.Adapter {
             this.update.dpi = this.config.updateDpi;
             this.update.gatewayTraffic = this.config.updateGatewayTraffic;
             this.update.gatewayTrafficMaxDays = Number(this.config.gatewayTrafficMaxDays);
-            // Missing in instances of versions < 1.1.0
+            // Off by default: js-controller adds missing native keys from io-package.json on upgrade
             this.update.wan = this.config.updateWan === true;
 
             this.objectsFilter = this.config.objectsFilter;
@@ -1261,9 +1263,27 @@ class Unifi extends utils.Adapter {
      * @param site name of the site
      */
     private async fetchWan(site: string): Promise<WanSummary[]> {
-        const data = (await this.controllers[site].customApiRequest(
-            `/v2/api/site/<SITE>/aggregated-dashboard?historySeconds=${WAN_HISTORY_SECONDS}`,
-        )) as AggregatedDashboard | undefined;
+        if (this.wanUnavailable.has(site)) {
+            return [];
+        }
+
+        let data: AggregatedDashboard | undefined;
+        try {
+            data = (await this.controllers[site].customApiRequest(
+                `/v2/api/site/<SITE>/aggregated-dashboard?historySeconds=${WAN_HISTORY_SECONDS}`,
+            )) as AggregatedDashboard | undefined;
+        } catch (err) {
+            // @KI_HINWEIS: controllers without the v2 dashboard (older UniFi Network versions) answer with 404. The
+            // request is skipped until the next start instead of failing on every refresh.
+            if ((err as UnifiError).response?.status === 404) {
+                this.wanUnavailable.add(site);
+                this.log.warn(
+                    `fetchWan ${site}: the controller provides no WAN dashboard (404). The WAN statistics need UniFi Network 11 or newer and are skipped until the adapter restarts.`,
+                );
+                return [];
+            }
+            throw err;
+        }
         if (!data || typeof data !== 'object' || Array.isArray(data)) {
             throw new Error(`fetchWan ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
         }

@@ -115,23 +115,38 @@ function bucketLength(history: WanHistoryBucket[]): number {
 }
 
 /**
- * Bytes received and sent in the buckets that start in [from, to)
+ * Bytes received and sent in the buckets that start in [from, to).
  *
- * @param history buckets
+ * A direction is null if the history does not cover the start of the interval (e.g. yesterday, when the history
+ * starts today after the update to UniFi Network 11) or if no bucket of the interval has a rate for it. A measured
+ * rate of 0 gives 0.
+ *
+ * @param history buckets sorted by time
  * @param from start in ms
  * @param to end in ms
  */
-function sumBytes(history: WanHistoryBucket[], from: number, to: number): { rx: number; tx: number } {
+function sumBytes(history: WanHistoryBucket[], from: number, to: number): { rx: number | null; tx: number | null } {
+    // The history must start at or before the start of the interval
+    if (history.length === 0 || history[0].timestamp > from) {
+        return { rx: null, tx: null };
+    }
+
     const seconds = bucketLength(history) / 1000;
-    let rx = 0;
-    let tx = 0;
+    let rx: number | null = null;
+    let tx: number | null = null;
     for (const bucket of history) {
         if (bucket.timestamp >= from && bucket.timestamp < to) {
-            rx += (num(bucket.avg_rx_rate_bps) ?? 0) * seconds;
-            tx += (num(bucket.avg_tx_rate_bps) ?? 0) * seconds;
+            const rxRate = num(bucket.avg_rx_rate_bps);
+            const txRate = num(bucket.avg_tx_rate_bps);
+            if (rxRate !== null) {
+                rx = (rx ?? 0) + rxRate * seconds;
+            }
+            if (txRate !== null) {
+                tx = (tx ?? 0) + txRate * seconds;
+            }
         }
     }
-    return { rx: Math.round(rx), tx: Math.round(tx) };
+    return { rx: rx === null ? null : Math.round(rx), tx: tx === null ? null : Math.round(tx) };
 }
 
 /**
@@ -163,7 +178,6 @@ export function summarizeWan(dashboard: AggregatedDashboard, now = Date.now()): 
             .filter(b => typeof b?.timestamp === 'number')
             .sort((a, b) => a.timestamp - b.timestamp);
         const last = history[history.length - 1];
-        const hasHistory = history.length > 0;
 
         const today = sumBytes(history, todayStart.getTime(), Infinity);
         const yesterday = sumBytes(history, yesterdayStart.getTime(), todayStart.getTime());
@@ -192,12 +206,12 @@ export function summarizeWan(dashboard: AggregatedDashboard, now = Date.now()): 
             uptime: num(uptime),
             rx_rate: num(detail?.stats?.activity?.['rx_bytes-r']),
             tx_rate: num(detail?.stats?.activity?.['tx_bytes-r']),
-            today_rx_bytes: hasHistory ? today.rx : null,
-            today_tx_bytes: hasHistory ? today.tx : null,
-            yesterday_rx_bytes: hasHistory ? yesterday.rx : null,
-            yesterday_tx_bytes: hasHistory ? yesterday.tx : null,
-            last24h_rx_bytes: hasHistory ? last24h.rx : null,
-            last24h_tx_bytes: hasHistory ? last24h.tx : null,
+            today_rx_bytes: today.rx,
+            today_tx_bytes: today.tx,
+            yesterday_rx_bytes: yesterday.rx,
+            yesterday_tx_bytes: yesterday.tx,
+            last24h_rx_bytes: last24h.rx,
+            last24h_tx_bytes: last24h.tx,
             monthly_bytes: num(detail?.stats?.monthly_bytes),
             latency: num(last?.avg_latency_ms),
             packet_loss: num(last?.avg_packet_loss_pct),
