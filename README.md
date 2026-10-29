@@ -20,7 +20,7 @@ This ioBroker adapter allows the monitoring and limited controlling of [UniFi de
 ###  Minimum required information
 To get this adapter up and running the following information is needed:
 * IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UniFiOS (e.g. UDM-Pro))
-* Local username and password (2FA **cannot** be supported)
+* Username and password of a **local** UniFi OS user (Admins & Users → "Restrict to local access only"). UI.com cloud (SSO) accounts require 2FA/MFA, which **cannot** be supported — the login fails with `MFA_AUTH_REQUIRED` (status 499).
 * Update interval
 
 By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is recommended to keep this interval and refraid from further decreasing it.
@@ -87,6 +87,10 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@hdering) Added a hint to the settings that a local UniFi OS user is required, as UI.com accounts require MFA
+- (@hdering) A login rejected with `MFA_AUTH_REQUIRED` (UI.com account) is explained in the log instead of logging the response with the MFA cookie
+
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now
 - (copilot) Adapter requires admin >= 7.7.22 now
