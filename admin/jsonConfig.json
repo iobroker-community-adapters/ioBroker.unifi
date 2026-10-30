@@ -2105,7 +2105,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.wan": {
                     "type": "select",
@@ -2236,7 +2240,11 @@
                             "value": "wan.connection.speedtest_time",
                             "description": "Time of the speed test"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }
