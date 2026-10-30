@@ -101,7 +101,11 @@
                 "updateSysinfo": {
                     "type": "checkbox",
                     "label": "Update system information",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_sysinfoStatesHeader": {
                     "type": "header",
@@ -113,7 +117,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.sysinfo": {
                     "type": "select",
@@ -154,7 +162,11 @@
                             "value": "sysinfo.version",
                             "description": "Version"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -166,14 +178,20 @@
                     "type": "checkbox",
                     "label": "Update clients",
                     "xs": 12,
-                    "sm": 6
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "blacklistClients": {
                     "type": "checkbox",
                     "label": "Use the object filter as whitelist",
                     "disabled": "!data.updateClients",
                     "xs": 12,
-                    "sm": 6
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 },
                 "_clientsObjectsHeader": {
                     "type": "header",
@@ -185,7 +203,11 @@
                     "type": "chips",
                     "disabled": "!data.updateClients",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_clientsStatesHeader": {
                     "type": "header",
@@ -197,7 +219,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.clients": {
                     "type": "select",
@@ -393,7 +419,11 @@
                             "value": "clients.client.blocked",
                             "description": "client block / unblock"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_clientsSettingsHeader": {
                     "type": "header",
@@ -409,7 +439,10 @@
                     "disabled": "!data.updateClients",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 }
             }
         },
@@ -420,7 +453,11 @@
                 "updateDevices": {
                     "type": "checkbox",
                     "label": "Update devices",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_devicesObjectsHeader": {
                     "type": "header",
@@ -432,7 +469,11 @@
                     "type": "chips",
                     "disabled": "!data.updateDevices",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_devicesStatesHeader": {
                     "type": "header",
@@ -444,7 +485,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.devices": {
                     "type": "select",
@@ -1005,7 +1050,11 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1016,7 +1065,11 @@
                 "updateWlans": {
                     "type": "checkbox",
                     "label": "Update WLANs",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_wlansObjectsHeader": {
                     "type": "header",
@@ -1028,7 +1081,11 @@
                     "type": "chips",
                     "disabled": "!data.updateWlans",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_wlansStatesHeader": {
                     "type": "header",
@@ -1040,7 +1097,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.wlans": {
                     "type": "select",
@@ -1076,7 +1137,11 @@
                             "value": "wlans.wlan.vlan_enabled",
                             "description": "VLAN enabled"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1087,7 +1152,11 @@
                 "updateNetworks": {
                     "type": "checkbox",
                     "label": "Update networks",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_networksObjectsHeader": {
                     "type": "header",
@@ -1099,7 +1168,11 @@
                     "type": "chips",
                     "disabled": "!data.updateNetworks",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_networksStatesHeader": {
                     "type": "header",
@@ -1111,7 +1184,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.networks": {
                     "type": "select",
@@ -1192,7 +1269,11 @@
                             "value": "networks.network.wan_ip",
                             "description": "WAN IP"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1203,7 +1284,11 @@
                 "updateHealth": {
                     "type": "checkbox",
                     "label": "Update health",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_healthObjectsHeader": {
                     "type": "header",
@@ -1215,7 +1300,11 @@
                     "type": "chips",
                     "disabled": "!data.updateHealth",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_healthStatesHeader": {
                     "type": "header",
@@ -1227,7 +1316,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.health": {
                     "type": "select",
@@ -1328,7 +1421,11 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1339,7 +1436,11 @@
                 "updateVouchers": {
                     "type": "checkbox",
                     "label": "Update vouchers",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_vouchersStatesHeader": {
                     "type": "header",
@@ -1351,7 +1452,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.vouchers": {
                     "type": "select",
@@ -1432,7 +1537,11 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_vouchersSettingsHeader": {
                     "type": "header",
@@ -1445,7 +1554,11 @@
                     "label": "Update only unused vouchers",
                     "disabled": "!data.updateVouchers",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_vouchersCreationHeader": {
                     "type": "header",
@@ -1459,14 +1572,20 @@
                     "placeholder": "1",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersDuration": {
                     "type": "number",
                     "label": "Duration in minutes",
                     "placeholder": "60",
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersQuota": {
                     "type": "number",
@@ -1474,7 +1593,10 @@
                     "placeholder": "1",
                     "min": 0,
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersUploadLimit": {
                     "type": "number",
@@ -1483,7 +1605,10 @@
                     "min": 0,
                     "newLine": true,
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersDownloadLimit": {
                     "type": "number",
@@ -1491,7 +1616,10 @@
                     "placeholder": "0",
                     "min": 0,
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersByteQuota": {
                     "type": "number",
@@ -1499,13 +1627,20 @@
                     "placeholder": "0",
                     "min": 0,
                     "xs": 12,
-                    "sm": 4
+                    "sm": 4,
+                    "md": 4,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "createVouchersNote": {
                     "type": "text",
                     "label": "Note",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1516,7 +1651,11 @@
                 "updateAlarms": {
                     "type": "checkbox",
                     "label": "Update alarm messages",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_alarmsStatesHeader": {
                     "type": "header",
@@ -1528,7 +1667,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.alarms": {
                     "type": "select",
@@ -1594,7 +1737,11 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_alarmsSettingsHeader": {
                     "type": "header",
@@ -1607,7 +1754,11 @@
                     "label": "show only new alarm messages",
                     "disabled": "!data.updateAlarms",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1618,7 +1769,11 @@
                 "updateDpi": {
                     "type": "checkbox",
                     "label": "Update DPI (USG needed)",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_dpiStatesHeader": {
                     "type": "header",
@@ -1630,7 +1785,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.dpi": {
                     "type": "select",
@@ -1766,7 +1925,11 @@
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         },
@@ -1777,7 +1940,11 @@
                 "updateGatewayTraffic": {
                     "type": "checkbox",
                     "label": "Update Gateway Traffic (USG needed)",
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_gatewayTrafficStatesHeader": {
                     "type": "header",
@@ -1789,7 +1956,11 @@
                     "type": "staticText",
                     "text": "If nothing is selected, all states are created.",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "statesFilter.gateway_traffic": {
                     "type": "select",
@@ -1815,7 +1986,11 @@
                             "value": "gateway_traffic.device.day.received",
                             "description": "Bytes received"
                         }
-                    ]
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_gatewayTrafficSettingsHeader": {
                     "type": "header",
@@ -1832,7 +2007,10 @@
                     "disabled": "!data.updateGatewayTraffic",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 6,
+                    "md": 6,
+                    "lg": 6,
+                    "xl": 6
                 }
             }
         }
