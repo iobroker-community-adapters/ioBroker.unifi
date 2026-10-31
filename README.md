@@ -89,6 +89,9 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 -->
 ### **WORK IN PROGRESS**
 - (@Schimi1983) Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)
+- (@Schimi1983) Fixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others
+- (@Schimi1983) Fixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]
+- (@Schimi1983) Switching PoE creates the missing override of a port instead of failing [#658]
 
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now

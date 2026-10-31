@@ -37,6 +37,17 @@ describe('control states', () => {
         sinon.assert.notCalled(controller.restartDevice);
     });
 
+    it('logs in before a command if no controller is cached', async () => {
+        delete adapter.controllers.default;
+        adapter.getController = sinon.stub().callsFake(async site => (adapter.controllers[site] = controller));
+
+        await write(`devices.${MAC}.restart`, true);
+
+        sinon.assert.calledOnceWithExactly(adapter.getController, 'default');
+        sinon.assert.calledOnceWithExactly(controller.restartDevice, MAC, 'soft');
+        sinon.assert.notCalled(adapter.log.error);
+    });
+
     it('restarts a device', async () => {
         await write(`devices.${MAC}.restart`, true);
 
@@ -141,13 +152,38 @@ describe('control states', () => {
             assert.strictEqual(controller.setDeviceSettingsBase.firstCall.args[1].port_overrides[1].poe_mode, 'auto');
         });
 
-        it('fails for a port without override, as before', async () => {
+        it('creates the override of a port without one', async () => {
             controller.getAccessDevices.resolves([device('auto')]);
 
-            await adapter.switchPoeOfPort('default', MAC, '5', true);
+            await adapter.switchPoeOfPort('default', MAC, '5', false);
+
+            sinon.assert.calledOnceWithExactly(controller.setDeviceSettingsBase, 'dev1', {
+                port_overrides: [
+                    { port_idx: 1, poe_mode: 'auto' },
+                    { port_idx: 3, poe_mode: 'auto' },
+                    { port_idx: 5, poe_mode: 'off' },
+                ],
+            });
+            sinon.assert.notCalled(adapter.log.error);
+        });
+
+        it('creates the overrides of a device without any', async () => {
+            controller.getAccessDevices.resolves([{ mac: MAC, device_id: 'dev1' }]);
+
+            await adapter.switchPoeOfPort('default', MAC, '2', true);
+
+            sinon.assert.calledOnceWithExactly(controller.setDeviceSettingsBase, 'dev1', {
+                port_overrides: [{ port_idx: 2, poe_mode: 'auto' }],
+            });
+        });
+
+        it('warns about an unknown device', async () => {
+            controller.getAccessDevices.resolves([]);
+
+            await adapter.switchPoeOfPort('default', MAC, '2', true);
 
             sinon.assert.notCalled(controller.setDeviceSettingsBase);
-            sinon.assert.calledWithMatch(adapter.log.error, /port 5 has no port_overrides entry/);
+            sinon.assert.calledWithMatch(adapter.log.warn, /device aa:bb:cc:dd:ee:01 not found/);
         });
 
         it('is triggered by the port_poe_enabled state', async () => {

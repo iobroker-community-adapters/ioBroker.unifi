@@ -87,7 +87,9 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 
 - node-unifi 2 takes the site from the controller options; its methods have **no site parameter** (the adapter passed one to `createVouchers()` until this was fixed).
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
-- Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1, values of unexpected types are converted with `toString()` in `applyJsonLogic()`, and `switchPoeOfPort()` fails for ports without a `port_overrides` entry (creating one was never implemented).
+- Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1 and values of unexpected types are converted with `toString()` in `applyJsonLogic()`. `switchPoeOfPort()` creates a missing `port_overrides` entry with only `port_idx` and `poe_mode`.
+- `onStateChange()` calls `getController(site)` first, so commands work before the first refresh and after `resetControllers()`.
+- `processBlockedClients()` reads only the `blocked` states of its own site (`<site>.clients.*.blocked`) and writes changes only.
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 
 ## Tests
