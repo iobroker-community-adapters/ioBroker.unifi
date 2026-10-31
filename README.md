@@ -87,6 +87,9 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)
+
 ### 1.0.2 (2026-09-24)
 - (copilot) Adapter requires node.js >= 22 now
 - (copilot) Adapter requires admin >= 7.7.22 now
