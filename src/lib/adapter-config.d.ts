@@ -10,8 +10,12 @@ declare global {
             controllerIp: string;
             /** Empty for UniFi OS */
             controllerPort: string | number | null;
+            /** Missing in instances of versions < 1.1.0, which log in with a user */
+            authMode?: 'credentials' | 'apiKey';
             controllerUsername: string;
             controllerPassword: string;
+            /** UniFi Network → Integrations, UniFi OS only */
+            apiKey?: string;
             ignoreSSLErrors: boolean;
             /** In seconds */
             updateInterval: number | string;
@@ -32,6 +36,8 @@ declare global {
             updateGatewayTraffic: boolean;
             /** 0 = all available data */
             gatewayTrafficMaxDays: number | string;
+            /** WAN statistics of UniFi Network 11+, missing in instances of versions < 1.1.0 */
+            updateWan?: boolean;
 
             objectsFilter: UnifiObjectsFilter;
             statesFilter: UnifiStatesFilter;

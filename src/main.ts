@@ -2,10 +2,10 @@
  * Created with @iobroker/create-adapter v1.17.0
  */
 import * as utils from '@iobroker/adapter-core';
-import { Controller, type ControllerOptions } from 'node-unifi';
-
 import { applyRule } from './lib/jsonLogic';
 import { collectStateIds, loadObjectDefinitions } from './lib/objectDefinitions';
+import { Controller, type AuthMode, type ControllerOptions } from './lib/unifiController';
+import { summarizeWan, WAN_HISTORY_SECONDS, type AggregatedDashboard, type WanSummary } from './lib/wan';
 import type {
     CreatedObject,
     ObjectDefinitions,
@@ -34,6 +34,7 @@ type UpdateKey =
     | 'vouchers'
     | 'dpi'
     | 'gatewayTraffic'
+    | 'wan'
     | 'alarms';
 
 type FetchMethod =
@@ -46,6 +47,7 @@ type FetchMethod =
     | 'fetchVouchers'
     | 'fetchDpi'
     | 'fetchGatewayTraffic'
+    | 'fetchWan'
     | 'fetchAlarms';
 
 // Data requested for every site, in this order: [update setting, fetch method]
@@ -59,6 +61,7 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
     ['vouchers', 'fetchVouchers'],
     ['dpi', 'fetchDpi'],
     ['gatewayTraffic', 'fetchGatewayTraffic'],
+    ['wan', 'fetchWan'],
     ['alarms', 'fetchAlarms'],
 ];
 
@@ -77,6 +80,7 @@ const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
     'alarms',
     'dpi',
     'gateway_traffic',
+    'wan',
 ];
 
 // States that are always selected together with another state: [state, required states or channels]
@@ -101,10 +105,15 @@ interface Settings {
     updateInterval: number;
     controllerIp: string;
     controllerPort: string | number;
+    authMode: AuthMode;
     controllerUsername: string;
     controllerPassword: string;
+    apiKey: string;
     ignoreSSLErrors: boolean;
 }
+
+// Time to end the sessions of the local user when the adapter stops
+const LOGOUT_TIMEOUT = 2000;
 
 type UpdateSettings = Record<UpdateKey, boolean> & {
     /** Use the objects filter of the clients as whitelist */
@@ -141,8 +150,10 @@ class Unifi extends utils.Adapter {
         updateInterval: 60 * 1000,
         controllerIp: '',
         controllerPort: '',
+        authMode: 'credentials',
         controllerUsername: '',
         controllerPassword: '',
+        apiKey: '',
         ignoreSSLErrors: true,
     };
     private update: UpdateSettings = {
@@ -158,6 +169,7 @@ class Unifi extends utils.Adapter {
         dpi: false,
         gatewayTraffic: false,
         gatewayTrafficMaxDays: 0,
+        wan: false,
         alarms: false,
         alarmsNoArchived: false,
     };
@@ -182,12 +194,17 @@ class Unifi extends utils.Adapter {
         alarms: [],
         dpi: [],
         gateway_traffic: [],
+        wan: [],
     };
     private queryTimeout: ioBroker.Timeout | undefined = undefined;
     private updateInProgress = false;
     private consecutiveErrors = 0;
     /** Created objects without the namespace, to write only changed objects */
     private ownObjects: Record<string, CreatedObject> = {};
+    /** Sites for which the empty gateway statistics were reported, once per start */
+    private emptyGatewayTrafficWarned = new Set<string>();
+    /** Sites whose controller answered the WAN dashboard with 404, skipped until the next start */
+    private wanUnavailable = new Set<string>();
     private stopped = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
@@ -236,8 +253,11 @@ class Unifi extends utils.Adapter {
             this.settings.controllerIp = this.config.controllerIp;
             // An empty port is used for UniFi OS. The admin page may store it as null.
             this.settings.controllerPort = this.config.controllerPort || '';
-            this.settings.controllerUsername = this.config.controllerUsername;
-            this.settings.controllerPassword = this.config.controllerPassword;
+            // Instances of versions < 1.1.0 have no authMode and log in with a user
+            this.settings.authMode = this.config.authMode === 'apiKey' ? 'apiKey' : 'credentials';
+            this.settings.controllerUsername = this.config.controllerUsername || '';
+            this.settings.controllerPassword = this.config.controllerPassword || '';
+            this.settings.apiKey = (this.config.apiKey || '').trim();
             this.settings.ignoreSSLErrors =
                 this.config.ignoreSSLErrors !== undefined ? this.config.ignoreSSLErrors : true;
 
@@ -255,6 +275,8 @@ class Unifi extends utils.Adapter {
             this.update.dpi = this.config.updateDpi;
             this.update.gatewayTraffic = this.config.updateGatewayTraffic;
             this.update.gatewayTrafficMaxDays = Number(this.config.gatewayTrafficMaxDays);
+            // Off by default: js-controller adds missing native keys from io-package.json on upgrade
+            this.update.wan = this.config.updateWan === true;
 
             this.objectsFilter = this.config.objectsFilter;
             this.statesFilter = this.normalizeStatesFilter(this.config.statesFilter);
@@ -273,13 +295,15 @@ class Unifi extends utils.Adapter {
             this.vouchers.byteQuota = !this.config.createVouchersByteQuota ? null : this.config.createVouchersByteQuota;
             this.vouchers.note = this.config.createVouchersNote;
 
-            if (
-                this.settings.controllerIp !== '' &&
-                this.settings.controllerUsername !== '' &&
-                this.settings.controllerPassword !== ''
-            ) {
+            const loginConfigured =
+                this.settings.authMode === 'apiKey'
+                    ? this.settings.apiKey !== ''
+                    : this.settings.controllerUsername !== '' && this.settings.controllerPassword !== '';
+
+            if (this.settings.controllerIp && loginConfigured) {
                 // Send some log messages
                 this.log.debug(`controller = ${this.settings.controllerIp}:${this.settings.controllerPort}`);
+                this.log.debug(`authentication = ${this.settings.authMode}`);
                 this.log.debug(`updateInterval = ${this.settings.updateInterval / 1000}`);
 
                 // Start main function
@@ -361,8 +385,26 @@ class Unifi extends utils.Adapter {
                 this.queryTimeout = undefined;
             }
 
-            this.log.info('cleaned everything up...');
-            callback();
+            // End the sessions, otherwise every restart leaves one open on the console
+            const controllers = [...new Set(Object.values(this.controllers))];
+            this.controllers = {};
+            let done = false;
+            let timer: NodeJS.Timeout | undefined = undefined;
+            const finish = (): void => {
+                if (!done) {
+                    done = true;
+                    clearTimeout(timer);
+                    this.log.info('cleaned everything up...');
+                    callback();
+                }
+            };
+            if (controllers.length === 0) {
+                finish();
+                return;
+            }
+            // @KI_HINWEIS: a global timer on purpose, the adapter timers may already be cleared during unload
+            timer = setTimeout(finish, LOGOUT_TIMEOUT);
+            void Promise.allSettled(controllers.map(controller => controller.logout())).then(finish);
         } catch {
             callback();
         }
@@ -434,8 +476,10 @@ class Unifi extends utils.Adapter {
         const options: ControllerOptions = {
             host: this.settings.controllerIp,
             port: this.settings.controllerPort,
+            authMode: this.settings.authMode,
             username: this.settings.controllerUsername,
             password: this.settings.controllerPassword,
+            apiKey: this.settings.apiKey,
             sslverify: !this.settings.ignoreSSLErrors,
             timeout: 10000,
         };
@@ -477,9 +521,13 @@ class Unifi extends utils.Adapter {
      * answers with 403 (api.err.NoPermission) when the user lacks the rights for a
      * single endpoint, and logging in again cannot fix that.
      *
-     * @param err error of node-unifi
+     * @param err error of the UniFi client
      */
     private isAuthenticationError(err: UnifiError): boolean {
+        // An API key has no session: logging in again cannot help, the key is invalid, expired or deleted
+        if (this.settings.authMode === 'apiKey') {
+            return false;
+        }
         const status = err.response && err.response.status;
         return status === 401 || err.message === 'api.err.LoginRequired';
     }
@@ -562,7 +610,11 @@ class Unifi extends utils.Adapter {
      * @param methodName method that failed
      */
     private handleError(err: UnifiError, site: string | undefined, methodName?: string): void {
-        if (err.message === 'api.err.Invalid') {
+        if (this.settings.authMode === 'apiKey' && err.response?.status === 401) {
+            this.log.error(
+                `Error site ${site}: The API key was rejected. It may be invalid, expired or deleted. Create a new one in UniFi Network → Integrations.`,
+            );
+        } else if (err.message === 'api.err.Invalid') {
             this.log.error(`Error site ${site}: Incorrect username or password.`);
         } else if (err.message === 'api.err.LoginRequired') {
             this.log.error(`Error site ${site}: Login required. Check username and password.`);
@@ -1172,6 +1224,15 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchGatewayTraffic ${site}: ${data.length}`);
         this.log.silly(`fetchGatewayTraffic ${site}: ${JSON.stringify(data)}`);
 
+        // @KI_HINWEIS: UniFi Network 11 cleared the statistics and answers with an empty list since then. Without this
+        // warning gateway_traffic silently stops updating.
+        if (data.length === 0 && !this.emptyGatewayTrafficWarned.has(site)) {
+            this.emptyGatewayTrafficWarned.add(site);
+            this.log.warn(
+                `fetchGatewayTraffic ${site}: the controller returned no gateway statistics. UniFi Network 11 and newer do not provide them anymore, use the WAN statistics instead (setting "Update WAN statistics").`,
+            );
+        }
+
         await this.processGatewayTraffic(site, data);
 
         return data;
@@ -1194,6 +1255,48 @@ class Unifi extends utils.Adapter {
         if (siteData.length > 0) {
             await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
         }
+    }
+
+    /**
+     * Function to fetch the WAN statistics (UniFi Network 11 and newer)
+     *
+     * @param site name of the site
+     */
+    private async fetchWan(site: string): Promise<WanSummary[]> {
+        if (this.wanUnavailable.has(site)) {
+            return [];
+        }
+
+        let data: AggregatedDashboard | undefined;
+        try {
+            data = (await this.controllers[site].customApiRequest(
+                `/v2/api/site/<SITE>/aggregated-dashboard?historySeconds=${WAN_HISTORY_SECONDS}`,
+            )) as AggregatedDashboard | undefined;
+        } catch (err) {
+            // @KI_HINWEIS: controllers without the v2 dashboard (older UniFi Network versions) answer with 404. The
+            // request is skipped until the next start instead of failing on every refresh.
+            if ((err as UnifiError).response?.status === 404) {
+                this.wanUnavailable.add(site);
+                this.log.warn(
+                    `fetchWan ${site}: the controller provides no WAN dashboard (404). The WAN statistics need UniFi Network 11 or newer and are skipped until the adapter restarts.`,
+                );
+                return [];
+            }
+            throw err;
+        }
+        if (!data || typeof data !== 'object' || Array.isArray(data)) {
+            throw new Error(`fetchWan ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
+        }
+
+        const summaries = summarizeWan(data);
+        this.log.debug(`fetchWan ${site}: ${summaries.length}`);
+        this.log.silly(`fetchWan ${site}: ${JSON.stringify(summaries)}`);
+
+        if (summaries.length > 0) {
+            await this.applyJsonLogic(site, summaries, loadObjectDefinitions('wan'), this.statesFilter.wan);
+        }
+
+        return summaries;
     }
 
     /**
@@ -1341,7 +1444,7 @@ class Unifi extends utils.Adapter {
         const down = Number(this.vouchers.downloadLimit) || 0;
         const mbytes = Number(this.vouchers.byteQuota) || 0;
 
-        // node-unifi 2 takes the site from the controller, it is not a parameter anymore
+        // The client takes the site from the controller options, it is not a parameter
         const data = await this.controllers[site].createVouchers(minutes, count, quota, note, up, down, mbytes);
         if (!Array.isArray(data)) {
             throw new Error(`createVouchers: Returned data is not in valid format: ${JSON.stringify(data)}`);

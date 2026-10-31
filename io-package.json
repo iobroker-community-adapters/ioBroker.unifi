@@ -158,7 +158,7 @@
     "nogit": true,
     "supportCustoms": false,
     "connectionType": "local",
-    "dataSource": "push",
+    "dataSource": "poll",
     "dependencies": [
       {
         "js-controller": ">=6.0.11"
@@ -175,9 +175,11 @@
   },
   "native": {
     "controllerIp": "",
-    "controllerPort": "8443",
+    "controllerPort": "",
+    "authMode": "credentials",
     "controllerUsername": "",
     "controllerPassword": "",
+    "apiKey": "",
     "updateInterval": 60,
     "updateClients": true,
     "blacklistClients": false,
@@ -193,6 +195,7 @@
     "updateDpi": false,
     "updateGatewayTraffic": false,
     "gatewayTrafficMaxDays": 7,
+    "updateWan": false,
     "objectsFilter": {
       "clients": [],
       "devices": [],
@@ -210,7 +213,8 @@
       "vouchers": [],
       "alarms": [],
       "dpi": [],
-      "gateway_traffic": []
+      "gateway_traffic": [],
+      "wan": []
     },
     "clientsIsOnlineOffset": 30,
     "createVouchersNumber": 1,
@@ -223,10 +227,12 @@
     "ignoreSSLErrors": true
   },
   "protectedNative": [
-    "controllerPassword"
+    "controllerPassword",
+    "apiKey"
   ],
   "encryptedNative": [
-    "controllerPassword"
+    "controllerPassword",
+    "apiKey"
   ],
   "objects": [],
   "instanceObjects": [

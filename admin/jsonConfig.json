@@ -28,7 +28,11 @@
                     "xs": 12,
                     "style": {
                         "fontWeight": "bold"
-                    }
+                    },
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "controllerIp": {
                     "type": "text",
@@ -36,7 +40,10 @@
                     "placeholder": "127.0.0.1",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "controllerPort": {
                     "type": "number",
@@ -44,7 +51,10 @@
                     "placeholder": "8443",
                     "max": 65535,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_loginHeader": {
                     "type": "header",
@@ -52,18 +62,59 @@
                     "size": 5,
                     "newLine": true
                 },
+                "authMode": {
+                    "type": "select",
+                    "label": "Authentication",
+                    "newLine": true,
+                    "options": [
+                        {
+                            "label": "Local user",
+                            "value": "credentials"
+                        },
+                        {
+                            "label": "API key",
+                            "value": "apiKey"
+                        }
+                    ],
+                    "default": "credentials",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
                 "controllerUsername": {
                     "type": "text",
                     "label": "Username",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "hidden": "data.authMode === 'apiKey'"
                 },
                 "controllerPassword": {
                     "type": "password",
                     "label": "Password",
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "hidden": "data.authMode === 'apiKey'"
+                },
+                "apiKey": {
+                    "type": "password",
+                    "label": "API key",
+                    "newLine": true,
+                    "help": "UniFi Network → Integrations → Create New API Key. UniFi OS only (UDM, UCG, Cloud Key Gen2+, UniFi OS Server).",
+                    "hidden": "data.authMode !== 'apiKey'",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 8,
+                    "xl": 8
                 },
                 "_connectionHeader": {
                     "type": "header",
@@ -75,7 +126,11 @@
                     "type": "checkbox",
                     "label": "Ignore SSL certificate errors (self signed or expired)",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_updateHeader": {
                     "type": "header",
@@ -90,7 +145,10 @@
                     "min": 0,
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 }
             }
         },
@@ -2011,6 +2069,182 @@
                     "md": 6,
                     "lg": 6,
                     "xl": 6
+                }
+            }
+        },
+        "_wan": {
+            "type": "panel",
+            "label": "WAN",
+            "items": {
+                "updateWan": {
+                    "type": "checkbox",
+                    "label": "Update WAN statistics (UniFi Network 11 and newer)",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "_wanHint": {
+                    "type": "staticText",
+                    "text": "Traffic today, yesterday and in the last 24 hours, monthly traffic, provider, availability, latency and the last speed test of every internet connection. Replaces the gateway traffic, which UniFi Network 11 no longer provides.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "_wanStatesHeader": {
+                    "type": "header",
+                    "text": "Filter states",
+                    "size": 5,
+                    "newLine": true
+                },
+                "_wanStatesHint": {
+                    "type": "staticText",
+                    "text": "If nothing is selected, all states are created.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
+                "statesFilter.wan": {
+                    "type": "select",
+                    "multiple": true,
+                    "showAllValues": false,
+                    "noTranslation": true,
+                    "disabled": "!data.updateWan",
+                    "newLine": true,
+                    "xs": 12,
+                    "options": [
+                        {
+                            "label": "name",
+                            "value": "wan.connection.name",
+                            "description": "Name of the connection"
+                        },
+                        {
+                            "label": "isp_name",
+                            "value": "wan.connection.isp_name",
+                            "description": "Internet provider"
+                        },
+                        {
+                            "label": "isp_asn",
+                            "value": "wan.connection.isp_asn",
+                            "description": "AS number of the provider"
+                        },
+                        {
+                            "label": "capacity_download",
+                            "value": "wan.connection.capacity_download",
+                            "description": "Download capacity of the provider"
+                        },
+                        {
+                            "label": "capacity_upload",
+                            "value": "wan.connection.capacity_upload",
+                            "description": "Upload capacity of the provider"
+                        },
+                        {
+                            "label": "up",
+                            "value": "wan.connection.up",
+                            "description": "Connection is up"
+                        },
+                        {
+                            "label": "active",
+                            "value": "wan.connection.active",
+                            "description": "Connection is active"
+                        },
+                        {
+                            "label": "interface",
+                            "value": "wan.connection.interface",
+                            "description": "Interface"
+                        },
+                        {
+                            "label": "uptime",
+                            "value": "wan.connection.uptime",
+                            "description": "Availability"
+                        },
+                        {
+                            "label": "rx_rate",
+                            "value": "wan.connection.rx_rate",
+                            "description": "Current download rate"
+                        },
+                        {
+                            "label": "tx_rate",
+                            "value": "wan.connection.tx_rate",
+                            "description": "Current upload rate"
+                        },
+                        {
+                            "label": "today_rx_bytes",
+                            "value": "wan.connection.today_rx_bytes",
+                            "description": "Received today"
+                        },
+                        {
+                            "label": "today_tx_bytes",
+                            "value": "wan.connection.today_tx_bytes",
+                            "description": "Sent today"
+                        },
+                        {
+                            "label": "yesterday_rx_bytes",
+                            "value": "wan.connection.yesterday_rx_bytes",
+                            "description": "Received yesterday"
+                        },
+                        {
+                            "label": "yesterday_tx_bytes",
+                            "value": "wan.connection.yesterday_tx_bytes",
+                            "description": "Sent yesterday"
+                        },
+                        {
+                            "label": "last24h_rx_bytes",
+                            "value": "wan.connection.last24h_rx_bytes",
+                            "description": "Received in the last 24 hours"
+                        },
+                        {
+                            "label": "last24h_tx_bytes",
+                            "value": "wan.connection.last24h_tx_bytes",
+                            "description": "Sent in the last 24 hours"
+                        },
+                        {
+                            "label": "monthly_bytes",
+                            "value": "wan.connection.monthly_bytes",
+                            "description": "Traffic this month"
+                        },
+                        {
+                            "label": "latency",
+                            "value": "wan.connection.latency",
+                            "description": "Latency"
+                        },
+                        {
+                            "label": "packet_loss",
+                            "value": "wan.connection.packet_loss",
+                            "description": "Packet loss"
+                        },
+                        {
+                            "label": "speedtest_download",
+                            "value": "wan.connection.speedtest_download",
+                            "description": "Speed test download"
+                        },
+                        {
+                            "label": "speedtest_upload",
+                            "value": "wan.connection.speedtest_upload",
+                            "description": "Speed test upload"
+                        },
+                        {
+                            "label": "speedtest_latency",
+                            "value": "wan.connection.speedtest_latency",
+                            "description": "Speed test latency"
+                        },
+                        {
+                            "label": "speedtest_time",
+                            "value": "wan.connection.speedtest_time",
+                            "description": "Time of the speed test"
+                        }
+                    ],
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 }
             }
         }

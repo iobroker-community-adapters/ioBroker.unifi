@@ -1,8 +1,9 @@
 'use strict';
 
-// The adapter with the real node-unifi against a fake UniFi OS controller
+// The adapter with the real UniFi client against a fake UniFi OS controller
 
 const assert = require('node:assert');
+const sinon = require('sinon');
 const { createAdapter } = require('./lib/adapterMock');
 const { FakeController } = require('./lib/fakeController');
 
@@ -53,6 +54,7 @@ describe('adapter with a UniFi OS controller', function () {
             updateHealth: false,
             updateVouchers: false,
             updateAlarms: false,
+            updateWan: false,
             ...config,
         });
         adapter.updateUnifiData = async () => {};
@@ -107,6 +109,117 @@ describe('adapter with a UniFi OS controller', function () {
         assert.strictEqual(controller.logins, 2);
         assert.strictEqual(adapter.val('info.connection'), true);
         assert.strictEqual(adapter.val('info.consecutiveErrors'), 0);
+    });
+
+    it('ends the session of the local user on unload', async () => {
+        await startAdapter();
+        await adapter.updateUnifiData(true);
+
+        await new Promise(resolve => adapter.onUnload(resolve));
+
+        assert.strictEqual(controller.logouts, 1);
+        assert.deepStrictEqual(adapter.controllers, {});
+    });
+
+    describe('with an API key', () => {
+        const API_KEY = 'test-api-key';
+
+        beforeEach(() => {
+            controller.apiKey = API_KEY;
+        });
+
+        it('reads the data without logging in', async () => {
+            await startAdapter({
+                authMode: 'apiKey',
+                apiKey: ` ${API_KEY} `,
+                controllerUsername: '',
+                controllerPassword: '',
+            });
+            await adapter.updateUnifiData(true);
+
+            assert.strictEqual(controller.logins, 0);
+            assert.strictEqual(adapter.val('info.connection'), true);
+            assert.strictEqual(adapter.val('default.clients.aa:bb:cc:dd:ee:01.ip'), '192.168.1.10');
+            assertNoErrors(adapter);
+        });
+
+        it('sends commands with the key', async () => {
+            await startAdapter({ authMode: 'apiKey', apiKey: API_KEY });
+            await adapter.updateUnifiData(true);
+
+            await adapter.onStateChange('unifi.0.default.wlans.home_wifi.enabled', { val: false, ack: false });
+
+            const [request] = controller.requestsTo('rest/wlanconf/wlan1');
+            assert.deepStrictEqual(request.body, { enabled: false });
+            assertNoErrors(adapter);
+        });
+
+        it('reports a rejected key once per refresh without logging in again', async () => {
+            await startAdapter({ authMode: 'apiKey', apiKey: 'wrong' });
+            await adapter.updateUnifiData(true);
+            await adapter.updateUnifiData(true);
+
+            assert.strictEqual(controller.logins, 0);
+            assert.strictEqual(adapter.val('info.connection'), false);
+            assert.strictEqual(adapter.val('info.consecutiveErrors'), 2);
+            assert.match(adapter.log.error.firstCall.args[0], /API key was rejected/);
+            sinon.assert.notCalled(adapter.log.info.withArgs('UniFi session expired. Re-authenticating.'));
+        });
+
+        it('does not log out on unload', async () => {
+            await startAdapter({ authMode: 'apiKey', apiKey: API_KEY });
+            await adapter.updateUnifiData(true);
+
+            await new Promise(resolve => adapter.onUnload(resolve));
+
+            assert.strictEqual(controller.logouts, 0);
+        });
+    });
+
+    it('creates the WAN statistics from the dashboard of UniFi Network 11', async () => {
+        const { DASHBOARD, NOW } = require('./wan.test');
+        // the history of the test data, moved to the current time
+        const dashboard = structuredClone(DASHBOARD);
+        const shift = Date.now() - NOW;
+        for (const bucket of dashboard.wan_activity.activity_by_network_group.WAN.history) {
+            bucket.timestamp += shift;
+        }
+        controller.responses['v2/aggregated-dashboard'] = dashboard;
+        await startAdapter({ updateWan: true });
+
+        await adapter.updateUnifiData(true);
+
+        const [request] = controller.requestsTo('v2/aggregated-dashboard');
+        assert.strictEqual(request.query, 'historySeconds=180000');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan').common.name, 'Internet 1');
+        assert.strictEqual(adapter.val('default.wan.wan.isp_name'), 'Deutsche Telekom AG');
+        assert.strictEqual(adapter.val('default.wan.wan.up'), true);
+        assert.strictEqual(adapter.val('default.wan.wan.capacity_download'), 642);
+        assert.strictEqual(typeof adapter.val('default.wan.wan.today_rx_bytes'), 'number');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan.speedtest_time').common.role, 'value.time');
+        assertNoErrors(adapter);
+    });
+
+    it('skips the WAN statistics after a 404 of an older controller', async () => {
+        await startAdapter({ updateWan: true });
+
+        await adapter.updateUnifiData(true);
+        await adapter.updateUnifiData(true);
+
+        assert.strictEqual(controller.requestsTo('v2/aggregated-dashboard').length, 1);
+        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no WAN dashboard \(404\)/)));
+        assert.strictEqual(adapter.val('info.lastError'), '');
+        assertNoErrors(adapter);
+    });
+
+    it('warns once when the gateway statistics are empty (UniFi Network 11)', async () => {
+        controller.responses['stat/report/daily.gw'] = [];
+        await startAdapter({ updateGatewayTraffic: true });
+
+        await adapter.updateUnifiData(true);
+        await adapter.updateUnifiData(true);
+
+        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no gateway statistics/)));
     });
 
     it('creates vouchers with the configured settings', async () => {

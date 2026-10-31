@@ -90,7 +90,7 @@ describe('states filter', () => {
     beforeEach(() => {
         const createAdapter = proxyquire('../build/main', {
             '@iobroker/adapter-core': { Adapter: AdapterMock },
-            'node-unifi': { Controller: class {} },
+            './lib/unifiController': { Controller: class {} },
         });
         adapter = createAdapter();
     });

@@ -43,7 +43,7 @@ describe('refresh reliability', () => {
         Controller = sinon.stub();
         createAdapter = proxyquire('../build/main', {
             '@iobroker/adapter-core': { Adapter: AdapterMock },
-            'node-unifi': { Controller },
+            './lib/unifiController': { Controller },
         });
     });
 
