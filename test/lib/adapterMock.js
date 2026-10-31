@@ -177,10 +177,10 @@ class AdapterMock extends EventEmitter {
 }
 
 /**
- * The adapter from build/main.js with the in-memory adapter-core. node-unifi is the real one unless stubbed.
+ * The adapter from build/main.js with the in-memory adapter-core. The UniFi client (lib/unifiController) is the real one unless stubbed.
  *
  * @param {Record<string, any>} [config] native configuration
- * @param {Record<string, any>} [stubs] additional module stubs for proxyquire, e.g. `{ 'node-unifi': ... }`
+ * @param {Record<string, any>} [stubs] additional module stubs for proxyquire, e.g. `{ './lib/unifiController': ... }`
  */
 function createAdapter(config = {}, stubs = {}) {
     const createInstance = proxyquire('../../build/main', {

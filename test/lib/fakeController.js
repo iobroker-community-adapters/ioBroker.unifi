@@ -8,10 +8,12 @@ const FIXTURES = join(__dirname, '..', 'fixtures');
 
 /**
  * HTTPS server that answers like a UniFi OS console (e.g. UDM-Pro), so the adapter can be tested with the real
- * node-unifi. Only the parts that node-unifi uses are implemented:
+ * UniFi client (src/lib/unifiController.ts). Only the parts that the adapter uses are implemented:
  *
  * - `GET /` with status 200 marks the console as UniFi OS
- * - `POST /api/auth/login` sets the session cookie, `GET /api/users/self` checks it
+ * - `POST /api/auth/login` sets the session cookie, `GET /api/users/self` checks it, `POST /api/auth/logout` ends it
+ * - the header `X-API-KEY` with `apiKey` authenticates every request without a session (answers 401 like
+ *   UniFi OS 6 for a wrong key)
  * - `/proxy/network/api/self/sites` and `/proxy/network/api/s/<site>/<path>` answer with `{ meta: { rc: 'ok' }, data }`
  *   from `responses[<path>]`. Unknown paths answer with an empty list.
  */
@@ -23,7 +25,10 @@ class FakeController {
         /** @type {{ method: string, path: string, body: any }[]} requests to the network API */
         this.requests = [];
         this.logins = 0;
+        this.logouts = 0;
         this.token = null;
+        /** API key accepted in the header X-API-KEY, null = none */
+        this.apiKey = null;
         this.server = https.createServer(
             { key: readFileSync(join(FIXTURES, 'key.pem')), cert: readFileSync(join(FIXTURES, 'cert.pem')) },
             (req, res) => this.handle(req, res),
@@ -65,7 +70,14 @@ class FakeController {
                 res.writeHead(status, { 'Content-Type': 'application/json', ...headers });
                 res.end(JSON.stringify(data));
             };
-            const loggedIn = this.token !== null && (req.headers.cookie || '').includes(`TOKEN=${this.token}`);
+            const apiKey = req.headers['x-api-key'];
+            if (apiKey !== undefined && apiKey !== this.apiKey) {
+                send(401, { error: { code: 401, message: 'Unauthorized' } });
+                return;
+            }
+            const loggedIn =
+                apiKey !== undefined ||
+                (this.token !== null && (req.headers.cookie || '').includes(`TOKEN=${this.token}`));
 
             if (req.url === '/' && req.method === 'GET') {
                 send(200, {}, { 'x-csrf-token': 'csrf' });
@@ -73,6 +85,10 @@ class FakeController {
                 this.logins++;
                 this.token = `session${this.logins}`;
                 send(200, {}, { 'Set-Cookie': `TOKEN=${this.token}; Path=/; HttpOnly` });
+            } else if (req.url === '/api/auth/logout' && req.method === 'POST') {
+                this.logouts++;
+                this.token = null;
+                send(200, {});
             } else if (req.url === '/api/users/self') {
                 send(loggedIn ? 200 : 401, {});
             } else if (req.url.startsWith('/proxy/network/api/')) {
@@ -85,7 +101,7 @@ class FakeController {
                     send(200, { meta: { rc: 'ok' }, data: this.sites });
                     return;
                 }
-                // s/<site>/<path>, without a trailing slash (node-unifi adds one for optional IDs)
+                // s/<site>/<path>, without a trailing slash
                 const sitePath = path.split('/').slice(2).join('/').replace(/\/$/, '');
                 this.requests.push({ method: req.method, path: sitePath, body });
                 const response = this.responses[sitePath];
