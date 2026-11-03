@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "news": {
+      "1.0.3": {
+        "en": "Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)\nFixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others\nFixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]\nSwitching PoE creates the missing override of a port instead of failing [#658]",
+        "de": "Einstellungsseite: Größenattribute für alle Felder der Tabs, wie vom Repository-Checker gefordert (W5507)\nBehoben: Der State `blocked` der Clients wurde nicht aktualisiert, wenn alle States ausgewählt waren (leerer Filter), und bei mehreren Sites setzte die Aktualisierung einer Site die blockierten Clients der anderen zurück\nBehoben: Befehle (Neustart, LED, PoE, Blockieren, ...) schlugen vor der ersten Aktualisierung oder nach einer abgelaufenen Sitzung fehl [#725]\nPoE-Schalten legt den fehlenden Override eines Ports an, statt fehlzuschlagen [#658]",
+        "ru": "Страница настроек: атрибуты размера для всех полей вкладок в соответствии с требованиями средства проверки репозитория (W5507)\nИсправлено состояние «заблокировано» клиентов: оно не обновлялось при выборе всех состояний (фильтр пустых состояний), а на нескольких сайтах обновление одного сайта приводило к сбросу заблокированных клиентов других\nИсправлены ошибки команд (перезапуск, светодиод, PoE, блокировка и т. д.) перед первым обновлением или после истечения сеанса [#725]\nПереключение PoE приводит к отсутствию переопределения порта, а не к сбою [#658]",
+        "pt": "Página de ajustes: atributos de tamanho de todos os campos das guias, conforme exigido pelo W5507\nCorrigido o estado “bloqueado” dos clientes: não era atualizado ao selecionar todos os estados (filtro de estados vazios) e, com vários sites, reinicializar os bloqueados dos outros\nComandos fixos (reiniciar, LED, PoE, bloquear,...) falharam antes da atualização ou da expiração [#725]\nA troca de PoE cria a falta de uma porta em vez de falhar [#658]",
+        "nl": "Instellingenpagina: groottekarakteristieken voor alle velden van de tabbladen, zoals vereist door de repository-checker (W5507)\nDe status 'geblokkeerd' van de clients is opgelost: deze werd niet bijgewerkt toen alle statussen werden geselecteerd (filter voor lege statussen), en bij meerdere sites werd de geblokkeerde client van de andere opnieuw ingesteld door het vernieuwen van één site\nOpdrachten opgelost (herstarten, LED, PoE, blokkeren,...) die niet lukten voor de eerste verversing of na een verlopen sessie [#725]\nDoor over te schakelen naar PoE ontbreekt een poort in plaats van een storing [#658]",
+        "fr": "Page des paramètres : attributs de taille pour tous les champs des onglets, comme l'exige le Repository Checker (W5507)\nCorrection de l'état « bloqué » des clients : il n'était pas mis à jour lorsque tous les états étaient sélectionnés (filtre d'états vide), et sur plusieurs sites, le rafraîchissement d'un site réinitialisait les clients bloqués des autres\nCorrection d'un échec des commandes (redémarrage, LED, PoE, blocage,...) avant la fin d'une session [#725]\nLe changement de PoE entraîne le remplacement d'un port au lieu d'échouer [#658]",
+        "it": "Pagina impostazioni: dimensioni per tutti i campi delle schede, come richiesto dal Repository Checker (W5507)\nRisolto lo stato «bloccato» dei client: non veniva aggiornato selezionando tutti gli stati (filtro vuoto) e con diversi siti l'aggiornamento di un sito reimpostava i client bloccati degli altri\nComandi fissi (riavvio, LED, PoE, blocco,...) che mancavano prima o dopo una sessione scaduta [#725]\nIl cambio PoE crea l'override mancante di una porta invece di fallire [#658]",
+        "es": "Página de ajustes: atributos de tamaño para todos los campos de las pestañas, según lo exige el comprobador (W5507)\nSe corrigió el estado «bloqueado» de los clientes: no se actualizó cuando se seleccionaron todos los estados (filtro de estados vacío) y, con varios sitios, al actualizar un sitio, se restablecieron los clientes bloqueados de los demás\nComandos fijos (reiniciar, LED, PoE, bloquear,...) que fallaban antes de la primera actualización o tras caducar la sesión [#725]\nCambiar PoE crea la anulación que falta de un puerto en lugar de fallar [#658]",
+        "pl": "Strona ustawień: atrybuty rozmiaru dla wszystkich pól kart, zgodnie z wymaganiami narzędzia sprawdzającego repozytorium (W5507)\nNaprawiono „zablokowany” stan klientów: nie był aktualizowany, gdy wybrano wszystkie stany (pusty filtr stanów), a w przypadku kilku witryn odświeżanie jednej witryny resetowało zablokowanych klientów innych\nNaprawiono błąd poleceń (restart, LED, PoE, block,...) przed pierwszym odświeżeniem lub po wygasłej sesji [#725]\nPrzełączanie PoE powoduje brakujące nadpisanie portu zamiast niepowodzenia [#658]",
+        "uk": "Сторінка налаштувань: атрибути розміру для всіх полів вкладок, як того вимагає перевірка сховища (W5507)\nВиправлено «заблокований» стан клієнтів: він не оновлювався, коли були вибрані всі стани (фільтр порожніх станів), а з кількома сайтами оновлення одного сайту скинуло заблоковані клієнти інших\nВиправлені команди (перезапуск, світлодіод, PoE, блок,...), що виходять з ладу перед першим оновленням або після закінчення сеансу [#725]\nКомутація PoE створює відсутнє перевизначення порту замість того, щоб вийти з ладу [#658]",
+        "zh-cn": "设置页面：存储库检查器要求的选项卡所有字段的大小属性 (W5507)\n修复了客户端的 “已屏蔽” 状态：选择所有状态时不会更新（空状态过滤器），并且在多个站点的刷新一个站点会重置其他站点的被封锁客户端\n修复了第一次刷新之前或会话过期后命令（重启、LED、PoE、封锁等）失败的问题 [#725]\n切换 PoE 会导致缺少替代端口，而不是发生故障 [#658]"
+      },
       "1.0.2": {
         "en": "Adapter requires node.js >= 22 now\nAdapter requires admin >= 7.7.22 now\nAdapter requires js-controller >= 6.0.11 now\nController sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]\nA failing endpoint or site no longer aborts the whole refresh\nFixed polling stopping after `trigger_update` overlapped a scheduled refresh\nMigrated the settings page to JSON config\nFixed creating vouchers: the settings were passed in the wrong order since node-unifi 2\nThe adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub",
         "de": "Adapter benötigt jetzt node.js >= 22\nAdapter benötigt jetzt admin >= 7.7.22\nAdapter benötigt jetzt JS-Controller >= 6.0.11\nController-Sitzungen werden wiederverwendet und bei Fehlern läuft der Polling Loop weiter. #989\nEin defekter Endpunkt oder Site bricht nicht mehr den Refresh ab\nAbfragestopp behoben, nachdem `trigger_update` ein Update überlappte\nEinstellseite zur JSON-Konfiguration migriert\nVoucherstellung behoben: Die Werte wurden seit Node-Unifi 2 falsch eingegeben\nDer Adapter wurde auf TypeScript umgestellt. Nur von npm installierbar, nicht von GitHub",
@@ -80,19 +93,6 @@
         "pl": "złamany status klienta #(672)",
         "uk": "виправлені оновлення статусу клієнта #(672)",
         "zh-cn": "固定用户身份更新表(672)"
-      },
-      "0.6.5": {
-        "en": "Bumped node-unifi to latest 2.4.1",
-        "de": "Knoten-unifi nach neuesten 2.4.1",
-        "ru": "Bumped node-unifi до последних 2.4.1",
-        "pt": "Node-unifi tocado para o mais recente 2.4.1",
-        "nl": "Vertaling:",
-        "fr": "Bumped node-unifi to latest 2.4.1",
-        "it": "Nodo-unifi bumped al più recente 2.4.1",
-        "es": "Bumped node-unifi to latest 2.4.1",
-        "pl": "Węzeł węzeł-unifii do najnowszych 2.4.1",
-        "uk": "Bumped node-unifi до останньої 2.4.1",
-        "zh-cn": "废除了对最近2.4.1的不法性"
       }
     },
     "titleLang": {

@@ -87,7 +87,7 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.0.3 (2026-11-03)
 - (@Schimi1983) Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)
 - (@Schimi1983) Fixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others
 - (@Schimi1983) Fixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]
@@ -114,10 +114,6 @@ The adapter uses [node-unifi](https://github.com/jens-maus/node-unifi) to connec
 
 ### 0.6.6 (2023-06-20)
 * (pafade89) fixed broken client status updates (#672)
-
-### 0.6.5 (2023-06-20)
-* (jens-maus) Bumped node-unifi to latest 2.4.1
-
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
