@@ -196,6 +196,41 @@ describe('client status', () => {
         assert.strictEqual(adapter.val('default.clients.aa:bb:cc:dd:ee:02.blocked'), false);
     });
 
+    it('sets the blocked state also if all states are selected (empty filter)', async () => {
+        adapter.statesFilter = adapter.normalizeStatesFilter({ clients: [] });
+        adapter.controllers.default = {
+            getBlockedUsers: sinon.stub().resolves([{ mac: 'AA:BB:CC:DD:EE:01' }]),
+        };
+        adapter.states.set('unifi.0.default.clients.aa:bb:cc:dd:ee:01.blocked', { val: false, ack: true });
+
+        await adapter.processBlockedClients('default');
+
+        assert.strictEqual(adapter.val('default.clients.aa:bb:cc:dd:ee:01.blocked'), true);
+    });
+
+    it('keeps the blocked clients of the other sites', async () => {
+        adapter.statesFilter = adapter.normalizeStatesFilter({ clients: ['clients.client.blocked'] });
+        adapter.controllers.office = { getBlockedUsers: sinon.stub().resolves([]) };
+        adapter.states.set('unifi.0.default.clients.aa:bb:cc:dd:ee:01.blocked', { val: true, ack: true });
+        adapter.states.set('unifi.0.office.clients.aa:bb:cc:dd:ee:02.blocked', { val: true, ack: true });
+
+        await adapter.processBlockedClients('office');
+
+        assert.strictEqual(adapter.val('default.clients.aa:bb:cc:dd:ee:01.blocked'), true);
+        assert.strictEqual(adapter.val('office.clients.aa:bb:cc:dd:ee:02.blocked'), false);
+    });
+
+    it('writes the blocked state only when it changed', async () => {
+        adapter.statesFilter = adapter.normalizeStatesFilter({ clients: ['clients.client.blocked'] });
+        adapter.controllers.default = { getBlockedUsers: sinon.stub().resolves([]) };
+        adapter.states.set('unifi.0.default.clients.aa:bb:cc:dd:ee:01.blocked', { val: false, ack: true });
+        adapter.setStateAsync.resetHistory();
+
+        await adapter.processBlockedClients('default');
+
+        sinon.assert.notCalled(adapter.setStateAsync);
+    });
+
     it('does not request the blocked clients if the state is not selected', async () => {
         adapter.statesFilter = adapter.normalizeStatesFilter({ clients: ['clients.client.ip'] });
         adapter.controllers.default = { getBlockedUsers: sinon.stub().resolves([]) };
