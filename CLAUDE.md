@@ -91,6 +91,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1 and values of unexpected types are converted with `toString()` in `applyJsonLogic()`. `switchPoeOfPort()` creates a missing `port_overrides` entry with only `port_idx` and `poe_mode`.
 - `onStateChange()` calls `getController(site)` first, so commands work before the first refresh and after `resetControllers()`.
 - `processBlockedClients()` reads only the `blocked` states of its own site (`<site>.clients.*.blocked`) and writes changes only.
+- The `blocked` state is created for every client (wired too), `reconnect` only for wireless clients (`essid`).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 
 ## Tests

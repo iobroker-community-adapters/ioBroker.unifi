@@ -55,6 +55,9 @@ For every kind of information, the created states can be selected. If nothing is
 ### Enable/disable WiFis
 By changing the 'enabled' state of a WiFi it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
 
+### Block clients
+Set the `blocked` state of a client to `true` to block it in the UniFi controller, `false` unblocks it again. This works for wireless and wired clients.
+
 ### Voucher creation
 Using the `vouchers.create_vouchers` button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
 
@@ -98,6 +101,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@Schimi1983) The `blocked` state is created for wired clients too, with role `switch` [#760]
 - (@Schimi1983) Authentication with an API key (UniFi OS), as alternative to the local user
 - (@Schimi1983) node-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)
 - (@Schimi1983) The session of the local user is ended when the adapter stops
