@@ -90,6 +90,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1 and values of unexpected types are converted with `toString()` in `applyJsonLogic()`. `switchPoeOfPort()` creates a missing `port_overrides` entry with only `port_idx` and `poe_mode`.
 - `onStateChange()` calls `getController(site)` first, so commands work before the first refresh and after `resetControllers()`.
+- Gateways get the channels `wan1`/`wan2` from `stat/device` (no extra request): ip, ipv6 (joined with the json-logic operation `join`), up, port (`port_idx`), interface (`uplink_ifname`, e.g. ppp0), speed; latency and availability only while connected. `is_uplink` is not used, it is false for the active WAN of a UDM Pro.
 - `processBlockedClients()` reads only the `blocked` states of its own site (`<site>.clients.*.blocked`) and writes changes only.
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 

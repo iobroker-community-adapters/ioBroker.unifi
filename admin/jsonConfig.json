@@ -999,6 +999,96 @@
                             ]
                         },
                         {
+                            "label": "device › wan1",
+                            "items": [
+                                {
+                                    "label": "ip",
+                                    "value": "devices.device.wan1.ip",
+                                    "description": "WAN IPv4 address"
+                                },
+                                {
+                                    "label": "ipv6",
+                                    "value": "devices.device.wan1.ipv6",
+                                    "description": "WAN IPv6 addresses"
+                                },
+                                {
+                                    "label": "up",
+                                    "value": "devices.device.wan1.up",
+                                    "description": "WAN connected"
+                                },
+                                {
+                                    "label": "port",
+                                    "value": "devices.device.wan1.port",
+                                    "description": "WAN port number"
+                                },
+                                {
+                                    "label": "interface",
+                                    "value": "devices.device.wan1.interface",
+                                    "description": "WAN interface"
+                                },
+                                {
+                                    "label": "speed",
+                                    "value": "devices.device.wan1.speed",
+                                    "description": "WAN link speed"
+                                },
+                                {
+                                    "label": "latency",
+                                    "value": "devices.device.wan1.latency",
+                                    "description": "WAN latency"
+                                },
+                                {
+                                    "label": "availability",
+                                    "value": "devices.device.wan1.availability",
+                                    "description": "WAN availability"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "device › wan2",
+                            "items": [
+                                {
+                                    "label": "ip",
+                                    "value": "devices.device.wan2.ip",
+                                    "description": "WAN IPv4 address"
+                                },
+                                {
+                                    "label": "ipv6",
+                                    "value": "devices.device.wan2.ipv6",
+                                    "description": "WAN IPv6 addresses"
+                                },
+                                {
+                                    "label": "up",
+                                    "value": "devices.device.wan2.up",
+                                    "description": "WAN connected"
+                                },
+                                {
+                                    "label": "port",
+                                    "value": "devices.device.wan2.port",
+                                    "description": "WAN port number"
+                                },
+                                {
+                                    "label": "interface",
+                                    "value": "devices.device.wan2.interface",
+                                    "description": "WAN interface"
+                                },
+                                {
+                                    "label": "speed",
+                                    "value": "devices.device.wan2.speed",
+                                    "description": "WAN link speed"
+                                },
+                                {
+                                    "label": "latency",
+                                    "value": "devices.device.wan2.latency",
+                                    "description": "WAN latency"
+                                },
+                                {
+                                    "label": "availability",
+                                    "value": "devices.device.wan2.availability",
+                                    "description": "WAN availability"
+                                }
+                            ]
+                        },
+                        {
                             "label": "device › sys_stats",
                             "items": [
                                 {
