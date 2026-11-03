@@ -28,7 +28,11 @@
                     "xs": 12,
                     "style": {
                         "fontWeight": "bold"
-                    }
+                    },
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "controllerIp": {
                     "type": "text",
@@ -36,7 +40,10 @@
                     "placeholder": "127.0.0.1",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "controllerPort": {
                     "type": "number",
@@ -44,7 +51,10 @@
                     "placeholder": "8443",
                     "max": 65535,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 },
                 "_loginHeader": {
                     "type": "header",
@@ -52,18 +62,59 @@
                     "size": 5,
                     "newLine": true
                 },
+                "authMode": {
+                    "type": "select",
+                    "label": "Authentication",
+                    "newLine": true,
+                    "options": [
+                        {
+                            "label": "Local user",
+                            "value": "credentials"
+                        },
+                        {
+                            "label": "API key",
+                            "value": "apiKey"
+                        }
+                    ],
+                    "default": "credentials",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
+                },
                 "controllerUsername": {
                     "type": "text",
                     "label": "Username",
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "hidden": "data.authMode === 'apiKey'"
                 },
                 "controllerPassword": {
                     "type": "password",
                     "label": "Password",
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4,
+                    "hidden": "data.authMode === 'apiKey'"
+                },
+                "apiKey": {
+                    "type": "password",
+                    "label": "API key",
+                    "newLine": true,
+                    "help": "UniFi Network → Integrations → Create New API Key. UniFi OS only (UDM, UCG, Cloud Key Gen2+, UniFi OS Server).",
+                    "hidden": "data.authMode !== 'apiKey'",
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 8,
+                    "xl": 8
                 },
                 "_connectionHeader": {
                     "type": "header",
@@ -75,7 +126,11 @@
                     "type": "checkbox",
                     "label": "Ignore SSL certificate errors (self signed or expired)",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_updateHeader": {
                     "type": "header",
@@ -90,7 +145,10 @@
                     "min": 0,
                     "newLine": true,
                     "xs": 12,
-                    "sm": 6
+                    "sm": 12,
+                    "md": 6,
+                    "lg": 4,
+                    "xl": 4
                 }
             }
         },
