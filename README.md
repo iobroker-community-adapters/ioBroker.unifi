@@ -120,6 +120,9 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) Gateway traffic: with UniFi Network 11 and newer (no gateway statistics anymore) the request is skipped after one message until the next start. With the WAN statistics switched on it is only an info, without them a warning that tells which settings to change
+
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
 
