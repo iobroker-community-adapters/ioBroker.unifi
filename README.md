@@ -124,6 +124,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 ### **WORK IN PROGRESS**
 - (@Schimi1983) Login of the local user blocked by the UniFi console (account locked, login limit): a clear message instead of the raw answer, and the next attempt only after 15 minutes, so the block is not extended
 - (@Schimi1983) Internal errors of the controller (HTTP 500) are logged in one short line instead of the whole HTML page
+- (@Schimi1983) A single timeout of the controller is a warning without stack (the next refresh repeats the request), only from 3 failed refreshes in a row an error
 
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)

@@ -67,9 +67,24 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
 
 // Upper limit for the delay between refreshes after consecutive failures
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
+/** From this number of failed refreshes in a row a timeout is logged as error instead of warning */
+const REPEATED_FAILURES = 3;
 
 /** Login error codes of UniFi OS after too many logins: the console blocks further logins for a while */
 const LOGIN_BLOCKED_CODES = ['AUTHENTICATION_FAILED_ACCOUNT_LOCKED', 'AUTHENTICATION_FAILED_LIMIT_REACHED'];
+
+/**
+ * Prefix of a log message: the method and the site, if known
+ *
+ * @param site name of the site
+ * @param methodName name of the failed method
+ */
+function logPrefix(site: string | undefined, methodName: string | undefined): string {
+    if (methodName) {
+        return `[${methodName}${site ? ` site ${site}` : ''}] `;
+    }
+    return site ? `Error site ${site}: ` : '';
+}
 
 /**
  * The `meta` of a JSON answer of the controller
@@ -667,8 +682,22 @@ class Unifi extends utils.Adapter {
             // Internal error of the network application, e.g. the Tomcat page "HTTP Status 500 – Internal Server Error"
             const detail = htmlErrorTitle(err.response?.data) ?? responseMeta(err)?.msg ?? err.message;
             this.log.error(
-                `${methodName ? `[${methodName} site ${site}] ` : `Error site ${site}: `}the UniFi controller answered with an internal error (${status}: ${detail}). The request is repeated with the next refresh.`,
+                `${logPrefix(site, methodName)}the UniFi controller answered with an internal error (${status}: ${detail}). The request is repeated with the next refresh.`,
             );
+        } else if (/^timeout of \d+ms exceeded$/.test(err.message)) {
+            // @KI_HINWEIS: a console under load answers a request now and then too late. That fixes itself with the
+            // next refresh, so it is a warning without stack and Sentry report; only repeated failures are an error.
+            const seconds = Number(/\d+/.exec(err.message)?.[0]) / 1000;
+            const prefix = logPrefix(site, methodName);
+            if (this.consecutiveErrors >= REPEATED_FAILURES) {
+                this.log.error(
+                    `${prefix}the UniFi controller did not answer within ${seconds} s, ${this.consecutiveErrors} refreshes in a row. Check that the console is reachable and not overloaded.`,
+                );
+            } else {
+                this.log.warn(
+                    `${prefix}the UniFi controller did not answer within ${seconds} s. The request is repeated with the next refresh.`,
+                );
+            }
         } else if (this.settings.authMode === 'apiKey' && status === 401) {
             this.log.error(
                 `Error site ${site}: The API key was rejected. It may be invalid, expired or deleted. Create a new one in UniFi Network → Integrations.`,

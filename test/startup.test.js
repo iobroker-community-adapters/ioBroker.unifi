@@ -169,6 +169,20 @@ describe('error handling', () => {
         ]);
     });
 
+    it('logs a single timeout as warning without stack, repeated timeouts as error', () => {
+        const err = new Error('timeout of 10000ms exceeded');
+
+        adapter.handleError(err, undefined, 'updateUnifiData');
+        sinon.assert.notCalled(adapter.log.error);
+        sinon.assert.calledOnceWithExactly(
+            adapter.log.warn,
+            '[updateUnifiData] the UniFi controller did not answer within 10 s. The request is repeated with the next refresh.',
+        );
+
+        adapter.consecutiveErrors = 3;
+        assert.match(loggedError(err)[0], /did not answer within 10 s, 3 refreshes in a row/);
+    });
+
     it('explains a rejected API key', () => {
         adapter.settings.authMode = 'apiKey';
         const err = new Error('Request failed with status code 401');
