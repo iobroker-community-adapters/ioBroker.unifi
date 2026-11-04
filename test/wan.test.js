@@ -145,6 +145,23 @@ describe('WAN statistics', () => {
         assert.strictEqual(wan.last24h_rx_bytes, null);
     });
 
+    it('counts every bucket with the length of one bucket, also if buckets are missing (gateway offline)', () => {
+        const dashboard = structuredClone(DASHBOARD);
+        // the second bucket and 3 h of yesterday (10:00 - 13:00) are missing
+        dashboard.wan_activity.activity_by_network_group.WAN.history = [
+            ...hourly(YESTERDAY - 2 * HOUR, 1, 1000, 100),
+            ...hourly(YESTERDAY, 10, 100, 10),
+            ...hourly(YESTERDAY + 13 * HOUR, 11, 100, 10),
+            ...hourly(TODAY, 15, 10, 1),
+        ];
+
+        const [wan] = summarizeWan(dashboard, NOW);
+
+        assert.strictEqual(wan.today_rx_bytes, 15 * 3600 * 10);
+        assert.strictEqual(wan.yesterday_rx_bytes, 21 * 3600 * 100);
+        assert.strictEqual(wan.yesterday_tx_bytes, 21 * 3600 * 10);
+    });
+
     it('has no value for a direction without rates, but 0 for measured zero rates', () => {
         const dashboard = structuredClone(DASHBOARD);
         for (const bucket of dashboard.wan_activity.activity_by_network_group.WAN.history) {

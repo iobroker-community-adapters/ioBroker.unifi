@@ -120,6 +120,9 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
+
 ### 1.2.0 (2026-11-04)
 - (@Schimi1983) The `blocked` state is created for wired clients too, with role `switch` [#760]
 - (@Schimi1983) Gateways: IPv4 and IPv6 addresses, status, port, link speed, latency and availability of every internet connection (`wan1`, `wan2`) [#696]

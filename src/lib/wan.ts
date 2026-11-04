@@ -106,12 +106,20 @@ function num(value: unknown): number | null {
 }
 
 /**
- * Length of a bucket in ms, from the distance of the first two buckets
+ * Length of a bucket in ms: the smallest distance of two consecutive buckets. A missing bucket (e.g. while the
+ * gateway was offline) only makes a distance larger, so it does not change the length.
  *
  * @param history buckets sorted by time
  */
 function bucketLength(history: WanHistoryBucket[]): number {
-    return history.length > 1 ? history[1].timestamp - history[0].timestamp : HOUR;
+    let length = Infinity;
+    for (let i = 1; i < history.length; i++) {
+        const distance = history[i].timestamp - history[i - 1].timestamp;
+        if (distance > 0 && distance < length) {
+            length = distance;
+        }
+    }
+    return Number.isFinite(length) ? length : HOUR;
 }
 
 /**
