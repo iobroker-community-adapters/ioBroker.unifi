@@ -33,6 +33,11 @@ add_operation('secondsToHours', (a: number): string => `${Math.floor(a / 60)}:${
 /** Convert to string */
 add_operation('string', (a: { toString(): string }): string => a.toString());
 
+/** Join the items of an array with a separator, e.g. the IPv6 addresses of a WAN port; no array stays as it is */
+add_operation('join', (a: unknown, separator: string): unknown =>
+    Array.isArray(a) ? a.filter(item => item !== null && item !== undefined && item !== '').join(separator) : a,
+);
+
 /** Check if not null */
 add_operation('notNull', (a: unknown): boolean => a !== null);
 

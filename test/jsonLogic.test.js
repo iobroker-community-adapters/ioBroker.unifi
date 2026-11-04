@@ -52,6 +52,13 @@ describe('json-logic operations', () => {
         assert.strictEqual(applyRule({ notNull: [0] }), true);
     });
 
+    it('joins arrays, e.g. the IPv6 addresses of a WAN port', () => {
+        const rule = { join: [{ var: 'ipv6' }, ', '] };
+        assert.strictEqual(applyRule(rule, { ipv6: ['2001:db8::1', '', 'fe80::1'] }), '2001:db8::1, fe80::1');
+        assert.strictEqual(applyRule(rule, { ipv6: [] }), '');
+        assert.strictEqual(applyRule(rule, {}), null);
+    });
+
     it('translates the PoE mode', () => {
         assert.strictEqual(applyRule({ poeMode: ['auto'] }), true);
         assert.strictEqual(applyRule({ poeMode: ['off'] }), false);

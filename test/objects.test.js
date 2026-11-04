@@ -196,6 +196,55 @@ describe('client status', () => {
         assert.ok(adapter.objects.has(`${wireless}.reconnect`));
     });
 
+    it('creates the WAN ports of a gateway with addresses, status and link', async () => {
+        // as reported by a UDM Pro: WAN 1 via PPPoE on SFP+ 1, WAN 2 configured on port 9 without cable
+        const gateway = {
+            mac: 'aa:bb:cc:00:00:01',
+            name: 'UDM Pro',
+            type: 'udm',
+            wan1: {
+                ifname: 'eth9',
+                uplink_ifname: 'ppp0',
+                port_idx: 10,
+                up: true,
+                ip: '203.0.113.10',
+                ipv6: ['2001:db8::10', 'fe80::1'],
+                speed: 1000,
+                latency: 2,
+                availability: 100,
+            },
+            wan2: { ifname: 'eth8', uplink_ifname: 'eth8', port_idx: 9, up: false, ipv6: [], speed: 10 },
+        };
+        const accessPoint = { mac: 'aa:bb:cc:00:00:02', name: 'AP', type: 'uap' };
+
+        await adapter.processDevices('default', [gateway, accessPoint]);
+
+        const wan1 = 'default.devices.aa:bb:cc:00:00:01.wan1';
+        assert.strictEqual(adapter.val(`${wan1}.ip`), '203.0.113.10');
+        assert.strictEqual(adapter.val(`${wan1}.ipv6`), '2001:db8::10, fe80::1');
+        assert.strictEqual(adapter.val(`${wan1}.up`), true);
+        assert.strictEqual(adapter.val(`${wan1}.port`), 10);
+        assert.strictEqual(adapter.val(`${wan1}.interface`), 'ppp0');
+        assert.strictEqual(adapter.val(`${wan1}.speed`), 1000);
+        assert.strictEqual(adapter.val(`${wan1}.latency`), 2);
+        assert.strictEqual(adapter.val(`${wan1}.availability`), 100);
+        assert.strictEqual(adapter.objects.get(`unifi.0.${wan1}`)?.common.name, 'WAN 1');
+        assert.strictEqual(adapter.objects.get(`unifi.0.${wan1}.ip`)?.common.role, 'info.ip');
+        assert.strictEqual(adapter.objects.get(`unifi.0.${wan1}.up`)?.common.role, 'indicator.reachable');
+        assert.strictEqual(adapter.objects.get(`unifi.0.${wan1}.latency`)?.common.unit, 'ms');
+
+        // without connection: no address, no latency and availability
+        const wan2 = 'default.devices.aa:bb:cc:00:00:01.wan2';
+        assert.strictEqual(adapter.val(`${wan2}.up`), false);
+        assert.strictEqual(adapter.val(`${wan2}.port`), 9);
+        assert.strictEqual(adapter.val(`${wan2}.ip`), null);
+        assert.strictEqual(adapter.val(`${wan2}.ipv6`), '');
+        assert.strictEqual(adapter.objects.has(`unifi.0.${wan2}.latency`), false);
+        assert.strictEqual(adapter.objects.has(`unifi.0.${wan2}.availability`), false);
+
+        assert.strictEqual(adapter.objects.has('unifi.0.default.devices.aa:bb:cc:00:00:02.wan1'), false);
+    });
+
     it('sets the blocked state of the clients', async () => {
         adapter.statesFilter = adapter.normalizeStatesFilter({ clients: ['clients.client.blocked'] });
         adapter.controllers.default = {

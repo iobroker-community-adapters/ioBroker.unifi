@@ -48,6 +48,9 @@ It is possible to disable the update of selected information or filter specific 
 | Networks    | Name                                    |
 | Health      | Subsystem                               |
 
+### Internet connections (WAN)
+For a gateway (e.g. UDM-Pro, UCG, USG) every internet connection gets its own folder below the device: `wan1`, and `wan2` if a second connection is set up. It shows the public IPv4 address, the IPv6 addresses, whether the connection is up, the port number on the gateway, the link speed and, while connected, the latency and availability.
+
 ### Filter states
 For every kind of information, the created states can be selected. If nothing is selected, all states are created. States needed by a selected state are added automatically, e.g. `last_seen_by_uap` and `last_seen_by_usw` for `is_online`.
 
@@ -119,6 +122,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 -->
 ### **WORK IN PROGRESS**
 - (@Schimi1983) The `blocked` state is created for wired clients too, with role `switch` [#760]
+- (@Schimi1983) Gateways: IPv4 and IPv6 addresses, status, port, link speed, latency and availability of every internet connection (`wan1`, `wan2`) [#696]
 
 ### 1.1.0 (2026-11-04)
 - (@Schimi1983) Authentication with an API key (UniFi OS), as alternative to the local user

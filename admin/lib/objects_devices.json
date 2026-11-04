@@ -1620,6 +1620,392 @@
                                     }
                                 }
                             },
+                            "devices.device.wan1": {
+                                "type": "channel",
+                                "common": {
+                                    "name": "WAN 1"
+                                },
+                                "native": {
+                                    "object_id": "devices.device.wan1"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wan1"
+                                            },
+                                            "wan1",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "wan1",
+                                    "has": {
+                                        "devices.device.wan1.ip": {
+                                            "_id": "ip",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN IPv4 address",
+                                                "type": "string",
+                                                "role": "info.ip",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.ip"
+                                            },
+                                            "logic": {
+                                                "value": "ip"
+                                            }
+                                        },
+                                        "devices.device.wan1.ipv6": {
+                                            "_id": "ipv6",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN IPv6 addresses",
+                                                "type": "string",
+                                                "role": "info.ip",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.ipv6"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "join": [
+                                                        {
+                                                            "var": "ipv6"
+                                                        },
+                                                        ", "
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "devices.device.wan1.up": {
+                                            "_id": "up",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN connected",
+                                                "type": "boolean",
+                                                "role": "indicator.reachable",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.up"
+                                            },
+                                            "logic": {
+                                                "value": "up"
+                                            }
+                                        },
+                                        "devices.device.wan1.port": {
+                                            "_id": "port",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN port number",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.port"
+                                            },
+                                            "logic": {
+                                                "value": "port_idx"
+                                            }
+                                        },
+                                        "devices.device.wan1.interface": {
+                                            "_id": "interface",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN interface",
+                                                "type": "string",
+                                                "role": "info.name",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.interface"
+                                            },
+                                            "logic": {
+                                                "value": "uplink_ifname"
+                                            }
+                                        },
+                                        "devices.device.wan1.speed": {
+                                            "_id": "speed",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN link speed",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Mbit/s",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.speed"
+                                            },
+                                            "logic": {
+                                                "value": "speed"
+                                            }
+                                        },
+                                        "devices.device.wan1.latency": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN latency",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.latency"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "latency"
+                                                        },
+                                                        "latency",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "latency"
+                                            }
+                                        },
+                                        "devices.device.wan1.availability": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN availability",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "%",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan1.availability"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "availability"
+                                                        },
+                                                        "availability",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "availability"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "devices.device.wan2": {
+                                "type": "channel",
+                                "common": {
+                                    "name": "WAN 2"
+                                },
+                                "native": {
+                                    "object_id": "devices.device.wan2"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "wan2"
+                                            },
+                                            "wan2",
+                                            null
+                                        ]
+                                    },
+                                    "has_key": "wan2",
+                                    "has": {
+                                        "devices.device.wan2.ip": {
+                                            "_id": "ip",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN IPv4 address",
+                                                "type": "string",
+                                                "role": "info.ip",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.ip"
+                                            },
+                                            "logic": {
+                                                "value": "ip"
+                                            }
+                                        },
+                                        "devices.device.wan2.ipv6": {
+                                            "_id": "ipv6",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN IPv6 addresses",
+                                                "type": "string",
+                                                "role": "info.ip",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.ipv6"
+                                            },
+                                            "logic": {
+                                                "value": {
+                                                    "join": [
+                                                        {
+                                                            "var": "ipv6"
+                                                        },
+                                                        ", "
+                                                    ]
+                                                }
+                                            }
+                                        },
+                                        "devices.device.wan2.up": {
+                                            "_id": "up",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN connected",
+                                                "type": "boolean",
+                                                "role": "indicator.reachable",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.up"
+                                            },
+                                            "logic": {
+                                                "value": "up"
+                                            }
+                                        },
+                                        "devices.device.wan2.port": {
+                                            "_id": "port",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN port number",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.port"
+                                            },
+                                            "logic": {
+                                                "value": "port_idx"
+                                            }
+                                        },
+                                        "devices.device.wan2.interface": {
+                                            "_id": "interface",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN interface",
+                                                "type": "string",
+                                                "role": "info.name",
+                                                "read": true,
+                                                "write": false,
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.interface"
+                                            },
+                                            "logic": {
+                                                "value": "uplink_ifname"
+                                            }
+                                        },
+                                        "devices.device.wan2.speed": {
+                                            "_id": "speed",
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN link speed",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "Mbit/s",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.speed"
+                                            },
+                                            "logic": {
+                                                "value": "speed"
+                                            }
+                                        },
+                                        "devices.device.wan2.latency": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN latency",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "ms",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.latency"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "latency"
+                                                        },
+                                                        "latency",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "latency"
+                                            }
+                                        },
+                                        "devices.device.wan2.availability": {
+                                            "type": "state",
+                                            "common": {
+                                                "name": "WAN availability",
+                                                "type": "number",
+                                                "role": "value",
+                                                "read": true,
+                                                "write": false,
+                                                "unit": "%",
+                                                "desc": ""
+                                            },
+                                            "native": {
+                                                "object_id": "devices.device.wan2.availability"
+                                            },
+                                            "logic": {
+                                                "_id": {
+                                                    "ifNotNull": [
+                                                        {
+                                                            "var": "availability"
+                                                        },
+                                                        "availability",
+                                                        null
+                                                    ]
+                                                },
+                                                "value": "availability"
+                                            }
+                                        }
+                                    }
+                                }
+                            },
                             "devices.device.sys_stats": {
                                 "_id": "sys_stats",
                                 "type": "channel",
