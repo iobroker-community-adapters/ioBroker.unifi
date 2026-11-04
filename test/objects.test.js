@@ -182,6 +182,20 @@ describe('client status', () => {
         assert.strictEqual(adapter.states.has(`${c}.noobject.is_online`), false);
     });
 
+    it('creates the blocked state also for wired clients, reconnect only for wireless clients', async () => {
+        await adapter.processClients('default', [
+            client(1, { is_wired: true }),
+            client(2, { is_wired: false, essid: 'Home WiFi' }),
+        ]);
+
+        const wired = 'unifi.0.default.clients.aa:bb:cc:dd:ee:01';
+        const wireless = 'unifi.0.default.clients.aa:bb:cc:dd:ee:02';
+        assert.strictEqual(adapter.objects.get(`${wired}.blocked`)?.common.role, 'switch');
+        assert.ok(adapter.objects.has(`${wireless}.blocked`));
+        assert.strictEqual(adapter.objects.has(`${wired}.reconnect`), false);
+        assert.ok(adapter.objects.has(`${wireless}.reconnect`));
+    });
+
     it('sets the blocked state of the clients', async () => {
         adapter.statesFilter = adapter.normalizeStatesFilter({ clients: ['clients.client.blocked'] });
         adapter.controllers.default = {

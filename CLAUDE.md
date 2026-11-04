@@ -94,6 +94,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - `processBlockedClients()` reads only the `blocked` states of its own site (`<site>.clients.*.blocked`) and writes changes only.
 - `updateWan` is `false` in `io-package.json` on purpose: js-controller adds missing native keys on upgrade, a default of `true` would switch it on for existing instances. `fetchWan()` skips a site after a 404 until the next start. `summarizeWan()` returns `null` for an interval the history does not cover from its start and for a direction without rates.
 - Network 11 answers `stat/report/*.gw` with an empty list; `fetchGatewayTraffic()` warns once per site. The rates `avg_*_rate_bps` of the dashboard are bytes per second despite the name (their sum times the bucket length equals `summary.rx_bytes`).
+- The `blocked` state is created for every client (wired too), `reconnect` only for wireless clients (`essid`).
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
 
 ## Tests
