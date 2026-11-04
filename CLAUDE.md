@@ -87,6 +87,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 ### Misc conventions
 
 - The client takes the site from the controller options; its methods have **no site parameter** (same as node-unifi 2). Errors have the shape of the former axios errors (`Request failed with status code <n>` + `response.status/data`, or `meta.msg` as message), `handleError()` relies on it.
+- A blocked login of the local user (`AUTHENTICATION_FAILED_ACCOUNT_LOCKED` / `AUTHENTICATION_FAILED_LIMIT_REACHED`, 429) is logged in plain text without stack/Sentry, and the next refresh waits `MAX_BACKOFF_DELAY`. HTTP ≥ 500 of the controller is one short line (title of the HTML page), no Sentry.
 - `onUnload()` logs the local user out (max. 2 s, global timer on purpose), otherwise every restart leaves a session open on the console.
 - `FORBIDDEN_CHARS` in `src/main.ts` is applied to every created object ID.
 - Kept from the JS version on purpose: `createVouchers()` maps a quota of 0 to 1 and values of unexpected types are converted with `toString()` in `applyJsonLogic()`. `switchPoeOfPort()` creates a missing `port_overrides` entry with only `port_idx` and `poe_mode`.

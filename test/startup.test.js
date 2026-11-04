@@ -148,6 +148,27 @@ describe('error handling', () => {
         ]);
     });
 
+    it('explains a blocked login of the local user without stack', () => {
+        const err = new Error('Request failed with status code 403');
+        err.response = { status: 403, data: { message: 'SSO Account locked', code: 'AUTHENTICATION_FAILED_ACCOUNT_LOCKED' } };
+
+        const logged = loggedError(err);
+        assert.strictEqual(logged.length, 1);
+        assert.match(logged[0], /blocks the login of the local user.*15 minutes.*API key/);
+    });
+
+    it('shortens the HTML page of an internal error of the controller', () => {
+        const err = new Error('Request failed with status code 500');
+        err.response = {
+            status: 500,
+            data: '<!doctype html><html lang="en"><head><title>HTTP Status 500 – Internal Server Error</title><style>body {}</style></head><body><h1>HTTP Status 500 – Internal Server Error</h1></body></html>',
+        };
+
+        assert.deepStrictEqual(loggedError(err), [
+            '[test site default] the UniFi controller answered with an internal error (500: HTTP Status 500 – Internal Server Error). The request is repeated with the next refresh.',
+        ]);
+    });
+
     it('explains a rejected API key', () => {
         adapter.settings.authMode = 'apiKey';
         const err = new Error('Request failed with status code 401');

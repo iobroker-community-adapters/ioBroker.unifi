@@ -113,6 +113,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 | Alarms      | https://IP/proxy/network/api/s/SITE/stat/alarm       |
 
 ## Known issues
+* "The UniFi console blocks the login of the local user": UniFi OS locks a local user for a while after too many logins (e.g. when the same user is used by several systems). The adapter waits 15 minutes before it tries again. An API key avoids this, it needs no login.
 * The is_wired state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller and is not related to the adapter. (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1)
 
 ## Changelog
@@ -120,6 +121,10 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) Login of the local user blocked by the UniFi console (account locked, login limit): a clear message instead of the raw answer, and the next attempt only after 15 minutes, so the block is not extended
+- (@Schimi1983) Internal errors of the controller (HTTP 500) are logged in one short line instead of the whole HTML page
+
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
 

@@ -146,6 +146,24 @@ describe('refresh reliability', () => {
         assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [30 * 60 * 1000]);
     });
 
+    it('waits 15 minutes when the console blocks the login of the local user', async () => {
+        const adapter = createAdapter();
+        adapter.settings.updateInterval = 60000;
+        const locked = httpError(403);
+        locked.response.data = { message: 'SSO Account locked', code: 'AUTHENTICATION_FAILED_ACCOUNT_LOCKED' };
+        adapter.performUpdate = sinon.stub().rejects(locked);
+        adapter.scheduleNextUpdate = sinon.stub();
+
+        await adapter.updateUnifiData();
+        assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [15 * 60 * 1000]);
+
+        const limit = httpError(429);
+        limit.response.data = { message: "You've reached the login attempt limit", code: 'AUTHENTICATION_FAILED_LIMIT_REACHED' };
+        adapter.performUpdate = sinon.stub().rejects(limit);
+        await adapter.updateUnifiData();
+        assert.deepStrictEqual(adapter.scheduleNextUpdate.lastCall.args, [15 * 60 * 1000]);
+    });
+
     it('does not start overlapping refreshes', async () => {
         const adapter = createAdapter();
         adapter.updateInProgress = true;

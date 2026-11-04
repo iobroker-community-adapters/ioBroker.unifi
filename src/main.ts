@@ -68,6 +68,44 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
 // Upper limit for the delay between refreshes after consecutive failures
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
 
+/** Login error codes of UniFi OS after too many logins: the console blocks further logins for a while */
+const LOGIN_BLOCKED_CODES = ['AUTHENTICATION_FAILED_ACCOUNT_LOCKED', 'AUTHENTICATION_FAILED_LIMIT_REACHED'];
+
+/**
+ * The `meta` of a JSON answer of the controller
+ *
+ * @param err error of the client
+ */
+function responseMeta(err: UnifiError): { msg?: string } | undefined {
+    const data = err.response?.data;
+    return typeof data === 'object' ? data.meta : undefined;
+}
+
+/**
+ * The login of the local user is blocked by UniFi OS (account locked or login limit reached)
+ *
+ * @param err error of the client
+ */
+function isLoginBlocked(err: UnifiError): boolean {
+    const data = err.response?.data;
+    const code = typeof data === 'object' ? data.code : undefined;
+    return (code !== undefined && LOGIN_BLOCKED_CODES.includes(code)) || err.response?.status === 429;
+}
+
+/**
+ * Short text of an HTML error page of the controller, e.g. "HTTP Status 500 – Internal Server Error"
+ *
+ * @param data answer of the controller
+ * @returns the title, or undefined if the answer is no HTML page
+ */
+function htmlErrorTitle(data: unknown): string | undefined {
+    if (typeof data !== 'string' || !/^\s*</.test(data)) {
+        return undefined;
+    }
+    const title = /<title>([^<]*)<\/title>/i.exec(data)?.[1] ?? /<h1>([^<]*)<\/h1>/i.exec(data)?.[1];
+    return title?.trim() || 'HTML page';
+}
+
 // Categories of the state filter, defined in admin/lib/objects_<category>.json
 const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
     'sysinfo',
@@ -617,7 +655,21 @@ class Unifi extends utils.Adapter {
      * @param methodName method that failed
      */
     private handleError(err: UnifiError, site: string | undefined, methodName?: string): void {
-        if (this.settings.authMode === 'apiKey' && err.response?.status === 401) {
+        const status = err.response?.status;
+        if (this.settings.authMode !== 'apiKey' && isLoginBlocked(err)) {
+            // @KI_HINWEIS: UniFi OS locks the local user after too many logins (403 AUTHENTICATION_FAILED_ACCOUNT_LOCKED)
+            // and limits the login attempts (429 AUTHENTICATION_FAILED_LIMIT_REACHED). No stack and no Sentry report:
+            // it is no error of the adapter, the next attempt follows after MAX_BACKOFF_DELAY.
+            this.log.error(
+                `The UniFi console blocks the login of the local user for now (too many logins). The adapter tries again in ${MAX_BACKOFF_DELAY / 60000} minutes. If this repeats, check that the user is not used by other systems, or use an API key (UniFi Network → Integrations).`,
+            );
+        } else if (status !== undefined && status >= 500) {
+            // Internal error of the network application, e.g. the Tomcat page "HTTP Status 500 – Internal Server Error"
+            const detail = htmlErrorTitle(err.response?.data) ?? responseMeta(err)?.msg ?? err.message;
+            this.log.error(
+                `${methodName ? `[${methodName} site ${site}] ` : `Error site ${site}: `}the UniFi controller answered with an internal error (${status}: ${detail}). The request is repeated with the next refresh.`,
+            );
+        } else if (this.settings.authMode === 'apiKey' && status === 401) {
             this.log.error(
                 `Error site ${site}: The API key was rejected. It may be invalid, expired or deleted. Create a new one in UniFi Network → Integrations.`,
             );
@@ -633,7 +685,7 @@ class Unifi extends utils.Adapter {
             this.log.error(
                 `Error site ${site}: Server is busy. There seems to be a problem with the UniFi controller.`,
             );
-        } else if (err.message === 'api.err.NoPermission' || err.response?.data?.meta?.msg === 'api.err.NoPermission') {
+        } else if (err.message === 'api.err.NoPermission' || responseMeta(err)?.msg === 'api.err.NoPermission') {
             this.log.error(`Error site ${site}: Permission denied. Check access rights.`);
         } else if (err.message.includes('connect EHOSTUNREACH') || err.message.includes('connect ENETUNREACH')) {
             this.log.error(`Error site ${site}: Host or network cannot be reached.`);
@@ -667,7 +719,8 @@ class Unifi extends utils.Adapter {
             this.log.error(err.message);
         } else {
             if (err.response && err.response.data) {
-                this.log.error(`Error site ${site} (data): ${JSON.stringify(err.response.data)}`);
+                const html = htmlErrorTitle(err.response.data);
+                this.log.error(`Error site ${site} (data): ${html ?? JSON.stringify(err.response.data)}`);
             }
             if (methodName) {
                 this.log.error(`[${methodName} site ${site}] error: ${err.message}, stack: ${err.stack}`);
@@ -706,6 +759,7 @@ class Unifi extends utils.Adapter {
         await this.setDiagnosticState('info.refreshInProgress', true);
 
         let successful = false;
+        let loginBlocked = false;
         try {
             this.log.debug('Update started');
 
@@ -736,6 +790,7 @@ class Unifi extends utils.Adapter {
             await this.setDiagnosticState('info.lastError', (err as Error).message || String(err));
             await this.setDiagnosticState('info.consecutiveErrors', this.consecutiveErrors);
 
+            loginBlocked = this.settings.authMode !== 'apiKey' && isLoginBlocked(err);
             this.handleError(err, undefined, 'updateUnifiData');
         } finally {
             this.updateInProgress = false;
@@ -745,7 +800,10 @@ class Unifi extends utils.Adapter {
                 // Backoff 1x, 2x, 4x, 8x, 16x: capped, but never shorter than the configured interval
                 const interval = this.settings.updateInterval;
                 const backoffFactor = successful ? 1 : Math.pow(2, Math.min(this.consecutiveErrors - 1, 4));
-                const delay = Math.max(interval, Math.min(interval * backoffFactor, MAX_BACKOFF_DELAY));
+                // Every further login attempt would extend the block of the console
+                const delay = loginBlocked
+                    ? Math.max(interval, MAX_BACKOFF_DELAY)
+                    : Math.max(interval, Math.min(interval * backoffFactor, MAX_BACKOFF_DELAY));
                 this.scheduleNextUpdate(delay);
             }
         }

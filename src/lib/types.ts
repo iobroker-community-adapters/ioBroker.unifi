@@ -76,11 +76,16 @@ export interface UnifiError extends Error {
     code?: string;
     response?: {
         status?: number;
-        data?: {
-            meta?: {
-                msg?: string;
-            };
-        };
+        /** JSON answer of the controller, or the HTML page of an internal error */
+        data?:
+            | {
+                  meta?: {
+                      msg?: string;
+                  };
+                  /** error code of the UniFi OS login, e.g. AUTHENTICATION_FAILED_ACCOUNT_LOCKED */
+                  code?: string;
+              }
+            | string;
     };
 }
 
