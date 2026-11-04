@@ -212,14 +212,26 @@ describe('adapter with a UniFi OS controller', function () {
         assertNoErrors(adapter);
     });
 
-    it('warns once when the gateway statistics are empty (UniFi Network 11)', async () => {
+    it('warns once and skips the empty gateway statistics (UniFi Network 11)', async () => {
         controller.responses['stat/report/daily.gw'] = [];
         await startAdapter({ updateGatewayTraffic: true });
 
         await adapter.updateUnifiData(true);
         await adapter.updateUnifiData(true);
 
-        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no gateway statistics/)));
+        assert.strictEqual(controller.requestsTo('stat/report/daily.gw').length, 1);
+        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no gateway statistics.*Switch on "Update WAN statistics"/)));
+        assertNoErrors(adapter);
+    });
+
+    it('only informs about the empty gateway statistics if the WAN statistics are on', async () => {
+        controller.responses['stat/report/daily.gw'] = [];
+        await startAdapter({ updateGatewayTraffic: true, updateWan: true });
+
+        await adapter.updateUnifiData(true);
+
+        sinon.assert.notCalled(adapter.log.warn.withArgs(sinon.match(/no gateway statistics/)));
+        sinon.assert.calledOnce(adapter.log.info.withArgs(sinon.match(/no gateway statistics.*Switch off "Update Gateway Traffic"/)));
     });
 
     it('creates vouchers with the configured settings', async () => {
