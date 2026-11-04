@@ -114,7 +114,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.1.0 (2026-11-04)
 - (@Schimi1983) Authentication with an API key (UniFi OS), as alternative to the local user
 - (@Schimi1983) node-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)
 - (@Schimi1983) The session of the local user is ended when the adapter stops
@@ -146,9 +146,6 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 ### 0.6.7 (2023-12-10)
 * (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues
 * (jens-maus) updated dependencies
-
-### 0.6.6 (2023-06-20)
-* (pafade89) fixed broken client status updates (#672)
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
