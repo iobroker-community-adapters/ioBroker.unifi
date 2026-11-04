@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "news": {
+      "1.2.0": {
+        "en": "The `blocked` state is created for wired clients too, with role `switch` [#760]\nGateways: IPv4 and IPv6 addresses, status, port, link speed, latency and availability of every internet connection (`wan1`, `wan2`) [#696]",
+        "de": "Der State `blocked` wird auch für kabelgebundene Clients angelegt, mit der Rolle `switch` [#760]\nGateways: IPv4- und IPv6-Adressen, Status, Port, Link-Geschwindigkeit, Latenz und Verfügbarkeit jeder Internetverbindung (`wan1`, `wan2`) [#696]",
+        "ru": "Состояние «заблокировано» также создано для проводных клиентов с ролью `switch` [#760]\nШлюзы: адреса IPv4 и IPv6, статус, порт, скорость соединения, задержка и доступность каждого интернет-соединения (`wan1`, `wan2`) [#696]",
+        "pt": "O estado “bloqueado” também é criado para clientes com fio [#760]\nGateways: endereços IPv4 e IPv6, status, porta, velocidade, latência e disponibilidade de cada conexão à Internet [#696]",
+        "nl": "De status `geblokkeerd` wordt ook gecreëerd voor bekabelde clients, met de rol `switch` [#760]\nGateways: IPv4- en IPv6-adressen, status, poort, verbindingssnelheid, latentie en beschikbaarheid van elke internetverbinding (`wan1`, `wan2`) [#696]",
+        "fr": "L'état « bloqué » est également créé pour les clients câblés, avec le rôle switch [#760]\nPasserelles : adresses IPv4 et IPv6, état, port, vitesse, latence et disponibilité de chaque connexion Internet (`wan1`, `wan2`) [#696]",
+        "it": "Lo stato `bloccato` è creato anche per i client cablati, con ruolo `switch` [#760]\nGateway: indirizzi IPv4 e IPv6, stato, porta, velocità, latenza e disponibilità di ogni connessione Internet (`wan1`, `wan2`) [#696]",
+        "es": "El estado «bloqueado» también se crea para los clientes de cable, con el rol «switch» [#760]\nPuertas de enlace: direcciones IPv4 e IPv6, estado, puerto, velocidad de enlace, latencia y disponibilidad de cada conexión a Internet («wan1», «wan2») [#696]",
+        "pl": "Stan „zablokowany” jest tworzony również dla klientów przewodowych, z rolą `switch` [#760]\nBramy: adresy IPv4 i IPv6, status, port, szybkość łącza, opóźnienie i dostępność każdego połączenia internetowego („wan1”, „wan2”) [#696]",
+        "uk": "Стан `заблокований` створюється і для провідних клієнтів, з роллю `switch` [#760]\nШлюзи: адреси IPv4 та IPv6, статус, порт, швидкість зв'язку, затримка та доступність кожного підключення до Інтернету (`wan1`, `wan2`) [#696]",
+        "zh-cn": "“blocked” 状态也是为有线客户端创建的，角色为 “切换” [#760]\n网关：每个互联网连接的 IPv4 和 IPv6 地址、状态、端口、链路速度、延迟和可用性（`wan1`、`wan2`）[#696]"
+      },
       "1.1.0": {
         "en": "Authentication with an API key (UniFi OS), as alternative to the local user\nnode-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)\nThe session of the local user is ended when the adapter stops\nThe default port is empty (UniFi OS) and `common.dataSource` is `poll`\nWAN statistics for UniFi Network 11 and newer: traffic today, yesterday and in the last 24 hours, monthly traffic, state, availability, latency, provider and last speed test of every internet connection [#696]\nWarning when the controller returns no gateway statistics (UniFi Network 11 cleared them)",
         "de": "Anmeldung mit einem API-Key (UniFi OS) als Alternative zum lokalen Benutzer\nnode-unifi wurde durch einen eigenen Client ohne Abhängigkeiten ersetzt (kein axios mit bekannten Sicherheitslücken, eine Anfrage weniger pro Aufruf)\nDie Sitzung des lokalen Benutzers wird beendet, wenn der Adapter stoppt\nDer Standard-Port ist leer (UniFi OS) und `common.dataSource` ist `poll`\nWAN-Statistik für UniFi Network 11 und neuer: Datenverkehr heute, gestern und in den letzten 24 Stunden, monatlicher Datenverkehr, Status, Verfügbarkeit, Latenz, Anbieter und letzter Speedtest jeder Internetverbindung [#696]\nWarnung, wenn der Controller keine Gateway-Statistik liefert (UniFi Network 11 liefert sie nicht mehr)",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga node.js 18 i sterownika js- > = 5 teraz\nZaktualizowano zależności",
         "uk": "Адаптер вимагає node.js 18 і js-controller >= 5 тепер\nЗалежність було оновлено",
         "zh-cn": "适配器需要节点.js 18和js控制器 QQ 现在5号\n依赖关系已更新"
-      },
-      "0.6.7": {
-        "en": "updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues\nupdated dependencies",
-        "de": "aktualisierte node-unifi auf 2.5.1 um UDMpro v3.2.x Auth Probleme zu beheben\naktualisierte abhängigkeiten",
-        "ru": "обновленный node-unifi до 2.5.1 для исправления UDMpro v3.2.x auth вопросов\nобновленные зависимости",
-        "pt": "atualizado node-unifi para 2.5.1 para corrigir UDMpro v3.2.x problemas de auth\ndependências atualizadas",
-        "nl": "quality over Quantity (QoQ) Releases Vertaling:\nvertaling:",
-        "fr": "mise à jour node-unifi à 2.5.1 pour résoudre les problèmes d'UDMpro v3.2.x auth\ndépendances actualisées",
-        "it": "nodo-unifi aggiornato a 2.5.1 per risolvere i problemi UDMpro v3.2.x auth\ndipendenze aggiornate",
-        "es": "actualizado node-unifi a 2.5.1 para solucionar problemas de UDMpro v3.2.x auth\ndependencias actualizadas",
-        "pl": "uaktualnianie węzła-unifiego do 2,5.1 w celu naprawienia problemów UDMpro v3.2.x\nzależności aktualizacji",
-        "uk": "оновлений вузол-unifi до 2.5.1 для виправлення UDMpro v3.2.x auth проблеми\nоновлені залежності",
-        "zh-cn": "对2.5.1至ix UDMpro诉3.2.x uth问题的最新不法\n二. 最新依赖"
       }
     },
     "titleLang": {

@@ -120,7 +120,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.2.0 (2026-11-04)
 - (@Schimi1983) The `blocked` state is created for wired clients too, with role `switch` [#760]
 - (@Schimi1983) Gateways: IPv4 and IPv6 addresses, status, port, link speed, latency and availability of every internet connection (`wan1`, `wan2`) [#696]
 
@@ -152,10 +152,6 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 ### 0.7.0 (2024-04-13)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated
-
-### 0.6.7 (2023-12-10)
-* (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues
-* (jens-maus) updated dependencies
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
