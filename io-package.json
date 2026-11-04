@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "unifi",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "news": {
+      "1.2.1": {
+        "en": "WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)",
+        "de": "WAN-Statistik: Der Datenverkehr wurde mehrfach gezählt, wenn am Anfang des Verlaufs eine Lücke war (z. B. weil das Gateway offline war)",
+        "ru": "Статистика WAN: трафик подсчитывался несколько раз, если в начале истории был пробел (например, шлюз был отключен)",
+        "pt": "Estatísticas de WAN: o tráfego era contado várias vezes se o histórico começasse (p. ex., offline)",
+        "nl": "WAN-statistieken: het verkeer werd verschillende keren geteld als er in het begin een hiaat was in de geschiedenis (de gateway was bijvoorbeeld offline)",
+        "fr": "Statistiques WAN : le trafic était compté plusieurs fois si l'historique était vide au début (ex : la passerelle était hors ligne)",
+        "it": "Statistiche WAN: il traffico veniva contato più volte se la cronologia era vuota (ad es. offline)",
+        "es": "Estadísticas de WAN: el tráfico se contaba varias veces si el historial tenía un hueco (p. ej., la puerta estaba desconectada)",
+        "pl": "Statystyki WAN: ruch był liczony kilka razy, jeśli historia miała lukę na początku (np. bramka była offline)",
+        "uk": "Статистика WAN: трафік підраховували кілька разів, якщо історія мала розрив на початку (наприклад, шлюз був офлайн)",
+        "zh-cn": "WAN 统计信息：如果历史记录在开始时有间隔（例如网关处于离线状态），则会对流量进行多次计数"
+      },
       "1.2.0": {
         "en": "The `blocked` state is created for wired clients too, with role `switch` [#760]\nGateways: IPv4 and IPv6 addresses, status, port, link speed, latency and availability of every internet connection (`wan1`, `wan2`) [#696]",
         "de": "Der State `blocked` wird auch für kabelgebundene Clients angelegt, mit der Rolle `switch` [#760]\nGateways: IPv4- und IPv6-Adressen, Status, Port, Link-Geschwindigkeit, Latenz und Verfügbarkeit jeder Internetverbindung (`wan1`, `wan2`) [#696]",
@@ -80,19 +93,6 @@
         "pl": "Adapter wymaga teraz node.js >= 22\nAdapter wymaga administratora >= 7.7.22 teraz\nAdapter wymaga kontrolera js->= 6.0.11 teraz\nSesje kontrolera są ponownie wykorzystywane, a pętla sondażu działa po błędach, nowych stanach diagnostycznych w `info` [#989]\nNieudany punkt końcowy lub witryna przestaje przerwać całego odświeżania\nNaprawiono zatrzymanie sondażu po tym, jak `trigger_update` nakładało się na zaplanowane odświeżanie\nPrzeniesiono stronę ustawień do konfiguracji JSON\nNaprawiono tworzenie kuponów: ustawienia zostały przekazane w niewłaściwej kolejności od node-unifi 2\nAdapter został zmieniony do TypeScript. Można go zainstalować tylko z npm, a nie z GitHub",
         "uk": "Адаптер вимагає node.js >= 22 зараз\nАдаптер вимагає адміністратора >= 7.7.22 зараз\nАдаптер вимагає js-контролера >= 6.0.11 зараз\nСеанси контролера повторно використовуються, і цикл опитування продовжує працювати після помилок, нових діагностичних станів у `info` [#989]\nНевдала кінцева точка або сайт більше не перериває все оновлення\nВиправлено зупинку опитування після того, як `trigger_update` перекривало заплановане оновлення\nПеренесення сторінки налаштувань до конфігурації JSON\nВиправлено створення ваучерів: налаштування були передані в неправильному порядку з моменту node-unifi 2\nАдаптер був перероблений на TypeScript. Його можна встановити лише з npm, а не з GitHub",
         "zh-cn": "适配器现在需要 node.js >= 22\n适配器现在需要管理员 >= 7.7.22\n适配器现在需要 js-controller >= 6.0.11\n控制器会话被重用，轮询循环在出错后继续运行，`info`出现新的诊断状态 [#989]\n终端节点或站点出现故障不会再中止整个刷新\n修复了 “trigger_update” 与预定刷新重叠后轮询停止的问题\n将设置页面迁移到 JSON 配置\n修复了创建代金券的问题：自 node-unifi 2 以来，设置按错误的顺序传递\n该适配器已重构为 TypeScript。它只能从 npm 安装，不能从 GitHub 安装"
-      },
-      "0.7.0": {
-        "en": "Adapter requires node.js 18 and js-controller >= 5 now\nDependencies have been updated",
-        "de": "Adapter benötigt node.js 18 und js-controller >= 5 jetzt\nAbhängigkeiten wurden aktualisiert",
-        "ru": "Адаптер требует node.js 18 и js-controller >= 5 сейчас\nЗависимость обновлена",
-        "pt": "Adapter requer node.js 18 e js-controller >= 5 agora\nAs dependências foram atualizadas",
-        "nl": "Adapter vereist node.js 18 en js-controller Nu 5\nAfhankelijkheden zijn bijgewerkt",
-        "fr": "Adaptateur nécessite node.js 18 et js-controller >= 5 maintenant\nLes dépendances ont été actualisées",
-        "it": "Adattatore richiede node.js 18 e js-controller >= 5 ora\nLe dipendenze sono state aggiornate",
-        "es": "Adaptador requiere node.js 18 y js-controller √= 5 ahora\nSe han actualizado las dependencias",
-        "pl": "Adapter wymaga node.js 18 i sterownika js- > = 5 teraz\nZaktualizowano zależności",
-        "uk": "Адаптер вимагає node.js 18 і js-controller >= 5 тепер\nЗалежність було оновлено",
-        "zh-cn": "适配器需要节点.js 18和js控制器 QQ 现在5号\n依赖关系已更新"
       }
     },
     "titleLang": {

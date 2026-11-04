@@ -120,7 +120,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
 
 ### 1.2.0 (2026-11-04)
@@ -151,10 +151,6 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 - (@GermanBluefox) Migrated the settings page to JSON config
 - (@GermanBluefox) Fixed creating vouchers: the settings were passed in the wrong order since node-unifi 2
 - (@GermanBluefox) The adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub
-
-### 0.7.0 (2024-04-13)
-* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
-* (mcm1957) Dependencies have been updated
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 

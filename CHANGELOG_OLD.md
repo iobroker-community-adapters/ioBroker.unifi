@@ -1,8 +1,12 @@
 # Older changes
+## 0.7.0 (2024-04-13)
+* (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
+* (mcm1957) Dependencies have been updated
+
+
 ## 0.6.7 (2023-12-10)
 * (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues
 * (jens-maus) updated dependencies
-
 
 ## 0.6.6 (2023-06-20)
 * (pafade89) fixed broken client status updates (#672)
