@@ -36,6 +36,8 @@ declare global {
             updateGatewayTraffic: boolean;
             /** 0 = all available data */
             gatewayTrafficMaxDays: number | string;
+            /** WAN statistics of UniFi Network 11+, missing in instances of versions < 1.1.0 */
+            updateWan?: boolean;
 
             objectsFilter: UnifiObjectsFilter;
             statesFilter: UnifiStatesFilter;

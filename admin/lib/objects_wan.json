@@ -1,0 +1,500 @@
+{
+    "wan": {
+        "_id": "wan",
+        "type": "channel",
+        "common": {
+            "name": "WAN"
+        },
+        "native": {
+            "object_id": "wan"
+        },
+        "logic": {
+            "has_key": "_self",
+            "has": {
+                "wan.connection": {
+                    "type": "device",
+                    "common": {},
+                    "native": {
+                        "object_id": "wan.connection"
+                    },
+                    "logic": {
+                        "_id": {
+                            "cleanupForUseAsId": [
+                                {
+                                    "var": "id"
+                                }
+                            ]
+                        },
+                        "common": {
+                            "name": {
+                                "if": [
+                                    {
+                                        "var": "name"
+                                    },
+                                    {
+                                        "var": "name"
+                                    },
+                                    {
+                                        "var": "id"
+                                    }
+                                ]
+                            }
+                        },
+                        "has_key": "_self",
+                        "has": {
+                            "wan.connection.name": {
+                                "_id": "name",
+                                "type": "state",
+                                "common": {
+                                    "name": "Name of the connection",
+                                    "type": "string",
+                                    "role": "info.name",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.name"
+                                },
+                                "logic": {
+                                    "value": "name"
+                                }
+                            },
+                            "wan.connection.isp_name": {
+                                "_id": "isp_name",
+                                "type": "state",
+                                "common": {
+                                    "name": "Internet provider",
+                                    "type": "string",
+                                    "role": "text",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.isp_name"
+                                },
+                                "logic": {
+                                    "value": "isp_name"
+                                }
+                            },
+                            "wan.connection.isp_asn": {
+                                "_id": "isp_asn",
+                                "type": "state",
+                                "common": {
+                                    "name": "AS number of the provider",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.isp_asn"
+                                },
+                                "logic": {
+                                    "value": "isp_asn"
+                                }
+                            },
+                            "wan.connection.capacity_download": {
+                                "_id": "capacity_download",
+                                "type": "state",
+                                "common": {
+                                    "name": "Download capacity of the provider",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.capacity_download"
+                                },
+                                "logic": {
+                                    "value": "capacity_download"
+                                }
+                            },
+                            "wan.connection.capacity_upload": {
+                                "_id": "capacity_upload",
+                                "type": "state",
+                                "common": {
+                                    "name": "Upload capacity of the provider",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.capacity_upload"
+                                },
+                                "logic": {
+                                    "value": "capacity_upload"
+                                }
+                            },
+                            "wan.connection.up": {
+                                "_id": "up",
+                                "type": "state",
+                                "common": {
+                                    "name": "Connection is up",
+                                    "type": "boolean",
+                                    "role": "indicator.reachable",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.up"
+                                },
+                                "logic": {
+                                    "value": "up"
+                                }
+                            },
+                            "wan.connection.active": {
+                                "_id": "active",
+                                "type": "state",
+                                "common": {
+                                    "name": "Connection is active",
+                                    "type": "boolean",
+                                    "role": "indicator",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.active"
+                                },
+                                "logic": {
+                                    "value": "active"
+                                }
+                            },
+                            "wan.connection.interface": {
+                                "_id": "interface",
+                                "type": "state",
+                                "common": {
+                                    "name": "Interface",
+                                    "type": "string",
+                                    "role": "text",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.interface"
+                                },
+                                "logic": {
+                                    "value": "interface"
+                                }
+                            },
+                            "wan.connection.uptime": {
+                                "_id": "uptime",
+                                "type": "state",
+                                "common": {
+                                    "name": "Availability",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "%",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.uptime"
+                                },
+                                "logic": {
+                                    "value": "uptime"
+                                }
+                            },
+                            "wan.connection.rx_rate": {
+                                "_id": "rx_rate",
+                                "type": "state",
+                                "common": {
+                                    "name": "Current download rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.rx_rate"
+                                },
+                                "logic": {
+                                    "value": "rx_rate"
+                                }
+                            },
+                            "wan.connection.tx_rate": {
+                                "_id": "tx_rate",
+                                "type": "state",
+                                "common": {
+                                    "name": "Current upload rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.tx_rate"
+                                },
+                                "logic": {
+                                    "value": "tx_rate"
+                                }
+                            },
+                            "wan.connection.today_rx_bytes": {
+                                "_id": "today_rx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Received today",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.today_rx_bytes"
+                                },
+                                "logic": {
+                                    "value": "today_rx_bytes"
+                                }
+                            },
+                            "wan.connection.today_tx_bytes": {
+                                "_id": "today_tx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Sent today",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.today_tx_bytes"
+                                },
+                                "logic": {
+                                    "value": "today_tx_bytes"
+                                }
+                            },
+                            "wan.connection.yesterday_rx_bytes": {
+                                "_id": "yesterday_rx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Received yesterday",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.yesterday_rx_bytes"
+                                },
+                                "logic": {
+                                    "value": "yesterday_rx_bytes"
+                                }
+                            },
+                            "wan.connection.yesterday_tx_bytes": {
+                                "_id": "yesterday_tx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Sent yesterday",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.yesterday_tx_bytes"
+                                },
+                                "logic": {
+                                    "value": "yesterday_tx_bytes"
+                                }
+                            },
+                            "wan.connection.last24h_rx_bytes": {
+                                "_id": "last24h_rx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Received in the last 24 hours",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.last24h_rx_bytes"
+                                },
+                                "logic": {
+                                    "value": "last24h_rx_bytes"
+                                }
+                            },
+                            "wan.connection.last24h_tx_bytes": {
+                                "_id": "last24h_tx_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Sent in the last 24 hours",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.last24h_tx_bytes"
+                                },
+                                "logic": {
+                                    "value": "last24h_tx_bytes"
+                                }
+                            },
+                            "wan.connection.monthly_bytes": {
+                                "_id": "monthly_bytes",
+                                "type": "state",
+                                "common": {
+                                    "name": "Traffic this month",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Byte",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.monthly_bytes"
+                                },
+                                "logic": {
+                                    "value": "monthly_bytes"
+                                }
+                            },
+                            "wan.connection.latency": {
+                                "_id": "latency",
+                                "type": "state",
+                                "common": {
+                                    "name": "Latency",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "ms",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.latency"
+                                },
+                                "logic": {
+                                    "value": "latency"
+                                }
+                            },
+                            "wan.connection.packet_loss": {
+                                "_id": "packet_loss",
+                                "type": "state",
+                                "common": {
+                                    "name": "Packet loss",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "%",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.packet_loss"
+                                },
+                                "logic": {
+                                    "value": "packet_loss"
+                                }
+                            },
+                            "wan.connection.speedtest_download": {
+                                "_id": "speedtest_download",
+                                "type": "state",
+                                "common": {
+                                    "name": "Speed test download",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.speedtest_download"
+                                },
+                                "logic": {
+                                    "value": "speedtest_download"
+                                }
+                            },
+                            "wan.connection.speedtest_upload": {
+                                "_id": "speedtest_upload",
+                                "type": "state",
+                                "common": {
+                                    "name": "Speed test upload",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.speedtest_upload"
+                                },
+                                "logic": {
+                                    "value": "speedtest_upload"
+                                }
+                            },
+                            "wan.connection.speedtest_latency": {
+                                "_id": "speedtest_latency",
+                                "type": "state",
+                                "common": {
+                                    "name": "Speed test latency",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "ms",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.speedtest_latency"
+                                },
+                                "logic": {
+                                    "value": "speedtest_latency"
+                                }
+                            },
+                            "wan.connection.speedtest_time": {
+                                "_id": "speedtest_time",
+                                "type": "state",
+                                "common": {
+                                    "name": "Time of the speed test",
+                                    "type": "number",
+                                    "role": "value.time",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "wan.connection.speedtest_time"
+                                },
+                                "logic": {
+                                    "value": "speedtest_time"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
