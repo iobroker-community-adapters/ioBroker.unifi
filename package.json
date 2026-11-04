@@ -40,7 +40,7 @@
     "@iobroker/types": "^7.2.3",
     "@tsconfig/node22": "^22.0.6",
     "@types/json-logic-js": "^2.0.8",
-    "@types/node": "^22.20.4",
+    "@types/node": "^22.20.5",
     "glob-parent": "^6.0.2",
     "hosted-git-info": "^10.1.1",
     "json-schema": "^0.4.0",
