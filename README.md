@@ -120,6 +120,9 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) Repository checker: `sinon` comes with `@iobroker/testing`, news of versions that are not on npm removed, line breaks of the copyright lines
+
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
 
@@ -162,8 +165,8 @@ This adapter uses functionality from the following third-party nodejs modules:
 ## License
 The MIT License (MIT)
 
-Copyright (c) 2024-2026 iobroker-community-adapters <iobroker-community-adapters@gmx.de>
-Copyright (c) 2016-2023 Jens Maus &lt;mail@jens-maus.de&gt;
+Copyright (c) 2024-2026 iobroker-community-adapters <iobroker-community-adapters@gmx.de>  
+Copyright (c) 2016-2023 Jens Maus &lt;mail@jens-maus.de&gt;  
 Copyright (c) 2020 braindead1 &lt;os.braindead1@gmail.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
