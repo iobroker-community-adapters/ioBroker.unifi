@@ -2,7 +2,21 @@
     "gateway_traffic": {
         "_id": "gateway_traffic",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Gateway traffic",
+                "de": "Gateway-Datenverkehr",
+                "ru": "Трафик шлюза",
+                "pt": "Tráfego do gateway",
+                "nl": "Gatewayverkeer",
+                "fr": "Trafic de la passerelle",
+                "it": "Traffico del gateway",
+                "es": "Tráfico de la puerta de enlace",
+                "pl": "Ruch bramy",
+                "uk": "Трафік шлюзу",
+                "zh-cn": "网关流量"
+            }
+        },
         "native": {
             "object_id": "gateway_traffic"
         },
@@ -71,7 +85,7 @@
                                             "common": {
                                                 "name": "Date of day",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "date",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -95,10 +109,10 @@
                                             "common": {
                                                 "name": "Bytes sent",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -114,10 +128,10 @@
                                             "common": {
                                                 "name": "Bytes received",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {

@@ -2,7 +2,21 @@
     "networks": {
         "_id": "networks",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Networks",
+                "de": "Netzwerke",
+                "ru": "Сети",
+                "pt": "Redes",
+                "nl": "Netwerken",
+                "fr": "Réseaux",
+                "it": "Reti",
+                "es": "Redes",
+                "pl": "Sieci",
+                "uk": "Мережі",
+                "zh-cn": "网络"
+            }
+        },
         "native": {
             "object_id": "networks"
         },
@@ -33,7 +47,7 @@
                                 "common": {
                                     "name": "DHCP DNS enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -59,7 +73,7 @@
                                 "common": {
                                     "name": "DHCP enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -85,7 +99,7 @@
                                 "common": {
                                     "name": "DHCP leasetime",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value.interval",
                                     "read": true,
                                     "write": false,
                                     "unit": "s",
@@ -112,7 +126,7 @@
                                 "common": {
                                     "name": "DHCP start",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -138,7 +152,7 @@
                                 "common": {
                                     "name": "DHCP stop",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -164,7 +178,7 @@
                                 "common": {
                                     "name": "Enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -190,7 +204,7 @@
                                 "common": {
                                     "name": "IP subnet",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -216,7 +230,7 @@
                                 "common": {
                                     "name": "Name",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.name",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -242,7 +256,7 @@
                                 "common": {
                                     "name": "Network group",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -268,7 +282,7 @@
                                 "common": {
                                     "name": "Purpose",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -294,7 +308,7 @@
                                 "common": {
                                     "name": "VLAN",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -320,7 +334,7 @@
                                 "common": {
                                     "name": "VLAN enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -346,7 +360,7 @@
                                 "common": {
                                     "name": "VPN type",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -372,7 +386,7 @@
                                 "common": {
                                     "name": "WAN IP",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
