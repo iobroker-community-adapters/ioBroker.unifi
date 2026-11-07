@@ -2,7 +2,21 @@
     "vouchers": {
         "_id": "vouchers",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Vouchers",
+                "de": "Gutscheine",
+                "ru": "Ваучеры",
+                "pt": "Vouchers",
+                "nl": "Vouchers",
+                "fr": "Bons",
+                "it": "Voucher",
+                "es": "Vales",
+                "pl": "Vouchery",
+                "uk": "Ваучери",
+                "zh-cn": "凭证"
+            }
+        },
         "native": {
             "object_id": "vouchers"
         },
@@ -39,7 +53,7 @@
                                 "common": {
                                     "name": "Code",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -57,7 +71,7 @@
                                 "common": {
                                     "name": "Create time",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "date",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -80,11 +94,11 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Duration",
-                                    "type": "string",
-                                    "role": "state",
+                                    "type": "number",
+                                    "role": "value.interval",
                                     "read": true,
                                     "write": false,
-                                    "unit": "m",
+                                    "unit": "min",
                                     "desc": ""
                                 },
                                 "native": {
@@ -100,7 +114,7 @@
                                 "common": {
                                     "name": "Note",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -118,7 +132,7 @@
                                 "common": {
                                     "name": "QOS overwrite",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -135,10 +149,10 @@
                                 "common": {
                                     "name": "QOS max download",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Kbps",
+                                    "unit": "kbit/s",
                                     "desc": ""
                                 },
                                 "native": {
@@ -162,10 +176,10 @@
                                 "common": {
                                     "name": "QOS max upload",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Kbps",
+                                    "unit": "kbit/s",
                                     "desc": ""
                                 },
                                 "native": {
@@ -189,7 +203,7 @@
                                 "common": {
                                     "name": "QOS usage quota",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "unit": "MB",
@@ -217,7 +231,7 @@
                                 "common": {
                                     "name": "Quota",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -235,7 +249,7 @@
                                 "common": {
                                     "name": "Status",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -253,7 +267,7 @@
                                 "common": {
                                     "name": "Used",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -280,7 +294,8 @@
                         "desc": ""
                     },
                     "native": {
-                        "object_id": "vouchers.create_vouchers"},
+                        "object_id": "vouchers.create_vouchers"
+                    },
                     "logic": {}
                 }
             }

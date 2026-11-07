@@ -2,7 +2,21 @@
     "wlans": {
         "_id": "wlans",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "WLANs",
+                "de": "WLANs",
+                "ru": "Сети WLAN",
+                "pt": "WLANs",
+                "nl": "WLAN's",
+                "fr": "WLAN",
+                "it": "WLAN",
+                "es": "WLAN",
+                "pl": "Sieci WLAN",
+                "uk": "Мережі WLAN",
+                "zh-cn": "无线网络"
+            }
+        },
         "native": {
             "object_id": "wlans"
         },
@@ -34,7 +48,7 @@
                                 "common": {
                                     "name": "Enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "switch.enable",
                                     "read": true,
                                     "write": true,
                                     "desc": ""
@@ -54,7 +68,7 @@
                                 "common": {
                                     "name": "Name",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.name",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -81,7 +95,7 @@
                                 "common": {
                                     "name": "Security",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -98,7 +112,7 @@
                                 "common": {
                                     "name": "VLAN",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -124,7 +138,7 @@
                                 "common": {
                                     "name": "VLAN enabled",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator",
                                     "read": true,
                                     "write": false,
                                     "desc": ""

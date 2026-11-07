@@ -2,7 +2,21 @@
     "devices": {
         "_id": "devices",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Devices",
+                "de": "Geräte",
+                "ru": "Устройства",
+                "pt": "Dispositivos",
+                "nl": "Apparaten",
+                "fr": "Appareils",
+                "it": "Dispositivi",
+                "es": "Dispositivos",
+                "pl": "Urządzenia",
+                "uk": "Пристрої",
+                "zh-cn": "设备"
+            }
+        },
         "native": {
             "object_id": "devices"
         },
@@ -40,7 +54,21 @@
                             "devices.device.port_table": {
                                 "_id": "port_table",
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Ports",
+                                        "de": "Anschlüsse",
+                                        "ru": "Порты",
+                                        "pt": "Portas",
+                                        "nl": "Poorten",
+                                        "fr": "Ports",
+                                        "it": "Porte",
+                                        "es": "Puertos",
+                                        "pl": "Porty",
+                                        "uk": "Порти",
+                                        "zh-cn": "端口"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.port_table"
                                 },
@@ -87,7 +115,7 @@
                                                         "common": {
                                                             "name": "Enable",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -104,7 +132,7 @@
                                                         "common": {
                                                             "name": "Is uplink",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -131,7 +159,7 @@
                                                         "common": {
                                                             "name": "Name",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "info.name",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -148,7 +176,7 @@
                                                         "common": {
                                                             "name": "POE class",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -174,7 +202,7 @@
                                                         "common": {
                                                             "name": "POE mode",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -199,8 +227,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE current",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value.current",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "mA",
@@ -226,8 +254,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE power",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value.power",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "W",
@@ -253,8 +281,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "POE voltage",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value.voltage",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "V",
@@ -281,7 +309,7 @@
                                                         "common": {
                                                             "name": "ID",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -307,7 +335,7 @@
                                                         "common": {
                                                             "name": "POE",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -333,7 +361,7 @@
                                                         "common": {
                                                             "name": "switch poe power",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "switch.power",
                                                             "read": true,
                                                             "write": true,
                                                             "desc": ""
@@ -391,10 +419,10 @@
                                                         "common": {
                                                             "name": "RX Bytes",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "Byte",
+                                                            "unit": "B",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -418,7 +446,7 @@
                                                         "common": {
                                                             "name": "Satisfaction",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "%",
@@ -446,10 +474,10 @@
                                                         "common": {
                                                             "name": "Speed",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "mbps",
+                                                            "unit": "Mbit/s",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -464,10 +492,10 @@
                                                         "common": {
                                                             "name": "TX Bytes",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "Byte",
+                                                            "unit": "B",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -495,7 +523,21 @@
                             "devices.device.port_overrides": {
                                 "_id": "port_overrides",
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Port settings",
+                                        "de": "Anschluss-Einstellungen",
+                                        "ru": "Настройки портов",
+                                        "pt": "Configurações das portas",
+                                        "nl": "Poortinstellingen",
+                                        "fr": "Paramètres des ports",
+                                        "it": "Impostazioni delle porte",
+                                        "es": "Configuración de puertos",
+                                        "pl": "Ustawienia portów",
+                                        "uk": "Налаштування портів",
+                                        "zh-cn": "端口设置"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.port_overrides"
                                 },
@@ -541,7 +583,7 @@
                                                         "common": {
                                                             "name": "ID",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -568,7 +610,7 @@
                                                         "common": {
                                                             "name": "Name",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "info.name",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -586,7 +628,7 @@
                                                         "common": {
                                                             "name": "Portconf ID",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -603,7 +645,7 @@
                                                         "common": {
                                                             "name": "Operation mode",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -629,7 +671,7 @@
                                                         "common": {
                                                             "name": "Enable MAC ID Filter Allow List",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -655,7 +697,7 @@
                                                         "common": {
                                                             "name": "MAC ID Filter Allow List",
                                                             "type": "array",
-                                                            "role": "state",
+                                                            "role": "list",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -681,7 +723,7 @@
                                                         "common": {
                                                             "name": "POE mode",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -706,11 +748,11 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Link Speed",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "Mbps",
+                                                            "unit": "Mbit/s",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -733,8 +775,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Full duplex",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "boolean",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -759,8 +801,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Port isolation",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "boolean",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -786,7 +828,7 @@
                                                         "common": {
                                                             "name": "Enable Storm Control for Unicast",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -811,8 +853,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Storm Control Unicast Rate",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "pkts/s",
@@ -839,7 +881,7 @@
                                                         "common": {
                                                             "name": "Enable Storm Control for Multicast",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -864,8 +906,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Storm Control Multicast Rate",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "pkts/s",
@@ -892,7 +934,7 @@
                                                         "common": {
                                                             "name": "Enable Storm Control for Broadcast",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -917,8 +959,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Storm Control Broadcast Rate",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "pkts/s",
@@ -945,7 +987,7 @@
                                                         "common": {
                                                             "name": "Enable LLDP-MED",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": "Link Layer Discovery Protocol - Media Endpoint Devices (for VoIP)"
@@ -970,8 +1012,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Link negotiation",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "boolean",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -996,8 +1038,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Enable Spanning Tree Protocol",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "boolean",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1023,7 +1065,7 @@
                                                         "common": {
                                                             "name": "Enable Egress rate limit",
                                                             "type": "boolean",
-                                                            "role": "state",
+                                                            "role": "indicator",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1048,11 +1090,11 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Egress rate limit",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "kb/s",
+                                                            "unit": "kbit/s",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -1075,8 +1117,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Aggregate ports",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1101,8 +1143,8 @@
                                                         "type": "state",
                                                         "common": {
                                                             "name": "Mirroring Port",
-                                                            "type": "string",
-                                                            "role": "state",
+                                                            "type": "number",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1131,7 +1173,21 @@
                             },
                             "devices.device.radio_table_stats": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Radios",
+                                        "de": "Funkmodule",
+                                        "ru": "Радиомодули",
+                                        "pt": "Rádios",
+                                        "nl": "Radio's",
+                                        "fr": "Radios",
+                                        "it": "Radio",
+                                        "es": "Radios",
+                                        "pl": "Moduły radiowe",
+                                        "uk": "Радіомодулі",
+                                        "zh-cn": "无线电"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.radio_table_stats"
                                 },
@@ -1172,7 +1228,7 @@
                                                         "common": {
                                                             "name": "RX channel utilization",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "%",
@@ -1191,7 +1247,7 @@
                                                         "common": {
                                                             "name": "TX channel utilization",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "%",
@@ -1210,7 +1266,7 @@
                                                         "common": {
                                                             "name": "Total channel utilization",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "%",
@@ -1229,7 +1285,7 @@
                                                         "common": {
                                                             "name": "TX power",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "dBm",
@@ -1248,7 +1304,7 @@
                                                         "common": {
                                                             "name": "Channel",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1266,10 +1322,11 @@
                                                         "common": {
                                                             "name": "Satisfaction",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "desc": ""
+                                                            "desc": "",
+                                                            "unit": "%"
                                                         },
                                                         "native": {
                                                             "object_id": "devices.device.radio_table_stats.stat.satisfaction"
@@ -1284,7 +1341,7 @@
                                                         "common": {
                                                             "name": "radio",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1304,7 +1361,21 @@
                             },
                             "devices.device.temperatures": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Temperatures",
+                                        "de": "Temperaturen",
+                                        "ru": "Температуры",
+                                        "pt": "Temperaturas",
+                                        "nl": "Temperaturen",
+                                        "fr": "Températures",
+                                        "it": "Temperature",
+                                        "es": "Temperaturas",
+                                        "pl": "Temperatury",
+                                        "uk": "Температури",
+                                        "zh-cn": "温度"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.temperatures"
                                 },
@@ -1345,7 +1416,7 @@
                                                         "common": {
                                                             "name": "type of temperature",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1363,7 +1434,7 @@
                                                         "common": {
                                                             "name": "temperature value",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value.temperature",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "°C",
@@ -1384,7 +1455,21 @@
                             },
                             "devices.device.storage": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Storage",
+                                        "de": "Speicher",
+                                        "ru": "Хранилище",
+                                        "pt": "Armazenamento",
+                                        "nl": "Opslag",
+                                        "fr": "Stockage",
+                                        "it": "Archiviazione",
+                                        "es": "Almacenamiento",
+                                        "pl": "Pamięć masowa",
+                                        "uk": "Сховище",
+                                        "zh-cn": "存储"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.storage"
                                 },
@@ -1425,7 +1510,7 @@
                                                         "common": {
                                                             "name": "moiting point of storage",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1443,10 +1528,10 @@
                                                         "common": {
                                                             "name": "size of storage",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "byte",
+                                                            "unit": "B",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -1462,7 +1547,7 @@
                                                         "common": {
                                                             "name": "type of storage",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -1480,10 +1565,10 @@
                                                         "common": {
                                                             "name": "using of storage size",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
-                                                            "unit": "byte",
+                                                            "unit": "B",
                                                             "desc": ""
                                                         },
                                                         "native": {
@@ -1501,7 +1586,21 @@
                             },
                             "devices.device.speedtest-status": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Speed test",
+                                        "de": "Geschwindigkeitstest",
+                                        "ru": "Тест скорости",
+                                        "pt": "Teste de velocidade",
+                                        "nl": "Snelheidstest",
+                                        "fr": "Test de débit",
+                                        "it": "Test di velocità",
+                                        "es": "Prueba de velocidad",
+                                        "pl": "Test prędkości",
+                                        "uk": "Тест швидкості",
+                                        "zh-cn": "速度测试"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.speedtest"
                                 },
@@ -1523,7 +1622,7 @@
                                             "common": {
                                                 "name": "Latency",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "ms",
@@ -1542,7 +1641,7 @@
                                             "common": {
                                                 "name": "Run date",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "date",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -1566,7 +1665,7 @@
                                             "common": {
                                                 "name": "Run time",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value.interval",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "s",
@@ -1585,10 +1684,10 @@
                                             "common": {
                                                 "name": "Download",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Mbps",
+                                                "unit": "Mbit/s",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -1604,10 +1703,10 @@
                                             "common": {
                                                 "name": "Upload",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Mbps",
+                                                "unit": "Mbit/s",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -2009,7 +2108,21 @@
                             "devices.device.sys_stats": {
                                 "_id": "sys_stats",
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "System load",
+                                        "de": "Systemlast",
+                                        "ru": "Нагрузка системы",
+                                        "pt": "Carga do sistema",
+                                        "nl": "Systeembelasting",
+                                        "fr": "Charge du système",
+                                        "it": "Carico di sistema",
+                                        "es": "Carga del sistema",
+                                        "pl": "Obciążenie systemu",
+                                        "uk": "Навантаження системи",
+                                        "zh-cn": "系统负载"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.sys_stats"
                                 },
@@ -2021,8 +2134,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 1m",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2039,8 +2152,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 15m",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2057,8 +2170,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Load average 5m",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2076,10 +2189,10 @@
                                             "common": {
                                                 "name": "memory buffer",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -2095,10 +2208,10 @@
                                             "common": {
                                                 "name": "memory total",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -2114,10 +2227,10 @@
                                             "common": {
                                                 "name": "memory used",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -2132,7 +2245,21 @@
                             },
                             "devices.device.system-stats": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "System usage",
+                                        "de": "Systemauslastung",
+                                        "ru": "Использование системы",
+                                        "pt": "Uso do sistema",
+                                        "nl": "Systeemgebruik",
+                                        "fr": "Utilisation du système",
+                                        "it": "Utilizzo del sistema",
+                                        "es": "Uso del sistema",
+                                        "pl": "Wykorzystanie systemu",
+                                        "uk": "Використання системи",
+                                        "zh-cn": "系统使用率"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.system-stats"
                                 },
@@ -2153,8 +2280,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "CPU usage",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "%",
@@ -2172,8 +2299,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Memory usage",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "%",
@@ -2191,8 +2318,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Uptime",
-                                                "type": "string",
-                                                "role": "state",
+                                                "type": "number",
+                                                "role": "value.interval",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "s",
@@ -2210,7 +2337,21 @@
                             },
                             "devices.device.last_uplink": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Uplink",
+                                        "de": "Uplink",
+                                        "ru": "Восходящий канал",
+                                        "pt": "Uplink",
+                                        "nl": "Uplink",
+                                        "fr": "Liaison montante",
+                                        "it": "Uplink",
+                                        "es": "Enlace ascendente",
+                                        "pl": "Uplink",
+                                        "uk": "Висхідний канал",
+                                        "zh-cn": "上行链路"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.last_uplink"
                                 },
@@ -2232,7 +2373,7 @@
                                             "common": {
                                                 "name": "Uplink MAC address",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "info.mac",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2250,7 +2391,7 @@
                                             "common": {
                                                 "name": "Uplink device name",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "info.name",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2268,7 +2409,7 @@
                                             "common": {
                                                 "name": "Uplink remote port",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2286,7 +2427,7 @@
                                             "common": {
                                                 "name": "Uplink port",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2304,7 +2445,7 @@
                                             "common": {
                                                 "name": "type of storage",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "text",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -2321,7 +2462,21 @@
                             },
                             "devices.device.vap_table": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Wireless networks",
+                                        "de": "Funknetzwerke",
+                                        "ru": "Беспроводные сети",
+                                        "pt": "Redes sem fio",
+                                        "nl": "Draadloze netwerken",
+                                        "fr": "Réseaux sans fil",
+                                        "it": "Reti wireless",
+                                        "es": "Redes inalámbricas",
+                                        "pl": "Sieci bezprzewodowe",
+                                        "uk": "Бездротові мережі",
+                                        "zh-cn": "无线网络"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "devices.device.vap_table"
                                 },
@@ -2362,7 +2517,7 @@
                                                         "common": {
                                                             "name": "Satisfaction",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "unit": "%",
@@ -2381,7 +2536,7 @@
                                                         "common": {
                                                             "name": "Channel",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -2399,7 +2554,7 @@
                                                         "common": {
                                                             "name": "Number of users",
                                                             "type": "number",
-                                                            "role": "state",
+                                                            "role": "value",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -2417,7 +2572,7 @@
                                                         "common": {
                                                             "name": "SSID",
                                                             "type": "string",
-                                                            "role": "state",
+                                                            "role": "text",
                                                             "read": true,
                                                             "write": false,
                                                             "desc": ""
@@ -2440,7 +2595,7 @@
                                 "common": {
                                     "name": "General temperature",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value.temperature",
                                     "read": true,
                                     "write": false,
                                     "unit": "°C",
@@ -2467,7 +2622,7 @@
                                 "common": {
                                     "name": "Number of guests",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2494,7 +2649,7 @@
                                 "common": {
                                     "name": "Device Id",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2535,7 +2690,7 @@
                                 "common": {
                                     "name": "IP address",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2553,7 +2708,7 @@
                                 "common": {
                                     "name": "MAC address",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.mac",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2571,7 +2726,7 @@
                                 "common": {
                                     "name": "Model",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.model",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2589,7 +2744,7 @@
                                 "common": {
                                     "name": "Name",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.name",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2606,7 +2761,7 @@
                                 "common": {
                                     "name": "Number of guests",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2632,7 +2787,7 @@
                                 "common": {
                                     "name": "Number of clients",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2658,7 +2813,7 @@
                                 "common": {
                                     "name": "Number of users",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2684,7 +2839,7 @@
                                 "common": {
                                     "name": "Device state",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": "Status of device",
@@ -2722,7 +2877,7 @@
                                 "common": {
                                     "name": "Overheating",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator.alarm",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2748,10 +2903,10 @@
                                 "common": {
                                     "name": "RX",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -2775,10 +2930,10 @@
                                 "common": {
                                     "name": "RX dropped",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -2802,7 +2957,7 @@
                                 "common": {
                                     "name": "Satisfaction",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "unit": "%",
@@ -2830,7 +2985,7 @@
                                 "common": {
                                     "name": "Type",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2847,10 +3002,10 @@
                                 "common": {
                                     "name": "TX",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -2874,10 +3029,10 @@
                                 "common": {
                                     "name": "TX dropped",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -2902,7 +3057,7 @@
                                 "common": {
                                     "name": "Upgradable",
                                     "type": "boolean",
-                                    "role": "state",
+                                    "role": "indicator.maintenance",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2919,7 +3074,7 @@
                                 "common": {
                                     "name": "Upgrade to firmware",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -2946,7 +3101,7 @@
                                 "common": {
                                     "name": "Uptime",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value.interval",
                                     "read": true,
                                     "write": false,
                                     "unit": "s",
@@ -2965,7 +3120,7 @@
                                 "common": {
                                     "name": "Version",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.firmware",
                                     "read": true,
                                     "write": false,
                                     "desc": ""

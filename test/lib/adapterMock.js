@@ -188,7 +188,10 @@ function createAdapter(config = {}, stubs = {}) {
         ...stubs,
     });
     const adapter = createInstance();
-    adapter.config = { ...structuredClone(require('../../io-package.json').native), ...config };
+    const native = structuredClone(require('../../io-package.json').native);
+    // New instances get a recommended selection of states; the tests work with all states unless they set a filter
+    native.statesFilter = Object.fromEntries(Object.keys(native.statesFilter).map(category => [category, []]));
+    adapter.config = { ...native, ...config };
     return adapter;
 }
 

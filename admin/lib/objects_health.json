@@ -2,7 +2,21 @@
     "health": {
         "_id": "health",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Health",
+                "de": "Zustand",
+                "ru": "Состояние",
+                "pt": "Estado",
+                "nl": "Status",
+                "fr": "État",
+                "it": "Stato",
+                "es": "Estado",
+                "pl": "Stan",
+                "uk": "Стан",
+                "zh-cn": "健康状态"
+            }
+        },
         "native": {
             "object_id": "health"
         },
@@ -30,7 +44,21 @@
                         "has": {
                             "health.subsystem.speedtest": {
                                 "type": "channel",
-                                "common": {},
+                                "common": {
+                                    "name": {
+                                        "en": "Speed test",
+                                        "de": "Geschwindigkeitstest",
+                                        "ru": "Тест скорости",
+                                        "pt": "Teste de velocidade",
+                                        "nl": "Snelheidstest",
+                                        "fr": "Test de débit",
+                                        "it": "Test di velocità",
+                                        "es": "Prueba de velocidad",
+                                        "pl": "Test prędkości",
+                                        "uk": "Тест швидкості",
+                                        "zh-cn": "速度测试"
+                                    }
+                                },
                                 "native": {
                                     "object_id": "health.subsystem.speedtest"
                                 },
@@ -52,7 +80,7 @@
                                             "common": {
                                                 "name": "Speedtest lastrun",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "date",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -76,7 +104,7 @@
                                             "common": {
                                                 "name": "Speedtest ping",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "unit": "ms",
@@ -95,7 +123,7 @@
                                             "common": {
                                                 "name": "Speedtest status",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "text",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -115,7 +143,7 @@
                                 "common": {
                                     "name": "LAN IP",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -141,7 +169,7 @@
                                 "common": {
                                     "name": "Latency",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "unit": "ms",
@@ -168,7 +196,7 @@
                                 "common": {
                                     "name": "Number of guests",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -194,7 +222,7 @@
                                 "common": {
                                     "name": "Number of IOT",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -220,7 +248,7 @@
                                 "common": {
                                     "name": "Number of users",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -246,10 +274,10 @@
                                 "common": {
                                     "name": "RX Bytes R",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B/s",
                                     "desc": ""
                                 },
                                 "native": {
@@ -274,7 +302,7 @@
                                 "common": {
                                     "name": "Status",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.status",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -292,7 +320,7 @@
                                 "common": {
                                     "name": "Subsystem",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "text",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -309,10 +337,10 @@
                                 "common": {
                                     "name": "TX Bytes R",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B/s",
                                     "desc": ""
                                 },
                                 "native": {
@@ -336,7 +364,7 @@
                                 "common": {
                                     "name": "Uptime",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value.interval",
                                     "read": true,
                                     "write": false,
                                     "unit": "s",
@@ -363,7 +391,7 @@
                                 "common": {
                                     "name": "WAN IP",
                                     "type": "string",
-                                    "role": "state",
+                                    "role": "info.ip",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -389,7 +417,7 @@
                                 "common": {
                                     "name": "Download speed",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "unit": "Mbit/s",
@@ -416,7 +444,7 @@
                                 "common": {
                                     "name": "Upload speed",
                                     "type": "number",
-                                    "role": "state",
+                                    "role": "value",
                                     "read": true,
                                     "write": false,
                                     "unit": "Mbit/s",
@@ -450,7 +478,7 @@
         "common": {
             "name": "Number of new alarms",
             "type": "number",
-            "role": "state",
+            "role": "value",
             "read": true,
             "write": false,
             "desc": ""

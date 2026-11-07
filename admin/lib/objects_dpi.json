@@ -2,7 +2,21 @@
     "dpi": {
         "_id": "dpi",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "Deep packet inspection",
+                "de": "Deep Packet Inspection",
+                "ru": "Глубокая инспекция пакетов",
+                "pt": "Inspeção profunda de pacotes",
+                "nl": "Deep packet inspection",
+                "fr": "Inspection approfondie des paquets",
+                "it": "Ispezione approfondita dei pacchetti",
+                "es": "Inspección profunda de paquetes",
+                "pl": "Głęboka inspekcja pakietów",
+                "uk": "Глибока інспекція пакетів",
+                "zh-cn": "深度包检测"
+            }
+        },
         "native": {
             "object_id": "dpi"
         },
@@ -11,7 +25,21 @@
             "has": {
                 "dpi.by_app": {
                     "type": "channel",
-                    "common": {},
+                    "common": {
+                        "name": {
+                            "en": "By application",
+                            "de": "Nach Anwendung",
+                            "ru": "По приложению",
+                            "pt": "Por aplicação",
+                            "nl": "Per applicatie",
+                            "fr": "Par application",
+                            "it": "Per applicazione",
+                            "es": "Por aplicación",
+                            "pl": "Według aplikacji",
+                            "uk": "За застосунком",
+                            "zh-cn": "按应用"
+                        }
+                    },
                     "native": {
                         "object_id": "dpi.by_app"
                     },
@@ -66,7 +94,7 @@
                                             "common": {
                                                 "name": "Application Id",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -84,7 +112,7 @@
                                             "common": {
                                                 "name": "Category Id",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -102,7 +130,7 @@
                                             "common": {
                                                 "name": "Name of Application",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "info.name",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -122,10 +150,24 @@
                                                     ]
                                                 }
                                             }
-                                        },                                        
+                                        },
                                         "dpi.by_app.app.clients": {
                                             "type": "channel",
-                                            "common": {},
+                                            "common": {
+                                                "name": {
+                                                    "en": "Clients",
+                                                    "de": "Clients",
+                                                    "ru": "Клиенты",
+                                                    "pt": "Clientes",
+                                                    "nl": "Clients",
+                                                    "fr": "Clients",
+                                                    "it": "Client",
+                                                    "es": "Clientes",
+                                                    "pl": "Klienci",
+                                                    "uk": "Клієнти",
+                                                    "zh-cn": "客户端"
+                                                }
+                                            },
                                             "native": {
                                                 "object_id": "dpi.by_app.app.clients"
                                             },
@@ -166,7 +208,7 @@
                                                                     "common": {
                                                                         "name": "MAC address",
                                                                         "type": "string",
-                                                                        "role": "state",
+                                                                        "role": "info.mac",
                                                                         "read": true,
                                                                         "write": false,
                                                                         "desc": ""
@@ -183,10 +225,10 @@
                                                                     "common": {
                                                                         "name": "RX",
                                                                         "type": "number",
-                                                                        "role": "state",
+                                                                        "role": "value",
                                                                         "read": true,
                                                                         "write": false,
-                                                                        "unit": "Byte",
+                                                                        "unit": "B",
                                                                         "desc": ""
                                                                     },
                                                                     "native": {
@@ -210,7 +252,7 @@
                                                                     "common": {
                                                                         "name": "RX packets",
                                                                         "type": "number",
-                                                                        "role": "state",
+                                                                        "role": "value",
                                                                         "read": true,
                                                                         "write": false,
                                                                         "desc": ""
@@ -236,10 +278,10 @@
                                                                     "common": {
                                                                         "name": "TX",
                                                                         "type": "number",
-                                                                        "role": "state",
+                                                                        "role": "value",
                                                                         "read": true,
                                                                         "write": false,
-                                                                        "unit": "Byte",
+                                                                        "unit": "B",
                                                                         "desc": ""
                                                                     },
                                                                     "native": {
@@ -263,7 +305,7 @@
                                                                     "common": {
                                                                         "name": "TX packets",
                                                                         "type": "number",
-                                                                        "role": "state",
+                                                                        "role": "value",
                                                                         "read": true,
                                                                         "write": false,
                                                                         "desc": ""
@@ -295,7 +337,7 @@
                                             "common": {
                                                 "name": "Known clients",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -321,10 +363,10 @@
                                             "common": {
                                                 "name": "RX",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -348,7 +390,7 @@
                                             "common": {
                                                 "name": "RX packets",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -374,10 +416,10 @@
                                             "common": {
                                                 "name": "TX",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -401,7 +443,7 @@
                                             "common": {
                                                 "name": "TX packets",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -430,7 +472,21 @@
                 },
                 "dpi.by_cat": {
                     "type": "channel",
-                    "common": {},
+                    "common": {
+                        "name": {
+                            "en": "By category",
+                            "de": "Nach Kategorie",
+                            "ru": "По категории",
+                            "pt": "Por categoria",
+                            "nl": "Per categorie",
+                            "fr": "Par catégorie",
+                            "it": "Per categoria",
+                            "es": "Por categoría",
+                            "pl": "Według kategorii",
+                            "uk": "За категорією",
+                            "zh-cn": "按类别"
+                        }
+                    },
                     "native": {
                         "object_id": "dpi.by_cat"
                     },
@@ -482,7 +538,7 @@
                                             "common": {
                                                 "name": "Name of Category",
                                                 "type": "string",
-                                                "role": "state",
+                                                "role": "info.name",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -506,7 +562,7 @@
                                             "common": {
                                                 "name": "List of Application Ids",
                                                 "type": "array",
-                                                "role": "state",
+                                                "role": "list",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -524,7 +580,7 @@
                                             "common": {
                                                 "name": "Category Id",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -541,10 +597,10 @@
                                             "common": {
                                                 "name": "RX",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -568,7 +624,7 @@
                                             "common": {
                                                 "name": "RX packets",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -594,10 +650,10 @@
                                             "common": {
                                                 "name": "TX",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
-                                                "unit": "Byte",
+                                                "unit": "B",
                                                 "desc": ""
                                             },
                                             "native": {
@@ -621,7 +677,7 @@
                                             "common": {
                                                 "name": "TX packets",
                                                 "type": "number",
-                                                "role": "state",
+                                                "role": "value",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -654,7 +710,7 @@
                     "common": {
                         "name": "Last updated",
                         "type": "string",
-                        "role": "state",
+                        "role": "date",
                         "read": true,
                         "write": false,
                         "desc": ""
