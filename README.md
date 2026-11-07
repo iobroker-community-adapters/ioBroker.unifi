@@ -54,6 +54,8 @@ For a gateway (e.g. UDM-Pro, UCG, USG) every internet connection gets its own fo
 ### Filter states
 For every kind of information, the created states can be selected. If nothing is selected, all states are created. States needed by a selected state are added automatically, e.g. `last_seen_by_uap` and `last_seen_by_usw` for `is_online`.
 
+New instances start with a recommended selection for clients (name, IP, online, WLAN, signal, block/reconnect …) and devices (name, model, IP, state, firmware, CPU/memory, temperature, WAN connections, ports with PoE …), so the object tree stays clear. Select more states at any time, or remove all to get every state. Existing instances keep their selection.
+
 ### WAN statistics (UniFi Network 11 and newer)
 UniFi Network 11 moved to a new statistics engine and cleared the statistics history. Since then the gateway report used for `gateway_traffic` returns no data (the adapter logs a warning once). The setting **Update WAN statistics** reads the data of the dashboard of the network application instead (`/v2/api/site/<site>/aggregated-dashboard`) and creates `<site>.wan.<connection>` for every internet connection (`WAN`, `WAN2`, ...):
 
@@ -120,6 +122,13 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) All states have a specific ioBroker role (e.g. `info.ip`, `info.mac`, `indicator.reachable`, `value.temperature`, `switch.enable`, `date`) instead of the generic `state`, so visualizations and assistants recognize them
+- (@Schimi1983) Unified units (`B`, `B/s`, `Mbit/s`, `kbit/s`, `min`), numbers are stored as numbers (PoE power/voltage/current, load, CPU, memory, uptime of the devices, voucher duration), and the port settings full duplex, isolation, auto negotiation and spanning tree as true/false
+- (@Schimi1983) `rssi` of the clients is the signal-to-noise ratio in dB (unit was dBm)
+- (@Schimi1983) Readable names for all folders (e.g. "Ports", "Radios", "Speed test") in 11 languages, the site gets its name from the controller
+- (@Schimi1983) New instances: recommended selection of client and device states, alarms off (UniFi Network 10 and newer has no alarms)
+
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
 

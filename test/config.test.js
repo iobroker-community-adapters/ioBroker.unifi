@@ -70,6 +70,23 @@ describe('admin configuration', () => {
         assertSameMembers(categories, Object.keys(ioPackage.native.statesFilter));
     });
 
+    it('preselects only states that exist (default states filter of new instances)', () => {
+        const options = new Set();
+        const collect = item => {
+            if (item && typeof item === 'object') {
+                if (typeof item.value === 'string' && item.label !== undefined) {
+                    options.add(item.value);
+                }
+                Object.values(item).forEach(collect);
+            }
+        };
+        collect(jsonConfig);
+        const unknown = Object.values(ioPackage.native.statesFilter)
+            .flat()
+            .filter(id => !options.has(id));
+        assert.deepStrictEqual(unknown, []);
+    });
+
     it('has a field for every setting and no field without a setting', () => {
         const native = [];
         for (const [key, value] of Object.entries(ioPackage.native)) {
@@ -138,5 +155,60 @@ describe('states filter', () => {
         const filter = adapter.normalizeStatesFilter({ clients: ['clients', 'clients.client'] });
 
         assert.deepStrictEqual(filter.clients, []);
+    });
+});
+
+describe('object definitions', () => {
+    const fs = require('node:fs');
+    const path = require('node:path');
+    const dir = path.join(__dirname, '..', 'admin', 'lib');
+
+    /** All definitions of all admin/lib/objects_*.json files, as [key, definition] */
+    const definitions = [];
+    const collect = has => {
+        for (const [key, definition] of Object.entries(has)) {
+            definitions.push([key, definition]);
+            if (definition.logic && definition.logic.has) {
+                collect(definition.logic.has);
+            }
+        }
+    };
+    for (const file of fs.readdirSync(dir).filter(f => /^objects_.*\.json$/.test(f))) {
+        collect(JSON.parse(fs.readFileSync(path.join(dir, file), 'utf8')));
+    }
+    const states = definitions.filter(([, definition]) => definition.type === 'state');
+
+    // @KI_HINWEIS: "state" is the generic fallback of ioBroker. It is only allowed where no specific role exists.
+    const GENERIC_ROLE_ALLOWED = ['devices.device.led_override'];
+    const UNITS = ['B', 'B/s', 'Mbit/s', 'kbit/s', '%', 's', 'min', 'ms', '°C', 'W', 'V', 'mA', 'dB', 'dBm', 'MB', 'pkts/s'];
+
+    it('gives every state a specific role (ioBroker state roles)', () => {
+        const generic = states
+            .filter(([key, definition]) => definition.common.role === 'state' && !GENERIC_ROLE_ALLOWED.includes(key))
+            .map(([key]) => key);
+        assert.deepStrictEqual(generic, []);
+    });
+
+    it('uses only the unified units', () => {
+        const other = states
+            .filter(([, definition]) => definition.common.unit !== undefined && !UNITS.includes(definition.common.unit))
+            .map(([key, definition]) => `${key}: ${definition.common.unit}`);
+        assert.deepStrictEqual(other, []);
+    });
+
+    it('marks writable states with a role that can be written', () => {
+        const wrong = states
+            .filter(([, definition]) => definition.common.write)
+            .filter(([, definition]) => !/^(switch|button|level|state)/.test(definition.common.role))
+            .map(([key, definition]) => `${key}: ${definition.common.role}`);
+        assert.deepStrictEqual(wrong, []);
+    });
+
+    it('gives every fixed channel a name', () => {
+        const unnamed = definitions
+            .filter(([, definition]) => ['channel', 'device'].includes(definition.type))
+            .filter(([, definition]) => !definition.common?.name && !definition.logic?.common?.name)
+            .map(([key]) => key);
+        assert.deepStrictEqual(unnamed, []);
     });
 });

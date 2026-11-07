@@ -12,6 +12,18 @@
                         "var": "name"
                     }
                 ]
+            },
+            "common": {
+                "name": {
+                    "or": [
+                        {
+                            "var": "desc"
+                        },
+                        {
+                            "var": "name"
+                        }
+                    ]
+                }
             }
         }
     }
