@@ -1,8 +1,18 @@
 # Older changes
+## 1.0.2 (2026-09-24)
+- (copilot) Adapter requires node.js >= 22 now
+- (copilot) Adapter requires admin >= 7.7.22 now
+- (copilot) Adapter requires js-controller >= 6.0.11 now
+- (@FiraSenax) Controller sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]
+- (@GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
+- (@GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
+- (@GermanBluefox) Migrated the settings page to JSON config
+- (@GermanBluefox) Fixed creating vouchers: the settings were passed in the wrong order since node-unifi 2
+- (@GermanBluefox) The adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub
+
 ## 0.7.0 (2024-04-13)
 * (mcm1957) Adapter requires node.js 18 and js-controller >= 5 now
 * (mcm1957) Dependencies have been updated
-
 
 ## 0.6.7 (2023-12-10)
 * (jens-maus) updated node-unifi to 2.5.1 to fix UDMpro v3.2.x auth issues

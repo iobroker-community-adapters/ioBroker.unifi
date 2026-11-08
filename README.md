@@ -149,7 +149,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.0.0 (2026-11-08)
 - (@GermanBluefox) **Breaking change:** 16 states store numbers or booleans instead of text now (PoE power/voltage/current, load average, CPU / memory / uptime of `system-stats`, port settings speed and rates, voucher duration; `full_duplex`, `isolation`, `autoneg` and `stp_port_mode` of the port settings are true/false). History adapters may reject the new type for an existing series (InfluxDB: field type conflict), and scripts that compare these states with text (e.g. `=== 'true'`) have to be adjusted. The object IDs do not change
 - (@Schimi1983) Repository checker: `sinon` comes with `@iobroker/testing`, news of versions that are not on npm removed, line breaks of the copyright lines
 - (@Schimi1983) Gateway traffic: with UniFi Network 11 and newer (no gateway statistics anymore) the request is skipped after one message until the next start. With the WAN statistics switched on it is only an info, without them a warning that tells which settings to change
@@ -187,17 +187,6 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
 - (@Schimi1983) Fixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others
 - (@Schimi1983) Fixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]
 - (@Schimi1983) Switching PoE creates the missing override of a port instead of failing [#658]
-
-### 1.0.2 (2026-09-24)
-- (copilot) Adapter requires node.js >= 22 now
-- (copilot) Adapter requires admin >= 7.7.22 now
-- (copilot) Adapter requires js-controller >= 6.0.11 now
-- (@FiraSenax) Controller sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]
-- (@GermanBluefox) A failing endpoint or site no longer aborts the whole refresh
-- (@GermanBluefox) Fixed polling stopping after `trigger_update` overlapped a scheduled refresh
-- (@GermanBluefox) Migrated the settings page to JSON config
-- (@GermanBluefox) Fixed creating vouchers: the settings were passed in the wrong order since node-unifi 2
-- (@GermanBluefox) The adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub
 
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
