@@ -161,6 +161,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
 - (@Schimi1983) `rssi` of the clients is the signal-to-noise ratio in dB (unit was dBm)
 - (@Schimi1983) Readable names for all folders (e.g. "Ports", "Radios", "Speed test") in 11 languages, the site gets its name from the controller
 - (@Schimi1983) New instances: recommended selection of client and device states, alarms off (UniFi Network 10 and newer has no alarms)
+- (@hdering) Endpoints removed in newer UniFi Network versions (e.g. alarms, 404 `api.err.NotFound`) are logged once as a warning and skipped instead of logging an error on every refresh
 
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
