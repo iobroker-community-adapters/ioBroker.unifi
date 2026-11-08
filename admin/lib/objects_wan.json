@@ -19,9 +19,22 @@
                     },
                     "logic": {
                         "_id": {
-                            "cleanupForUseAsId": [
+                            "if": [
                                 {
-                                    "var": "id"
+                                    "==": [
+                                        {
+                                            "var": "id"
+                                        },
+                                        "WAN"
+                                    ]
+                                },
+                                "wan1",
+                                {
+                                    "cleanupForUseAsId": [
+                                        {
+                                            "var": "id"
+                                        }
+                                    ]
                                 }
                             ]
                         },

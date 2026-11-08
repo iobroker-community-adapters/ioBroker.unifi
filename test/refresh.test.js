@@ -237,13 +237,13 @@ describe('refresh reliability', () => {
 
         beforeEach(() => {
             adapter = createAdapter();
-            adapter.update = { clients: true, devices: true, dpi: true, alarms: true };
+            adapter.update = { clients: true, devices: true, dpi: true, wan: true };
             adapter.getController = sinon.stub().resolves({});
             adapter.fetchSites = sinon.stub().resolves(['default', 'office']);
             adapter.fetchClients = sinon.stub().resolves();
             adapter.fetchDevices = sinon.stub().resolves();
             adapter.fetchDpi = sinon.stub().resolves();
-            adapter.fetchAlarms = sinon.stub().resolves();
+            adapter.fetchWan = sinon.stub().resolves();
             adapter.setClientOnlineStatus = sinon.stub().resolves();
             adapter.handleError = sinon.stub();
         });
@@ -255,7 +255,7 @@ describe('refresh reliability', () => {
 
             assert.deepStrictEqual(failures, []);
             sinon.assert.calledTwice(adapter.fetchClients);
-            sinon.assert.calledWith(adapter.fetchAlarms, 'office');
+            sinon.assert.calledWith(adapter.fetchWan, 'office');
             sinon.assert.notCalled(adapter.fetchDpi);
             sinon.assert.calledOnce(adapter.setClientOnlineStatus);
         });
@@ -269,7 +269,7 @@ describe('refresh reliability', () => {
 
             assert.strictEqual(failures.length, 1);
             assert.ok(failures[0].includes('fetchDpi (default)'));
-            sinon.assert.calledTwice(adapter.fetchAlarms);
+            sinon.assert.calledTwice(adapter.fetchWan);
             sinon.assert.calledOnceWithExactly(
                 adapter.handleError,
                 sinon.match.instanceOf(Error),
@@ -312,20 +312,20 @@ describe('refresh reliability', () => {
             const failures = await adapter.performUpdate(true);
 
             assert.strictEqual(failures.length, 2);
-            sinon.assert.calledTwice(adapter.fetchAlarms);
+            sinon.assert.calledTwice(adapter.fetchWan);
         });
 
         it('warns once and skips an endpoint the controller does not provide', async () => {
-            adapter.fetchAlarms.withArgs('default').rejects(httpError(404, 'api.err.NotFound'));
+            adapter.fetchWan.withArgs('default').rejects(httpError(404, 'api.err.NotFound'));
 
             const failures = await adapter.performUpdate(true);
             await adapter.performUpdate(true);
 
             assert.deepStrictEqual(failures, []);
-            sinon.assert.calledOnceWithExactly(adapter.log.warn, sinon.match('fetchAlarms (site default)'));
+            sinon.assert.calledOnceWithExactly(adapter.log.warn, sinon.match('fetchWan (site default)'));
             sinon.assert.notCalled(adapter.handleError);
-            assert.strictEqual(adapter.fetchAlarms.withArgs('default').callCount, 1);
-            assert.strictEqual(adapter.fetchAlarms.withArgs('office').callCount, 2);
+            assert.strictEqual(adapter.fetchWan.withArgs('default').callCount, 1);
+            assert.strictEqual(adapter.fetchWan.withArgs('office').callCount, 2);
         });
 
         it('does not update the client online status when clients are not provided', async () => {

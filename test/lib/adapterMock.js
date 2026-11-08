@@ -55,7 +55,9 @@ class AdapterMock extends EventEmitter {
             'getObjectAsync',
             'getForeignObjectAsync',
             'getForeignObjectsAsync',
+            'getAdapterObjectsAsync',
             'extendObjectAsync',
+            'extendForeignObjectAsync',
             'delObjectAsync',
             'getStateAsync',
             'getStatesAsync',
@@ -102,6 +104,22 @@ class AdapterMock extends EventEmitter {
             native: { ...old.native, ...obj.native },
         });
         return { id: fullId };
+    }
+
+    async getAdapterObjectsAsync() {
+        const result = {};
+        for (const [id, obj] of this.objects) {
+            if (id.startsWith(`${this.namespace}.`)) {
+                result[id] = obj;
+            }
+        }
+        return result;
+    }
+
+    async extendForeignObjectAsync(id, obj) {
+        const old = this.objects.get(id) || {};
+        this.objects.set(id, { ...old, ...obj, _id: id, common: { ...old.common, ...obj.common } });
+        return { id };
     }
 
     async delObjectAsync(id) {

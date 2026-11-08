@@ -44,10 +44,8 @@ This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devi
 | Networks | networks and VLANs with their settings | as needed |
 | Health | overall status of internet, LAN, WLAN and VPN | on |
 | Vouchers | guest vouchers of the hotspot; create new ones | only with hotspot |
-| Alarms | alarm messages | **off** with UniFi Network 10 and newer (no alarms anymore) |
 | DPI | traffic per application and category | as needed, needs a gateway with traffic identification |
-| Gateway traffic | traffic per day of older gateways | **off** with UniFi Network 11 and newer, use WAN |
-| WAN | internet traffic today / yesterday / month, provider, availability, speed test | on with UniFi Network 11 and newer |
+| WAN | internet traffic today / yesterday / month, provider, availability, speed test | on |
 
 **Filter objects:** entries of objects that should not be created. Clients: name, host name, IP or MAC address; the list can also be used the other way round, as the only clients to create. Devices: name, IP or MAC address. WLANs: name (SSID). Networks: name. Health: subsystem, e.g. `wan`, `www`, `lan`, `wlan`, `vpn`.
 
@@ -58,21 +56,26 @@ This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devi
 |--------|---------|
 | `unifi.0.<site>.sysinfo` | version, update available |
 | `unifi.0.<site>.clients.<mac>` | one folder per client: `name`, `ip`, `is_online`, `essid`, `signal`, `last_seen`, current traffic (`tx_bytes-r` / `rx_bytes-r`, wired: `wired-…`), WLAN link speed (`tx_rate` / `rx_rate`) … |
-| `unifi.0.<site>.devices.<mac>` | one folder per UniFi device: `state`, `version`, `upgradable`, `uptime`, temperatures, `port_table` (ports, PoE), `wan1` / `wan2` (internet connections of the gateway) … |
+| `unifi.0.<site>.devices.<mac>` | one folder per UniFi device: `state`, `version`, `upgradable`, `uptime`, temperatures and the folders below |
+| `… .devices.<mac>.ports.port_<n>` | one folder per port: `name`, `enable`, `speed`, PoE (`poe_power`, `poe_enabled`, `poe_cycle`) and the configured `settings` of the port |
+| `… .devices.<mac>.statistics` | CPU and memory in %, load average, memory in bytes, uptime |
+| `… .devices.<mac>.radios.<radio>` | one folder per radio of an access point (named *2.4 GHz*, *5 GHz*, *6 GHz*): channel, transmit power, channel utilization |
+| `… .devices.<mac>.uplink` | the device and port this device is connected to |
+| `… .devices.<mac>.wan1` / `wan2` | internet connections of a gateway |
 | `unifi.0.<site>.wlans.<name>` | one folder per WLAN, `enabled` |
 | `unifi.0.<site>.networks.<name>` | one folder per network |
 | `unifi.0.<site>.health.<subsystem>` | `wan`, `lan`, `wlan`, `vpn`, `www` with `status` |
-| `unifi.0.<site>.wan.<connection>` | traffic, provider, availability and speed test of every internet connection |
+| `unifi.0.<site>.wan.wan1` / `wan2` | traffic, provider, availability and speed test of every internet connection |
 | `unifi.0.<site>.vouchers` | vouchers and the button `create_vouchers` |
 | `unifi.0.info` | connection and state of the last refresh (see Troubleshooting) |
 
-`<site>` is the name of the UniFi site, usually `default`. All states have the matching ioBroker role, so they are recognized by visualizations and assistants.
+`<site>` is the name of the UniFi site, usually `default`. All states have the matching ioBroker role, so they are recognized by visualizations and assistants. Times (`last_seen`, `first_seen`, speed tests, vouchers) are timestamps (role `value.time`), visualizations show them as date and time.
 
 ### Internet connections (WAN)
 For a gateway (e.g. UDM-Pro, UCG, USG) every internet connection gets its own folder below the device: `wan1`, and `wan2` if a second connection is set up. It shows the public IPv4 address, the IPv6 addresses, whether the connection is up, the port number on the gateway, the link speed and, while connected, the latency and availability.
 
 ### WAN statistics (UniFi Network 11 and newer)
-UniFi Network 11 moved to a new statistics engine and cleared the statistics history; the gateway report used for `gateway_traffic` returns no data since then. The setting **Update WAN statistics** reads the data of the dashboard of the network application instead and creates `<site>.wan.<connection>` for every internet connection (`WAN`, `WAN2`, …):
+The setting **Update WAN statistics** reads the data of the dashboard of the network application and creates `<site>.wan.wan1` (and `wan2`, … for more internet connections):
 
 | State | Content |
 |-------|---------|
@@ -96,8 +99,8 @@ The traffic values are summed from hourly values of the console, so they are acc
 | `clients.<mac>.reconnect` | button: disconnect a wireless client so it connects again |
 | `devices.<mac>.restart` | button: restart the device |
 | `devices.<mac>.led_override` | LEDs `on`, `off` or `default` (setting of the site) |
-| `devices.<mac>.port_table.port_<n>.port_poe_enabled` | switch PoE of the port on or off |
-| `devices.<mac>.port_table.port_<n>.port_poe_cycle` | button: switch PoE off and on again, e.g. to restart a camera |
+| `devices.<mac>.ports.port_<n>.poe_enabled` | switch PoE of the port on or off |
+| `devices.<mac>.ports.port_<n>.poe_cycle` | button: switch PoE off and on again, e.g. to restart a camera |
 | `vouchers.create_vouchers` | button: create vouchers with the settings of the Vouchers tab |
 | `unifi.0.trigger_update` | button: read the data now |
 
@@ -119,12 +122,31 @@ Switching needs an API key or a local user with full management of UniFi Network
 | `not available right now` | the network application of the console is restarting, e.g. during an update. The adapter continues by itself after some minutes; only `still not available` needs attention. |
 | `cannot be reached`, `refused the connection`, `closed the connection` | the console or the network was away for a moment (restart, update); the next refresh repeats it. Right after the start, or when it repeats: check the IP address and port and that the console is reachable from the ioBroker host. |
 | `did not answer within 10 s` | the console was busy for a moment, the next refresh repeats it. Only repeated messages need attention. |
-| `no gateway statistics` | UniFi Network 11 and newer: switch off *Gateway traffic* and switch on *WAN* |
+| `old objects with history settings were kept` | see *Update from version 2* |
+
+## Update from version 2
+Version 3 sorts the objects like the official UniFi Network API and drops what UniFi Network 10 and 11 no longer provide. **The adapter moves everything by itself at the first start:** the history settings (History, SQL, InfluxDB …) and the rooms and functions go to the new objects, then the old objects are deleted. The values recorded so far stay under the old IDs in the history database.
+
+What you have to adjust: **scripts and visualizations** that use the old IDs.
+
+| Old (version 2) | New (version 3) |
+|-----------------|-----------------|
+| `devices.<mac>.port_table.port_<n>.…` | `devices.<mac>.ports.port_<n>.…` |
+| `… .port_table.port_<n>.port_poe_enabled` / `port_poe_cycle` / `port_poe` | `… .ports.port_<n>.poe_enabled` / `poe_cycle` / `poe` |
+| `devices.<mac>.port_overrides.port_<n>.…` | `devices.<mac>.ports.port_<n>.settings.…` |
+| `devices.<mac>.sys_stats.…` and `devices.<mac>.system-stats.…` | `devices.<mac>.statistics.…` |
+| `devices.<mac>.radio_table_stats.<radio>.…` | `devices.<mac>.radios.<radio>.…` |
+| `devices.<mac>.last_uplink.…` | `devices.<mac>.uplink.…` |
+| `wan.wan.…` | `wan.wan1.…` |
+| `clients.<mac>.first_seen`, `last_seen`, `last_seen_by_uap/usw`, `dpi.last_updated`, `vouchers.*.create_time`, `*.speedtest.rundate/lastrun` | same IDs, timestamp (number) instead of text |
+| `clients.<mac>.is_guest_by_*`, `uptime_by_*`, `last_seen_by_ugw` | removed (internal values of the controller) |
+| `alarms`, `gateway_traffic` | removed: UniFi Network 10 and newer have no alarms, Network 11 no gateway statistics; use *WAN* instead |
+
+An old object with history settings is kept if its new object does not exist, e.g. because the state is not selected in the states filter; the log names it. Select the state or delete the old object. Your selection of states is taken over automatically. Controllers older than UniFi Network 10 keep using version 2.
 
 ## Known issues
 * The `is_wired` state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1).
 * The UniFi console locks a local user for a while after too many logins. The adapter waits 15 minutes before it tries again; an API key needs no login.
-* UniFi Network 10 and newer no longer provide alarms, switch them off in the settings.
 
 <details>
 <summary>For developers: API endpoints</summary>
@@ -152,6 +174,10 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@Schimi1983) **Breaking change, version 3:** objects sorted like the official UniFi Network API, see *Update from version 2* in the README for the table old → new. The adapter moves the history settings, rooms and functions to the new objects at the first start and deletes the old objects; scripts and visualizations with the old IDs have to be adjusted
+- (@Schimi1983) Devices: one folder per port with its settings (`ports.port_<n>`, `ports.port_<n>.settings` instead of `port_table` + `port_overrides`, PoE states without the prefix `port_`), `statistics` instead of `sys_stats` + `system-stats`, `radios` named by band, `uplink`
+- (@Schimi1983) Times are timestamps (role `value.time`) instead of text; the WAN statistics of the first internet connection are `wan.wan1`; internal client states `*_by_ugw`, `is_guest_by_*`, `uptime_by_*` removed
+- (@Schimi1983) Alarms (removed in UniFi Network 10) and gateway traffic (empty since UniFi Network 11) removed together with their settings
 - (@Schimi1983) Clients: current traffic per second (`tx_bytes-r`, `rx_bytes-r`, wired `wired-tx_bytes-r`, `wired-rx_bytes-r`), WLAN link speed in Mbit/s (`tx_rate`, `rx_rate`) and `powersave_enabled` (#71, #531)
 - (@Schimi1983) Short network errors (console not reachable, connection refused or closed) after a successful refresh are a warning in plain text instead of an error; an error right after the start (wrong IP address or port) or after 3 failed refreshes in a row
 - (@Schimi1983) While the UniFi Network application restarts (e.g. during an update, HTTP 502/503/504) a warning instead of an error with stack; an error only after 3 failed refreshes in a row

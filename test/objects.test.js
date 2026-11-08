@@ -115,36 +115,12 @@ describe('object creation', () => {
         assert.strictEqual(adapter.val('default.vouchers.voucher_3333344444.code'), undefined);
     });
 
-    it('deletes the alarms that are gone when only new alarms are shown', async () => {
-        const alarm = (id, extra = {}) => ({
-            _id: id,
-            key: 'EVT_AP_Lost_Contact',
-            msg: 'AP[aa:bb:cc:dd:ee:10] was disconnected',
-            ap: 'aa:bb:cc:dd:ee:10',
-            ap_name: 'Office AP',
-            time: Date.now(),
-            archived: false,
-            ...extra,
-        });
-        await adapter.processAlarms('default', [alarm('a1'), alarm('a2')]);
-        assert.strictEqual(adapter.val('default.alarms.alarm_a2.message'), 'AP - Office AP: was disconnected');
-
-        adapter.update.alarmsNoArchived = true;
-        await adapter.processAlarms('default', [alarm('a1')]);
-
-        assert.ok(adapter.objects.has('unifi.0.default.alarms.alarm_a1.message'));
-        assert.ok(![...adapter.objects.keys()].some(id => id.includes('alarm_a2')));
-    });
 });
 
 describe('client status', () => {
     let adapter;
 
-    const timestamp = secondsAgo => {
-        const date = new Date(Date.now() - secondsAgo * 1000);
-        const pad = n => String(n).padStart(2, '0');
-        return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
-    };
+    const timestamp = secondsAgo => Date.now() - secondsAgo * 1000;
 
     beforeEach(() => {
         adapter = createAdapter();
@@ -331,5 +307,83 @@ describe('client status', () => {
         await adapter.processBlockedClients('default');
 
         sinon.assert.notCalled(adapter.controllers.default.getBlockedUsers);
+    });
+});
+
+describe('device structure of version 3', () => {
+    let adapter;
+
+    beforeEach(() => {
+        adapter = createAdapter();
+    });
+
+    // shortened data of a UniFi Network 11.1 console
+    const ACCESS_POINT = {
+        mac: '78:45:58:60:46:ec',
+        name: 'OG',
+        ip: '192.168.1.75',
+        model: 'UAL6',
+        type: 'uap',
+        device_id: 'f1cebf47',
+        port_table: [{ port_idx: 1, name: 'Port 1', enable: true }],
+        sys_stats: { loadavg_1: '0.82', loadavg_15: '0.82', loadavg_5: '0.83', mem_total: 259813376, mem_used: 80490496 },
+        'system-stats': { cpu: '1.9', mem: '31.0', uptime: '928048' },
+        radio_table_stats: [
+            { name: 'ra0', radio: 'ng', channel: 11, tx_power: 17 },
+            { name: 'rai0', radio: 'na', channel: 100, tx_power: 23 },
+        ],
+        last_uplink: {
+            type: 'wire',
+            port_idx: 1,
+            uplink_mac: '74:ac:b9:ab:8e:f0',
+            uplink_device_name: 'USW Pro 24 PoE',
+            uplink_remote_port: 18,
+        },
+        state: 1,
+    };
+    const SWITCH = {
+        mac: '74:ac:b9:ab:8e:f0',
+        name: 'USW Pro 24 PoE',
+        ip: '192.168.1.243',
+        model: 'US24PRO',
+        type: 'usw',
+        device_id: 'ab976379',
+        port_table: [
+            { port_idx: 1, name: 'Port 1', enable: true, port_poe: true, poe_mode: 'auto', poe_power: '4.25', speed: 1000 },
+            { port_idx: 2, name: 'Port 2', enable: true, port_poe: true, poe_mode: 'off', speed: 0 },
+        ],
+        port_overrides: [{ port_idx: 1, name: 'Camera', poe_mode: 'auto', isolation: false, full_duplex: true }],
+    };
+
+    it('creates ports with their settings, statistics, radios and uplink', async () => {
+        await adapter.processDevices('default', [ACCESS_POINT, SWITCH]);
+
+        const ap = 'default.devices.78:45:58:60:46:ec';
+        assert.strictEqual(adapter.val(`${ap}.statistics.cpu`), 1.9);
+        assert.strictEqual(adapter.val(`${ap}.statistics.loadavg_5`), 0.83);
+        assert.strictEqual(adapter.val(`${ap}.statistics.mem_total`), 259813376);
+        assert.strictEqual(adapter.objects.get(`unifi.0.${ap}.radios.ra0`).common.name, '2.4 GHz');
+        assert.strictEqual(adapter.objects.get(`unifi.0.${ap}.radios.rai0`).common.name, '5 GHz');
+        assert.strictEqual(adapter.val(`${ap}.radios.rai0.channel`), 100);
+        assert.strictEqual(adapter.val(`${ap}.uplink.name`), 'USW Pro 24 PoE');
+        assert.strictEqual(adapter.val(`${ap}.uplink.remote_port`), 18);
+        assert.strictEqual(adapter.objects.has(`unifi.0.${ap}.ports.port_1.settings`), false);
+
+        const sw = 'default.devices.74:ac:b9:ab:8e:f0';
+        assert.strictEqual(adapter.val(`${sw}.ports.port_1.poe_enabled`), true);
+        assert.strictEqual(adapter.val(`${sw}.ports.port_2.poe_enabled`), false);
+        assert.strictEqual(adapter.val(`${sw}.ports.port_1.poe_power`), 4.25);
+        assert.strictEqual(adapter.objects.get(`unifi.0.${sw}.ports.port_1.poe_enabled`).common.role, 'switch.power');
+        assert.ok(adapter.objects.has(`unifi.0.${sw}.ports.port_1.poe_cycle`));
+        assert.strictEqual(adapter.val(`${sw}.ports.port_1.settings.name`), 'Camera');
+        assert.strictEqual(adapter.val(`${sw}.ports.port_1.settings.full_duplex`), true);
+        assert.strictEqual(adapter.objects.has(`unifi.0.${sw}.ports.port_2.settings`), false);
+
+        // nothing of the structure of version 2
+        assert.ok(
+            ![...adapter.objects.keys()].some(id =>
+                /port_table|port_overrides|sys_stats|system-stats|radio_table_stats|last_uplink/.test(id),
+            ),
+        );
     });
 });
