@@ -57,7 +57,7 @@ This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devi
 | Folder | Content |
 |--------|---------|
 | `unifi.0.<site>.sysinfo` | version, update available |
-| `unifi.0.<site>.clients.<mac>` | one folder per client: `name`, `ip`, `is_online`, `essid`, `signal`, `last_seen` … |
+| `unifi.0.<site>.clients.<mac>` | one folder per client: `name`, `ip`, `is_online`, `essid`, `signal`, `last_seen`, current traffic (`tx_bytes-r` / `rx_bytes-r`, wired: `wired-…`), WLAN link speed (`tx_rate` / `rx_rate`) … |
 | `unifi.0.<site>.devices.<mac>` | one folder per UniFi device: `state`, `version`, `upgradable`, `uptime`, temperatures, `port_table` (ports, PoE), `wan1` / `wan2` (internet connections of the gateway) … |
 | `unifi.0.<site>.wlans.<name>` | one folder per WLAN, `enabled` |
 | `unifi.0.<site>.networks.<name>` | one folder per network |
@@ -116,6 +116,7 @@ Switching needs an API key or a local user with full management of UniFi Network
 | `Incorrect username or password` | check user name and password; the user must be a local user |
 | `The API key was rejected` | the key is invalid, expired or deleted: create a new one in UniFi Network → Integrations |
 | `The UniFi console blocks the login of the local user` | too many logins, e.g. because the same user is used by other systems. The adapter tries again after 15 minutes. An API key avoids this. |
+| `not available right now` | the network application of the console is restarting, e.g. during an update. The adapter continues by itself after some minutes; only `still not available` needs attention. |
 | `did not answer within 10 s` | the console was busy for a moment, the next refresh repeats it. Only repeated messages need attention. |
 | `no gateway statistics` | UniFi Network 11 and newer: switch off *Gateway traffic* and switch on *WAN* |
 
@@ -149,6 +150,10 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+- (@Schimi1983) Clients: current traffic per second (`tx_bytes-r`, `rx_bytes-r`, wired `wired-tx_bytes-r`, `wired-rx_bytes-r`), WLAN link speed in Mbit/s (`tx_rate`, `rx_rate`) and `powersave_enabled` (#71, #531)
+- (@Schimi1983) While the UniFi Network application restarts (e.g. during an update, HTTP 502/503/504) a warning instead of an error with stack; an error only after 3 failed refreshes in a row
+
 ### 2.0.0 (2026-11-08)
 - (@GermanBluefox) **Breaking change:** 16 states store numbers or booleans instead of text now (PoE power/voltage/current, load average, CPU / memory / uptime of `system-stats`, port settings speed and rates, voucher duration; `full_duplex`, `isolation`, `autoneg` and `stp_port_mode` of the port settings are true/false). History adapters may reject the new type for an existing series (InfluxDB: field type conflict), and scripts that compare these states with text (e.g. `=== 'true'`) have to be adjusted. The object IDs do not change
 - (@Schimi1983) Repository checker: `sinon` comes with `@iobroker/testing`, news of versions that are not on npm removed, line breaks of the copyright lines

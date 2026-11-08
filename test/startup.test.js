@@ -169,6 +169,23 @@ describe('error handling', () => {
         ]);
     });
 
+    it('logs a network application that is not available (update, restart) as warning, repeated as error', () => {
+        const err = new Error('Request failed with status code 502');
+        err.response = { status: 502, data: { error: { code: 502, message: 'Bad Gateway' } } };
+
+        adapter.handleError(err, undefined, 'updateUnifiData');
+        sinon.assert.notCalled(adapter.log.error);
+        sinon.assert.calledOnceWithExactly(
+            adapter.log.warn,
+            '[updateUnifiData] the UniFi Network application is not available right now (502: Bad Gateway), e.g. during an update or restart. The request is repeated with the next refresh.',
+        );
+
+        adapter.consecutiveErrors = 3;
+        assert.deepStrictEqual(loggedError(err), [
+            '[test site default] the UniFi Network application is still not available (502: Bad Gateway), 3 refreshes in a row. Check the console.',
+        ]);
+    });
+
     it('logs a single timeout as warning without stack, repeated timeouts as error', () => {
         const err = new Error('timeout of 10000ms exceeded');
 

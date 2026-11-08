@@ -69,6 +69,8 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
 /** From this number of failed refreshes in a row a timeout is logged as error instead of warning */
 const REPEATED_FAILURES = 3;
+// HTTP status of UniFi OS while the network application does not run (update, restart)
+const UNAVAILABLE_CODES = [502, 503, 504];
 
 /** Login error codes of UniFi OS after too many logins: the console blocks further logins for a while */
 const LOGIN_BLOCKED_CODES = ['AUTHENTICATION_FAILED_ACCOUNT_LOCKED', 'AUTHENTICATION_FAILED_LIMIT_REACHED'];
@@ -119,6 +121,21 @@ function htmlErrorTitle(data: unknown): string | undefined {
     }
     const title = /<title>([^<]*)<\/title>/i.exec(data)?.[1] ?? /<h1>([^<]*)<\/h1>/i.exec(data)?.[1];
     return title?.trim() || 'HTML page';
+}
+
+/**
+ * Short text of an error answer: title of an HTML page, `meta.msg` or `error.message`, else the error message
+ *
+ * @param err error of the client
+ */
+function errorDetail(err: UnifiError): string {
+    const data = err.response?.data;
+    return (
+        htmlErrorTitle(data) ??
+        responseMeta(err)?.msg ??
+        (typeof data === 'object' ? data.error?.message : undefined) ??
+        err.message
+    );
 }
 
 // Categories of the state filter, defined in admin/lib/objects_<category>.json
@@ -701,11 +718,25 @@ class Unifi extends utils.Adapter {
             this.log.error(
                 `The UniFi console blocks the login of the local user for now (too many logins). The adapter tries again in ${MAX_BACKOFF_DELAY / 60000} minutes. If this repeats, check that the user is not used by other systems, or use an API key (UniFi Network → Integrations).`,
             );
+        } else if (status !== undefined && UNAVAILABLE_CODES.includes(status)) {
+            // @KI_HINWEIS: UniFi OS answers 502/503/504 while the network application is not running, e.g. during
+            // an update or a restart of the application (some minutes). That fixes itself, so it is a warning
+            // without stack and Sentry report; only repeated failures are an error.
+            const prefix = logPrefix(site, methodName);
+            const detail = `${status}: ${errorDetail(err)}`;
+            if (this.consecutiveErrors >= REPEATED_FAILURES) {
+                this.log.error(
+                    `${prefix}the UniFi Network application is still not available (${detail}), ${this.consecutiveErrors} refreshes in a row. Check the console.`,
+                );
+            } else {
+                this.log.warn(
+                    `${prefix}the UniFi Network application is not available right now (${detail}), e.g. during an update or restart. The request is repeated with the next refresh.`,
+                );
+            }
         } else if (status !== undefined && status >= 500) {
             // Internal error of the network application, e.g. the Tomcat page "HTTP Status 500 – Internal Server Error"
-            const detail = htmlErrorTitle(err.response?.data) ?? responseMeta(err)?.msg ?? err.message;
             this.log.error(
-                `${logPrefix(site, methodName)}the UniFi controller answered with an internal error (${status}: ${detail}). The request is repeated with the next refresh.`,
+                `${logPrefix(site, methodName)}the UniFi controller answered with an internal error (${status}: ${errorDetail(err)}). The request is repeated with the next refresh.`,
             );
         } else if (/^timeout of \d+ms exceeded$/.test(err.message)) {
             // @KI_HINWEIS: a console under load answers a request now and then too late. That fixes itself with the

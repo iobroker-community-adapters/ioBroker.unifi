@@ -196,6 +196,36 @@ describe('client status', () => {
         assert.ok(adapter.objects.has(`${wireless}.reconnect`));
     });
 
+    it('creates the current rates, the WLAN link speed and power save of the clients', async () => {
+        await adapter.processClients('default', [
+            client(1, { is_wired: true, 'wired-tx_bytes-r': 1500 }),
+            client(2, {
+                is_wired: false,
+                essid: 'Home WiFi',
+                'rx_bytes-r': 250,
+                tx_rate: 65000,
+                rx_rate: 144400,
+                powersave_enabled: false,
+            }),
+        ]);
+
+        const wired = 'default.clients.aa:bb:cc:dd:ee:01';
+        const wireless = 'default.clients.aa:bb:cc:dd:ee:02';
+        assert.strictEqual(adapter.val(`${wired}.wired-tx_bytes-r`), 1500);
+        // the controller leaves the rate out while a client sends nothing
+        assert.strictEqual(adapter.val(`${wired}.wired-rx_bytes-r`), 0);
+        assert.strictEqual(adapter.objects.has(`unifi.0.${wired}.tx_bytes-r`), false);
+        assert.strictEqual(adapter.objects.has(`unifi.0.${wired}.tx_rate`), false);
+
+        assert.strictEqual(adapter.val(`${wireless}.rx_bytes-r`), 250);
+        assert.strictEqual(adapter.val(`${wireless}.tx_bytes-r`), 0);
+        assert.strictEqual(adapter.val(`${wireless}.tx_rate`), 65);
+        assert.strictEqual(adapter.val(`${wireless}.rx_rate`), 144.4);
+        assert.strictEqual(adapter.val(`${wireless}.powersave_enabled`), false);
+        assert.strictEqual(adapter.objects.get(`unifi.0.${wireless}.tx_rate`)?.common.unit, 'Mbit/s');
+        assert.strictEqual(adapter.objects.has(`unifi.0.${wireless}.wired-tx_bytes-r`), false);
+    });
+
     it('creates the WAN ports of a gateway with addresses, status and link', async () => {
         // as reported by a UDM Pro: WAN 1 via PPPoE on SFP+ 1, WAN 2 configured on port 9 without cable
         const gateway = {
