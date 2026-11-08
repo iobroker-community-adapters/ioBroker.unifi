@@ -2,7 +2,21 @@
     "sysinfo": {
         "_id": "sysinfo",
         "type": "channel",
-        "common": {},
+        "common": {
+            "name": {
+                "en": "System information",
+                "de": "Systeminformationen",
+                "ru": "Информация о системе",
+                "pt": "Informações do sistema",
+                "nl": "Systeeminformatie",
+                "fr": "Informations système",
+                "it": "Informazioni di sistema",
+                "es": "Información del sistema",
+                "pl": "Informacje o systemie",
+                "uk": "Інформація про систему",
+                "zh-cn": "系统信息"
+            }
+        },
         "native": {
             "object_id": "sysinfo"
         },
@@ -15,7 +29,7 @@
                     "common": {
                         "name": "Hostname",
                         "type": "string",
-                        "role": "state",
+                        "role": "info.name",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -33,7 +47,7 @@
                     "common": {
                         "name": "Name",
                         "type": "string",
-                        "role": "state",
+                        "role": "info.name",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -51,7 +65,7 @@
                     "common": {
                         "name": "Previous version",
                         "type": "string",
-                        "role": "state",
+                        "role": "text",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -69,7 +83,7 @@
                     "common": {
                         "name": "Update available",
                         "type": "boolean",
-                        "role": "state",
+                        "role": "indicator.maintenance",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -87,7 +101,7 @@
                     "common": {
                         "name": "Update downloaded",
                         "type": "boolean",
-                        "role": "state",
+                        "role": "indicator",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -105,7 +119,7 @@
                     "common": {
                         "name": "Version",
                         "type": "string",
-                        "role": "state",
+                        "role": "info.firmware",
                         "read": true,
                         "write": false,
                         "desc": ""

@@ -76,6 +76,10 @@ Always use `this.setTimeout` / `this.clearTimeout` (adapter-core, auto-cleared o
 - **States filter** (`statesFilter.<category>`, multi-select in the admin): the admin stores only the selected **states**. `normalizeStatesFilter()` adds the channels above them (the filter is checked on every level of the tree) and the states in `STATE_DEPENDENCIES` (e.g. `is_online` needs `last_seen_by_uap/usw`). An empty selection means all states. Configurations of the old admin page, which stored the channels too, are read the same way.
 - `blacklist`/`whitelist` are the names before 0.5.3; `onReady()` migrates them with `updateConfig()` (the instance restarts).
 
+### Roles and units
+
+Every state in `admin/lib/objects_*.json` has a specific role of the ioBroker state roles; `state` only where none fits (`led_override`). `test/config.test.js` checks the roles, the unified units (`B`, `B/s`, `Mbit/s`, `kbit/s`, `%`, `s`, `min`, `ms`, `°C`, `W`, `V`, `mA`, `dB`, `dBm`, `MB`, `pkts/s`), writable roles and the names of the fixed channels (translated objects). `statesFilter` in `io-package.json` is the recommended selection for **new** instances (existing ones keep theirs); the tests start with empty filters (all states) in `test/lib/adapterMock.js`.
+
 ### Admin configuration
 
 `admin/jsonConfig.json` (`common.adminUI.config = "json"`). The `options` of the `statesFilter.*` selects are **generated** from `admin/lib/objects_*.json` by `npm run build` / `npm run 2-jsonConfig` — do not edit them by hand. `test/config.test.js` fails if they are out of date.

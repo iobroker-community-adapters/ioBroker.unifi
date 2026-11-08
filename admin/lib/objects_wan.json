@@ -176,7 +176,7 @@
                                 "common": {
                                     "name": "Interface",
                                     "type": "string",
-                                    "role": "text",
+                                    "role": "info.name",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -254,7 +254,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -273,7 +273,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -292,7 +292,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -311,7 +311,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -330,7 +330,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -349,7 +349,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
@@ -368,7 +368,7 @@
                                     "role": "value",
                                     "read": true,
                                     "write": false,
-                                    "unit": "Byte",
+                                    "unit": "B",
                                     "desc": ""
                                 },
                                 "native": {
