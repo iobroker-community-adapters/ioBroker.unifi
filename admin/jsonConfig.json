@@ -115,6 +115,13 @@
                     "lg": 8,
                     "xl": 8
                 },
+                "_localUserNotice": {
+                    "type": "staticText",
+                    "text": "UI.com cloud accounts require MFA, which the adapter cannot handle. Use a local UniFi OS user (Admins & Users → \"Restrict to local access only\") or an API key.",
+                    "hidden": "data.authMode === 'apiKey'",
+                    "newLine": true,
+                    "xs": 12
+                },
                 "_connectionHeader": {
                     "type": "header",
                     "text": "Connection",

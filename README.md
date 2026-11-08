@@ -18,7 +18,7 @@ This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devi
 
 ## Requirements
 * A UniFi console with UniFi OS (UDM, UDM-Pro, UDM-SE, UCG, UX, Cloud Key Gen2+, UniFi OS Server) or a self-hosted UniFi Network application
-* An **API key** (UniFi OS only, recommended) or a **local user** of the console. Cloud accounts of ui.com with two-factor authentication cannot be used.
+* An **API key** (UniFi OS only, recommended) or a **local user** of the console. Cloud accounts of ui.com cannot be used: they require MFA, the login fails with `MFA_AUTH_REQUIRED`.
 
 ## Setup
 1. **Create an API key** (recommended): open the UniFi Network application → **Integrations** (in Network 11 in the left navigation, before in Settings → Control Plane → Integrations) → **Create New API Key**. Copy the key, it is shown only once.
@@ -162,6 +162,8 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
 - (@Schimi1983) Readable names for all folders (e.g. "Ports", "Radios", "Speed test") in 11 languages, the site gets its name from the controller
 - (@Schimi1983) New instances: recommended selection of client and device states, alarms off (UniFi Network 10 and newer has no alarms)
 - (@hdering) Endpoints removed in newer UniFi Network versions (e.g. alarms, 404 `api.err.NotFound`) are logged once as a warning and skipped instead of logging an error on every refresh
+- (@hdering) Added a hint to the settings that a local UniFi OS user or an API key is required, as UI.com accounts require MFA
+- (@hdering) A login rejected with `MFA_AUTH_REQUIRED` (UI.com account) is explained in the log instead of logging the response with the MFA cookie
 
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)

@@ -274,5 +274,6 @@
     "temperature value": "значення температури",
     "type of storage": "тип зберігання",
     "type of temperature": "тип температури",
-    "using of storage size": "використання розміру зберігання"
+    "using of storage size": "використання розміру зберігання",
+    "UI.com cloud accounts require MFA, which the adapter cannot handle. Use a local UniFi OS user (Admins & Users → \"Restrict to local access only\") or an API key.": "Хмарні облікові записи UI.com вимагають MFA, яку адаптер не підтримує. Використовуйте локального користувача UniFi OS (Admins & Users → \"Restrict to local access only\") або API-ключ."
 }

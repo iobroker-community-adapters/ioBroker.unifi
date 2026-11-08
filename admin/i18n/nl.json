@@ -274,5 +274,6 @@
     "temperature value": "temperatuurwaarde",
     "type of storage": "type opslag",
     "type of temperature": "type temperatuur",
-    "using of storage size": "gebruik van opslaggrootte"
+    "using of storage size": "gebruik van opslaggrootte",
+    "UI.com cloud accounts require MFA, which the adapter cannot handle. Use a local UniFi OS user (Admins & Users → \"Restrict to local access only\") or an API key.": "UI.com-cloudaccounts vereisen MFA, wat de adapter niet ondersteunt. Gebruik een lokale UniFi OS-gebruiker (Admins & Users → \"Restrict to local access only\") of een API-sleutel."
 }
