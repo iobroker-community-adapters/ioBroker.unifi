@@ -70,8 +70,8 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Create time",
-                                    "type": "string",
-                                    "role": "date",
+                                    "type": "number",
+                                    "role": "value.time",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -81,7 +81,7 @@
                                 },
                                 "logic": {
                                     "value": {
-                                        "secondsToDateTime": [
+                                        "secondsToMs": [
                                             {
                                                 "var": "create_time"
                                             }

@@ -120,7 +120,11 @@
                     "text": "UI.com cloud accounts require MFA, which the adapter cannot handle. Use a local UniFi OS user (Admins & Users → \"Restrict to local access only\") or an API key.",
                     "hidden": "data.authMode === 'apiKey'",
                     "newLine": true,
-                    "xs": 12
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_connectionHeader": {
                     "type": "header",
@@ -382,21 +386,6 @@
                             "description": "Is guest"
                         },
                         {
-                            "label": "is_guest_by_uap",
-                            "value": "clients.client.is_guest_by_uap",
-                            "description": "Is guest by UAP"
-                        },
-                        {
-                            "label": "is_guest_by_ugw",
-                            "value": "clients.client.is_guest_by_ugw",
-                            "description": "Is guest by UGW"
-                        },
-                        {
-                            "label": "is_guest_by_usw",
-                            "value": "clients.client.is_guest_by_usw",
-                            "description": "Is guest by USW"
-                        },
-                        {
                             "label": "is_online",
                             "value": "clients.client.is_online",
                             "description": "Is online"
@@ -415,11 +404,6 @@
                             "label": "last_seen_by_uap",
                             "value": "clients.client.last_seen_by_uap",
                             "description": "Last seen by UAP"
-                        },
-                        {
-                            "label": "last_seen_by_ugw",
-                            "value": "clients.client.last_seen_by_ugw",
-                            "description": "Last seen by UGW"
                         },
                         {
                             "label": "last_seen_by_usw",
@@ -490,21 +474,6 @@
                             "label": "uptime",
                             "value": "clients.client.uptime",
                             "description": "Uptime"
-                        },
-                        {
-                            "label": "uptime_by_uap",
-                            "value": "clients.client.uptime_by_uap",
-                            "description": "Uptime by UAP"
-                        },
-                        {
-                            "label": "uptime_by_ugw",
-                            "value": "clients.client.uptime_by_ugw",
-                            "description": "Uptime by UGW"
-                        },
-                        {
-                            "label": "uptime_by_usw",
-                            "value": "clients.client.uptime_by_usw",
-                            "description": "Uptime by USW"
                         },
                         {
                             "label": "wired-rx_bytes",
@@ -789,246 +758,241 @@
                             ]
                         },
                         {
-                            "label": "device › port_table › port",
+                            "label": "device › ports › port",
                             "items": [
                                 {
                                     "label": "enable",
-                                    "value": "devices.device.port_table.port.enable",
+                                    "value": "devices.device.ports.port.enable",
                                     "description": "Enable"
                                 },
                                 {
                                     "label": "is_uplink",
-                                    "value": "devices.device.port_table.port.is_uplink",
+                                    "value": "devices.device.ports.port.is_uplink",
                                     "description": "Is uplink"
                                 },
                                 {
                                     "label": "name",
-                                    "value": "devices.device.port_table.port.name",
+                                    "value": "devices.device.ports.port.name",
                                     "description": "Name"
                                 },
                                 {
                                     "label": "poe_class",
-                                    "value": "devices.device.port_table.port.poe_class",
+                                    "value": "devices.device.ports.port.poe_class",
                                     "description": "POE class"
                                 },
                                 {
                                     "label": "poe_mode",
-                                    "value": "devices.device.port_table.port.poe_mode",
+                                    "value": "devices.device.ports.port.poe_mode",
                                     "description": "POE mode"
                                 },
                                 {
                                     "label": "poe_current",
-                                    "value": "devices.device.port_table.port.poe_current",
+                                    "value": "devices.device.ports.port.poe_current",
                                     "description": "POE current"
                                 },
                                 {
                                     "label": "poe_power",
-                                    "value": "devices.device.port_table.port.poe_power",
+                                    "value": "devices.device.ports.port.poe_power",
                                     "description": "POE power"
                                 },
                                 {
                                     "label": "poe_voltage",
-                                    "value": "devices.device.port_table.port.poe_voltage",
+                                    "value": "devices.device.ports.port.poe_voltage",
                                     "description": "POE voltage"
                                 },
                                 {
                                     "label": "port_idx",
-                                    "value": "devices.device.port_table.port.port_idx",
+                                    "value": "devices.device.ports.port.port_idx",
                                     "description": "ID"
                                 },
                                 {
-                                    "label": "port_poe",
-                                    "value": "devices.device.port_table.port.port_poe",
-                                    "description": "POE"
-                                },
-                                {
-                                    "label": "port_poe_enabled",
-                                    "value": "devices.device.port_table.port.port_poe_enabled",
-                                    "description": "switch poe power"
-                                },
-                                {
-                                    "label": "port_poe_cycle",
-                                    "value": "devices.device.port_table.port.port_poe_cycle",
-                                    "description": "port power cycle"
-                                },
-                                {
                                     "label": "rx_bytes",
-                                    "value": "devices.device.port_table.port.rx_bytes",
+                                    "value": "devices.device.ports.port.rx_bytes",
                                     "description": "RX Bytes"
                                 },
                                 {
                                     "label": "satisfaction",
-                                    "value": "devices.device.port_table.port.satisfaction",
+                                    "value": "devices.device.ports.port.satisfaction",
                                     "description": "Satisfaction"
                                 },
                                 {
                                     "label": "speed",
-                                    "value": "devices.device.port_table.port.speed",
+                                    "value": "devices.device.ports.port.speed",
                                     "description": "Speed"
                                 },
                                 {
                                     "label": "tx_bytes",
-                                    "value": "devices.device.port_table.port.tx_bytes",
+                                    "value": "devices.device.ports.port.tx_bytes",
                                     "description": "TX Bytes"
+                                },
+                                {
+                                    "label": "poe_enabled",
+                                    "value": "devices.device.ports.port.poe_enabled",
+                                    "description": "switch poe power"
+                                },
+                                {
+                                    "label": "poe_cycle",
+                                    "value": "devices.device.ports.port.poe_cycle",
+                                    "description": "port power cycle"
+                                },
+                                {
+                                    "label": "poe",
+                                    "value": "devices.device.ports.port.poe",
+                                    "description": "POE"
                                 }
                             ]
                         },
                         {
-                            "label": "device › port_overrides › port",
+                            "label": "device › ports › port › settings",
                             "items": [
                                 {
-                                    "label": "port_idx",
-                                    "value": "devices.device.port_overrides.port.port_idx",
-                                    "description": "ID"
-                                },
-                                {
                                     "label": "name",
-                                    "value": "devices.device.port_overrides.port.name",
+                                    "value": "devices.device.ports.port.settings.name",
                                     "description": "Name"
                                 },
                                 {
                                     "label": "portconf_id",
-                                    "value": "devices.device.port_overrides.port.portconf_id",
+                                    "value": "devices.device.ports.port.settings.portconf_id",
                                     "description": "Portconf ID"
                                 },
                                 {
                                     "label": "op_mode",
-                                    "value": "devices.device.port_overrides.port.op_mode",
+                                    "value": "devices.device.ports.port.settings.op_mode",
                                     "description": "Operation mode"
                                 },
                                 {
                                     "label": "port_security_enabled",
-                                    "value": "devices.device.port_overrides.port.port_security_enabled",
+                                    "value": "devices.device.ports.port.settings.port_security_enabled",
                                     "description": "Enable MAC ID Filter Allow List"
                                 },
                                 {
                                     "label": "port_security_mac_address",
-                                    "value": "devices.device.port_overrides.port.port_security_mac_address",
+                                    "value": "devices.device.ports.port.settings.port_security_mac_address",
                                     "description": "MAC ID Filter Allow List"
                                 },
                                 {
                                     "label": "poe_mode",
-                                    "value": "devices.device.port_overrides.port.poe_mode",
+                                    "value": "devices.device.ports.port.settings.poe_mode",
                                     "description": "POE mode"
                                 },
                                 {
                                     "label": "speed",
-                                    "value": "devices.device.port_overrides.port.speed",
+                                    "value": "devices.device.ports.port.settings.speed",
                                     "description": "Link Speed"
                                 },
                                 {
                                     "label": "full_duplex",
-                                    "value": "devices.device.port_overrides.port.full_duplex",
+                                    "value": "devices.device.ports.port.settings.full_duplex",
                                     "description": "Full duplex"
                                 },
                                 {
                                     "label": "isolation",
-                                    "value": "devices.device.port_overrides.port.isolation",
+                                    "value": "devices.device.ports.port.settings.isolation",
                                     "description": "Port isolation"
                                 },
                                 {
                                     "label": "stormctrl_ucast_enabled",
-                                    "value": "devices.device.port_overrides.port.stormctrl_ucast_enabled",
+                                    "value": "devices.device.ports.port.settings.stormctrl_ucast_enabled",
                                     "description": "Enable Storm Control for Unicast"
                                 },
                                 {
                                     "label": "stormctrl_ucast_rate",
-                                    "value": "devices.device.port_overrides.port.stormctrl_ucast_rate",
+                                    "value": "devices.device.ports.port.settings.stormctrl_ucast_rate",
                                     "description": "Storm Control Unicast Rate"
                                 },
                                 {
                                     "label": "stormctrl_mcast_enabled",
-                                    "value": "devices.device.port_overrides.port.stormctrl_mcast_enabled",
+                                    "value": "devices.device.ports.port.settings.stormctrl_mcast_enabled",
                                     "description": "Enable Storm Control for Multicast"
                                 },
                                 {
                                     "label": "stormctrl_mcast_rate",
-                                    "value": "devices.device.port_overrides.port.stormctrl_mcast_rate",
+                                    "value": "devices.device.ports.port.settings.stormctrl_mcast_rate",
                                     "description": "Storm Control Multicast Rate"
                                 },
                                 {
                                     "label": "stormctrl_bcast_enabled",
-                                    "value": "devices.device.port_overrides.port.stormctrl_bcast_enabled",
+                                    "value": "devices.device.ports.port.settings.stormctrl_bcast_enabled",
                                     "description": "Enable Storm Control for Broadcast"
                                 },
                                 {
                                     "label": "stormctrl_bcast_rate",
-                                    "value": "devices.device.port_overrides.port.stormctrl_bcast_rate",
+                                    "value": "devices.device.ports.port.settings.stormctrl_bcast_rate",
                                     "description": "Storm Control Broadcast Rate"
                                 },
                                 {
                                     "label": "lldpmed_notify_enabled",
-                                    "value": "devices.device.port_overrides.port.lldpmed_notify_enabled",
+                                    "value": "devices.device.ports.port.settings.lldpmed_notify_enabled",
                                     "description": "Enable LLDP-MED"
                                 },
                                 {
                                     "label": "autoneg",
-                                    "value": "devices.device.port_overrides.port.autoneg",
+                                    "value": "devices.device.ports.port.settings.autoneg",
                                     "description": "Link negotiation"
                                 },
                                 {
                                     "label": "stp_port_mode",
-                                    "value": "devices.device.port_overrides.port.stp_port_mode",
+                                    "value": "devices.device.ports.port.settings.stp_port_mode",
                                     "description": "Enable Spanning Tree Protocol"
                                 },
                                 {
                                     "label": "egress_rate_limit_kbps_enabled",
-                                    "value": "devices.device.port_overrides.port.egress_rate_limit_kbps_enabled",
+                                    "value": "devices.device.ports.port.settings.egress_rate_limit_kbps_enabled",
                                     "description": "Enable Egress rate limit"
                                 },
                                 {
                                     "label": "egress_rate_limit_kbps",
-                                    "value": "devices.device.port_overrides.port.egress_rate_limit_kbps",
+                                    "value": "devices.device.ports.port.settings.egress_rate_limit_kbps",
                                     "description": "Egress rate limit"
                                 },
                                 {
                                     "label": "aggregate_num_ports",
-                                    "value": "devices.device.port_overrides.port.aggregate_num_ports",
+                                    "value": "devices.device.ports.port.settings.aggregate_num_ports",
                                     "description": "Aggregate ports"
                                 },
                                 {
                                     "label": "mirror_port_idx",
-                                    "value": "devices.device.port_overrides.port.mirror_port_idx",
+                                    "value": "devices.device.ports.port.settings.mirror_port_idx",
                                     "description": "Mirroring Port"
                                 }
                             ]
                         },
                         {
-                            "label": "device › radio_table_stats › stat",
+                            "label": "device › radios › stat",
                             "items": [
                                 {
                                     "label": "cu_self_rx",
-                                    "value": "devices.device.radio_table_stats.stat.cu_self_rx",
+                                    "value": "devices.device.radios.stat.cu_self_rx",
                                     "description": "RX channel utilization"
                                 },
                                 {
                                     "label": "cu_self_tx",
-                                    "value": "devices.device.radio_table_stats.stat.cu_self_tx",
+                                    "value": "devices.device.radios.stat.cu_self_tx",
                                     "description": "TX channel utilization"
                                 },
                                 {
                                     "label": "cu_total",
-                                    "value": "devices.device.radio_table_stats.stat.cu_total",
+                                    "value": "devices.device.radios.stat.cu_total",
                                     "description": "Total channel utilization"
                                 },
                                 {
                                     "label": "tx_power",
-                                    "value": "devices.device.radio_table_stats.stat.tx_power",
+                                    "value": "devices.device.radios.stat.tx_power",
                                     "description": "TX power"
                                 },
                                 {
                                     "label": "channel",
-                                    "value": "devices.device.radio_table_stats.stat.channel",
+                                    "value": "devices.device.radios.stat.channel",
                                     "description": "Channel"
                                 },
                                 {
                                     "label": "satisfaction",
-                                    "value": "devices.device.radio_table_stats.stat.satisfaction",
+                                    "value": "devices.device.radios.stat.satisfaction",
                                     "description": "Satisfaction"
                                 },
                                 {
                                     "label": "radio",
-                                    "value": "devices.device.radio_table_stats.stat.radio",
+                                    "value": "devices.device.radios.stat.radio",
                                     "description": "radio"
                                 }
                             ]
@@ -1194,86 +1158,81 @@
                             ]
                         },
                         {
-                            "label": "device › sys_stats",
+                            "label": "device › statistics",
                             "items": [
                                 {
                                     "label": "loadavg_1",
-                                    "value": "devices.device.sys_stats.loadavg_1",
+                                    "value": "devices.device.statistics.loadavg_1",
                                     "description": "Load average 1m"
                                 },
                                 {
                                     "label": "loadavg_15",
-                                    "value": "devices.device.sys_stats.loadavg_15",
+                                    "value": "devices.device.statistics.loadavg_15",
                                     "description": "Load average 15m"
                                 },
                                 {
                                     "label": "loadavg_5",
-                                    "value": "devices.device.sys_stats.loadavg_5",
+                                    "value": "devices.device.statistics.loadavg_5",
                                     "description": "Load average 5m"
                                 },
                                 {
                                     "label": "mem_buffer",
-                                    "value": "devices.device.sys_stats.mem_buffer",
+                                    "value": "devices.device.statistics.mem_buffer",
                                     "description": "memory buffer"
                                 },
                                 {
                                     "label": "mem_total",
-                                    "value": "devices.device.sys_stats.mem_total",
+                                    "value": "devices.device.statistics.mem_total",
                                     "description": "memory total"
                                 },
                                 {
                                     "label": "mem_used",
-                                    "value": "devices.device.sys_stats.mem_used",
+                                    "value": "devices.device.statistics.mem_used",
                                     "description": "memory used"
-                                }
-                            ]
-                        },
-                        {
-                            "label": "device › system-stats",
-                            "items": [
+                                },
                                 {
                                     "label": "cpu",
-                                    "value": "devices.device.system-stats.cpu",
+                                    "value": "devices.device.statistics.cpu",
                                     "description": "CPU usage"
                                 },
                                 {
                                     "label": "mem",
-                                    "value": "devices.device.system-stats.mem",
+                                    "value": "devices.device.statistics.mem",
                                     "description": "Memory usage"
                                 },
                                 {
                                     "label": "uptime",
-                                    "value": "devices.device.system-stats.uptime",
+                                    "value": "devices.device.statistics.uptime",
                                     "description": "Uptime"
                                 }
                             ]
                         },
                         {
-                            "label": "device › last_uplink",
+                            "label": "device › uplink",
                             "items": [
                                 {
                                     "label": "mac",
-                                    "value": "devices.device.last_uplink.mac",
+                                    "value": "devices.device.uplink.mac",
                                     "description": "Uplink MAC address"
                                 },
                                 {
                                     "label": "name",
-                                    "value": "devices.device.last_uplink.name",
+                                    "value": "devices.device.uplink.name",
                                     "description": "Uplink device name"
                                 },
                                 {
                                     "label": "remote_port",
-                                    "value": "devices.device.last_uplink.remote_port",
+                                    "value": "devices.device.uplink.remote_port",
                                     "description": "Uplink remote port"
                                 },
                                 {
                                     "label": "port_idx",
-                                    "value": "devices.device.last_uplink.port_idx",
+                                    "value": "devices.device.uplink.port_idx",
                                     "description": "Uplink port"
                                 },
                                 {
                                     "label": "type",
-                                    "value": "devices.device.last_uplink.type",
+                                    "value": "devices.device.uplink.type",
                                     "description": "type of storage"
                                 }
                             ]
@@ -1967,137 +1926,6 @@
                 }
             }
         },
-        "_alarms": {
-            "type": "panel",
-            "label": "Alarms",
-            "items": {
-                "_alarmsIntro": {
-                    "type": "staticText",
-                    "text": "Note: UniFi Network 10 and newer no longer provide alarms. Leave this switched off with these versions.",
-                    "newLine": true,
-                    "style": {
-                        "fontWeight": "bold"
-                    },
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "updateAlarms": {
-                    "type": "checkbox",
-                    "label": "Update alarm messages",
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "_alarmsStatesHeader": {
-                    "type": "header",
-                    "text": "Filter states",
-                    "size": 5,
-                    "newLine": true
-                },
-                "_alarmsStatesHint": {
-                    "type": "staticText",
-                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "statesFilter.alarms": {
-                    "type": "select",
-                    "multiple": true,
-                    "showAllValues": false,
-                    "noTranslation": true,
-                    "disabled": "!data.updateAlarms",
-                    "newLine": true,
-                    "xs": 12,
-                    "options": [
-                        {
-                            "label": "alarm",
-                            "items": [
-                                {
-                                    "label": "archived",
-                                    "value": "alarms.alarm.archived",
-                                    "description": "Archived"
-                                },
-                                {
-                                    "label": "time",
-                                    "value": "alarms.alarm.time",
-                                    "description": "Time"
-                                },
-                                {
-                                    "label": "message",
-                                    "value": "alarms.alarm.message",
-                                    "description": "Message"
-                                },
-                                {
-                                    "label": "event",
-                                    "value": "alarms.alarm.event",
-                                    "description": "Event"
-                                }
-                            ]
-                        },
-                        {
-                            "label": "alarm › device",
-                            "items": [
-                                {
-                                    "label": "mac",
-                                    "value": "alarms.alarm.device.mac",
-                                    "description": "MAC Address"
-                                },
-                                {
-                                    "label": "name",
-                                    "value": "alarms.alarm.device.name",
-                                    "description": "Name"
-                                }
-                            ]
-                        },
-                        {
-                            "label": "alarm › client",
-                            "items": [
-                                {
-                                    "label": "mac",
-                                    "value": "alarms.alarm.client.mac",
-                                    "description": "MAC Address"
-                                },
-                                {
-                                    "label": "ip",
-                                    "value": "alarms.alarm.client.ip",
-                                    "description": "IP"
-                                }
-                            ]
-                        }
-                    ],
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "_alarmsSettingsHeader": {
-                    "type": "header",
-                    "text": "Settings for alarms",
-                    "size": 5,
-                    "newLine": true
-                },
-                "updateAlarmsNoArchived": {
-                    "type": "checkbox",
-                    "label": "show only new alarm messages",
-                    "disabled": "!data.updateAlarms",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                }
-            }
-        },
         "_dpi": {
             "type": "panel",
             "label": "DPI",
@@ -2276,100 +2104,6 @@
                     "md": 12,
                     "lg": 12,
                     "xl": 12
-                }
-            }
-        },
-        "_gatewayTraffic": {
-            "type": "panel",
-            "label": "Gateway traffic",
-            "items": {
-                "_gatewayTrafficIntro": {
-                    "type": "staticText",
-                    "text": "Note: UniFi Network 11 and newer no longer provide the gateway statistics. Use the WAN tab instead.",
-                    "newLine": true,
-                    "style": {
-                        "fontWeight": "bold"
-                    },
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "updateGatewayTraffic": {
-                    "type": "checkbox",
-                    "label": "Update Gateway Traffic (USG needed)",
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "_gatewayTrafficStatesHeader": {
-                    "type": "header",
-                    "text": "Filter states",
-                    "size": 5,
-                    "newLine": true
-                },
-                "_gatewayTrafficStatesHint": {
-                    "type": "staticText",
-                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "statesFilter.gateway_traffic": {
-                    "type": "select",
-                    "multiple": true,
-                    "showAllValues": false,
-                    "noTranslation": true,
-                    "disabled": "!data.updateGatewayTraffic",
-                    "newLine": true,
-                    "xs": 12,
-                    "options": [
-                        {
-                            "label": "date",
-                            "value": "gateway_traffic.device.day.date",
-                            "description": "Date of day"
-                        },
-                        {
-                            "label": "sent",
-                            "value": "gateway_traffic.device.day.sent",
-                            "description": "Bytes sent"
-                        },
-                        {
-                            "label": "received",
-                            "value": "gateway_traffic.device.day.received",
-                            "description": "Bytes received"
-                        }
-                    ],
-                    "sm": 12,
-                    "md": 12,
-                    "lg": 12,
-                    "xl": 12
-                },
-                "_gatewayTrafficSettingsHeader": {
-                    "type": "header",
-                    "text": "Settings for Gateway Traffic",
-                    "size": 5,
-                    "newLine": true
-                },
-                "gatewayTrafficMaxDays": {
-                    "type": "number",
-                    "label": "Get data for x Days (0 = all available data)",
-                    "placeholder": "7",
-                    "min": 0,
-                    "max": 365,
-                    "disabled": "!data.updateGatewayTraffic",
-                    "newLine": true,
-                    "xs": 12,
-                    "sm": 6,
-                    "md": 6,
-                    "lg": 6,
-                    "xl": 6
                 }
             }
         },

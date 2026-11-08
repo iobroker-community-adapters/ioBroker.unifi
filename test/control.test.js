@@ -70,7 +70,7 @@ describe('control states', () => {
     });
 
     it('power cycles a switch port', async () => {
-        await write(`devices.${MAC}.port_table.port_3.port_poe_cycle`, true);
+        await write(`devices.${MAC}.ports.port_3.poe_cycle`, true);
 
         sinon.assert.calledOnceWithExactly(controller.powerCycleSwitchPort, MAC, '3');
     });
@@ -186,10 +186,10 @@ describe('control states', () => {
             sinon.assert.calledWithMatch(adapter.log.warn, /device aa:bb:cc:dd:ee:01 not found/);
         });
 
-        it('is triggered by the port_poe_enabled state', async () => {
+        it('is triggered by the poe_enabled state', async () => {
             adapter.switchPoeOfPort = sinon.stub().resolves();
 
-            await write(`devices.${MAC}.port_table.port_3.port_poe_enabled`, true);
+            await write(`devices.${MAC}.ports.port_3.poe_enabled`, true);
 
             sinon.assert.calledOnceWithExactly(adapter.switchPoeOfPort, 'default', MAC, '3', true);
         });

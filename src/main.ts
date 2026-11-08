@@ -5,12 +5,12 @@ import * as utils from '@iobroker/adapter-core';
 import { applyRule } from './lib/jsonLogic';
 import { collectStateIds, loadObjectDefinitions } from './lib/objectDefinitions';
 import { Controller, type AuthMode, type ControllerOptions } from './lib/unifiController';
+import { migrateFilterPath, migrateObjectId, prepareDevice } from './lib/structure';
 import { summarizeWan, WAN_HISTORY_SECONDS, type AggregatedDashboard, type WanSummary } from './lib/wan';
 import type {
     CreatedObject,
     ObjectDefinitions,
     StatesFilterCategory,
-    UnifiAlarm,
     UnifiBlockedClient,
     UnifiClient,
     UnifiDevice,
@@ -24,18 +24,7 @@ import type {
     UnifiVoucher,
 } from './lib/types';
 
-type UpdateKey =
-    | 'sysinfo'
-    | 'clients'
-    | 'devices'
-    | 'wlans'
-    | 'networks'
-    | 'health'
-    | 'vouchers'
-    | 'dpi'
-    | 'gatewayTraffic'
-    | 'wan'
-    | 'alarms';
+type UpdateKey = 'sysinfo' | 'clients' | 'devices' | 'wlans' | 'networks' | 'health' | 'vouchers' | 'dpi' | 'wan';
 
 type FetchMethod =
     | 'fetchSiteSysinfo'
@@ -46,9 +35,7 @@ type FetchMethod =
     | 'fetchHealth'
     | 'fetchVouchers'
     | 'fetchDpi'
-    | 'fetchGatewayTraffic'
-    | 'fetchWan'
-    | 'fetchAlarms';
+    | 'fetchWan';
 
 // Data requested for every site, in this order: [update setting, fetch method]
 const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
@@ -60,9 +47,7 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
     ['health', 'fetchHealth'],
     ['vouchers', 'fetchVouchers'],
     ['dpi', 'fetchDpi'],
-    ['gatewayTraffic', 'fetchGatewayTraffic'],
     ['wan', 'fetchWan'],
-    ['alarms', 'fetchAlarms'],
 ];
 
 // Upper limit for the delay between refreshes after consecutive failures
@@ -175,9 +160,7 @@ const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
     'networks',
     'health',
     'vouchers',
-    'alarms',
     'dpi',
-    'gateway_traffic',
     'wan',
 ];
 
@@ -185,10 +168,8 @@ const STATES_FILTER_CATEGORIES: StatesFilterCategory[] = [
 const STATE_DEPENDENCIES: [string, string[]][] = [
     // is_online is calculated from the last seen timestamps
     ['clients.client.is_online', ['clients.client.last_seen_by_uap', 'clients.client.last_seen_by_usw']],
-    [
-        'devices.device.port_table.port.port_poe_enabled',
-        ['devices.device.port_table.port.port_poe', 'devices.device.port_overrides'],
-    ],
+    // the PoE switch is created for ports with PoE, its value is the PoE mode of the port
+    ['devices.device.ports.port.poe_enabled', ['devices.device.ports.port.poe']],
     // the LED override is sent with the device ID
     ['devices.device.led_override', ['devices.device.device_id']],
 ];
@@ -217,8 +198,6 @@ type UpdateSettings = Record<UpdateKey, boolean> & {
     /** Use the objects filter of the clients as whitelist */
     blacklist: boolean;
     vouchersNoUsed: boolean;
-    alarmsNoArchived: boolean;
-    gatewayTrafficMaxDays: number;
 };
 
 interface VoucherSettings {
@@ -265,11 +244,7 @@ class Unifi extends utils.Adapter {
         vouchers: false,
         vouchersNoUsed: false,
         dpi: false,
-        gatewayTraffic: false,
-        gatewayTrafficMaxDays: 0,
         wan: false,
-        alarms: false,
-        alarmsNoArchived: false,
     };
     private clients = { isOnlineOffset: 60 * 1000 };
     private vouchers: VoucherSettings = {
@@ -289,9 +264,7 @@ class Unifi extends utils.Adapter {
         networks: [],
         health: [],
         vouchers: [],
-        alarms: [],
         dpi: [],
-        gateway_traffic: [],
         wan: [],
     };
     private queryTimeout: ioBroker.Timeout | undefined = undefined;
@@ -303,11 +276,11 @@ class Unifi extends utils.Adapter {
     private unsupportedEndpoints = new Set<string>();
     /** Created objects without the namespace, to write only changed objects */
     private ownObjects: Record<string, CreatedObject> = {};
-    /** Sites whose controller returned no gateway statistics (UniFi Network 11+), skipped until the next start */
-    private gatewayTrafficUnavailable = new Set<string>();
     /** Sites whose controller answered the WAN dashboard with 404, skipped until the next start */
     private wanUnavailable = new Set<string>();
     private stopped = false;
+    /** The objects of version 2 and older were checked after the first refresh of this start */
+    private migrationChecked = false;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -328,8 +301,8 @@ class Unifi extends utils.Adapter {
             await this.subscribeStatesAsync('*.wlans.*.enabled');
             await this.subscribeStatesAsync('*.vouchers.create_vouchers');
             await this.subscribeStatesAsync('trigger_update');
-            await this.subscribeStatesAsync('*.port_table.port_*.port_poe_enabled');
-            await this.subscribeStatesAsync('*.port_table.port_*.port_poe_cycle');
+            await this.subscribeStatesAsync('*.ports.port_*.poe_enabled');
+            await this.subscribeStatesAsync('*.ports.port_*.poe_cycle');
             await this.subscribeStatesAsync('*.clients.*.reconnect');
             await this.subscribeStatesAsync('*.clients.*.blocked');
             await this.subscribeStatesAsync('*.devices.*.led_override');
@@ -372,11 +345,7 @@ class Unifi extends utils.Adapter {
             this.update.vouchers = this.config.updateVouchers;
             this.update.vouchersNoUsed = this.config.updateVouchersNoUsed;
             this.update.wlans = this.config.updateWlans;
-            this.update.alarms = this.config.updateAlarms;
-            this.update.alarmsNoArchived = this.config.updateAlarmsNoArchived;
             this.update.dpi = this.config.updateDpi;
-            this.update.gatewayTraffic = this.config.updateGatewayTraffic;
-            this.update.gatewayTrafficMaxDays = Number(this.config.gatewayTrafficMaxDays);
             // Off by default: js-controller adds missing native keys from io-package.json on upgrade
             this.update.wan = this.config.updateWan === true;
 
@@ -448,10 +417,10 @@ class Unifi extends utils.Adapter {
                     await this.createUnifiVouchers(site);
                 } else if (idParts[2] === 'trigger_update') {
                     await this.updateUnifiData(true);
-                } else if (idParts[7] === 'port_poe_enabled') {
+                } else if (idParts[5] === 'ports' && idParts[7] === 'poe_enabled') {
                     const portNumber = idParts[6].split('_').pop() || '';
                     void this.switchPoeOfPort(site, mac, portNumber, state.val);
-                } else if (idParts[7] === 'port_poe_cycle') {
+                } else if (idParts[5] === 'ports' && idParts[7] === 'poe_cycle') {
                     const portNumber = idParts[6].split('_').pop() || '';
 
                     this.log.info(`onStateChange: port power cycle (port: ${portNumber}, device: ${mac})`);
@@ -530,7 +499,13 @@ class Unifi extends utils.Adapter {
         const result = {} as UnifiStatesFilter;
 
         for (const category of STATES_FILTER_CATEGORIES) {
-            const selected = statesFilter && Array.isArray(statesFilter[category]) ? statesFilter[category] : [];
+            // The selection of version 2 and older uses the old paths (e.g. port_table), see migrateFilterPath()
+            const selected = (statesFilter && Array.isArray(statesFilter[category]) ? statesFilter[category] : [])
+                .map(id => {
+                    const moved = migrateFilterPath(id);
+                    return moved === undefined ? id : moved;
+                })
+                .filter((id): id is string => id !== null);
             const stateIds = collectStateIds(loadObjectDefinitions(category)[category].logic.has || {});
 
             // Older versions also stored the channels, which are not needed to find the selection
@@ -904,6 +879,12 @@ class Unifi extends utils.Adapter {
             await this.setDiagnosticState('info.lastError', failures.join('; '));
             await this.setDiagnosticState('info.consecutiveErrors', 0);
             this.log.debug(failures.length ? `Update done with ${failures.length} failed request(s)` : 'Update done');
+
+            // After the first refresh the objects of the new structure exist, so the old ones can be moved
+            if (!this.migrationChecked) {
+                this.migrationChecked = true;
+                await this.migrateObjects();
+            }
         } catch (err) {
             this.consecutiveErrors++;
             await this.setDiagnosticState('info.connection', false);
@@ -1102,8 +1083,14 @@ class Unifi extends utils.Adapter {
         const now = Math.floor(Date.now() / 1000) * 1000;
 
         for (const [key, value] of Object.entries(states)) {
-            if (value !== null && typeof value.val === 'string') {
-                const lastSeen = Date.parse(value.val.replace(' ', 'T'));
+            // a timestamp in ms; text (yyyy-mm-dd HH:MM:ss) is the value of version 2 until the next refresh
+            const lastSeen =
+                typeof value?.val === 'number'
+                    ? value.val
+                    : typeof value?.val === 'string'
+                      ? Date.parse(value.val.replace(' ', 'T'))
+                      : NaN;
+            if (!isNaN(lastSeen)) {
                 const isOnline = lastSeen - (now - this.settings.updateInterval - this.clients.isOnlineOffset) >= 0;
                 const stateId = key.replace(/last_seen_by_(usw|uap)/gi, 'is_online');
                 const oldState = await this.getStateAsync(stateId);
@@ -1151,7 +1138,9 @@ class Unifi extends utils.Adapter {
         const objects = loadObjectDefinitions('devices');
 
         // Process objectsFilter
-        const siteData = data.filter(item => !isInList(this.objectsFilter.devices, item.mac, item.ip, item.name));
+        const siteData = data
+            .filter(item => !isInList(this.objectsFilter.devices, item.mac, item.ip, item.name))
+            .map(prepareDevice);
 
         this.log.silly(`processDevices: filtered data: ${JSON.stringify(siteData)}`);
 
@@ -1384,80 +1373,6 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to fetch daily gateway traffic
-     *
-     * @param site name of the site
-     */
-    private async fetchGatewayTraffic(site: string): Promise<unknown[]> {
-        if (this.gatewayTrafficUnavailable.has(site)) {
-            return [];
-        }
-
-        let start: number | undefined = undefined;
-        let end: number | undefined = undefined;
-        if (this.update.gatewayTrafficMaxDays > 0) {
-            const now = new Date();
-            end = now.getTime();
-
-            now.setDate(now.getDate() - this.update.gatewayTrafficMaxDays);
-            start = now.getTime();
-
-            this.log.silly(
-                `fetchGatewayTraffic: start: ${new Date(start).toLocaleDateString()}, end: ${new Date(end).toLocaleDateString()}`,
-            );
-        }
-
-        const data = await this.controllers[site].getDailyGatewayStats(start, end, ['lan-rx_bytes', 'lan-tx_bytes']);
-        if (!Array.isArray(data)) {
-            throw new Error(
-                `fetchGatewayTraffic ${site}: Returned data is not in valid format. This option is only available for gateways!: ${JSON.stringify(data)}`,
-            );
-        }
-        this.log.debug(`fetchGatewayTraffic ${site}: ${data.length}`);
-        this.log.silly(`fetchGatewayTraffic ${site}: ${JSON.stringify(data)}`);
-
-        // @KI_HINWEIS: UniFi Network 11 cleared the statistics and answers with an empty list since then. The request
-        // is skipped until the next start, with one message that tells what to switch: with the WAN statistics already
-        // on, it is only a hint (info); without them the traffic data is missing completely (warn).
-        if (data.length === 0) {
-            this.gatewayTrafficUnavailable.add(site);
-            if (this.update.wan) {
-                this.log.info(
-                    `fetchGatewayTraffic ${site}: no gateway statistics (UniFi Network 11 and newer), the WAN statistics replace them. Switch off "Update Gateway Traffic" in the settings to hide this message.`,
-                );
-            } else {
-                this.log.warn(
-                    `fetchGatewayTraffic ${site}: no gateway statistics (UniFi Network 11 and newer). Switch on "Update WAN statistics" and switch off "Update Gateway Traffic" in the settings.`,
-                );
-            }
-            return data;
-        }
-
-        await this.processGatewayTraffic(site, data);
-
-        return data;
-    }
-
-    /**
-     * Function that receives the daily gateway traffic as a JSON data array
-     *
-     * @param site name of the site
-     * @param data traffic of the site
-     */
-    private async processGatewayTraffic(site: string, data: unknown[]): Promise<void> {
-        const objects = loadObjectDefinitions('gateway_traffic');
-
-        // Gateway traffic has no objects filter
-        const siteData = data.filter(item => item);
-
-        this.log.silly(`processGatewayTraffic: filtered data: ${JSON.stringify(siteData)}`);
-
-        if (siteData.length > 0) {
-            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.gateway_traffic);
-        }
-    }
-
-    /**
      * Function to fetch the WAN statistics (UniFi Network 11 and newer)
      *
      * @param site name of the site
@@ -1500,66 +1415,84 @@ class Unifi extends utils.Adapter {
     }
 
     /**
-     * Function to fetch alarms
-     *
-     * @param site name of the site
+     * Moves the objects of version 2 and older to the structure of version 3 (see `migrateObjectId()`): the
+     * settings of history adapters (`common.custom`) and the membership in rooms and functions go to the new object,
+     * then the old object is deleted. An old object with history settings whose new object does not exist (e.g. not
+     * selected in the states filter) is kept, so no setting is lost; the next start tries again.
      */
-    private async fetchAlarms(site: string): Promise<UnifiAlarm[]> {
-        const data = await this.controllers[site].getAlarms();
-        if (!Array.isArray(data)) {
-            throw new Error(`fetchAlarms ${site}: Returned data is not in valid format: ${JSON.stringify(data)}`);
-        }
-        this.log.debug(`fetchAlarms ${site}: ${data.length}`);
-        this.log.silly(`fetchAlarms ${site}: ${JSON.stringify(data)}`);
-
-        await this.processAlarms(site, data as UnifiAlarm[]);
-
-        return data as UnifiAlarm[];
-    }
-
-    /**
-     * Function that receives the alarms as a JSON data array
-     *
-     * @param site name of the site
-     * @param data alarms of the site
-     */
-    private async processAlarms(site: string, data: UnifiAlarm[]): Promise<void> {
-        const objects = loadObjectDefinitions('alarms');
-
-        // Alarms have no objects filter
-        const siteData = data.filter(item => item);
-
-        this.log.silly(`processAlarms: filtered data: ${JSON.stringify(siteData)}`);
-
-        if (this.update.alarmsNoArchived) {
-            const existingAlarms = await this.getForeignObjectsAsync(
-                `${this.namespace}.${site}.alarms.alarm_*`,
-                'channel',
-            );
-            const alarmDatapoints = this.getUnifiObjectsLibIds('alarms');
-
-            for (const alarm in existingAlarms) {
-                const alarmId = alarm.replace(`${this.namespace}.${site}.alarms.alarm_`, '');
-
-                if (!siteData.find(item => item._id === alarmId)) {
-                    this.log.debug(`deleting data points of alarm with id '${alarmId}'`);
-
-                    for (const dp of alarmDatapoints) {
-                        const dpId = `${site}.${dp.replace('.alarm', `.alarm_${alarmId}`)}`;
-
-                        if (await this.getObjectAsync(dpId)) {
-                            await this.delObjectAsync(dpId);
-                        }
-
-                        // remove from own objects if exist
-                        delete this.ownObjects[dpId];
-                    }
+    private async migrateObjects(): Promise<void> {
+        try {
+            const prefix = `${this.namespace}.`;
+            const objects = await this.getAdapterObjectsAsync();
+            const moves: { oldId: string; newId: string | null }[] = [];
+            for (const id of Object.keys(objects)) {
+                const moved = migrateObjectId(id.substring(prefix.length));
+                if (moved !== undefined) {
+                    moves.push({ oldId: id, newId: moved === null ? null : `${prefix}${moved}` });
                 }
             }
-        }
+            if (moves.length === 0) {
+                return;
+            }
 
-        if (siteData.length > 0) {
-            await this.applyJsonLogic(site, siteData, objects, this.statesFilter.alarms);
+            const kept: string[] = [];
+            let customMoved = 0;
+            const successors = new Map<string, string | null>();
+            for (const { oldId, newId } of moves) {
+                const custom = objects[oldId]?.common?.custom as Record<string, unknown> | undefined;
+                const target = newId !== null && objects[newId] ? newId : null;
+                if (custom && Object.keys(custom).length > 0) {
+                    if (!target) {
+                        // a removed state (e.g. alarms) has nothing to keep it for, a moved one waits for its new object
+                        if (newId !== null) {
+                            kept.push(oldId);
+                            continue;
+                        }
+                        successors.set(oldId, null);
+                        continue;
+                    }
+                    const existing = (objects[target].common?.custom as Record<string, unknown> | undefined) ?? {};
+                    // @KI_HINWEIS: the setting of the new object wins, e.g. if the user configured it already
+                    await this.extendObjectAsync(target.substring(prefix.length), {
+                        common: { custom: { ...custom, ...existing } },
+                    });
+                    customMoved++;
+                }
+                successors.set(oldId, target);
+            }
+
+            // Rooms, functions and other enums
+            const enums = await this.getForeignObjectsAsync('enum.*', 'enum');
+            for (const [enumId, enumObj] of Object.entries(enums)) {
+                const members = enumObj?.common?.members;
+                if (!Array.isArray(members) || !members.some(member => successors.has(member))) {
+                    continue;
+                }
+                const newMembers = members
+                    .map(member => (successors.has(member) ? successors.get(member) : member))
+                    .filter((member): member is string => typeof member === 'string');
+                await this.extendForeignObjectAsync(enumId, { common: { members: [...new Set(newMembers)] } });
+            }
+
+            // Children first; a folder that still contains a kept object stays
+            const toDelete = [...successors.keys()]
+                .filter(id => !kept.some(keptId => keptId.startsWith(`${id}.`)))
+                .sort((a, b) => b.length - a.length);
+            for (const id of toDelete) {
+                // deletes the state too
+                await this.delObjectAsync(id.substring(prefix.length));
+            }
+
+            this.log.info(
+                `Moved the objects to the structure of version 3: ${toDelete.length} old objects deleted, the history settings of ${customMoved} states moved to the new objects.`,
+            );
+            if (kept.length > 0) {
+                this.log.warn(
+                    `${kept.length} old objects with history settings were kept because their new object does not exist (e.g. not selected in the states filter): ${kept.slice(0, 10).join(', ')}${kept.length > 10 ? ', …' : ''}. Select the states or delete the old objects.`,
+                );
+            }
+        } catch (err) {
+            this.log.warn(`Could not move the objects to the structure of version 3: ${(err as Error).message}`);
         }
     }
 
@@ -1913,7 +1846,7 @@ class Unifi extends utils.Adapter {
     /**
      * IDs of all states and channels of admin/lib/objects_<libName>.json, children first
      *
-     * @param libName e.g. 'alarms'
+     * @param libName e.g. 'vouchers'
      */
     private getUnifiObjectsLibIds(libName: string): string[] {
         const idList: string[] = [];

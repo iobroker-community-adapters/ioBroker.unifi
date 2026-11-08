@@ -3,32 +3,12 @@ import { add_operation, apply, type RulesLogic } from 'json-logic-js';
 import { DPI_APPLICATIONS, DPI_CATEGORIES } from './dpiNames';
 import type { ObjectRule } from './types';
 
-const DAY = 1000 * 60 * 60 * 24;
-
-/**
- * Local date as `yyyy-mm-dd` or `yyyy-mm-dd HH:MM:ss`, like the dateformat package that was used before.
- *
- * @param date date to format
- * @param withTime add the time
- */
-function formatDate(date: Date, withTime: boolean): string {
-    if (isNaN(date.getTime())) {
-        // same as dateformat, which threw on invalid dates
-        throw new TypeError('Invalid date');
-    }
-    const pad = (n: number): string => n.toString().padStart(2, '0');
-    const day = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-
-    return withTime ? `${day} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}` : day;
-}
-
 // Additional operations for the rules in admin/lib/objects_*.json
 
-/** Convert seconds to date time */
-add_operation('secondsToDateTime', (a: number): string => formatDate(new Date(a * 1000), true));
-
-/** Convert seconds to hours */
-add_operation('secondsToHours', (a: number): string => `${Math.floor(a / 60)}:${`0${Math.floor(a % 60)}`.slice(-2)}`);
+/** Convert seconds (UNIX time of the controller) to a timestamp in ms, the format of ioBroker (role `value.time`) */
+add_operation('secondsToMs', (a: number | null): number | null =>
+    typeof a === 'number' && Number.isFinite(a) && a > 0 ? a * 1000 : null,
+);
 
 /** Convert to string */
 add_operation('string', (a: { toString(): string }): string => a.toString());
@@ -56,39 +36,6 @@ add_operation('cleanupForUseAsId', (a: string | null): string | null => {
     const FORBIDDEN_CHARS = /[\][*.,;'"`<>\\?\s]/g;
 
     return a.replace(FORBIDDEN_CHARS, '_').toLowerCase();
-});
-
-/** Convert timestamp to date */
-add_operation('timestampToDate', (a: number): string => formatDate(new Date(a), false));
-
-/** Convert timestamp to date time */
-add_operation('timestampToDateTime', (a: number): string => formatDate(new Date(a), true));
-
-/** Add the days between the timestamp b and now to a */
-add_operation('timestampDiffInDaysToNow', (a: number, b: number): number => {
-    const diffDays = parseInt(String((Date.now() - new Date(b).getTime()) / DAY), 10);
-
-    return a + diffDays;
-});
-
-/** Replace the MAC address in an alarm message with the device name, if it exists */
-add_operation('alarmPrepareMessage', (msg: string, mac?: string, name?: string): string => {
-    if (mac && name) {
-        if (msg.includes('{gw}')) {
-            return msg.replace('{gw}', `${name}:`);
-        }
-        if (msg.includes('{dm}')) {
-            return msg.replace('{dm}', `${name}:`);
-        }
-        if (msg.includes('{sw}')) {
-            return msg.replace('{sw}', `${name}:`);
-        }
-        if (msg.includes('{ap}')) {
-            return msg.replace('{ap}', `${name}:`);
-        }
-        return msg.replace(`[${mac}]`, ` - ${name}:`);
-    }
-    return msg;
 });
 
 /** Translate PoE mode (off / auto) to boolean */
