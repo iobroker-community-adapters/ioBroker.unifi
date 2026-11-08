@@ -12,52 +12,67 @@
 > [!IMPORTANT]
 > This adapter cannot be installed from github
 
+This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devices are online, how your UniFi gateway, switches and access points are doing, how much internet traffic you use, and more. A few things can also be switched from ioBroker, e.g. WLANs, PoE ports, the LEDs of the devices, blocking a client or creating guest vouchers.
+
 **This adapter uses Sentry libraries to automatically report exceptions and code errors to the developers.** For more details and for information how to disable the error reporting see [Sentry-Plugin Documentation](https://github.com/ioBroker/plugin-sentry#plugin-sentry)! Sentry reporting is used starting with js-controller 3.0.
 
-This ioBroker adapter allows the monitoring and limited controlling of [UniFi devices](https://ui.com/), such as UniFi WiFi Access Points, using the API of the UniFi Network application.
+## Requirements
+* A UniFi console with UniFi OS (UDM, UDM-Pro, UDM-SE, UCG, UX, Cloud Key Gen2+, UniFi OS Server) or a self-hosted UniFi Network application
+* An **API key** (UniFi OS only, recommended) or a **local user** of the console. Cloud accounts of ui.com with two-factor authentication cannot be used.
 
-## Configuration
-###  Minimum required information
-To get this adapter up and running the following information is needed:
-* IP address and port of your UniFi controller (Leave the port empty in case your controller is running on UniFiOS (e.g. UDM-Pro))
-* An API key (UniFi OS only, recommended) or a local username and password (2FA **cannot** be supported)
-* Update interval
+## Setup
+1. **Create an API key** (recommended): open the UniFi Network application → **Integrations** (in Network 11 in the left navigation, before in Settings → Control Plane → Integrations) → **Create New API Key**. Copy the key, it is shown only once.
+   *Without UniFi OS, or if you prefer a user:* create a user in the console under Admins & Users with **Restrict to local access only** and access to UniFi Network: full management to switch things, view only to read only.
+2. **Install the adapter** in ioBroker (Adapters → UniFi) and open the settings of the instance.
+3. Tab **General**:
+   * **IP address** of the console, e.g. `192.168.1.1`. Leave the **port** empty for UniFi OS consoles; a self-hosted application usually uses `8443`.
+   * **Authentication**: *API key* and paste the key, or *Local user* with user name and password.
+   * Keep **Ignore SSL certificate errors** switched on: the consoles use a self-signed certificate.
+   * The **update interval** of 60 seconds fits most networks.
+4. Switch on in the other tabs what you need (see below) and **save**. After about a minute the data appears in the objects under `unifi.0`.
 
-### Authentication
-| Method | Available on | Notes |
-|--------|--------------|-------|
-| API key | UniFi OS consoles (UDM, UCG, Cloud Key Gen2+, UniFi OS Server) | No login, no session, no 2FA prompt. Tested with UniFi OS 6.0.15 / UniFi Network 11.0.97 |
-| Local user | All controllers | A user with "Restrict to local access only". Logs in once and reuses the session |
+`info.connection` shows whether the adapter is connected; the instance is green then.
 
-To create an API key, open UniFi Network → **Integrations** (in Network 11 a page of its own in the left navigation, before in Settings → Control Plane → Integrations) → **Create New API Key**. The key is shown only once. API keys can expire: the adapter then logs `The API key was rejected` and `info.connection` becomes `false`.
+## Settings
+| Tab | What you get | Recommendation |
+|-----|--------------|----------------|
+| General | connection and update interval | API key, 60 s |
+| Sysinfo | version and update status of the UniFi Network application | on |
+| Clients | every device in your network: name, IP, online, WLAN, signal; block / reconnect | on |
+| Devices | gateway, switches, access points: state, firmware, temperatures, ports with PoE, internet connections (`wan1`, `wan2`); restart, PoE, LEDs | on |
+| WLANs | your wireless networks; switch them on and off | on |
+| Networks | networks and VLANs with their settings | as needed |
+| Health | overall status of internet, LAN, WLAN and VPN | on |
+| Vouchers | guest vouchers of the hotspot; create new ones | only with hotspot |
+| Alarms | alarm messages | **off** with UniFi Network 10 and newer (no alarms anymore) |
+| DPI | traffic per application and category | as needed, needs a gateway with traffic identification |
+| Gateway traffic | traffic per day of older gateways | **off** with UniFi Network 11 and newer, use WAN |
+| WAN | internet traffic today / yesterday / month, provider, availability, speed test | on with UniFi Network 11 and newer |
 
-The key is accepted by the same API that the local user uses, so the adapter offers the same features with both methods (tested: reading data, client and device commands).
+**Filter objects:** names, host names, IP or MAC addresses of objects that should not be created. For clients the list can also be used the other way round, as the only clients to create.
 
-By default the information is updated every 60 seconds. Depending on your ioBroker hardware and your network size (number of clients, UniFi devices etc.) it is recommended to keep this interval and refraid from further decreasing it.
+**Filter states:** only the selected states are created; if nothing is selected, all states are created. New instances start with a recommended selection for clients and devices, so the object tree stays clear. States that are needed by a selected state are added automatically, e.g. `last_seen_by_uap` / `last_seen_by_usw` for `is_online`.
 
-### Filter objects
-The adapter updates as much information from your UniFi controller as possible, but offers the possibility to limit the updated information.
+## What you get
+| Folder | Content |
+|--------|---------|
+| `unifi.0.<site>.sysinfo` | version, update available |
+| `unifi.0.<site>.clients.<mac>` | one folder per client: `name`, `ip`, `is_online`, `essid`, `signal`, `last_seen` … |
+| `unifi.0.<site>.devices.<mac>` | one folder per UniFi device: `state`, `version`, `upgradable`, `uptime`, temperatures, `port_table` (ports, PoE), `wan1` / `wan2` (internet connections of the gateway) … |
+| `unifi.0.<site>.wlans.<name>` | one folder per WLAN, `enabled` |
+| `unifi.0.<site>.networks.<name>` | one folder per network |
+| `unifi.0.<site>.health.<subsystem>` | `wan`, `lan`, `wlan`, `vpn`, `www` with `status` |
+| `unifi.0.<site>.wan.<connection>` | traffic, provider, availability and speed test of every internet connection |
+| `unifi.0.<site>.vouchers` | vouchers and the button `create_vouchers` |
+| `unifi.0.info` | connection and state of the last refresh (see Troubleshooting) |
 
-It is possible to disable the update of selected information or filter specific objects of that information.
-
-| Information | Objects filterable by                   |
-|-------------|-----------------------------------------|
-| Clients     | Name, Hostname, IP address, MAC address |
-| Devices     | Name, IP address, MAC address           |
-| WiFis       | Name                                    |
-| Networks    | Name                                    |
-| Health      | Subsystem                               |
+`<site>` is the name of the UniFi site, usually `default`. All states have the matching ioBroker role, so they are recognized by visualizations and assistants.
 
 ### Internet connections (WAN)
 For a gateway (e.g. UDM-Pro, UCG, USG) every internet connection gets its own folder below the device: `wan1`, and `wan2` if a second connection is set up. It shows the public IPv4 address, the IPv6 addresses, whether the connection is up, the port number on the gateway, the link speed and, while connected, the latency and availability.
 
-### Filter states
-For every kind of information, the created states can be selected. If nothing is selected, all states are created. States needed by a selected state are added automatically, e.g. `last_seen_by_uap` and `last_seen_by_usw` for `is_online`.
-
-New instances start with a recommended selection for clients (name, IP, online, WLAN, signal, block/reconnect …) and devices (name, model, IP, state, firmware, CPU/memory, temperature, WAN connections, ports with PoE …), so the object tree stays clear. Select more states at any time, or remove all to get every state. Existing instances keep their selection.
-
 ### WAN statistics (UniFi Network 11 and newer)
-UniFi Network 11 moved to a new statistics engine and cleared the statistics history. Since then the gateway report used for `gateway_traffic` returns no data (the adapter logs a warning once). The setting **Update WAN statistics** reads the data of the dashboard of the network application instead (`/v2/api/site/<site>/aggregated-dashboard`) and creates `<site>.wan.<connection>` for every internet connection (`WAN`, `WAN2`, ...):
+UniFi Network 11 moved to a new statistics engine and cleared the statistics history; the gateway report used for `gateway_traffic` returns no data since then. The setting **Update WAN statistics** reads the data of the dashboard of the network application instead and creates `<site>.wan.<connection>` for every internet connection (`WAN`, `WAN2`, …):
 
 | State | Content |
 |-------|---------|
@@ -71,52 +86,63 @@ UniFi Network 11 moved to a new statistics engine and cleared the statistics his
 | `isp_name`, `isp_asn`, `capacity_download`, `capacity_upload` | provider and its bandwidth in Mbit/s |
 | `speedtest_download`, `speedtest_upload`, `speedtest_latency`, `speedtest_time` | last speed test of the console |
 
-The setting is off by default. The traffic values are summed from hourly values of the console, so they are accurate to about one hour. A value stays empty (`null`) as long as the console has no data for the whole interval, e.g. `yesterday_*` on the day of the update to UniFi Network 11, which cleared the history. In contrast to `gateway_traffic` (LAN side of the gateway) they count the internet traffic. Controllers without this dashboard answer with 404; the adapter then logs a warning and skips the WAN statistics until it restarts.
+The traffic values are summed from hourly values of the console, so they are accurate to about one hour. A value stays empty (`null`) as long as the console has no data for the whole interval, e.g. `yesterday_*` on the day of the update to UniFi Network 11. Controllers without this dashboard are skipped after one warning.
 
 ## Control
-### Enable/disable WiFis
-By changing the 'enabled' state of a WiFi it is possible to enable/disable it. Some seconds later the change will be provisioned to the Access Points.
+| State | Action |
+|-------|--------|
+| `wlans.<name>.enabled` | switch the WLAN on (`true`) or off (`false`); the access points take some seconds |
+| `clients.<mac>.blocked` | block (`true`) or unblock (`false`) a client, wireless or wired |
+| `clients.<mac>.reconnect` | button: disconnect a wireless client so it connects again |
+| `devices.<mac>.restart` | button: restart the device |
+| `devices.<mac>.led_override` | LEDs `on`, `off` or `default` (setting of the site) |
+| `devices.<mac>.port_table.port_<n>.port_poe_enabled` | switch PoE of the port on or off |
+| `devices.<mac>.port_table.port_<n>.port_poe_cycle` | button: switch PoE off and on again, e.g. to restart a camera |
+| `vouchers.create_vouchers` | button: create vouchers with the settings of the Vouchers tab |
+| `unifi.0.trigger_update` | button: read the data now |
 
-### Block clients
-Set the `blocked` state of a client to `true` to block it in the UniFi controller, `false` unblocks it again. This works for wireless and wired clients.
+Switching needs an API key or a local user with full management of UniFi Network.
 
-### Voucher creation
-Using the `vouchers.create_vouchers` button it is possible to create predefined vouchers. It is possible to configure the number of vouchers that will be created, the duration the vouchers are valid and also set limits for up- and download.
+## Troubleshooting
+| State | Meaning |
+|-------|---------|
+| `info.connection` | `true` while the console answers |
+| `info.lastSuccessfulRefresh` | time of the last complete refresh |
+| `info.lastError` | last error message, empty if everything is fine |
+| `info.consecutiveErrors` | failed refreshes in a row; after errors the adapter waits a bit longer before the next try |
 
-## Missing datapoints
-To simplify things, not all availble datapoints are pulled into your ioBroker. In case you're missing datapoints, use the following URLs to check the API. (Note: You have to replace IP, PORT and SITE with your settings)
-
-| Information | API URL                                     |
-|-------------|---------------------------------------------|
-| Sites       | https://IP:PORT/api/self/sites              |
-| SysInfo     | https://IP:PORT/api/s/SITE/stat/sysinfo     |
-| Clients     | https://IP:PORT/api/s/SITE/stat/sta         |
-| Devices     | https://IP:PORT/api/s/SITE/stat/device      |
-| WiFis       | https://IP:PORT/api/s/SITE/rest/wlanconf    |
-| Networks    | https://IP:PORT/api/s/SITE/rest/networkconf |
-| Health      | https://IP:PORT/api/s/SITE/stat/health      |
-| Vouchers    | https://IP:PORT/api/s/SITE/stat/voucher     |
-| DPI         | https://IP:PORT/api/s/SITE/stat/dpi         |
-| Alarms      | https://IP:PORT/api/s/SITE/stat/alarm       |
-
-### UniFiOS (UDM-Pro) endpoints
-
-| Information | API URL                                              |
-|-------------|------------------------------------------------------|
-| Sites       | https://IP/proxy/network/api/self/sites              |
-| SysInfo     | https://IP/proxy/network/api/s/SITE/stat/sysinfo     |
-| Clients     | https://IP/proxy/network/api/s/SITE/stat/sta         |
-| Devices     | https://IP/proxy/network/api/s/SITE/stat/device      |
-| WiFis       | https://IP/proxy/network/api/s/SITE/rest/wlanconf    |
-| Networks    | https://IP/proxy/network/api/s/SITE/rest/networkconf |
-| Health      | https://IP/proxy/network/api/s/SITE/stat/health      |
-| Vouchers    | https://IP/proxy/network/api/s/SITE/stat/voucher     |
-| DPI         | https://IP/proxy/network/api/s/SITE/stat/dpi         |
-| Alarms      | https://IP/proxy/network/api/s/SITE/stat/alarm       |
+| Message in the log | What to do |
+|--------------------|------------|
+| `Incorrect username or password` | check user name and password; the user must be a local user |
+| `The API key was rejected` | the key is invalid, expired or deleted: create a new one in UniFi Network → Integrations |
+| `The UniFi console blocks the login of the local user` | too many logins, e.g. because the same user is used by other systems. The adapter tries again after 15 minutes. An API key avoids this. |
+| `did not answer within 10 s` | the console was busy for a moment, the next refresh repeats it. Only repeated messages need attention. |
+| `no gateway statistics` | UniFi Network 11 and newer: switch off *Gateway traffic* and switch on *WAN* |
 
 ## Known issues
-* "The UniFi console blocks the login of the local user": UniFi OS locks a local user for a while after too many logins (e.g. when the same user is used by several systems). The adapter waits 15 minutes before it tries again. An API key avoids this, it needs no login.
-* The is_wired state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller and is not related to the adapter. (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1)
+* The `is_wired` state of clients is incorrect after a client went offline. This is a known issue of the UniFi controller (see https://community.ui.com/questions/Wireless-clients-shown-as-wired-clients/49d49818-4dab-473a-ba7f-d51bc4c067d1).
+* The UniFi console locks a local user for a while after too many logins. The adapter waits 15 minutes before it tries again; an API key needs no login.
+* UniFi Network 10 and newer no longer provide alarms, switch them off in the settings.
+
+<details>
+<summary>For developers: API endpoints</summary>
+
+Not all data of the API is mirrored into ioBroker. To check the raw data, open these URLs in the browser while you are logged in to the console (replace `IP` and `SITE`; a self-hosted application has no `/proxy/network` and needs the port, e.g. `https://IP:8443/api/s/SITE/stat/sta`):
+
+| Information | URL |
+|-------------|-----|
+| Sites | `https://IP/proxy/network/api/self/sites` |
+| System information | `https://IP/proxy/network/api/s/SITE/stat/sysinfo` |
+| Clients | `https://IP/proxy/network/api/s/SITE/stat/sta` |
+| Devices | `https://IP/proxy/network/api/s/SITE/stat/device` |
+| WLANs | `https://IP/proxy/network/api/s/SITE/rest/wlanconf` |
+| Networks | `https://IP/proxy/network/api/s/SITE/rest/networkconf` |
+| Health | `https://IP/proxy/network/api/s/SITE/stat/health` |
+| Vouchers | `https://IP/proxy/network/api/s/SITE/stat/voucher` |
+| DPI | `https://IP/proxy/network/api/s/SITE/stat/dpi` |
+| WAN statistics | `https://IP/proxy/network/v2/api/site/SITE/aggregated-dashboard?historySeconds=3600` |
+
+</details>
 
 ## Changelog
 <!--
@@ -129,6 +155,7 @@ To simplify things, not all availble datapoints are pulled into your ioBroker. I
 - (@Schimi1983) Login of the local user blocked by the UniFi console (account locked, login limit): a clear message instead of the raw answer, and the next attempt only after 15 minutes, so the block is not extended
 - (@Schimi1983) Internal errors of the controller (HTTP 500) are logged in one short line instead of the whole HTML page
 - (@Schimi1983) A single timeout of the controller is a warning without stack (the next refresh repeats the request), only from 3 failed refreshes in a row an error
+- (@Schimi1983) README and settings page for beginners: setup step by step, every tab explained with a recommendation, overview of the folders, control and troubleshooting tables, the API endpoints moved to a section for developers; short explanations on every tab of the settings in 11 languages
 - (@Schimi1983) All states have a specific ioBroker role (e.g. `info.ip`, `info.mac`, `indicator.reachable`, `value.temperature`, `switch.enable`, `date`) instead of the generic `state`, so visualizations and assistants recognize them
 - (@Schimi1983) Unified units (`B`, `B/s`, `Mbit/s`, `kbit/s`, `min`), numbers are stored as numbers (PoE power/voltage/current, load, CPU, memory, uptime of the devices, voucher duration), and the port settings full duplex, isolation, auto negotiation and spanning tree as true/false
 - (@Schimi1983) `rssi` of the clients is the signal-to-noise ratio in dB (unit was dBm)

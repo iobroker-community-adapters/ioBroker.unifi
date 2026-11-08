@@ -23,12 +23,9 @@
                 },
                 "_portNotice": {
                     "type": "staticText",
-                    "text": "Leave the port empty in case your controller is running under UniFiOS (e.g. UDM-Pro)!",
+                    "text": "Leave the port empty for UniFi OS consoles (UDM, UCG, Cloud Key Gen2+, UniFi OS Server). A self-hosted UniFi Network application usually uses port 8443.",
                     "newLine": true,
                     "xs": 12,
-                    "style": {
-                        "fontWeight": "bold"
-                    },
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
@@ -43,7 +40,8 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
-                    "xl": 4
+                    "xl": 4,
+                    "help": "IP address or host name of the UniFi console or controller"
                 },
                 "controllerPort": {
                     "type": "number",
@@ -81,7 +79,8 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
-                    "xl": 4
+                    "xl": 4,
+                    "help": "Recommended: API key (no login, cannot be locked). Local user: a user with \"Restrict to local access only\", without two-factor authentication."
                 },
                 "controllerUsername": {
                     "type": "text",
@@ -148,7 +147,8 @@
                     "sm": 12,
                     "md": 6,
                     "lg": 4,
-                    "xl": 4
+                    "xl": 4,
+                    "help": "How often the data is read. 60 seconds are recommended, shorter intervals put load on the console."
                 }
             }
         },
@@ -156,6 +156,16 @@
             "type": "panel",
             "label": "Sysinfo",
             "items": {
+                "_sysinfoIntro": {
+                    "type": "staticText",
+                    "text": "Version and update status of the UniFi Network application.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateSysinfo": {
                     "type": "checkbox",
                     "label": "Update system information",
@@ -173,7 +183,7 @@
                 },
                 "_sysinfoStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -232,6 +242,16 @@
             "type": "panel",
             "label": "Clients",
             "items": {
+                "_clientsIntro": {
+                    "type": "staticText",
+                    "text": "Every device that is or was connected to your network: name, IP address, online status, WLAN, signal. Clients can be blocked and reconnected.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateClients": {
                     "type": "checkbox",
                     "label": "Update clients",
@@ -257,6 +277,16 @@
                     "size": 5,
                     "newLine": true
                 },
+                "_clientsObjectsHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "objectsFilter.clients": {
                     "type": "chips",
                     "disabled": "!data.updateClients",
@@ -275,7 +305,7 @@
                 },
                 "_clientsStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -500,7 +530,8 @@
                     "sm": 6,
                     "md": 6,
                     "lg": 6,
-                    "xl": 6
+                    "xl": 6,
+                    "help": "A client counts as offline when it was not seen for this number of seconds."
                 }
             }
         },
@@ -508,6 +539,16 @@
             "type": "panel",
             "label": "Devices",
             "items": {
+                "_devicesIntro": {
+                    "type": "staticText",
+                    "text": "Your UniFi devices (gateway, switches, access points): state, firmware, temperatures, ports with PoE and the internet connections of the gateway. Devices can be restarted, PoE and LEDs switched.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateDevices": {
                     "type": "checkbox",
                     "label": "Update devices",
@@ -522,6 +563,16 @@
                     "text": "Filter objects",
                     "size": 5,
                     "newLine": true
+                },
+                "_devicesObjectsHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "objectsFilter.devices": {
                     "type": "chips",
@@ -541,7 +592,7 @@
                 },
                 "_devicesStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1210,6 +1261,16 @@
             "type": "panel",
             "label": "WLANs",
             "items": {
+                "_wlansIntro": {
+                    "type": "staticText",
+                    "text": "Your wireless networks. They can be switched on and off.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateWlans": {
                     "type": "checkbox",
                     "label": "Update WLANs",
@@ -1224,6 +1285,16 @@
                     "text": "Filter objects",
                     "size": 5,
                     "newLine": true
+                },
+                "_wlansObjectsHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "objectsFilter.wlans": {
                     "type": "chips",
@@ -1243,7 +1314,7 @@
                 },
                 "_wlansStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1297,6 +1368,16 @@
             "type": "panel",
             "label": "Networks",
             "items": {
+                "_networksIntro": {
+                    "type": "staticText",
+                    "text": "Your networks and VLANs with their settings.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateNetworks": {
                     "type": "checkbox",
                     "label": "Update networks",
@@ -1311,6 +1392,16 @@
                     "text": "Filter objects",
                     "size": 5,
                     "newLine": true
+                },
+                "_networksObjectsHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "objectsFilter.networks": {
                     "type": "chips",
@@ -1330,7 +1421,7 @@
                 },
                 "_networksStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1429,6 +1520,16 @@
             "type": "panel",
             "label": "Health",
             "items": {
+                "_healthIntro": {
+                    "type": "staticText",
+                    "text": "Overall status of internet, LAN, WLAN and VPN, as shown on the dashboard of the console.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateHealth": {
                     "type": "checkbox",
                     "label": "Update health",
@@ -1443,6 +1544,16 @@
                     "text": "Filter objects",
                     "size": 5,
                     "newLine": true
+                },
+                "_healthObjectsHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
                 },
                 "objectsFilter.health": {
                     "type": "chips",
@@ -1462,7 +1573,7 @@
                 },
                 "_healthStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1581,6 +1692,16 @@
             "type": "panel",
             "label": "Vouchers",
             "items": {
+                "_vouchersIntro": {
+                    "type": "staticText",
+                    "text": "Guest vouchers of the hotspot. The button vouchers.create_vouchers creates new vouchers with the settings below.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateVouchers": {
                     "type": "checkbox",
                     "label": "Update vouchers",
@@ -1598,7 +1719,7 @@
                 },
                 "_vouchersStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1796,6 +1917,19 @@
             "type": "panel",
             "label": "Alarms",
             "items": {
+                "_alarmsIntro": {
+                    "type": "staticText",
+                    "text": "Note: UniFi Network 10 and newer no longer provide alarms. Leave this switched off with these versions.",
+                    "newLine": true,
+                    "style": {
+                        "fontWeight": "bold"
+                    },
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateAlarms": {
                     "type": "checkbox",
                     "label": "Update alarm messages",
@@ -1813,7 +1947,7 @@
                 },
                 "_alarmsStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1914,6 +2048,16 @@
             "type": "panel",
             "label": "DPI",
             "items": {
+                "_dpiIntro": {
+                    "type": "staticText",
+                    "text": "Traffic per application and category (deep packet inspection). Needs a UniFi gateway with traffic identification switched on.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateDpi": {
                     "type": "checkbox",
                     "label": "Update DPI (USG needed)",
@@ -1931,7 +2075,7 @@
                 },
                 "_dpiStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -2085,6 +2229,19 @@
             "type": "panel",
             "label": "Gateway traffic",
             "items": {
+                "_gatewayTrafficIntro": {
+                    "type": "staticText",
+                    "text": "Note: UniFi Network 11 and newer no longer provide the gateway statistics. Use the WAN tab instead.",
+                    "newLine": true,
+                    "style": {
+                        "fontWeight": "bold"
+                    },
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12
+                },
                 "updateGatewayTraffic": {
                     "type": "checkbox",
                     "label": "Update Gateway Traffic (USG needed)",
@@ -2102,7 +2259,7 @@
                 },
                 "_gatewayTrafficStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -2193,7 +2350,7 @@
                 },
                 "_wanStatesHint": {
                     "type": "staticText",
-                    "text": "If nothing is selected, all states are created.",
+                    "text": "Only the selected states are created. If nothing is selected, all states are created.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
