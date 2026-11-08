@@ -201,8 +201,8 @@ class Unifi extends utils.Adapter {
     private consecutiveErrors = 0;
     /** Created objects without the namespace, to write only changed objects */
     private ownObjects: Record<string, CreatedObject> = {};
-    /** Sites for which the empty gateway statistics were reported, once per start */
-    private emptyGatewayTrafficWarned = new Set<string>();
+    /** Sites whose controller returned no gateway statistics (UniFi Network 11+), skipped until the next start */
+    private gatewayTrafficUnavailable = new Set<string>();
     /** Sites whose controller answered the WAN dashboard with 404, skipped until the next start */
     private wanUnavailable = new Set<string>();
     private stopped = false;
@@ -1211,6 +1211,10 @@ class Unifi extends utils.Adapter {
      * @param site name of the site
      */
     private async fetchGatewayTraffic(site: string): Promise<unknown[]> {
+        if (this.gatewayTrafficUnavailable.has(site)) {
+            return [];
+        }
+
         let start: number | undefined = undefined;
         let end: number | undefined = undefined;
         if (this.update.gatewayTrafficMaxDays > 0) {
@@ -1234,13 +1238,21 @@ class Unifi extends utils.Adapter {
         this.log.debug(`fetchGatewayTraffic ${site}: ${data.length}`);
         this.log.silly(`fetchGatewayTraffic ${site}: ${JSON.stringify(data)}`);
 
-        // @KI_HINWEIS: UniFi Network 11 cleared the statistics and answers with an empty list since then. Without this
-        // warning gateway_traffic silently stops updating.
-        if (data.length === 0 && !this.emptyGatewayTrafficWarned.has(site)) {
-            this.emptyGatewayTrafficWarned.add(site);
-            this.log.warn(
-                `fetchGatewayTraffic ${site}: the controller returned no gateway statistics. UniFi Network 11 and newer do not provide them anymore, use the WAN statistics instead (setting "Update WAN statistics").`,
-            );
+        // @KI_HINWEIS: UniFi Network 11 cleared the statistics and answers with an empty list since then. The request
+        // is skipped until the next start, with one message that tells what to switch: with the WAN statistics already
+        // on, it is only a hint (info); without them the traffic data is missing completely (warn).
+        if (data.length === 0) {
+            this.gatewayTrafficUnavailable.add(site);
+            if (this.update.wan) {
+                this.log.info(
+                    `fetchGatewayTraffic ${site}: no gateway statistics (UniFi Network 11 and newer), the WAN statistics replace them. Switch off "Update Gateway Traffic" in the settings to hide this message.`,
+                );
+            } else {
+                this.log.warn(
+                    `fetchGatewayTraffic ${site}: no gateway statistics (UniFi Network 11 and newer). Switch on "Update WAN statistics" and switch off "Update Gateway Traffic" in the settings.`,
+                );
+            }
+            return data;
         }
 
         await this.processGatewayTraffic(site, data);
