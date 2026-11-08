@@ -286,13 +286,25 @@
                 },
                 "_clientsObjectsHint": {
                     "type": "staticText",
-                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "text": "Names, host names, IP or MAC addresses of clients that should not be created. Confirm each entry with Enter.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
                     "md": 12,
                     "lg": 12,
-                    "xl": 12
+                    "xl": 12,
+                    "hidden": "data.blacklistClients"
+                },
+                "_clientsObjectsWhitelistHint": {
+                    "type": "staticText",
+                    "text": "Names, host names, IP or MAC addresses of the only clients that should be created. Confirm each entry with Enter.",
+                    "newLine": true,
+                    "xs": 12,
+                    "sm": 12,
+                    "md": 12,
+                    "lg": 12,
+                    "xl": 12,
+                    "hidden": "!data.blacklistClients"
                 },
                 "objectsFilter.clients": {
                     "type": "chips",
@@ -573,7 +585,7 @@
                 },
                 "_devicesObjectsHint": {
                     "type": "staticText",
-                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "text": "Names, IP or MAC addresses of devices that should not be created. Confirm each entry with Enter.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1295,7 +1307,7 @@
                 },
                 "_wlansObjectsHint": {
                     "type": "staticText",
-                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "text": "Names (SSID) of WLANs that should not be created. Confirm each entry with Enter.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1402,7 +1414,7 @@
                 },
                 "_networksObjectsHint": {
                     "type": "staticText",
-                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "text": "Names of networks that should not be created. Confirm each entry with Enter.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,
@@ -1554,7 +1566,7 @@
                 },
                 "_healthObjectsHint": {
                     "type": "staticText",
-                    "text": "Names, host names, IP or MAC addresses of objects that should not be created. Confirm each entry with Enter.",
+                    "text": "Subsystems that should not be created, e.g. wan, www, lan, wlan, vpn. Confirm each entry with Enter.",
                     "newLine": true,
                     "xs": 12,
                     "sm": 12,

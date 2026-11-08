@@ -49,7 +49,7 @@ This adapter shows your [UniFi network](https://ui.com/) in ioBroker: which devi
 | Gateway traffic | traffic per day of older gateways | **off** with UniFi Network 11 and newer, use WAN |
 | WAN | internet traffic today / yesterday / month, provider, availability, speed test | on with UniFi Network 11 and newer |
 
-**Filter objects:** names, host names, IP or MAC addresses of objects that should not be created. For clients the list can also be used the other way round, as the only clients to create.
+**Filter objects:** entries of objects that should not be created. Clients: name, host name, IP or MAC address; the list can also be used the other way round, as the only clients to create. Devices: name, IP or MAC address. WLANs: name (SSID). Networks: name. Health: subsystem, e.g. `wan`, `www`, `lan`, `wlan`, `vpn`.
 
 **Filter states:** only the selected states are created; if nothing is selected, all states are created. New instances start with a recommended selection for clients and devices, so the object tree stays clear. States that are needed by a selected state are added automatically, e.g. `last_seen_by_uap` / `last_seen_by_usw` for `is_online`.
 
@@ -150,6 +150,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
+- (@GermanBluefox) **Breaking change:** 16 states store numbers or booleans instead of text now (PoE power/voltage/current, load average, CPU / memory / uptime of `system-stats`, port settings speed and rates, voucher duration; `full_duplex`, `isolation`, `autoneg` and `stp_port_mode` of the port settings are true/false). History adapters may reject the new type for an existing series (InfluxDB: field type conflict), and scripts that compare these states with text (e.g. `=== 'true'`) have to be adjusted. The object IDs do not change
 - (@Schimi1983) Repository checker: `sinon` comes with `@iobroker/testing`, news of versions that are not on npm removed, line breaks of the copyright lines
 - (@Schimi1983) Gateway traffic: with UniFi Network 11 and newer (no gateway statistics anymore) the request is skipped after one message until the next start. With the WAN statistics switched on it is only an info, without them a warning that tells which settings to change
 - (@Schimi1983) Login of the local user blocked by the UniFi console (account locked, login limit): a clear message instead of the raw answer, and the next attempt only after 15 minutes, so the block is not extended
@@ -164,6 +165,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
 - (@hdering) Endpoints removed in newer UniFi Network versions (e.g. alarms, 404 `api.err.NotFound`) are logged once as a warning and skipped instead of logging an error on every refresh
 - (@hdering) Added a hint to the settings that a local UniFi OS user or an API key is required, as UI.com accounts require MFA
 - (@hdering) A login rejected with `MFA_AUTH_REQUIRED` (UI.com account) is explained in the log instead of logging the response with the MFA cookie
+- (@GermanBluefox) Settings: the hint of the object filter names what each tab really filters (clients, devices, WLANs, networks, health), and a separate hint for the client whitelist
 
 ### 1.2.1 (2026-11-04)
 - (@GermanBluefox) WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)
