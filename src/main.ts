@@ -69,9 +69,39 @@ const FETCH_METHODS: [UpdateKey, FetchMethod][] = [
 const MAX_BACKOFF_DELAY = 15 * 60 * 1000;
 /** From this number of failed refreshes in a row a timeout is logged as error instead of warning */
 const REPEATED_FAILURES = 3;
+// HTTP status of UniFi OS while the network application does not run (update, restart)
+const UNAVAILABLE_CODES = [502, 503, 504];
 
 /** Login error codes of UniFi OS after too many logins: the console blocks further logins for a while */
 const LOGIN_BLOCKED_CODES = ['AUTHENTICATION_FAILED_ACCOUNT_LOCKED', 'AUTHENTICATION_FAILED_LIMIT_REACHED'];
+
+/**
+ * Plain text of a network error that usually fixes itself (console or network away for a moment)
+ *
+ * @param message error message of the client, e.g. `connect EHOSTUNREACH 192.168.1.1:443`
+ */
+function networkErrorText(message: string): string | undefined {
+    if (message.includes('EHOSTUNREACH') || message.includes('ENETUNREACH')) {
+        return 'the UniFi console cannot be reached (network or console not available)';
+    }
+    if (message.includes('ECONNREFUSED')) {
+        return 'the UniFi console refused the connection';
+    }
+    if (message.includes('connect ETIMEDOUT')) {
+        return 'the connection to the UniFi console timed out';
+    }
+    if (
+        message.includes('ECONNRESET') ||
+        message.includes('socket hang up') ||
+        message.includes('socket disconnected')
+    ) {
+        return 'the UniFi console closed the connection';
+    }
+    if (message.includes('EAI_AGAIN')) {
+        return 'the name of the UniFi console could not be resolved (DNS not available)';
+    }
+    return undefined;
+}
 
 /**
  * Prefix of a log message: the method and the site, if known
@@ -119,6 +149,21 @@ function htmlErrorTitle(data: unknown): string | undefined {
     }
     const title = /<title>([^<]*)<\/title>/i.exec(data)?.[1] ?? /<h1>([^<]*)<\/h1>/i.exec(data)?.[1];
     return title?.trim() || 'HTML page';
+}
+
+/**
+ * Short text of an error answer: title of an HTML page, `meta.msg` or `error.message`, else the error message
+ *
+ * @param err error of the client
+ */
+function errorDetail(err: UnifiError): string {
+    const data = err.response?.data;
+    return (
+        htmlErrorTitle(data) ??
+        responseMeta(err)?.msg ??
+        (typeof data === 'object' ? data.error?.message : undefined) ??
+        err.message
+    );
 }
 
 // Categories of the state filter, defined in admin/lib/objects_<category>.json
@@ -252,6 +297,8 @@ class Unifi extends utils.Adapter {
     private queryTimeout: ioBroker.Timeout | undefined = undefined;
     private updateInProgress = false;
     private consecutiveErrors = 0;
+    /** A refresh succeeded since the start; before that a network error is most likely a wrong IP address or port */
+    private refreshedOnce = false;
     /** Endpoints the controller answered with 404 (`<site>:<method>`), skipped until the adapter restarts */
     private unsupportedEndpoints = new Set<string>();
     /** Created objects without the namespace, to write only changed objects */
@@ -701,12 +748,43 @@ class Unifi extends utils.Adapter {
             this.log.error(
                 `The UniFi console blocks the login of the local user for now (too many logins). The adapter tries again in ${MAX_BACKOFF_DELAY / 60000} minutes. If this repeats, check that the user is not used by other systems, or use an API key (UniFi Network → Integrations).`,
             );
+        } else if (status !== undefined && UNAVAILABLE_CODES.includes(status)) {
+            // @KI_HINWEIS: UniFi OS answers 502/503/504 while the network application is not running, e.g. during
+            // an update or a restart of the application (some minutes). That fixes itself, so it is a warning
+            // without stack and Sentry report; only repeated failures are an error.
+            const prefix = logPrefix(site, methodName);
+            const detail = `${status}: ${errorDetail(err)}`;
+            if (this.consecutiveErrors >= REPEATED_FAILURES) {
+                this.log.error(
+                    `${prefix}the UniFi Network application is still not available (${detail}), ${this.consecutiveErrors} refreshes in a row. Check the console.`,
+                );
+            } else {
+                this.log.warn(
+                    `${prefix}the UniFi Network application is not available right now (${detail}), e.g. during an update or restart. The request is repeated with the next refresh.`,
+                );
+            }
         } else if (status !== undefined && status >= 500) {
             // Internal error of the network application, e.g. the Tomcat page "HTTP Status 500 – Internal Server Error"
-            const detail = htmlErrorTitle(err.response?.data) ?? responseMeta(err)?.msg ?? err.message;
             this.log.error(
-                `${logPrefix(site, methodName)}the UniFi controller answered with an internal error (${status}: ${detail}). The request is repeated with the next refresh.`,
+                `${logPrefix(site, methodName)}the UniFi controller answered with an internal error (${status}: ${errorDetail(err)}). The request is repeated with the next refresh.`,
             );
+        } else if (networkErrorText(err.message)) {
+            // @KI_HINWEIS: the console or the network was away for a moment (restart, update, Wi-Fi of the host …).
+            // After a successful refresh that fixes itself, so it is a warning until it repeats. Before the first
+            // successful refresh it is most likely a wrong IP address or port, so it is an error right away.
+            const prefix = logPrefix(site, methodName);
+            const text = networkErrorText(err.message);
+            if (!this.refreshedOnce) {
+                this.log.error(
+                    `${prefix}${text}. Check the IP address and port in the settings and that the console is reachable from the ioBroker host.`,
+                );
+            } else if (this.consecutiveErrors >= REPEATED_FAILURES) {
+                this.log.error(
+                    `${prefix}${text}, ${this.consecutiveErrors} refreshes in a row. Check that the console is reachable from the ioBroker host.`,
+                );
+            } else {
+                this.log.warn(`${prefix}${text}. The request is repeated with the next refresh.`);
+            }
         } else if (/^timeout of \d+ms exceeded$/.test(err.message)) {
             // @KI_HINWEIS: a console under load answers a request now and then too late. That fixes itself with the
             // next refresh, so it is a warning without stack and Sentry report; only repeated failures are an error.
@@ -744,24 +822,8 @@ class Unifi extends utils.Adapter {
             );
         } else if (err.message === 'api.err.NoPermission' || responseMeta(err)?.msg === 'api.err.NoPermission') {
             this.log.error(`Error site ${site}: Permission denied. Check access rights.`);
-        } else if (err.message.includes('connect EHOSTUNREACH') || err.message.includes('connect ENETUNREACH')) {
-            this.log.error(`Error site ${site}: Host or network cannot be reached.`);
-        } else if (err.message.includes('connect ECONNREFUSED')) {
-            this.log.error(`Error site ${site}: Connection refused. Incorrect IP or port.`);
-        } else if (err.message.includes('connect ETIMEDOUT')) {
-            this.log.error(`Error site ${site}: Connection timedout.`);
-        } else if (err.message.includes('read ECONNRESET')) {
-            this.log.error(`Error site ${site}: Connection was closed by the UniFi controller.`);
-        } else if (err.message.includes('getaddrinfo EAI_AGAIN')) {
-            this.log.error(
-                `Error site ${site}: This error is not related to the adapter. There seems to be a DNS issue. Please google for "getaddrinfo EAI_AGAIN" to fix the issue.`,
-            );
         } else if (err.message.includes('getaddrinfo ENOTFOUND')) {
             this.log.error(`Error site ${site}: Host not found. Incorrect IP or port.`);
-        } else if (err.message.includes('socket hang up')) {
-            this.log.error(`Error site ${site}: Socket hang up: ${err.message}`);
-        } else if (err.message.includes('socket disconnected')) {
-            this.log.error(`Error site ${site}: Socket disconnected: ${err.message}`);
         } else if (
             err.message.includes('SSL routines') ||
             err.message.includes('ssl3_') ||
@@ -836,6 +898,7 @@ class Unifi extends utils.Adapter {
 
             successful = true;
             this.consecutiveErrors = 0;
+            this.refreshedOnce = true;
             await this.setDiagnosticState('info.connection', true);
             await this.setDiagnosticState('info.lastSuccessfulRefresh', Date.now());
             await this.setDiagnosticState('info.lastError', failures.join('; '));

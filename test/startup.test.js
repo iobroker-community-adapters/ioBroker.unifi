@@ -169,6 +169,23 @@ describe('error handling', () => {
         ]);
     });
 
+    it('logs a network application that is not available (update, restart) as warning, repeated as error', () => {
+        const err = new Error('Request failed with status code 502');
+        err.response = { status: 502, data: { error: { code: 502, message: 'Bad Gateway' } } };
+
+        adapter.handleError(err, undefined, 'updateUnifiData');
+        sinon.assert.notCalled(adapter.log.error);
+        sinon.assert.calledOnceWithExactly(
+            adapter.log.warn,
+            '[updateUnifiData] the UniFi Network application is not available right now (502: Bad Gateway), e.g. during an update or restart. The request is repeated with the next refresh.',
+        );
+
+        adapter.consecutiveErrors = 3;
+        assert.deepStrictEqual(loggedError(err), [
+            '[test site default] the UniFi Network application is still not available (502: Bad Gateway), 3 refreshes in a row. Check the console.',
+        ]);
+    });
+
     it('logs a single timeout as warning without stack, repeated timeouts as error', () => {
         const err = new Error('timeout of 10000ms exceeded');
 
@@ -193,9 +210,26 @@ describe('error handling', () => {
         ]);
     });
 
-    it('explains connection errors', () => {
+    it('explains network errors before the first refresh as an error (most likely a wrong IP address or port)', () => {
         assert.deepStrictEqual(loggedError(new Error('connect ECONNREFUSED 192.168.1.1:8443')), [
-            'Error site default: Connection refused. Incorrect IP or port.',
+            '[test site default] the UniFi console refused the connection. Check the IP address and port in the settings and that the console is reachable from the ioBroker host.',
+        ]);
+    });
+
+    it('logs a network error after a successful refresh as warning, repeated as error', () => {
+        adapter.refreshedOnce = true;
+        const err = new Error('connect EHOSTUNREACH 192.168.1.1:443');
+
+        adapter.handleError(err, undefined, 'updateUnifiData');
+        sinon.assert.notCalled(adapter.log.error);
+        sinon.assert.calledOnceWithExactly(
+            adapter.log.warn,
+            '[updateUnifiData] the UniFi console cannot be reached (network or console not available). The request is repeated with the next refresh.',
+        );
+
+        adapter.consecutiveErrors = 3;
+        assert.deepStrictEqual(loggedError(new Error('read ECONNRESET')), [
+            '[test site default] the UniFi console closed the connection, 3 refreshes in a row. Check that the console is reachable from the ioBroker host.',
         ]);
     });
 

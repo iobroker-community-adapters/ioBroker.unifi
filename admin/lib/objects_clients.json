@@ -911,6 +911,236 @@
                                     "value": "wired-tx_bytes"
                                 }
                             },
+                            "clients.client.tx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "TX rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.tx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "tx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "or": [
+                                            {
+                                                "var": "tx_bytes-r"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.rx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "RX rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.rx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "essid"
+                                            },
+                                            "rx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "or": [
+                                            {
+                                                "var": "rx_bytes-r"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.wired-tx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Wired TX rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.wired-tx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "if": [
+                                            {
+                                                "var": "is_wired"
+                                            },
+                                            "wired-tx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "or": [
+                                            {
+                                                "var": "wired-tx_bytes-r"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.wired-rx_bytes-r": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Wired RX rate",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "B/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.wired-rx_bytes-r"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "if": [
+                                            {
+                                                "var": "is_wired"
+                                            },
+                                            "wired-rx_bytes-r",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "or": [
+                                            {
+                                                "var": "wired-rx_bytes-r"
+                                            },
+                                            0
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.tx_rate": {
+                                "type": "state",
+                                "common": {
+                                    "name": "WLAN link speed TX",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.tx_rate"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "tx_rate"
+                                            },
+                                            "tx_rate",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "/": [
+                                            {
+                                                "var": "tx_rate"
+                                            },
+                                            1000
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.rx_rate": {
+                                "type": "state",
+                                "common": {
+                                    "name": "WLAN link speed RX",
+                                    "type": "number",
+                                    "role": "value",
+                                    "read": true,
+                                    "write": false,
+                                    "unit": "Mbit/s",
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.rx_rate"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "rx_rate"
+                                            },
+                                            "rx_rate",
+                                            null
+                                        ]
+                                    },
+                                    "value": {
+                                        "/": [
+                                            {
+                                                "var": "rx_rate"
+                                            },
+                                            1000
+                                        ]
+                                    }
+                                }
+                            },
+                            "clients.client.powersave_enabled": {
+                                "type": "state",
+                                "common": {
+                                    "name": "Power save",
+                                    "type": "boolean",
+                                    "role": "indicator",
+                                    "read": true,
+                                    "write": false,
+                                    "desc": ""
+                                },
+                                "native": {
+                                    "object_id": "clients.client.powersave_enabled"
+                                },
+                                "logic": {
+                                    "_id": {
+                                        "ifNotNull": [
+                                            {
+                                                "var": "powersave_enabled"
+                                            },
+                                            "powersave_enabled",
+                                            null
+                                        ]
+                                    },
+                                    "value": "powersave_enabled"
+                                }
+                            },
                             "clients.client.reconnect": {
                                 "type": "state",
                                 "common": {

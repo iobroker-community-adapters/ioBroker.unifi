@@ -84,6 +84,11 @@ export interface UnifiError extends Error {
                   };
                   /** error code of the UniFi OS login, e.g. AUTHENTICATION_FAILED_ACCOUNT_LOCKED */
                   code?: string;
+                  /** error of the UniFi OS proxy, e.g. `{ code: 502, message: 'Bad Gateway' }` while the network application restarts */
+                  error?: {
+                      code?: number;
+                      message?: string;
+                  };
               }
             | string;
     };

@@ -517,6 +517,41 @@
                             "description": "Wired TX"
                         },
                         {
+                            "label": "tx_bytes-r",
+                            "value": "clients.client.tx_bytes-r",
+                            "description": "TX rate"
+                        },
+                        {
+                            "label": "rx_bytes-r",
+                            "value": "clients.client.rx_bytes-r",
+                            "description": "RX rate"
+                        },
+                        {
+                            "label": "wired-tx_bytes-r",
+                            "value": "clients.client.wired-tx_bytes-r",
+                            "description": "Wired TX rate"
+                        },
+                        {
+                            "label": "wired-rx_bytes-r",
+                            "value": "clients.client.wired-rx_bytes-r",
+                            "description": "Wired RX rate"
+                        },
+                        {
+                            "label": "tx_rate",
+                            "value": "clients.client.tx_rate",
+                            "description": "WLAN link speed TX"
+                        },
+                        {
+                            "label": "rx_rate",
+                            "value": "clients.client.rx_rate",
+                            "description": "WLAN link speed RX"
+                        },
+                        {
+                            "label": "powersave_enabled",
+                            "value": "clients.client.powersave_enabled",
+                            "description": "Power save"
+                        },
+                        {
                             "label": "reconnect",
                             "value": "clients.client.reconnect",
                             "description": "reconnect"
