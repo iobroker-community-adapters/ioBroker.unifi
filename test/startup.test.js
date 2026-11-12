@@ -210,9 +210,26 @@ describe('error handling', () => {
         ]);
     });
 
-    it('explains connection errors', () => {
+    it('explains network errors before the first refresh as an error (most likely a wrong IP address or port)', () => {
         assert.deepStrictEqual(loggedError(new Error('connect ECONNREFUSED 192.168.1.1:8443')), [
-            'Error site default: Connection refused. Incorrect IP or port.',
+            '[test site default] the UniFi console refused the connection. Check the IP address and port in the settings and that the console is reachable from the ioBroker host.',
+        ]);
+    });
+
+    it('logs a network error after a successful refresh as warning, repeated as error', () => {
+        adapter.refreshedOnce = true;
+        const err = new Error('connect EHOSTUNREACH 192.168.1.1:443');
+
+        adapter.handleError(err, undefined, 'updateUnifiData');
+        sinon.assert.notCalled(adapter.log.error);
+        sinon.assert.calledOnceWithExactly(
+            adapter.log.warn,
+            '[updateUnifiData] the UniFi console cannot be reached (network or console not available). The request is repeated with the next refresh.',
+        );
+
+        adapter.consecutiveErrors = 3;
+        assert.deepStrictEqual(loggedError(new Error('read ECONNRESET')), [
+            '[test site default] the UniFi console closed the connection, 3 refreshes in a row. Check that the console is reachable from the ioBroker host.',
         ]);
     });
 

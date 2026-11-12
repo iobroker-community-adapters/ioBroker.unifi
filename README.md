@@ -117,6 +117,7 @@ Switching needs an API key or a local user with full management of UniFi Network
 | `The API key was rejected` | the key is invalid, expired or deleted: create a new one in UniFi Network → Integrations |
 | `The UniFi console blocks the login of the local user` | too many logins, e.g. because the same user is used by other systems. The adapter tries again after 15 minutes. An API key avoids this. |
 | `not available right now` | the network application of the console is restarting, e.g. during an update. The adapter continues by itself after some minutes; only `still not available` needs attention. |
+| `cannot be reached`, `refused the connection`, `closed the connection` | the console or the network was away for a moment (restart, update); the next refresh repeats it. Right after the start, or when it repeats: check the IP address and port and that the console is reachable from the ioBroker host. |
 | `did not answer within 10 s` | the console was busy for a moment, the next refresh repeats it. Only repeated messages need attention. |
 | `no gateway statistics` | UniFi Network 11 and newer: switch off *Gateway traffic* and switch on *WAN* |
 
@@ -152,6 +153,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
 -->
 ### **WORK IN PROGRESS**
 - (@Schimi1983) Clients: current traffic per second (`tx_bytes-r`, `rx_bytes-r`, wired `wired-tx_bytes-r`, `wired-rx_bytes-r`), WLAN link speed in Mbit/s (`tx_rate`, `rx_rate`) and `powersave_enabled` (#71, #531)
+- (@Schimi1983) Short network errors (console not reachable, connection refused or closed) after a successful refresh are a warning in plain text instead of an error; an error right after the start (wrong IP address or port) or after 3 failed refreshes in a row
 - (@Schimi1983) While the UniFi Network application restarts (e.g. during an update, HTTP 502/503/504) a warning instead of an error with stack; an error only after 3 failed refreshes in a row
 
 ### 2.0.0 (2026-11-08)
