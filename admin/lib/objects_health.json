@@ -79,8 +79,8 @@
                                             "type": "state",
                                             "common": {
                                                 "name": "Speedtest lastrun",
-                                                "type": "string",
-                                                "role": "date",
+                                                "type": "number",
+                                                "role": "value.time",
                                                 "read": true,
                                                 "write": false,
                                                 "desc": ""
@@ -90,7 +90,7 @@
                                             },
                                             "logic": {
                                                 "value": {
-                                                    "secondsToDateTime": [
+                                                    "secondsToMs": [
                                                         {
                                                             "var": "speedtest_lastrun"
                                                         }

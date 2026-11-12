@@ -267,33 +267,6 @@ export class Controller {
         return this.customApiRequest('/api/s/<SITE>/stat/dpi');
     }
 
-    /**
-     * Daily statistics of the gateway
-     *
-     * @param start in ms, default: one year before end
-     * @param end in ms, default: now
-     * @param attribs attributes in addition to `time`
-     */
-    public getDailyGatewayStats(
-        start: number | null = null,
-        end: number | null = null,
-        attribs: string[] | null = null,
-    ): Promise<unknown> {
-        const to = end ?? Date.now();
-        const from = start ?? to - 52 * 7 * 24 * 3600 * 1000;
-        const attrs = attribs === null ? ['time', 'mem', 'cpu', 'loadavg_5'] : ['time', ...attribs];
-        return this.customApiRequest('/api/s/<SITE>/stat/report/daily.gw', { attrs, start: from, end: to });
-    }
-
-    /**
-     * Alarms. Not available in UniFi Network 10 and newer (404)
-     *
-     * @param payload filter, e.g. `{ archived: false }`
-     */
-    public getAlarms(payload: Record<string, unknown> | null = null): Promise<unknown> {
-        return this.customApiRequest('/api/s/<SITE>/stat/alarm', payload);
-    }
-
     // ---- commands ----
 
     /**

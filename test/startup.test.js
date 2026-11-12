@@ -27,14 +27,12 @@ describe('start', () => {
             controllerPort: '8443',
             updateInterval: '30',
             clientsIsOnlineOffset: '20',
-            gatewayTrafficMaxDays: '7',
             createVouchersUploadLimit: '',
         });
 
         assert.strictEqual(adapter.settings.updateInterval, 30000);
         assert.strictEqual(adapter.settings.controllerPort, '8443');
         assert.strictEqual(adapter.clients.isOnlineOffset, 20000);
-        assert.strictEqual(adapter.update.gatewayTrafficMaxDays, 7);
         assert.strictEqual(adapter.vouchers.uploadLimit, null);
         sinon.assert.calledOnceWithExactly(adapter.updateUnifiData);
     });

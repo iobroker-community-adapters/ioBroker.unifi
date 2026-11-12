@@ -709,8 +709,8 @@
                     "type": "state",
                     "common": {
                         "name": "Last updated",
-                        "type": "string",
-                        "role": "date",
+                        "type": "number",
+                        "role": "value.time",
                         "read": true,
                         "write": false,
                         "desc": ""
@@ -720,7 +720,7 @@
                     },
                     "logic": {
                         "value": {
-                            "secondsToDateTime": [
+                            "secondsToMs": [
                                 {
                                     "var": "last_updated"
                                 }

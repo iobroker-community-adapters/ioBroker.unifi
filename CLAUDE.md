@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) with its own HTTPS client (`src/lib/unifiController.ts`, local user or API key) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics, gateway traffic, WAN statistics and alarms into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
+`iobroker.unifi` is an ioBroker adapter that polls a **UniFi Network controller** (classic controller or UniFi OS, e.g. UDM-Pro) with its own HTTPS client (`src/lib/unifiController.ts`, local user or API key) and mirrors sites, clients, devices, WLANs, networks, health, vouchers, DPI statistics and WAN statistics into ioBroker states. A few states are writable and control the controller (WLAN on/off, PoE, LED, restart, block/reconnect clients, create vouchers).
 
 TypeScript (CommonJS output). Sources live in `src/`, the published/runnable code is the compiled `build/` (`package.json` `main` is `build/main.js`). `build/` is gitignored — always run the build before starting the adapter or the tests.
 
@@ -40,6 +40,7 @@ There is deliberately **no `prepare` script** — `npm ci`/`npm install` does no
 | `src/lib/dpiNames.ts` | names of the DPI categories and applications (generated from the old `json_logic.js`) |
 | `src/lib/types.ts` | object definitions, UniFi data, filters |
 | `src/lib/adapter-config.d.ts` | augments `ioBroker.AdapterConfig` |
+| `src/lib/structure.ts` | structure of version 3: `prepareDevice()` (ports with settings, statistics), the move of the objects and states filters of version 2 (`migrateObjectId()`, `migrateFilterPath()`) |
 | `src/lib/wan.ts` | WAN statistics of UniFi Network 11+: `summarizeWan()` sums the hourly buckets of `aggregated-dashboard` per WAN group (today/yesterday in local time, last 24 h) |
 | `src/lib/unifiController.ts` | HTTPS client of the network application, replaces node-unifi with the same method names |
 | `admin/lib/objects_*.json` | **the object definitions** — which objects/states exist and how their values are computed |
@@ -56,7 +57,7 @@ The states are not created in code. Each `objects_<category>.json` is a tree of 
 - `logic.has` + `logic.has_key` — children; `has_key` names the property of the data that holds their data (`_self` = the data itself). Arrays are iterated.
 - `applyJsonLogic()` walks the tree, builds each object, writes it with `extendObjectAsync` **only when it changed** (`ownObjects` cache), converts the value to `common.type` and writes the state only when the value changed.
 
-The custom operations (`cleanupForUseAsId`, `timestampToDateTime`, `translateAppCodeToName`, …) are registered on import of `src/lib/jsonLogic.ts`. The files are read from `join(__dirname, '..', '..', 'admin', 'lib')`, i.e. relative to `build/lib` — `admin/lib` must stay in the npm package (`files`).
+The custom operations (`cleanupForUseAsId`, `secondsToMs`, `translateAppCodeToName`, …) are registered on import of `src/lib/jsonLogic.ts`. The files are read from `join(__dirname, '..', '..', 'admin', 'lib')`, i.e. relative to `build/lib` — `admin/lib` must stay in the npm package (`files`).
 
 ### Refresh loop
 
@@ -80,6 +81,12 @@ Always use `this.setTimeout` / `this.clearTimeout` (adapter-core, auto-cleared o
 
 Every state in `admin/lib/objects_*.json` has a specific role of the ioBroker state roles; `state` only where none fits (`led_override`). `test/config.test.js` checks the roles, the unified units (`B`, `B/s`, `Mbit/s`, `kbit/s`, `%`, `s`, `min`, `ms`, `°C`, `W`, `V`, `mA`, `dB`, `dBm`, `MB`, `pkts/s`), writable roles and the names of the fixed channels (translated objects). `statesFilter` in `io-package.json` is the recommended selection for **new** instances (existing ones keep theirs); the tests start with empty filters (all states) in `test/lib/adapterMock.js`.
 
+### Structure of version 3
+
+Since 3.0.0 the device folder follows the official UniFi Network API: `prepareDevice()` adds `ports` (every `port_table` entry with its `port_overrides` entry as `settings`) and `statistics` (`sys_stats` + `system-stats`) to the device data before `applyJsonLogic()`; the original properties stay, `switchPoeOfPort()` needs `port_overrides`. Radios keep the controller name as ID (`ra0`, `wifi0`, it differs by model) and get the band as name. Times are ms timestamps (`secondsToMs`, role `value.time`). Alarms and gateway traffic were removed (UniFi Network 10 / 11).
+
+After the first successful refresh of every start `migrateObjects()` moves the objects of version 2 (`migrateObjectId()`): `common.custom` (history adapters) and enum memberships go to the new object, then the old object is deleted. An old object with `custom` whose new object does not exist is kept and named in a warning. `normalizeStatesFilter()` maps the stored selection with `migrateFilterPath()`, the configuration is not rewritten.
+
 ### Admin configuration
 
 `admin/jsonConfig.json` (`common.adminUI.config = "json"`). The `options` of the `statesFilter.*` selects are **generated** from `admin/lib/objects_*.json` by `npm run build` / `npm run 2-jsonConfig` — do not edit them by hand. `test/config.test.js` fails if they are out of date.
@@ -99,7 +106,7 @@ Numbers in `native` may be strings: the old admin page stored every input as tex
 - Gateways get the channels `wan1`/`wan2` from `stat/device` (no extra request): ip, ipv6 (joined with the json-logic operation `join`), up, port (`port_idx`), interface (`uplink_ifname`, e.g. ppp0), speed; latency and availability only while connected. `is_uplink` is not used, it is false for the active WAN of a UDM Pro.
 - `processBlockedClients()` reads only the `blocked` states of its own site (`<site>.clients.*.blocked`) and writes changes only.
 - `updateWan` is `false` in `io-package.json` on purpose: js-controller adds missing native keys on upgrade, a default of `true` would switch it on for existing instances. `fetchWan()` skips a site after a 404 until the next start. `summarizeWan()` returns `null` for an interval the history does not cover from its start and for a direction without rates.
-- Network 11 answers `stat/report/*.gw` with an empty list; `fetchGatewayTraffic()` then skips the site until the next start, with one info (WAN statistics on) or warning (off). The rates `avg_*_rate_bps` of the dashboard are bytes per second despite the name (their sum times the bucket length equals `summary.rx_bytes`).
+- The rates `avg_*_rate_bps` of the WAN dashboard are bytes per second despite the name (their sum times the bucket length equals `summary.rx_bytes`).
 - The `blocked` state is created for every client (wired too), `reconnect` only for wireless clients (`essid`).
 - The rates `tx_bytes-r`/`rx_bytes-r` (wireless, `essid`) and `wired-*_bytes-r` (wired) are 0 when the controller leaves them out (no traffic); `tx_rate`/`rx_rate` come in kbit/s and are stored in Mbit/s.
 - `main.ts` exports a factory when required (compact mode) and self-starts when run directly.
@@ -113,12 +120,13 @@ The unit tests in `test/*.test.js` load the compiled `build/main.js` with `proxy
 | `test/lib/adapterMock.js` | `AdapterMock`: replaces `utils.Adapter` with an in-memory database of objects and states (all methods are sinon spies, `adapter.val(id)` reads a state); `createAdapter(config, stubs)` |
 | `test/lib/fakeController.js` | HTTPS server that answers like a UniFi OS console, used with the **real** client. `apiKey` enables the header `X-API-KEY`, `logouts` counts the logouts. `responses['stat/sta'] = [...]` sets the data of a path, `requestsTo(path)` returns the received requests, `expireSession()` invalidates the login. The certificate in `test/fixtures` is a self-signed test certificate for 127.0.0.1. |
 | `test/controller.test.js` | end-to-end against the fake controller: objects/states, re-login, vouchers, WLAN switch |
-| `test/objects.test.js` | object creation from `admin/lib/objects_*.json`, filters, deleting vouchers/alarms, `is_online`, blocked clients |
+| `test/objects.test.js` | object creation from `admin/lib/objects_*.json`, filters, deleting vouchers, `is_online`, blocked clients, the device structure of version 3 |
 | `test/control.test.js` | the writable states (`onStateChange`), PoE, vouchers |
 | `test/refresh.test.js` | refresh loop: re-login, backoff, overlapping refreshes, failure isolation |
 | `test/startup.test.js` | `onReady` (old text configs, migration, missing login), `handleError`, validation of the controller data |
 | `test/config.test.js` | jsonConfig ↔ `native`, generated options, states filter normalization |
 | `test/jsonLogic.test.js` | the json-logic operations and the option generator |
+| `test/structure.test.js` | `prepareDevice()`, the table old → new IDs (`migrateObjectId()`, `migrateFilterPath()`) and `migrateObjects()` |
 | `test/wan.test.js` | `summarizeWan()`: day boundaries, last 24 h, several WAN groups, missing data |
 | `test/unifiController.test.js` | the client: controller detection, paths, CSRF/cookies, API key, errors, timeout, IPv6 |
 
