@@ -122,12 +122,14 @@ Switching needs an API key or a local user with full management of UniFi Network
 | `not available right now` | the network application of the console is restarting, e.g. during an update. The adapter continues by itself after some minutes; only `still not available` needs attention. |
 | `cannot be reached`, `refused the connection`, `closed the connection` | the console or the network was away for a moment (restart, update); the next refresh repeats it. Right after the start, or when it repeats: check the IP address and port and that the console is reachable from the ioBroker host. |
 | `did not answer within 10 s` | the console was busy for a moment, the next refresh repeats it. Only repeated messages need attention. |
-| `old objects with history settings were kept` | see *Update from version 2* |
+| `old objects with history settings were kept` | see *Update from version 1 or 2* |
 
-## Update from version 2
-Version 3 sorts the objects like the official UniFi Network API and drops what UniFi Network 10 and 11 no longer provide. **The adapter moves everything by itself at the first start:** the history settings (History, SQL, InfluxDB …) and the rooms and functions go to the new objects, then the old objects are deleted. The values recorded so far stay under the old IDs in the history database.
+## Update from version 1 or 2
+Admin shows a notice before the update. Version 3 sorts the objects like the official UniFi Network API and drops what UniFi Network 10 and 11 no longer provide. **The adapter moves everything by itself at the first start:** the history settings (History, SQL, InfluxDB …) and the rooms and functions go to the new objects, then the old objects are deleted. The values recorded so far stay under the old IDs in the history database.
 
 What you have to adjust: **scripts and visualizations** that use the old IDs.
+
+**Coming from version 1:** since 2.0.0, 16 states store numbers or true/false instead of text (PoE power/voltage/current, load average, CPU / memory / uptime, speed and rates of the port settings, voucher duration; `full_duplex`, `isolation`, `autoneg`, `stp_port_mode`). Scripts that compare them with text (e.g. `=== 'true'`) have to be adjusted, and a history adapter like InfluxDB may reject the new type for an existing series (start a new series or convert it).
 
 | Old (version 2) | New (version 3) |
 |-----------------|-----------------|
@@ -174,7 +176,7 @@ Not all data of the API is mirrored into ioBroker. To check the raw data, open t
     ### **WORK IN PROGRESS**
 -->
 ### **WORK IN PROGRESS**
-- (@Schimi1983) **Breaking change, version 3:** objects sorted like the official UniFi Network API, see *Update from version 2* in the README for the table old → new. The adapter moves the history settings, rooms and functions to the new objects at the first start and deletes the old objects; scripts and visualizations with the old IDs have to be adjusted
+- (@Schimi1983) **Breaking change, version 3:** objects sorted like the official UniFi Network API, see *Update from version 1 or 2* in the README for the table old → new. The adapter moves the history settings, rooms and functions to the new objects at the first start and deletes the old objects; scripts and visualizations with the old IDs have to be adjusted
 - (@Schimi1983) Devices: one folder per port with its settings (`ports.port_<n>`, `ports.port_<n>.settings` instead of `port_table` + `port_overrides`, PoE states without the prefix `port_`), `statistics` instead of `sys_stats` + `system-stats`, `radios` named by band, `uplink`
 - (@Schimi1983) Times are timestamps (role `value.time`) instead of text; the WAN statistics of the first internet connection are `wan.wan1`; internal client states `*_by_ugw`, `is_guest_by_*`, `uptime_by_*` removed
 - (@Schimi1983) Alarms (removed in UniFi Network 10) and gateway traffic (empty since UniFi Network 11) removed together with their settings
