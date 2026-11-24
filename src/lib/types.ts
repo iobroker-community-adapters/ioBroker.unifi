@@ -18,9 +18,7 @@ export interface UnifiStatesFilter {
     networks: string[];
     health: string[];
     vouchers: string[];
-    alarms: string[];
     dpi: string[];
-    gateway_traffic: string[];
     wan: string[];
 }
 
@@ -149,10 +147,5 @@ export interface UnifiVoucher {
 export interface UnifiDpiStats {
     by_cat?: unknown[];
     by_app?: unknown[];
-    [key: string]: unknown;
-}
-
-export interface UnifiAlarm {
-    _id: string;
     [key: string]: unknown;
 }

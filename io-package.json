@@ -1,368 +1,418 @@
 {
-  "common": {
-    "name": "unifi",
-    "version": "2.0.0",
-    "news": {
-      "2.0.0": {
-        "en": "Breaking change: 16 states store numbers or booleans instead of text (PoE, load, `system-stats`, port settings, voucher duration). History adapters (e.g. InfluxDB) may reject the new type for an existing series, scripts that compare these states with text must be adjusted. The object IDs do not change\nAll states have a specific role (e.g. `info.ip`, `indicator.reachable`, `switch.enable`), unified units and readable folder names\nNew instances: recommended selection of states, alarms off\nBlocked login of the local user: a clear message, the next attempt after 15 minutes\nInternal errors (HTTP 500) and single timeouts of the controller are logged in one short line\nEndpoints removed in newer UniFi Network versions (404) and the empty gateway statistics of Network 11 are skipped after one message\nUI.com accounts (MFA): a clear message and a hint in the settings to use a local user or an API key\nREADME and settings page for beginners",
-        "de": "Breaking Change: 16 States speichern Zahlen oder Booleans statt Text (PoE, Last, `system-stats`, Port-Einstellungen, Voucher-Dauer). History-Adapter (z. B. InfluxDB) können den neuen Typ für eine bestehende Reihe ablehnen, Skripte, die diese States mit Text vergleichen, müssen angepasst werden. Die Objekt-IDs bleiben gleich\nAlle States haben eine passende Rolle (z. B. `info.ip`, `indicator.reachable`, `switch.enable`), einheitliche Einheiten und lesbare Ordnernamen\nNeue Instanzen: empfohlene Auswahl der States, Alarme aus\nGesperrter Login des lokalen Benutzers: eine klare Meldung, der nächste Versuch nach 15 Minuten\nInterne Fehler (HTTP 500) und einzelne Timeouts des Controllers werden in einer kurzen Zeile protokolliert\nEndpunkte, die neuere UniFi-Network-Versionen entfernt haben (404), und die leere Gateway-Statistik von Network 11 werden nach einer Meldung übersprungen\nUI.com-Konten (MFA): eine klare Meldung und ein Hinweis in den Einstellungen, einen lokalen Benutzer oder einen API-Schlüssel zu verwenden\nREADME und Einstellungsseite für Einsteiger",
-        "ru": "Несовместимое изменение: 16 состояний хранят числа или логические значения вместо текста (PoE, нагрузка, `system-stats`, настройки портов, длительность ваучера). Адаптеры истории (например, InfluxDB) могут отклонить новый тип для существующего ряда, скрипты, сравнивающие эти состояния с текстом, нужно изменить. ID объектов не меняются\nВсе состояния имеют конкретную роль (например, `info.ip`, `indicator.reachable`, `switch.enable`), единые единицы измерения и понятные имена папок\nНовые экземпляры: рекомендуемый выбор состояний, аварийные сигналы выключены\nЗаблокированный вход локального пользователя: понятное сообщение, следующая попытка через 15 минут\nВнутренние ошибки (HTTP 500) и одиночные тайм-ауты контроллера записываются в журнал одной короткой строкой\nКонечные точки, удалённые в новых версиях UniFi Network (404), и пустая статистика шлюза Network 11 пропускаются после одного сообщения\nУчётные записи UI.com (MFA): понятное сообщение и подсказка в настройках использовать локального пользователя или API-ключ\nREADME и страница настроек для начинающих",
-        "pt": "Alteração incompatível: 16 estados guardam números ou booleanos em vez de texto (PoE, carga, `system-stats`, ajustes das portas, duração do voucher). Adaptadores de histórico (p. ex. InfluxDB) podem rejeitar o novo tipo numa série existente, scripts que comparam estes estados com texto precisam de ser ajustados. Os IDs dos objetos não mudam\nTodos os estados têm uma função específica (p. ex. `info.ip`, `indicator.reachable`, `switch.enable`), unidades uniformes e nomes de pastas legíveis\nNovas instâncias: seleção recomendada de estados, alarmes desligados\nLogin bloqueado do usuário local: uma mensagem clara, a próxima tentativa após 15 minutos\nErros internos (HTTP 500) e timeouts isolados do controlador são registrados numa linha curta\nEndpoints removidos em versões mais recentes do UniFi Network (404) e as estatísticas vazias do gateway no Network 11 são ignorados após uma mensagem\nContas UI.com (MFA): uma mensagem clara e uma dica nas configurações para usar um usuário local ou uma chave de API\nREADME e página de configurações para iniciantes",
-        "nl": "Niet-compatibele wijziging: 16 states slaan getallen of booleans op in plaats van tekst (PoE, belasting, `system-stats`, poortinstellingen, voucherduur). Geschiedenisadapters (bijv. InfluxDB) kunnen het nieuwe type voor een bestaande reeks weigeren, scripts die deze states met tekst vergelijken moeten worden aangepast. De object-ID's veranderen niet\nAlle states hebben een specifieke rol (bijv. `info.ip`, `indicator.reachable`, `switch.enable`), uniforme eenheden en leesbare mapnamen\nNieuwe instanties: aanbevolen selectie van states, alarmen uit\nGeblokkeerde login van de lokale gebruiker: een duidelijke melding, de volgende poging na 15 minuten\nInterne fouten (HTTP 500) en losse time-outs van de controller worden in één korte regel gelogd\nEndpoints die in nieuwere UniFi Network-versies zijn verwijderd (404) en de lege gatewaystatistieken van Network 11 worden na één melding overgeslagen\nUI.com-accounts (MFA): een duidelijke melding en een tip in de instellingen om een lokale gebruiker of een API-sleutel te gebruiken\nREADME en instellingenpagina voor beginners",
-        "fr": "Changement incompatible : 16 états enregistrent des nombres ou des booléens au lieu de texte (PoE, charge, `system-stats`, paramètres des ports, durée des bons). Les adaptateurs d'historique (p. ex. InfluxDB) peuvent refuser le nouveau type pour une série existante, les scripts qui comparent ces états à du texte doivent être adaptés. Les ID des objets ne changent pas\nTous les états ont un rôle précis (p. ex. `info.ip`, `indicator.reachable`, `switch.enable`), des unités uniformes et des noms de dossiers lisibles\nNouvelles instances : sélection recommandée des états, alarmes désactivées\nConnexion bloquée de l'utilisateur local : un message clair, la prochaine tentative après 15 minutes\nLes erreurs internes (HTTP 500) et les dépassements de délai isolés du contrôleur sont journalisés en une ligne courte\nLes points d'accès supprimés dans les versions récentes d'UniFi Network (404) et les statistiques vides de la passerelle de Network 11 sont ignorés après un message\nComptes UI.com (MFA) : un message clair et une indication dans les paramètres pour utiliser un utilisateur local ou une clé API\nREADME et page de paramètres pour les débutants",
-        "it": "Modifica incompatibile: 16 stati salvano numeri o booleani invece di testo (PoE, carico, `system-stats`, impostazioni delle porte, durata dei voucher). Gli adattatori di cronologia (ad es. InfluxDB) possono rifiutare il nuovo tipo per una serie esistente, gli script che confrontano questi stati con del testo vanno adattati. Gli ID degli oggetti non cambiano\nTutti gli stati hanno un ruolo specifico (ad es. `info.ip`, `indicator.reachable`, `switch.enable`), unità uniformi e nomi delle cartelle leggibili\nNuove istanze: selezione consigliata degli stati, allarmi disattivati\nLogin bloccato dell'utente locale: un messaggio chiaro, il tentativo successivo dopo 15 minuti\nGli errori interni (HTTP 500) e i singoli timeout del controller vengono registrati in una riga breve\nGli endpoint rimossi nelle versioni più recenti di UniFi Network (404) e le statistiche vuote del gateway di Network 11 vengono saltati dopo un messaggio\nAccount UI.com (MFA): un messaggio chiaro e un suggerimento nelle impostazioni per usare un utente locale o una chiave API\nREADME e pagina delle impostazioni per principianti",
-        "es": "Cambio incompatible: 16 estados guardan números o booleanos en lugar de texto (PoE, carga, `system-stats`, ajustes de los puertos, duración de los vales). Los adaptadores de historial (p. ej. InfluxDB) pueden rechazar el nuevo tipo en una serie existente, hay que ajustar los scripts que comparan estos estados con texto. Los ID de los objetos no cambian\nTodos los estados tienen un rol específico (p. ej. `info.ip`, `indicator.reachable`, `switch.enable`), unidades uniformes y nombres de carpetas legibles\nInstancias nuevas: selección recomendada de estados, alarmas desactivadas\nInicio de sesión bloqueado del usuario local: un mensaje claro, el siguiente intento tras 15 minutos\nLos errores internos (HTTP 500) y los tiempos de espera aislados del controlador se registran en una línea corta\nLos endpoints eliminados en versiones nuevas de UniFi Network (404) y las estadísticas vacías de la puerta de enlace de Network 11 se omiten tras un mensaje\nCuentas de UI.com (MFA): un mensaje claro y una indicación en los ajustes para usar un usuario local o una clave API\nREADME y página de ajustes para principiantes",
-        "pl": "Zmiana niekompatybilna: 16 stanów zapisuje liczby lub wartości logiczne zamiast tekstu (PoE, obciążenie, `system-stats`, ustawienia portów, czas trwania kuponu). Adaptery historii (np. InfluxDB) mogą odrzucić nowy typ dla istniejącej serii, skrypty porównujące te stany z tekstem trzeba dostosować. Identyfikatory obiektów się nie zmieniają\nWszystkie stany mają konkretną rolę (np. `info.ip`, `indicator.reachable`, `switch.enable`), jednolite jednostki i czytelne nazwy folderów\nNowe instancje: zalecany wybór stanów, alarmy wyłączone\nZablokowane logowanie użytkownika lokalnego: jasny komunikat, następna próba po 15 minutach\nBłędy wewnętrzne (HTTP 500) i pojedyncze przekroczenia czasu kontrolera są zapisywane w jednej krótkiej linii\nPunkty końcowe usunięte w nowszych wersjach UniFi Network (404) oraz puste statystyki bramy w Network 11 są pomijane po jednym komunikacie\nKonta UI.com (MFA): jasny komunikat i wskazówka w ustawieniach, aby użyć użytkownika lokalnego lub klucza API\nREADME i strona ustawień dla początkujących",
-        "uk": "Несумісна зміна: 16 станів зберігають числа або логічні значення замість тексту (PoE, навантаження, `system-stats`, налаштування портів, тривалість ваучера). Адаптери історії (наприклад, InfluxDB) можуть відхилити новий тип для наявного ряду, скрипти, що порівнюють ці стани з текстом, треба змінити. ID об'єктів не змінюються\nУсі стани мають конкретну роль (наприклад, `info.ip`, `indicator.reachable`, `switch.enable`), єдині одиниці вимірювання та зрозумілі назви папок\nНові екземпляри: рекомендований вибір станів, тривоги вимкнено\nЗаблокований вхід локального користувача: зрозуміле повідомлення, наступна спроба через 15 хвилин\nВнутрішні помилки (HTTP 500) та поодинокі тайм-аути контролера записуються до журналу одним коротким рядком\nКінцеві точки, видалені в нових версіях UniFi Network (404), і порожня статистика шлюзу Network 11 пропускаються після одного повідомлення\nОблікові записи UI.com (MFA): зрозуміле повідомлення та підказка в налаштуваннях використовувати локального користувача або API-ключ\nREADME і сторінка налаштувань для початківців",
-        "zh-cn": "不兼容变更：16 个状态现在存储数字或布尔值而不是文本（PoE、负载、`system-stats`、端口设置、代金券时长）。历史适配器（例如 InfluxDB）可能拒绝已有序列的新类型，将这些状态与文本比较的脚本需要调整。对象 ID 不变\n所有状态都有具体的角色（例如 `info.ip`、`indicator.reachable`、`switch.enable`）、统一的单位和易读的文件夹名称\n新实例：推荐的状态选择，告警关闭\n本地用户登录被锁定：清晰的提示，15 分钟后再次尝试\n控制器的内部错误（HTTP 500）和单次超时只记录一行简短日志\n较新 UniFi Network 版本中已删除的端点（404）以及 Network 11 中为空的网关统计在提示一次后跳过\nUI.com 账户（MFA）：清晰的提示，并在设置中提示使用本地用户或 API 密钥\n面向新手的 README 和设置页面"
-      },
-      "1.2.1": {
-        "en": "WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)",
-        "de": "WAN-Statistik: Der Datenverkehr wurde mehrfach gezählt, wenn am Anfang des Verlaufs eine Lücke war (z. B. weil das Gateway offline war)",
-        "ru": "Статистика WAN: трафик подсчитывался несколько раз, если в начале истории был пробел (например, шлюз был отключен)",
-        "pt": "Estatísticas de WAN: o tráfego era contado várias vezes se o histórico começasse (p. ex., offline)",
-        "nl": "WAN-statistieken: het verkeer werd verschillende keren geteld als er in het begin een hiaat was in de geschiedenis (de gateway was bijvoorbeeld offline)",
-        "fr": "Statistiques WAN : le trafic était compté plusieurs fois si l'historique était vide au début (ex : la passerelle était hors ligne)",
-        "it": "Statistiche WAN: il traffico veniva contato più volte se la cronologia era vuota (ad es. offline)",
-        "es": "Estadísticas de WAN: el tráfico se contaba varias veces si el historial tenía un hueco (p. ej., la puerta estaba desconectada)",
-        "pl": "Statystyki WAN: ruch był liczony kilka razy, jeśli historia miała lukę na początku (np. bramka była offline)",
-        "uk": "Статистика WAN: трафік підраховували кілька разів, якщо історія мала розрив на початку (наприклад, шлюз був офлайн)",
-        "zh-cn": "WAN 统计信息：如果历史记录在开始时有间隔（例如网关处于离线状态），则会对流量进行多次计数"
-      },
-      "1.1.0": {
-        "en": "Authentication with an API key (UniFi OS), as alternative to the local user\nnode-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)\nThe session of the local user is ended when the adapter stops\nThe default port is empty (UniFi OS) and `common.dataSource` is `poll`\nWAN statistics for UniFi Network 11 and newer: traffic today, yesterday and in the last 24 hours, monthly traffic, state, availability, latency, provider and last speed test of every internet connection [#696]\nWarning when the controller returns no gateway statistics (UniFi Network 11 cleared them)",
-        "de": "Anmeldung mit einem API-Key (UniFi OS) als Alternative zum lokalen Benutzer\nnode-unifi wurde durch einen eigenen Client ohne Abhängigkeiten ersetzt (kein axios mit bekannten Sicherheitslücken, eine Anfrage weniger pro Aufruf)\nDie Sitzung des lokalen Benutzers wird beendet, wenn der Adapter stoppt\nDer Standard-Port ist leer (UniFi OS) und `common.dataSource` ist `poll`\nWAN-Statistik für UniFi Network 11 und neuer: Datenverkehr heute, gestern und in den letzten 24 Stunden, monatlicher Datenverkehr, Status, Verfügbarkeit, Latenz, Anbieter und letzter Speedtest jeder Internetverbindung [#696]\nWarnung, wenn der Controller keine Gateway-Statistik liefert (UniFi Network 11 liefert sie nicht mehr)",
-        "ru": "Аутентификация с помощью ключа API (UniFi OS) в качестве альтернативы локальному пользователю\nnode-unifi был заменен собственным клиентом без зависимостей (никаких axios с известными уязвимостями, на один запрос меньше на каждый вызов)\nСеанс локального пользователя завершается при остановке адаптера\nПорт по умолчанию пуст (UniFi OS), а `Common.DataSource` — это `poll`\nСтатистика WAN для UniFi Network 11 и новее: трафик сегодня, вчера и за последние 24 часа, ежемесячный трафик, состояние, доступность, задержка, провайдер и последний тест скорости каждого интернет-соединения [#696]\nПредупреждение, когда контроллер не возвращает статистику шлюза (UniFi Network 11 удалила их)",
-        "pt": "Autenticação com chave de API (UniFi OS), em vez do usuário local\nnode-unifi foi substituído por um cliente próprio sem dependências (sem axios, um pedido a menos por chamada)\nA sessão do usuário local termina com a parada do adaptador\nA porta padrão é vazia (UniFi OS) e `common.DataSource` é `poll`\nEstatísticas de WAN para UniFi Network 11 e mais recentes: tráfego hoje, ontem e nas últimas 24 horas, tráfego mensal, estado, disponibilidade, latência, provedor e último teste de velocidade [#696]\nAviso quando o controlador não retorna estatísticas de gateway (a UniFi Network 11 as apagou)",
-        "nl": "Authenticatie met een API-sleutel (UniFi OS), als alternatief voor de lokale gebruiker\nnode-unifi werd vervangen door een eigen client zonder afhankelijkheden (geen axios met bekende kwetsbaarheden, één verzoek minder per gesprek)\nDe sessie van de lokale gebruiker wordt beëindigd wanneer de adapter stopt\nDe standaardpoort is leeg (UniFi OS) en `Common.DataSource` is `poll`\nWAN-statistieken voor UniFi Network 11 en nieuwer: verkeer vandaag, gisteren en in de afgelopen 24 uur, maandelijks verkeer, status, beschikbaarheid, latentie, provider en laatste snelheidstest van elke internetverbinding [#696]\nWaarschuwing wanneer de controller geen gateway-statistieken retourneert (UniFi Network 11 heeft ze goedgekeurd)",
-        "fr": "Authentification par clé API (UniFi OS), au lieu de l'utilisateur local\nnode-unifi a été remplacé par son propre client sans dépendances (aucun axios présentant des failles connues, une requête de moins par appel)\nLa session de l'utilisateur local se termine à l'arrêt de l'adaptateur\nLe port par défaut est vide (UniFi OS) et « common.DataSource » est « poll »\nStatistiques WAN pour UniFi Network 11 et versions ultérieures : trafic actuel, hier et ces dernières 24 heures, trafic mensuel, état, disponibilité, latence, fournisseur et dernier test de vitesse de chaque connexion Internet [#696]\nAvertissement si la manette ne renvoie aucune statistique de passerelle (UniFi Network 11 les a effacées)",
-        "it": "Autenticazione con chiave API (UniFi OS), invece dell'utente locale\nnode-unifi è stato sostituito da un client senza dipendenze (no axios con vulnerabilità note, una richiesta in meno)\nL'utente locale termina quando l'adattatore si ferma\nLa porta di default è vuota (UniFi OS) e `common.DataSource` è `poll`\nStatistiche WAN per UniFi Network 11 e successivi: traffico attuale, ieri e nelle ultime 24 ore, mese, stato, disponibilità, latenza, provider e ultimo test di velocità di ogni connessione Internet [#696]\nAvviso se il controller non restituisce dati statistici (UniFi Network 11 li ha cancellati)",
-        "es": "Autenticación con una clave de API (UniFi OS), como alternativa al usuario local\nnode-unifi se sustituyó por un cliente propio sin dependencias (sin axios con vulnerabilidades conocidas, una solicitud menos por llamada)\nLa sesión del usuario local termina cuando el adaptador se detiene\nEl puerto por defecto está vacío (UniFi OS) y `Common.DataSource` es `poll`\nEstadísticas de WAN para UniFi Network 11 y posteriores: tráfico hoy, ayer y las últimas 24 horas, tráfico mensual, estado, disponibilidad, latencia, proveedor y última prueba de velocidad de cada conexión a Internet [#696]\nAviso cuando el mando no devuelve estadísticas de pasarela (UniFi Network 11 las borró)",
-        "pl": "Uwierzytelnianie za pomocą klucza API (UniFi OS) jako alternatywa dla użytkownika lokalnego\nnode-unifi został zastąpiony przez własnego klienta bez zależności (brak aksjów ze znanymi lukami, jedno żądanie mniej na połączenie)\nSesja użytkownika lokalnego zostaje zakończona po zatrzymaniu adaptera\nDomyślny port jest pusty (system operacyjny UniFi), a `common.DataSource` jest `poll`\nStatystyki WAN dla sieci UniFi 11 i nowszych: ruch dzisiaj, wczoraj i w ciągu ostatnich 24 godzin, ruch miesięczny, stan, dostępność, opóźnienie, dostawca i ostatni test prędkości każdego połączenia internetowego [#696]\nOstrzeżenie, gdy kontroler nie zwraca żadnych statystyk bramy (UniFi Network 11 je wyczyścił)",
-        "uk": "Аутентифікація за допомогою ключа API (UniFi OS), як альтернатива локальному користувачеві\nnode-unifi був замінений власним клієнтом без залежностей (без axios з відомими вразливостями, один запит менше за виклик)\nСеанс локального користувача завершується, коли адаптер зупиняється\nПорт за замовчуванням порожній (UniFi OS), а `Common.DataSource` - ``poll`\nСтатистика WAN для UniFi Network 11 і новіші: трафік сьогодні, вчора і за останні 24 години, місячний трафік, стан, наявність, затримка, провайдер та останній тест швидкості кожного підключення до Інтернету [#696]\nПопередження, коли контролер не повертає статистику шлюзу (UniFi Network 11 очистила їх)",
-        "zh-cn": "使用 API 密钥（UniFi OS）进行身份验证，以替代本地用户\nnode-unifi 被没有依赖关系的自己的客户端所取代（没有存在已知漏洞的 axios，每次调用少一个请求）\n当适配器停止时，本地用户的会话即结束\n默认端口为空（UniFi 操作系统）且 `common.DataSource`为`poll`\nUniFi Network 11 及更高版本的广域网统计数据：今天、昨天和过去 24 小时内的流量、每月流量、状态、可用性、延迟、提供商和每个互联网连接的最后一次速度测试 [#696]\n当控制器未返回网关统计数据时发出警告（UniFi 网络 11 已清除这些统计信息）"
-      },
-      "1.0.3": {
-        "en": "Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)\nFixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others\nFixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]\nSwitching PoE creates the missing override of a port instead of failing [#658]",
-        "de": "Einstellungsseite: Größenattribute für alle Felder der Tabs, wie vom Repository-Checker gefordert (W5507)\nBehoben: Der State `blocked` der Clients wurde nicht aktualisiert, wenn alle States ausgewählt waren (leerer Filter), und bei mehreren Sites setzte die Aktualisierung einer Site die blockierten Clients der anderen zurück\nBehoben: Befehle (Neustart, LED, PoE, Blockieren, ...) schlugen vor der ersten Aktualisierung oder nach einer abgelaufenen Sitzung fehl [#725]\nPoE-Schalten legt den fehlenden Override eines Ports an, statt fehlzuschlagen [#658]",
-        "ru": "Страница настроек: атрибуты размера для всех полей вкладок в соответствии с требованиями средства проверки репозитория (W5507)\nИсправлено состояние «заблокировано» клиентов: оно не обновлялось при выборе всех состояний (фильтр пустых состояний), а на нескольких сайтах обновление одного сайта приводило к сбросу заблокированных клиентов других\nИсправлены ошибки команд (перезапуск, светодиод, PoE, блокировка и т. д.) перед первым обновлением или после истечения сеанса [#725]\nПереключение PoE приводит к отсутствию переопределения порта, а не к сбою [#658]",
-        "pt": "Página de ajustes: atributos de tamanho de todos os campos das guias, conforme exigido pelo W5507\nCorrigido o estado “bloqueado” dos clientes: não era atualizado ao selecionar todos os estados (filtro de estados vazios) e, com vários sites, reinicializar os bloqueados dos outros\nComandos fixos (reiniciar, LED, PoE, bloquear,...) falharam antes da atualização ou da expiração [#725]\nA troca de PoE cria a falta de uma porta em vez de falhar [#658]",
-        "nl": "Instellingenpagina: groottekarakteristieken voor alle velden van de tabbladen, zoals vereist door de repository-checker (W5507)\nDe status 'geblokkeerd' van de clients is opgelost: deze werd niet bijgewerkt toen alle statussen werden geselecteerd (filter voor lege statussen), en bij meerdere sites werd de geblokkeerde client van de andere opnieuw ingesteld door het vernieuwen van één site\nOpdrachten opgelost (herstarten, LED, PoE, blokkeren,...) die niet lukten voor de eerste verversing of na een verlopen sessie [#725]\nDoor over te schakelen naar PoE ontbreekt een poort in plaats van een storing [#658]",
-        "fr": "Page des paramètres : attributs de taille pour tous les champs des onglets, comme l'exige le Repository Checker (W5507)\nCorrection de l'état « bloqué » des clients : il n'était pas mis à jour lorsque tous les états étaient sélectionnés (filtre d'états vide), et sur plusieurs sites, le rafraîchissement d'un site réinitialisait les clients bloqués des autres\nCorrection d'un échec des commandes (redémarrage, LED, PoE, blocage,...) avant la fin d'une session [#725]\nLe changement de PoE entraîne le remplacement d'un port au lieu d'échouer [#658]",
-        "it": "Pagina impostazioni: dimensioni per tutti i campi delle schede, come richiesto dal Repository Checker (W5507)\nRisolto lo stato «bloccato» dei client: non veniva aggiornato selezionando tutti gli stati (filtro vuoto) e con diversi siti l'aggiornamento di un sito reimpostava i client bloccati degli altri\nComandi fissi (riavvio, LED, PoE, blocco,...) che mancavano prima o dopo una sessione scaduta [#725]\nIl cambio PoE crea l'override mancante di una porta invece di fallire [#658]",
-        "es": "Página de ajustes: atributos de tamaño para todos los campos de las pestañas, según lo exige el comprobador (W5507)\nSe corrigió el estado «bloqueado» de los clientes: no se actualizó cuando se seleccionaron todos los estados (filtro de estados vacío) y, con varios sitios, al actualizar un sitio, se restablecieron los clientes bloqueados de los demás\nComandos fijos (reiniciar, LED, PoE, bloquear,...) que fallaban antes de la primera actualización o tras caducar la sesión [#725]\nCambiar PoE crea la anulación que falta de un puerto en lugar de fallar [#658]",
-        "pl": "Strona ustawień: atrybuty rozmiaru dla wszystkich pól kart, zgodnie z wymaganiami narzędzia sprawdzającego repozytorium (W5507)\nNaprawiono „zablokowany” stan klientów: nie był aktualizowany, gdy wybrano wszystkie stany (pusty filtr stanów), a w przypadku kilku witryn odświeżanie jednej witryny resetowało zablokowanych klientów innych\nNaprawiono błąd poleceń (restart, LED, PoE, block,...) przed pierwszym odświeżeniem lub po wygasłej sesji [#725]\nPrzełączanie PoE powoduje brakujące nadpisanie portu zamiast niepowodzenia [#658]",
-        "uk": "Сторінка налаштувань: атрибути розміру для всіх полів вкладок, як того вимагає перевірка сховища (W5507)\nВиправлено «заблокований» стан клієнтів: він не оновлювався, коли були вибрані всі стани (фільтр порожніх станів), а з кількома сайтами оновлення одного сайту скинуло заблоковані клієнти інших\nВиправлені команди (перезапуск, світлодіод, PoE, блок,...), що виходять з ладу перед першим оновленням або після закінчення сеансу [#725]\nКомутація PoE створює відсутнє перевизначення порту замість того, щоб вийти з ладу [#658]",
-        "zh-cn": "设置页面：存储库检查器要求的选项卡所有字段的大小属性 (W5507)\n修复了客户端的 “已屏蔽” 状态：选择所有状态时不会更新（空状态过滤器），并且在多个站点的刷新一个站点会重置其他站点的被封锁客户端\n修复了第一次刷新之前或会话过期后命令（重启、LED、PoE、封锁等）失败的问题 [#725]\n切换 PoE 会导致缺少替代端口，而不是发生故障 [#658]"
-      },
-      "1.0.2": {
-        "en": "Adapter requires node.js >= 22 now\nAdapter requires admin >= 7.7.22 now\nAdapter requires js-controller >= 6.0.11 now\nController sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]\nA failing endpoint or site no longer aborts the whole refresh\nFixed polling stopping after `trigger_update` overlapped a scheduled refresh\nMigrated the settings page to JSON config\nFixed creating vouchers: the settings were passed in the wrong order since node-unifi 2\nThe adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub",
-        "de": "Adapter benötigt jetzt node.js >= 22\nAdapter benötigt jetzt admin >= 7.7.22\nAdapter benötigt jetzt JS-Controller >= 6.0.11\nController-Sitzungen werden wiederverwendet und bei Fehlern läuft der Polling Loop weiter. #989\nEin defekter Endpunkt oder Site bricht nicht mehr den Refresh ab\nAbfragestopp behoben, nachdem `trigger_update` ein Update überlappte\nEinstellseite zur JSON-Konfiguration migriert\nVoucherstellung behoben: Die Werte wurden seit Node-Unifi 2 falsch eingegeben\nDer Adapter wurde auf TypeScript umgestellt. Nur von npm installierbar, nicht von GitHub",
-        "ru": "Теперь для адаптера требуется файл node.js >= 22\nДля адаптера теперь требуется администратор >= 7.7.22\nТеперь для адаптера требуется js-контроллер >= 6.0.11\nСеансы контроллера используются повторно, а цикл опроса продолжает работать после ошибок и новых диагностических состояний в `info` [#989]\nНеисправная конечная точка или сайт больше не прерывают полное обновление\nИсправлена остановка опроса после перекрытия `trigger_update` запланированного обновления\nПеренесена страница настроек в конфигурацию JSON\nИсправлено создание ваучеров: настройки передавались в неправильном порядке, начиная с node-unifi 2\nАдаптер был переработан на TypeScript. Его можно установить только из npm, а не из GitHub",
-        "pt": "O adaptador exige node.js >= 2\nAgora o adaptador exige admin >= 7.7.2\nO adaptador exige js-controller >= 6.0.11\nAs sessões do controlador são reutilizadas e o polling loop segue após erros e novos diagnósticos em `info` [#989]\nUm endpoint ou site com falha não aborta mais a atualização\nCorrigido o fim da enquete após a sobreposição de `trigger_update`\nMigrou a página de ajustes para JSON\nCorrigida a criação de vouchers: os ajustes eram errados desde o node-unifi 2\nO adaptador foi adaptado ao TypeScript. Só pode ser instalado do npm, não do GitHub",
-        "nl": "Voor de adapter is nu node.js >= 22 nodig\nAdapter vereist nu admin >= 7.7.22\nVoor de adapter is nu een js-controller >= 6.0.11 nodig\nDe sessies van de controller worden opnieuw gebruikt en de polling-lus blijft draaien na fouten. Nieuwe diagnosetoestanden in `info` [#989]\nAls een eindpunt of site niet meer werkt, wordt de hele vernieuwing niet langer afgebroken\nDe peiling is gestopt nadat `trigger_update` een geplande vernieuwing overlapt\nDe instellingenpagina is overgezet naar de JSON-configuratie\nHet aanmaken van vouchers is opgelost: de instellingen zijn sinds node-unifi 2 in de verkeerde volgorde doorgegeven\nDe adapter is omgevormd naar TypeScript. Het kan alleen vanaf npm worden geïnstalleerd, niet vanaf GitHub",
-        "fr": "Adapter nécessite node.js >= 22\nAdapter nécessite admin >= 7.7.22\nAdapter nécessite JS-Controller >= 6.0.11\nLes sessions du contrôleur sont réutilisées et le sondage continue malgré les erreurs. Nouveau diagnostic dans « info » [#989]\nUn terminal ou un site défaillant n'interrompt plus l'actualisation\nCorrection d'un arrêt du sondage après une actualisation programmée de « trigger_update »\nJ'ai migré la page des paramètres vers JSON\nCorrection de la création de bons : les paramètres ont été mal passés depuis node-unifi 2\nL'adaptateur a été modifié en TypeScript. Il ne peut être installé que depuis NPM, pas depuis GitHub",
-        "it": "Adapter richiede node.js =2 ora\nAdapter richiede admin >= 7.7.2 ora\nAdapter richiede js-controller >= 6.0.11 ora\nLe sessioni del controller vengono riutilizzate e il polling continua dopo errori, nuovi stati in `info` [#989]\nUn endpoint o sito guasto non interrompe più l'aggiornamento\nRisolto il problema del polling dopo `trigger_update` con un refresh programmato\nHa migrato le impostazioni a JSON config\nRisolto il problema con i voucher: le impostazioni erano errate da node-unifi 2\nL'adattatore è stato rifatto in TypeScript. Si può installare solo da npm, non da GitHub",
-        "es": "El adaptador necesita node.js >= 22 ahora\nEl adaptador necesita admin >= 7.7.22 ahora\nEl adaptador ahora requiere js-controller >= 6.0.11\nLas sesiones del controlador se reutilizan y el ciclo de sondeo sigue corriendo tras errores, nuevos estados de diagnóstico en `info` [#989]\nUn punto final o sitio que falla ya no aborta toda la actualización\nSe ha corregido que el sondeo se detuviera cuando `trigger_update` superponía una actualización\nMigró la página de ajustes a JSON Config\nSe corrigió la creación de vales: los ajustes se pasaron en un orden incorrecto desde node-unifi 2\nEl adaptador se refactorizó a TypeScript. Solo se puede instalar desde npm, no desde GitHub",
-        "pl": "Adapter wymaga teraz node.js >= 22\nAdapter wymaga administratora >= 7.7.22 teraz\nAdapter wymaga kontrolera js->= 6.0.11 teraz\nSesje kontrolera są ponownie wykorzystywane, a pętla sondażu działa po błędach, nowych stanach diagnostycznych w `info` [#989]\nNieudany punkt końcowy lub witryna przestaje przerwać całego odświeżania\nNaprawiono zatrzymanie sondażu po tym, jak `trigger_update` nakładało się na zaplanowane odświeżanie\nPrzeniesiono stronę ustawień do konfiguracji JSON\nNaprawiono tworzenie kuponów: ustawienia zostały przekazane w niewłaściwej kolejności od node-unifi 2\nAdapter został zmieniony do TypeScript. Można go zainstalować tylko z npm, a nie z GitHub",
-        "uk": "Адаптер вимагає node.js >= 22 зараз\nАдаптер вимагає адміністратора >= 7.7.22 зараз\nАдаптер вимагає js-контролера >= 6.0.11 зараз\nСеанси контролера повторно використовуються, і цикл опитування продовжує працювати після помилок, нових діагностичних станів у `info` [#989]\nНевдала кінцева точка або сайт більше не перериває все оновлення\nВиправлено зупинку опитування після того, як `trigger_update` перекривало заплановане оновлення\nПеренесення сторінки налаштувань до конфігурації JSON\nВиправлено створення ваучерів: налаштування були передані в неправильному порядку з моменту node-unifi 2\nАдаптер був перероблений на TypeScript. Його можна встановити лише з npm, а не з GitHub",
-        "zh-cn": "适配器现在需要 node.js >= 22\n适配器现在需要管理员 >= 7.7.22\n适配器现在需要 js-controller >= 6.0.11\n控制器会话被重用，轮询循环在出错后继续运行，`info`出现新的诊断状态 [#989]\n终端节点或站点出现故障不会再中止整个刷新\n修复了 “trigger_update” 与预定刷新重叠后轮询停止的问题\n将设置页面迁移到 JSON 配置\n修复了创建代金券的问题：自 node-unifi 2 以来，设置按错误的顺序传递\n该适配器已重构为 TypeScript。它只能从 npm 安装，不能从 GitHub 安装"
-      }
+    "common": {
+        "name": "unifi",
+        "version": "2.0.0",
+        "news": {
+            "2.0.0": {
+                "en": "Breaking change: 16 states store numbers or booleans instead of text (PoE, load, `system-stats`, port settings, voucher duration). History adapters (e.g. InfluxDB) may reject the new type for an existing series, scripts that compare these states with text must be adjusted. The object IDs do not change\nAll states have a specific role (e.g. `info.ip`, `indicator.reachable`, `switch.enable`), unified units and readable folder names\nNew instances: recommended selection of states, alarms off\nBlocked login of the local user: a clear message, the next attempt after 15 minutes\nInternal errors (HTTP 500) and single timeouts of the controller are logged in one short line\nEndpoints removed in newer UniFi Network versions (404) and the empty gateway statistics of Network 11 are skipped after one message\nUI.com accounts (MFA): a clear message and a hint in the settings to use a local user or an API key\nREADME and settings page for beginners",
+                "de": "Breaking Change: 16 States speichern Zahlen oder Booleans statt Text (PoE, Last, `system-stats`, Port-Einstellungen, Voucher-Dauer). History-Adapter (z. B. InfluxDB) können den neuen Typ für eine bestehende Reihe ablehnen, Skripte, die diese States mit Text vergleichen, müssen angepasst werden. Die Objekt-IDs bleiben gleich\nAlle States haben eine passende Rolle (z. B. `info.ip`, `indicator.reachable`, `switch.enable`), einheitliche Einheiten und lesbare Ordnernamen\nNeue Instanzen: empfohlene Auswahl der States, Alarme aus\nGesperrter Login des lokalen Benutzers: eine klare Meldung, der nächste Versuch nach 15 Minuten\nInterne Fehler (HTTP 500) und einzelne Timeouts des Controllers werden in einer kurzen Zeile protokolliert\nEndpunkte, die neuere UniFi-Network-Versionen entfernt haben (404), und die leere Gateway-Statistik von Network 11 werden nach einer Meldung übersprungen\nUI.com-Konten (MFA): eine klare Meldung und ein Hinweis in den Einstellungen, einen lokalen Benutzer oder einen API-Schlüssel zu verwenden\nREADME und Einstellungsseite für Einsteiger",
+                "ru": "Несовместимое изменение: 16 состояний хранят числа или логические значения вместо текста (PoE, нагрузка, `system-stats`, настройки портов, длительность ваучера). Адаптеры истории (например, InfluxDB) могут отклонить новый тип для существующего ряда, скрипты, сравнивающие эти состояния с текстом, нужно изменить. ID объектов не меняются\nВсе состояния имеют конкретную роль (например, `info.ip`, `indicator.reachable`, `switch.enable`), единые единицы измерения и понятные имена папок\nНовые экземпляры: рекомендуемый выбор состояний, аварийные сигналы выключены\nЗаблокированный вход локального пользователя: понятное сообщение, следующая попытка через 15 минут\nВнутренние ошибки (HTTP 500) и одиночные тайм-ауты контроллера записываются в журнал одной короткой строкой\nКонечные точки, удалённые в новых версиях UniFi Network (404), и пустая статистика шлюза Network 11 пропускаются после одного сообщения\nУчётные записи UI.com (MFA): понятное сообщение и подсказка в настройках использовать локального пользователя или API-ключ\nREADME и страница настроек для начинающих",
+                "pt": "Alteração incompatível: 16 estados guardam números ou booleanos em vez de texto (PoE, carga, `system-stats`, ajustes das portas, duração do voucher). Adaptadores de histórico (p. ex. InfluxDB) podem rejeitar o novo tipo numa série existente, scripts que comparam estes estados com texto precisam de ser ajustados. Os IDs dos objetos não mudam\nTodos os estados têm uma função específica (p. ex. `info.ip`, `indicator.reachable`, `switch.enable`), unidades uniformes e nomes de pastas legíveis\nNovas instâncias: seleção recomendada de estados, alarmes desligados\nLogin bloqueado do usuário local: uma mensagem clara, a próxima tentativa após 15 minutos\nErros internos (HTTP 500) e timeouts isolados do controlador são registrados numa linha curta\nEndpoints removidos em versões mais recentes do UniFi Network (404) e as estatísticas vazias do gateway no Network 11 são ignorados após uma mensagem\nContas UI.com (MFA): uma mensagem clara e uma dica nas configurações para usar um usuário local ou uma chave de API\nREADME e página de configurações para iniciantes",
+                "nl": "Niet-compatibele wijziging: 16 states slaan getallen of booleans op in plaats van tekst (PoE, belasting, `system-stats`, poortinstellingen, voucherduur). Geschiedenisadapters (bijv. InfluxDB) kunnen het nieuwe type voor een bestaande reeks weigeren, scripts die deze states met tekst vergelijken moeten worden aangepast. De object-ID's veranderen niet\nAlle states hebben een specifieke rol (bijv. `info.ip`, `indicator.reachable`, `switch.enable`), uniforme eenheden en leesbare mapnamen\nNieuwe instanties: aanbevolen selectie van states, alarmen uit\nGeblokkeerde login van de lokale gebruiker: een duidelijke melding, de volgende poging na 15 minuten\nInterne fouten (HTTP 500) en losse time-outs van de controller worden in één korte regel gelogd\nEndpoints die in nieuwere UniFi Network-versies zijn verwijderd (404) en de lege gatewaystatistieken van Network 11 worden na één melding overgeslagen\nUI.com-accounts (MFA): een duidelijke melding en een tip in de instellingen om een lokale gebruiker of een API-sleutel te gebruiken\nREADME en instellingenpagina voor beginners",
+                "fr": "Changement incompatible : 16 états enregistrent des nombres ou des booléens au lieu de texte (PoE, charge, `system-stats`, paramètres des ports, durée des bons). Les adaptateurs d'historique (p. ex. InfluxDB) peuvent refuser le nouveau type pour une série existante, les scripts qui comparent ces états à du texte doivent être adaptés. Les ID des objets ne changent pas\nTous les états ont un rôle précis (p. ex. `info.ip`, `indicator.reachable`, `switch.enable`), des unités uniformes et des noms de dossiers lisibles\nNouvelles instances : sélection recommandée des états, alarmes désactivées\nConnexion bloquée de l'utilisateur local : un message clair, la prochaine tentative après 15 minutes\nLes erreurs internes (HTTP 500) et les dépassements de délai isolés du contrôleur sont journalisés en une ligne courte\nLes points d'accès supprimés dans les versions récentes d'UniFi Network (404) et les statistiques vides de la passerelle de Network 11 sont ignorés après un message\nComptes UI.com (MFA) : un message clair et une indication dans les paramètres pour utiliser un utilisateur local ou une clé API\nREADME et page de paramètres pour les débutants",
+                "it": "Modifica incompatibile: 16 stati salvano numeri o booleani invece di testo (PoE, carico, `system-stats`, impostazioni delle porte, durata dei voucher). Gli adattatori di cronologia (ad es. InfluxDB) possono rifiutare il nuovo tipo per una serie esistente, gli script che confrontano questi stati con del testo vanno adattati. Gli ID degli oggetti non cambiano\nTutti gli stati hanno un ruolo specifico (ad es. `info.ip`, `indicator.reachable`, `switch.enable`), unità uniformi e nomi delle cartelle leggibili\nNuove istanze: selezione consigliata degli stati, allarmi disattivati\nLogin bloccato dell'utente locale: un messaggio chiaro, il tentativo successivo dopo 15 minuti\nGli errori interni (HTTP 500) e i singoli timeout del controller vengono registrati in una riga breve\nGli endpoint rimossi nelle versioni più recenti di UniFi Network (404) e le statistiche vuote del gateway di Network 11 vengono saltati dopo un messaggio\nAccount UI.com (MFA): un messaggio chiaro e un suggerimento nelle impostazioni per usare un utente locale o una chiave API\nREADME e pagina delle impostazioni per principianti",
+                "es": "Cambio incompatible: 16 estados guardan números o booleanos en lugar de texto (PoE, carga, `system-stats`, ajustes de los puertos, duración de los vales). Los adaptadores de historial (p. ej. InfluxDB) pueden rechazar el nuevo tipo en una serie existente, hay que ajustar los scripts que comparan estos estados con texto. Los ID de los objetos no cambian\nTodos los estados tienen un rol específico (p. ej. `info.ip`, `indicator.reachable`, `switch.enable`), unidades uniformes y nombres de carpetas legibles\nInstancias nuevas: selección recomendada de estados, alarmas desactivadas\nInicio de sesión bloqueado del usuario local: un mensaje claro, el siguiente intento tras 15 minutos\nLos errores internos (HTTP 500) y los tiempos de espera aislados del controlador se registran en una línea corta\nLos endpoints eliminados en versiones nuevas de UniFi Network (404) y las estadísticas vacías de la puerta de enlace de Network 11 se omiten tras un mensaje\nCuentas de UI.com (MFA): un mensaje claro y una indicación en los ajustes para usar un usuario local o una clave API\nREADME y página de ajustes para principiantes",
+                "pl": "Zmiana niekompatybilna: 16 stanów zapisuje liczby lub wartości logiczne zamiast tekstu (PoE, obciążenie, `system-stats`, ustawienia portów, czas trwania kuponu). Adaptery historii (np. InfluxDB) mogą odrzucić nowy typ dla istniejącej serii, skrypty porównujące te stany z tekstem trzeba dostosować. Identyfikatory obiektów się nie zmieniają\nWszystkie stany mają konkretną rolę (np. `info.ip`, `indicator.reachable`, `switch.enable`), jednolite jednostki i czytelne nazwy folderów\nNowe instancje: zalecany wybór stanów, alarmy wyłączone\nZablokowane logowanie użytkownika lokalnego: jasny komunikat, następna próba po 15 minutach\nBłędy wewnętrzne (HTTP 500) i pojedyncze przekroczenia czasu kontrolera są zapisywane w jednej krótkiej linii\nPunkty końcowe usunięte w nowszych wersjach UniFi Network (404) oraz puste statystyki bramy w Network 11 są pomijane po jednym komunikacie\nKonta UI.com (MFA): jasny komunikat i wskazówka w ustawieniach, aby użyć użytkownika lokalnego lub klucza API\nREADME i strona ustawień dla początkujących",
+                "uk": "Несумісна зміна: 16 станів зберігають числа або логічні значення замість тексту (PoE, навантаження, `system-stats`, налаштування портів, тривалість ваучера). Адаптери історії (наприклад, InfluxDB) можуть відхилити новий тип для наявного ряду, скрипти, що порівнюють ці стани з текстом, треба змінити. ID об'єктів не змінюються\nУсі стани мають конкретну роль (наприклад, `info.ip`, `indicator.reachable`, `switch.enable`), єдині одиниці вимірювання та зрозумілі назви папок\nНові екземпляри: рекомендований вибір станів, тривоги вимкнено\nЗаблокований вхід локального користувача: зрозуміле повідомлення, наступна спроба через 15 хвилин\nВнутрішні помилки (HTTP 500) та поодинокі тайм-аути контролера записуються до журналу одним коротким рядком\nКінцеві точки, видалені в нових версіях UniFi Network (404), і порожня статистика шлюзу Network 11 пропускаються після одного повідомлення\nОблікові записи UI.com (MFA): зрозуміле повідомлення та підказка в налаштуваннях використовувати локального користувача або API-ключ\nREADME і сторінка налаштувань для початківців",
+                "zh-cn": "不兼容变更：16 个状态现在存储数字或布尔值而不是文本（PoE、负载、`system-stats`、端口设置、代金券时长）。历史适配器（例如 InfluxDB）可能拒绝已有序列的新类型，将这些状态与文本比较的脚本需要调整。对象 ID 不变\n所有状态都有具体的角色（例如 `info.ip`、`indicator.reachable`、`switch.enable`）、统一的单位和易读的文件夹名称\n新实例：推荐的状态选择，告警关闭\n本地用户登录被锁定：清晰的提示，15 分钟后再次尝试\n控制器的内部错误（HTTP 500）和单次超时只记录一行简短日志\n较新 UniFi Network 版本中已删除的端点（404）以及 Network 11 中为空的网关统计在提示一次后跳过\nUI.com 账户（MFA）：清晰的提示，并在设置中提示使用本地用户或 API 密钥\n面向新手的 README 和设置页面"
+            },
+            "1.2.1": {
+                "en": "WAN statistics: traffic was counted several times if the history had a gap at its start (e.g. the gateway was offline)",
+                "de": "WAN-Statistik: Der Datenverkehr wurde mehrfach gezählt, wenn am Anfang des Verlaufs eine Lücke war (z. B. weil das Gateway offline war)",
+                "ru": "Статистика WAN: трафик подсчитывался несколько раз, если в начале истории был пробел (например, шлюз был отключен)",
+                "pt": "Estatísticas de WAN: o tráfego era contado várias vezes se o histórico começasse (p. ex., offline)",
+                "nl": "WAN-statistieken: het verkeer werd verschillende keren geteld als er in het begin een hiaat was in de geschiedenis (de gateway was bijvoorbeeld offline)",
+                "fr": "Statistiques WAN : le trafic était compté plusieurs fois si l'historique était vide au début (ex : la passerelle était hors ligne)",
+                "it": "Statistiche WAN: il traffico veniva contato più volte se la cronologia era vuota (ad es. offline)",
+                "es": "Estadísticas de WAN: el tráfico se contaba varias veces si el historial tenía un hueco (p. ej., la puerta estaba desconectada)",
+                "pl": "Statystyki WAN: ruch był liczony kilka razy, jeśli historia miała lukę na początku (np. bramka była offline)",
+                "uk": "Статистика WAN: трафік підраховували кілька разів, якщо історія мала розрив на початку (наприклад, шлюз був офлайн)",
+                "zh-cn": "WAN 统计信息：如果历史记录在开始时有间隔（例如网关处于离线状态），则会对流量进行多次计数"
+            },
+            "1.1.0": {
+                "en": "Authentication with an API key (UniFi OS), as alternative to the local user\nnode-unifi was replaced by an own client without dependencies (no axios with known vulnerabilities, one request less per call)\nThe session of the local user is ended when the adapter stops\nThe default port is empty (UniFi OS) and `common.dataSource` is `poll`\nWAN statistics for UniFi Network 11 and newer: traffic today, yesterday and in the last 24 hours, monthly traffic, state, availability, latency, provider and last speed test of every internet connection [#696]\nWarning when the controller returns no gateway statistics (UniFi Network 11 cleared them)",
+                "de": "Anmeldung mit einem API-Key (UniFi OS) als Alternative zum lokalen Benutzer\nnode-unifi wurde durch einen eigenen Client ohne Abhängigkeiten ersetzt (kein axios mit bekannten Sicherheitslücken, eine Anfrage weniger pro Aufruf)\nDie Sitzung des lokalen Benutzers wird beendet, wenn der Adapter stoppt\nDer Standard-Port ist leer (UniFi OS) und `common.dataSource` ist `poll`\nWAN-Statistik für UniFi Network 11 und neuer: Datenverkehr heute, gestern und in den letzten 24 Stunden, monatlicher Datenverkehr, Status, Verfügbarkeit, Latenz, Anbieter und letzter Speedtest jeder Internetverbindung [#696]\nWarnung, wenn der Controller keine Gateway-Statistik liefert (UniFi Network 11 liefert sie nicht mehr)",
+                "ru": "Аутентификация с помощью ключа API (UniFi OS) в качестве альтернативы локальному пользователю\nnode-unifi был заменен собственным клиентом без зависимостей (никаких axios с известными уязвимостями, на один запрос меньше на каждый вызов)\nСеанс локального пользователя завершается при остановке адаптера\nПорт по умолчанию пуст (UniFi OS), а `Common.DataSource` — это `poll`\nСтатистика WAN для UniFi Network 11 и новее: трафик сегодня, вчера и за последние 24 часа, ежемесячный трафик, состояние, доступность, задержка, провайдер и последний тест скорости каждого интернет-соединения [#696]\nПредупреждение, когда контроллер не возвращает статистику шлюза (UniFi Network 11 удалила их)",
+                "pt": "Autenticação com chave de API (UniFi OS), em vez do usuário local\nnode-unifi foi substituído por um cliente próprio sem dependências (sem axios, um pedido a menos por chamada)\nA sessão do usuário local termina com a parada do adaptador\nA porta padrão é vazia (UniFi OS) e `common.DataSource` é `poll`\nEstatísticas de WAN para UniFi Network 11 e mais recentes: tráfego hoje, ontem e nas últimas 24 horas, tráfego mensal, estado, disponibilidade, latência, provedor e último teste de velocidade [#696]\nAviso quando o controlador não retorna estatísticas de gateway (a UniFi Network 11 as apagou)",
+                "nl": "Authenticatie met een API-sleutel (UniFi OS), als alternatief voor de lokale gebruiker\nnode-unifi werd vervangen door een eigen client zonder afhankelijkheden (geen axios met bekende kwetsbaarheden, één verzoek minder per gesprek)\nDe sessie van de lokale gebruiker wordt beëindigd wanneer de adapter stopt\nDe standaardpoort is leeg (UniFi OS) en `Common.DataSource` is `poll`\nWAN-statistieken voor UniFi Network 11 en nieuwer: verkeer vandaag, gisteren en in de afgelopen 24 uur, maandelijks verkeer, status, beschikbaarheid, latentie, provider en laatste snelheidstest van elke internetverbinding [#696]\nWaarschuwing wanneer de controller geen gateway-statistieken retourneert (UniFi Network 11 heeft ze goedgekeurd)",
+                "fr": "Authentification par clé API (UniFi OS), au lieu de l'utilisateur local\nnode-unifi a été remplacé par son propre client sans dépendances (aucun axios présentant des failles connues, une requête de moins par appel)\nLa session de l'utilisateur local se termine à l'arrêt de l'adaptateur\nLe port par défaut est vide (UniFi OS) et « common.DataSource » est « poll »\nStatistiques WAN pour UniFi Network 11 et versions ultérieures : trafic actuel, hier et ces dernières 24 heures, trafic mensuel, état, disponibilité, latence, fournisseur et dernier test de vitesse de chaque connexion Internet [#696]\nAvertissement si la manette ne renvoie aucune statistique de passerelle (UniFi Network 11 les a effacées)",
+                "it": "Autenticazione con chiave API (UniFi OS), invece dell'utente locale\nnode-unifi è stato sostituito da un client senza dipendenze (no axios con vulnerabilità note, una richiesta in meno)\nL'utente locale termina quando l'adattatore si ferma\nLa porta di default è vuota (UniFi OS) e `common.DataSource` è `poll`\nStatistiche WAN per UniFi Network 11 e successivi: traffico attuale, ieri e nelle ultime 24 ore, mese, stato, disponibilità, latenza, provider e ultimo test di velocità di ogni connessione Internet [#696]\nAvviso se il controller non restituisce dati statistici (UniFi Network 11 li ha cancellati)",
+                "es": "Autenticación con una clave de API (UniFi OS), como alternativa al usuario local\nnode-unifi se sustituyó por un cliente propio sin dependencias (sin axios con vulnerabilidades conocidas, una solicitud menos por llamada)\nLa sesión del usuario local termina cuando el adaptador se detiene\nEl puerto por defecto está vacío (UniFi OS) y `Common.DataSource` es `poll`\nEstadísticas de WAN para UniFi Network 11 y posteriores: tráfico hoy, ayer y las últimas 24 horas, tráfico mensual, estado, disponibilidad, latencia, proveedor y última prueba de velocidad de cada conexión a Internet [#696]\nAviso cuando el mando no devuelve estadísticas de pasarela (UniFi Network 11 las borró)",
+                "pl": "Uwierzytelnianie za pomocą klucza API (UniFi OS) jako alternatywa dla użytkownika lokalnego\nnode-unifi został zastąpiony przez własnego klienta bez zależności (brak aksjów ze znanymi lukami, jedno żądanie mniej na połączenie)\nSesja użytkownika lokalnego zostaje zakończona po zatrzymaniu adaptera\nDomyślny port jest pusty (system operacyjny UniFi), a `common.DataSource` jest `poll`\nStatystyki WAN dla sieci UniFi 11 i nowszych: ruch dzisiaj, wczoraj i w ciągu ostatnich 24 godzin, ruch miesięczny, stan, dostępność, opóźnienie, dostawca i ostatni test prędkości każdego połączenia internetowego [#696]\nOstrzeżenie, gdy kontroler nie zwraca żadnych statystyk bramy (UniFi Network 11 je wyczyścił)",
+                "uk": "Аутентифікація за допомогою ключа API (UniFi OS), як альтернатива локальному користувачеві\nnode-unifi був замінений власним клієнтом без залежностей (без axios з відомими вразливостями, один запит менше за виклик)\nСеанс локального користувача завершується, коли адаптер зупиняється\nПорт за замовчуванням порожній (UniFi OS), а `Common.DataSource` - ``poll`\nСтатистика WAN для UniFi Network 11 і новіші: трафік сьогодні, вчора і за останні 24 години, місячний трафік, стан, наявність, затримка, провайдер та останній тест швидкості кожного підключення до Інтернету [#696]\nПопередження, коли контролер не повертає статистику шлюзу (UniFi Network 11 очистила їх)",
+                "zh-cn": "使用 API 密钥（UniFi OS）进行身份验证，以替代本地用户\nnode-unifi 被没有依赖关系的自己的客户端所取代（没有存在已知漏洞的 axios，每次调用少一个请求）\n当适配器停止时，本地用户的会话即结束\n默认端口为空（UniFi 操作系统）且 `common.DataSource`为`poll`\nUniFi Network 11 及更高版本的广域网统计数据：今天、昨天和过去 24 小时内的流量、每月流量、状态、可用性、延迟、提供商和每个互联网连接的最后一次速度测试 [#696]\n当控制器未返回网关统计数据时发出警告（UniFi 网络 11 已清除这些统计信息）"
+            },
+            "1.0.3": {
+                "en": "Settings page: size attributes for all fields of the tabs, as required by the repository checker (W5507)\nFixed the `blocked` state of the clients: it was not updated when all states were selected (empty states filter), and with several sites the refresh of one site reset the blocked clients of the others\nFixed commands (restart, LED, PoE, block, ...) failing before the first refresh or after an expired session [#725]\nSwitching PoE creates the missing override of a port instead of failing [#658]",
+                "de": "Einstellungsseite: Größenattribute für alle Felder der Tabs, wie vom Repository-Checker gefordert (W5507)\nBehoben: Der State `blocked` der Clients wurde nicht aktualisiert, wenn alle States ausgewählt waren (leerer Filter), und bei mehreren Sites setzte die Aktualisierung einer Site die blockierten Clients der anderen zurück\nBehoben: Befehle (Neustart, LED, PoE, Blockieren, ...) schlugen vor der ersten Aktualisierung oder nach einer abgelaufenen Sitzung fehl [#725]\nPoE-Schalten legt den fehlenden Override eines Ports an, statt fehlzuschlagen [#658]",
+                "ru": "Страница настроек: атрибуты размера для всех полей вкладок в соответствии с требованиями средства проверки репозитория (W5507)\nИсправлено состояние «заблокировано» клиентов: оно не обновлялось при выборе всех состояний (фильтр пустых состояний), а на нескольких сайтах обновление одного сайта приводило к сбросу заблокированных клиентов других\nИсправлены ошибки команд (перезапуск, светодиод, PoE, блокировка и т. д.) перед первым обновлением или после истечения сеанса [#725]\nПереключение PoE приводит к отсутствию переопределения порта, а не к сбою [#658]",
+                "pt": "Página de ajustes: atributos de tamanho de todos os campos das guias, conforme exigido pelo W5507\nCorrigido o estado “bloqueado” dos clientes: não era atualizado ao selecionar todos os estados (filtro de estados vazios) e, com vários sites, reinicializar os bloqueados dos outros\nComandos fixos (reiniciar, LED, PoE, bloquear,...) falharam antes da atualização ou da expiração [#725]\nA troca de PoE cria a falta de uma porta em vez de falhar [#658]",
+                "nl": "Instellingenpagina: groottekarakteristieken voor alle velden van de tabbladen, zoals vereist door de repository-checker (W5507)\nDe status 'geblokkeerd' van de clients is opgelost: deze werd niet bijgewerkt toen alle statussen werden geselecteerd (filter voor lege statussen), en bij meerdere sites werd de geblokkeerde client van de andere opnieuw ingesteld door het vernieuwen van één site\nOpdrachten opgelost (herstarten, LED, PoE, blokkeren,...) die niet lukten voor de eerste verversing of na een verlopen sessie [#725]\nDoor over te schakelen naar PoE ontbreekt een poort in plaats van een storing [#658]",
+                "fr": "Page des paramètres : attributs de taille pour tous les champs des onglets, comme l'exige le Repository Checker (W5507)\nCorrection de l'état « bloqué » des clients : il n'était pas mis à jour lorsque tous les états étaient sélectionnés (filtre d'états vide), et sur plusieurs sites, le rafraîchissement d'un site réinitialisait les clients bloqués des autres\nCorrection d'un échec des commandes (redémarrage, LED, PoE, blocage,...) avant la fin d'une session [#725]\nLe changement de PoE entraîne le remplacement d'un port au lieu d'échouer [#658]",
+                "it": "Pagina impostazioni: dimensioni per tutti i campi delle schede, come richiesto dal Repository Checker (W5507)\nRisolto lo stato «bloccato» dei client: non veniva aggiornato selezionando tutti gli stati (filtro vuoto) e con diversi siti l'aggiornamento di un sito reimpostava i client bloccati degli altri\nComandi fissi (riavvio, LED, PoE, blocco,...) che mancavano prima o dopo una sessione scaduta [#725]\nIl cambio PoE crea l'override mancante di una porta invece di fallire [#658]",
+                "es": "Página de ajustes: atributos de tamaño para todos los campos de las pestañas, según lo exige el comprobador (W5507)\nSe corrigió el estado «bloqueado» de los clientes: no se actualizó cuando se seleccionaron todos los estados (filtro de estados vacío) y, con varios sitios, al actualizar un sitio, se restablecieron los clientes bloqueados de los demás\nComandos fijos (reiniciar, LED, PoE, bloquear,...) que fallaban antes de la primera actualización o tras caducar la sesión [#725]\nCambiar PoE crea la anulación que falta de un puerto en lugar de fallar [#658]",
+                "pl": "Strona ustawień: atrybuty rozmiaru dla wszystkich pól kart, zgodnie z wymaganiami narzędzia sprawdzającego repozytorium (W5507)\nNaprawiono „zablokowany” stan klientów: nie był aktualizowany, gdy wybrano wszystkie stany (pusty filtr stanów), a w przypadku kilku witryn odświeżanie jednej witryny resetowało zablokowanych klientów innych\nNaprawiono błąd poleceń (restart, LED, PoE, block,...) przed pierwszym odświeżeniem lub po wygasłej sesji [#725]\nPrzełączanie PoE powoduje brakujące nadpisanie portu zamiast niepowodzenia [#658]",
+                "uk": "Сторінка налаштувань: атрибути розміру для всіх полів вкладок, як того вимагає перевірка сховища (W5507)\nВиправлено «заблокований» стан клієнтів: він не оновлювався, коли були вибрані всі стани (фільтр порожніх станів), а з кількома сайтами оновлення одного сайту скинуло заблоковані клієнти інших\nВиправлені команди (перезапуск, світлодіод, PoE, блок,...), що виходять з ладу перед першим оновленням або після закінчення сеансу [#725]\nКомутація PoE створює відсутнє перевизначення порту замість того, щоб вийти з ладу [#658]",
+                "zh-cn": "设置页面：存储库检查器要求的选项卡所有字段的大小属性 (W5507)\n修复了客户端的 “已屏蔽” 状态：选择所有状态时不会更新（空状态过滤器），并且在多个站点的刷新一个站点会重置其他站点的被封锁客户端\n修复了第一次刷新之前或会话过期后命令（重启、LED、PoE、封锁等）失败的问题 [#725]\n切换 PoE 会导致缺少替代端口，而不是发生故障 [#658]"
+            },
+            "1.0.2": {
+                "en": "Adapter requires node.js >= 22 now\nAdapter requires admin >= 7.7.22 now\nAdapter requires js-controller >= 6.0.11 now\nController sessions are reused and the polling loop keeps running after errors, new diagnostic states in `info` [#989]\nA failing endpoint or site no longer aborts the whole refresh\nFixed polling stopping after `trigger_update` overlapped a scheduled refresh\nMigrated the settings page to JSON config\nFixed creating vouchers: the settings were passed in the wrong order since node-unifi 2\nThe adapter was refactored to TypeScript. It can be installed from npm only, not from GitHub",
+                "de": "Adapter benötigt jetzt node.js >= 22\nAdapter benötigt jetzt admin >= 7.7.22\nAdapter benötigt jetzt JS-Controller >= 6.0.11\nController-Sitzungen werden wiederverwendet und bei Fehlern läuft der Polling Loop weiter. #989\nEin defekter Endpunkt oder Site bricht nicht mehr den Refresh ab\nAbfragestopp behoben, nachdem `trigger_update` ein Update überlappte\nEinstellseite zur JSON-Konfiguration migriert\nVoucherstellung behoben: Die Werte wurden seit Node-Unifi 2 falsch eingegeben\nDer Adapter wurde auf TypeScript umgestellt. Nur von npm installierbar, nicht von GitHub",
+                "ru": "Теперь для адаптера требуется файл node.js >= 22\nДля адаптера теперь требуется администратор >= 7.7.22\nТеперь для адаптера требуется js-контроллер >= 6.0.11\nСеансы контроллера используются повторно, а цикл опроса продолжает работать после ошибок и новых диагностических состояний в `info` [#989]\nНеисправная конечная точка или сайт больше не прерывают полное обновление\nИсправлена остановка опроса после перекрытия `trigger_update` запланированного обновления\nПеренесена страница настроек в конфигурацию JSON\nИсправлено создание ваучеров: настройки передавались в неправильном порядке, начиная с node-unifi 2\nАдаптер был переработан на TypeScript. Его можно установить только из npm, а не из GitHub",
+                "pt": "O adaptador exige node.js >= 2\nAgora o adaptador exige admin >= 7.7.2\nO adaptador exige js-controller >= 6.0.11\nAs sessões do controlador são reutilizadas e o polling loop segue após erros e novos diagnósticos em `info` [#989]\nUm endpoint ou site com falha não aborta mais a atualização\nCorrigido o fim da enquete após a sobreposição de `trigger_update`\nMigrou a página de ajustes para JSON\nCorrigida a criação de vouchers: os ajustes eram errados desde o node-unifi 2\nO adaptador foi adaptado ao TypeScript. Só pode ser instalado do npm, não do GitHub",
+                "nl": "Voor de adapter is nu node.js >= 22 nodig\nAdapter vereist nu admin >= 7.7.22\nVoor de adapter is nu een js-controller >= 6.0.11 nodig\nDe sessies van de controller worden opnieuw gebruikt en de polling-lus blijft draaien na fouten. Nieuwe diagnosetoestanden in `info` [#989]\nAls een eindpunt of site niet meer werkt, wordt de hele vernieuwing niet langer afgebroken\nDe peiling is gestopt nadat `trigger_update` een geplande vernieuwing overlapt\nDe instellingenpagina is overgezet naar de JSON-configuratie\nHet aanmaken van vouchers is opgelost: de instellingen zijn sinds node-unifi 2 in de verkeerde volgorde doorgegeven\nDe adapter is omgevormd naar TypeScript. Het kan alleen vanaf npm worden geïnstalleerd, niet vanaf GitHub",
+                "fr": "Adapter nécessite node.js >= 22\nAdapter nécessite admin >= 7.7.22\nAdapter nécessite JS-Controller >= 6.0.11\nLes sessions du contrôleur sont réutilisées et le sondage continue malgré les erreurs. Nouveau diagnostic dans « info » [#989]\nUn terminal ou un site défaillant n'interrompt plus l'actualisation\nCorrection d'un arrêt du sondage après une actualisation programmée de « trigger_update »\nJ'ai migré la page des paramètres vers JSON\nCorrection de la création de bons : les paramètres ont été mal passés depuis node-unifi 2\nL'adaptateur a été modifié en TypeScript. Il ne peut être installé que depuis NPM, pas depuis GitHub",
+                "it": "Adapter richiede node.js =2 ora\nAdapter richiede admin >= 7.7.2 ora\nAdapter richiede js-controller >= 6.0.11 ora\nLe sessioni del controller vengono riutilizzate e il polling continua dopo errori, nuovi stati in `info` [#989]\nUn endpoint o sito guasto non interrompe più l'aggiornamento\nRisolto il problema del polling dopo `trigger_update` con un refresh programmato\nHa migrato le impostazioni a JSON config\nRisolto il problema con i voucher: le impostazioni erano errate da node-unifi 2\nL'adattatore è stato rifatto in TypeScript. Si può installare solo da npm, non da GitHub",
+                "es": "El adaptador necesita node.js >= 22 ahora\nEl adaptador necesita admin >= 7.7.22 ahora\nEl adaptador ahora requiere js-controller >= 6.0.11\nLas sesiones del controlador se reutilizan y el ciclo de sondeo sigue corriendo tras errores, nuevos estados de diagnóstico en `info` [#989]\nUn punto final o sitio que falla ya no aborta toda la actualización\nSe ha corregido que el sondeo se detuviera cuando `trigger_update` superponía una actualización\nMigró la página de ajustes a JSON Config\nSe corrigió la creación de vales: los ajustes se pasaron en un orden incorrecto desde node-unifi 2\nEl adaptador se refactorizó a TypeScript. Solo se puede instalar desde npm, no desde GitHub",
+                "pl": "Adapter wymaga teraz node.js >= 22\nAdapter wymaga administratora >= 7.7.22 teraz\nAdapter wymaga kontrolera js->= 6.0.11 teraz\nSesje kontrolera są ponownie wykorzystywane, a pętla sondażu działa po błędach, nowych stanach diagnostycznych w `info` [#989]\nNieudany punkt końcowy lub witryna przestaje przerwać całego odświeżania\nNaprawiono zatrzymanie sondażu po tym, jak `trigger_update` nakładało się na zaplanowane odświeżanie\nPrzeniesiono stronę ustawień do konfiguracji JSON\nNaprawiono tworzenie kuponów: ustawienia zostały przekazane w niewłaściwej kolejności od node-unifi 2\nAdapter został zmieniony do TypeScript. Można go zainstalować tylko z npm, a nie z GitHub",
+                "uk": "Адаптер вимагає node.js >= 22 зараз\nАдаптер вимагає адміністратора >= 7.7.22 зараз\nАдаптер вимагає js-контролера >= 6.0.11 зараз\nСеанси контролера повторно використовуються, і цикл опитування продовжує працювати після помилок, нових діагностичних станів у `info` [#989]\nНевдала кінцева точка або сайт більше не перериває все оновлення\nВиправлено зупинку опитування після того, як `trigger_update` перекривало заплановане оновлення\nПеренесення сторінки налаштувань до конфігурації JSON\nВиправлено створення ваучерів: налаштування були передані в неправильному порядку з моменту node-unifi 2\nАдаптер був перероблений на TypeScript. Його можна встановити лише з npm, а не з GitHub",
+                "zh-cn": "适配器现在需要 node.js >= 22\n适配器现在需要管理员 >= 7.7.22\n适配器现在需要 js-controller >= 6.0.11\n控制器会话被重用，轮询循环在出错后继续运行，`info`出现新的诊断状态 [#989]\n终端节点或站点出现故障不会再中止整个刷新\n修复了 “trigger_update” 与预定刷新重叠后轮询停止的问题\n将设置页面迁移到 JSON 配置\n修复了创建代金券的问题：自 node-unifi 2 以来，设置按错误的顺序传递\n该适配器已重构为 TypeScript。它只能从 npm 安装，不能从 GitHub 安装"
+            }
+        },
+        "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": [
+                        "oldVersion<3.0.0",
+                        "newVersion>=3.0.0"
+                    ]
+                },
+                "title": {
+                    "en": "Version 3: new object structure",
+                    "de": "Version 3: neue Objektstruktur",
+                    "ru": "Версия 3: новая структура объектов",
+                    "pt": "Versão 3: nova estrutura de objetos",
+                    "nl": "Versie 3: nieuwe objectstructuur",
+                    "fr": "Version 3 : nouvelle structure des objets",
+                    "it": "Versione 3: nuova struttura degli oggetti",
+                    "es": "Versión 3: nueva estructura de objetos",
+                    "pl": "Wersja 3: nowa struktura obiektów",
+                    "uk": "Версія 3: нова структура об'єктів",
+                    "zh-cn": "版本 3：新的对象结构"
+                },
+                "text": {
+                    "en": "This update changes object IDs and data types. The device objects are sorted like the official UniFi Network API (e.g. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), times are timestamps, alarms and gateway traffic are removed. Coming from version 1, 16 states also store numbers or true/false instead of text (since 2.0.0). History settings, rooms and functions are moved automatically at the first start. Scripts and visualizations with the old IDs or text comparisons must be adjusted, and history adapters (e.g. InfluxDB) may reject the new type for an existing series.",
+                    "de": "Dieses Update ändert Objekt-IDs und Datentypen. Die Geräte-Objekte sind wie in der offiziellen UniFi-Network-API sortiert (z. B. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), Zeiten sind Zeitstempel, Alarme und Gateway-Traffic entfallen. Wer von Version 1 kommt: 16 Datenpunkte speichern außerdem Zahlen oder true/false statt Text (seit 2.0.0). Verlaufseinstellungen, Räume und Funktionen werden beim ersten Start automatisch übernommen. Skripte und Visualisierungen mit den alten IDs oder Textvergleichen müssen angepasst werden, und Verlaufsadapter (z. B. InfluxDB) können den neuen Typ für eine bestehende Reihe ablehnen.",
+                    "ru": "Это обновление изменяет идентификаторы объектов и типы данных. Объекты устройств упорядочены как в официальном UniFi Network API (например, port_table → ports, system-stats → statistics, wan.wan → wan.wan1), время хранится как метка времени, тревоги и трафик шлюза удалены. При обновлении с версии 1: 16 состояний также хранят числа или true/false вместо текста (с 2.0.0). Настройки истории, комнаты и функции переносятся автоматически при первом запуске. Скрипты и визуализации со старыми ID или текстовыми сравнениями нужно изменить, а адаптеры истории (например, InfluxDB) могут отклонить новый тип для существующего ряда.",
+                    "pt": "Esta atualização altera IDs de objetos e tipos de dados. Os objetos dos dispositivos são organizados como na API oficial UniFi Network (p. ex. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), as horas são carimbos de data/hora, os alarmes e o tráfego do gateway são removidos. Vindo da versão 1, 16 estados também guardam números ou true/false em vez de texto (desde 2.0.0). As definições de histórico, divisões e funções são transferidas automaticamente no primeiro arranque. Scripts e visualizações com os IDs antigos ou comparações de texto têm de ser ajustados, e os adaptadores de histórico (p. ex. InfluxDB) podem rejeitar o novo tipo numa série existente.",
+                    "nl": "Deze update wijzigt object-ID's en gegevenstypen. De apparaatobjecten zijn geordend zoals in de officiële UniFi Network API (bijv. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), tijden zijn tijdstempels, alarmen en gateway-verkeer zijn verwijderd. Vanaf versie 1: 16 states slaan bovendien getallen of true/false op in plaats van tekst (sinds 2.0.0). Geschiedenisinstellingen, kamers en functies worden bij de eerste start automatisch overgenomen. Scripts en visualisaties met de oude ID's of tekstvergelijkingen moeten worden aangepast, en geschiedenisadapters (bijv. InfluxDB) kunnen het nieuwe type voor een bestaande reeks weigeren.",
+                    "fr": "Cette mise à jour modifie les ID des objets et les types de données. Les objets des appareils sont organisés comme dans l'API officielle UniFi Network (p. ex. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), les heures sont des horodatages, les alarmes et le trafic de la passerelle sont supprimés. Depuis la version 1 : 16 états enregistrent en plus des nombres ou true/false au lieu de texte (depuis 2.0.0). Les paramètres d'historique, les pièces et les fonctions sont repris automatiquement au premier démarrage. Les scripts et visualisations utilisant les anciens ID ou des comparaisons de texte doivent être adaptés, et les adaptateurs d'historique (p. ex. InfluxDB) peuvent refuser le nouveau type pour une série existante.",
+                    "it": "Questo aggiornamento modifica gli ID degli oggetti e i tipi di dati. Gli oggetti dei dispositivi sono ordinati come nell'API ufficiale UniFi Network (ad es. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), gli orari sono timestamp, allarmi e traffico del gateway sono rimossi. Provenendo dalla versione 1, 16 stati memorizzano inoltre numeri o true/false invece di testo (dalla 2.0.0). Impostazioni della cronologia, stanze e funzioni vengono trasferite automaticamente al primo avvio. Script e visualizzazioni con i vecchi ID o confronti di testo devono essere adattati e gli adattatori di cronologia (ad es. InfluxDB) possono rifiutare il nuovo tipo per una serie esistente.",
+                    "es": "Esta actualización cambia los ID de los objetos y los tipos de datos. Los objetos de los dispositivos se ordenan como en la API oficial de UniFi Network (p. ej. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), las horas son marcas de tiempo y se eliminan las alarmas y el tráfico del gateway. Desde la versión 1: 16 estados además guardan números o true/false en lugar de texto (desde 2.0.0). La configuración del historial, las habitaciones y las funciones se transfieren automáticamente en el primer inicio. Los scripts y visualizaciones con los ID antiguos o comparaciones de texto deben adaptarse, y los adaptadores de historial (p. ej. InfluxDB) pueden rechazar el nuevo tipo para una serie existente.",
+                    "pl": "Ta aktualizacja zmienia identyfikatory obiektów i typy danych. Obiekty urządzeń są uporządkowane jak w oficjalnym API UniFi Network (np. port_table → ports, system-stats → statistics, wan.wan → wan.wan1), czasy są znacznikami czasu, alarmy i ruch bramy zostały usunięte. Przy aktualizacji z wersji 1: 16 stanów zapisuje też liczby lub true/false zamiast tekstu (od 2.0.0). Ustawienia historii, pomieszczenia i funkcje są przenoszone automatycznie przy pierwszym uruchomieniu. Skrypty i wizualizacje ze starymi ID lub porównaniami tekstu trzeba dostosować, a adaptery historii (np. InfluxDB) mogą odrzucić nowy typ dla istniejącej serii.",
+                    "uk": "Це оновлення змінює ідентифікатори об'єктів і типи даних. Об'єкти пристроїв упорядковано як в офіційному UniFi Network API (наприклад, port_table → ports, system-stats → statistics, wan.wan → wan.wan1), час зберігається як мітка часу, тривоги та трафік шлюзу видалено. Під час оновлення з версії 1: 16 станів також зберігають числа або true/false замість тексту (з 2.0.0). Налаштування історії, кімнати й функції переносяться автоматично під час першого запуску. Скрипти й візуалізації зі старими ID або текстовими порівняннями потрібно змінити, а адаптери історії (наприклад, InfluxDB) можуть відхилити новий тип для наявного ряду.",
+                    "zh-cn": "此更新会更改对象 ID 和数据类型。设备对象按照官方 UniFi Network API 排列（例如 port_table → ports、system-stats → statistics、wan.wan → wan.wan1），时间改为时间戳，警报和网关流量已移除。从版本 1 升级时：另有 16 个状态改为存储数字或 true/false 而不是文本（自 2.0.0 起）。历史设置、房间和功能会在首次启动时自动迁移。使用旧 ID 或文本比较的脚本和可视化需要调整，历史适配器（例如 InfluxDB）可能会拒绝现有序列的新类型。"
+                },
+                "link": "https://github.com/iobroker-community-adapters/ioBroker.unifi#update-from-version-1-or-2",
+                "linkText": {
+                    "en": "Table old → new",
+                    "de": "Tabelle alt → neu",
+                    "ru": "Таблица старое → новое",
+                    "pt": "Tabela antigo → novo",
+                    "nl": "Tabel oud → nieuw",
+                    "fr": "Tableau ancien → nouveau",
+                    "it": "Tabella vecchio → nuovo",
+                    "es": "Tabla antiguo → nuevo",
+                    "pl": "Tabela stare → nowe",
+                    "uk": "Таблиця старе → нове",
+                    "zh-cn": "新旧对照表"
+                },
+                "level": "warn",
+                "buttons": [
+                    "agree",
+                    "cancel"
+                ]
+            }
+        ],
+        "titleLang": {
+            "en": "UniFi Network",
+            "de": "UniFi-Netzwerk",
+            "ru": "Сеть UniFi",
+            "pt": "Rede UniFi",
+            "nl": "UniFi-netwerk",
+            "fr": "Réseau UniFi",
+            "it": "Rete UniFi",
+            "es": "Red UniFi",
+            "pl": "Sieć Uni-Fi",
+            "zh-cn": "UniFi 网络",
+            "uk": "Мережа UniFi"
+        },
+        "desc": {
+            "en": "Communicates with a UniFi-Controller",
+            "de": "Kommuniziert mit einem UniFi-Controller",
+            "ru": "Общается с UniFi-контроллером",
+            "pt": "Comunica-se com um controlador UniFi",
+            "nl": "Communiceert met een UniFi-controller",
+            "fr": "Communique avec un contrôleur UniFi",
+            "it": "Comunica con un controller UniFi",
+            "es": "Se comunica con un controlador UniFi",
+            "pl": "Komunikuje się z kontrolerem UniFi",
+            "zh-cn": "与UniFi控制器通信",
+            "uk": "Зв'язується з UniFi-контролером"
+        },
+        "authors": [
+            "braindead1 <os.braindead1@gmail.com>",
+            "Jens Maus <mail@jens-maus.de>",
+            "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
+        ],
+        "keywords": [
+            "unifi",
+            "wifi",
+            "network"
+        ],
+        "licenseInformation": {
+            "license": "MIT",
+            "type": "free"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "unifi.svg",
+        "enabled": false,
+        "plugins": {
+            "sentry": {
+                "dsn": "https://19160d9f5a71442098ebaa42ef3284c7@sentry.iobroker.net/59"
+            }
+        },
+        "localLinks": {
+            "_default": {
+                "link": "https://%controllerIp%:%controllerPort%"
+            }
+        },
+        "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.svg",
+        "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
+        "loglevel": "info",
+        "tier": 2,
+        "mode": "daemon",
+        "type": "network",
+        "compact": true,
+        "nogit": true,
+        "supportCustoms": false,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=7.7.22"
+            }
+        ],
+        "adminUI": {
+            "config": "json"
+        }
     },
-    "titleLang": {
-      "en": "UniFi Network",
-      "de": "UniFi-Netzwerk",
-      "ru": "Сеть UniFi",
-      "pt": "Rede UniFi",
-      "nl": "UniFi-netwerk",
-      "fr": "Réseau UniFi",
-      "it": "Rete UniFi",
-      "es": "Red UniFi",
-      "pl": "Sieć Uni-Fi",
-      "zh-cn": "UniFi 网络",
-      "uk": "Мережа UniFi"
+    "native": {
+        "controllerIp": "",
+        "controllerPort": "",
+        "authMode": "credentials",
+        "controllerUsername": "",
+        "controllerPassword": "",
+        "apiKey": "",
+        "updateInterval": 60,
+        "updateClients": true,
+        "blacklistClients": false,
+        "updateDevices": true,
+        "updateHealth": true,
+        "updateNetworks": true,
+        "updateSysinfo": true,
+        "updateVouchers": true,
+        "updateVouchersNoUsed": false,
+        "updateWlans": true,
+        "updateDpi": false,
+        "updateWan": false,
+        "objectsFilter": {
+            "clients": [],
+            "devices": [],
+            "wlans": [],
+            "networks": [],
+            "health": []
+        },
+        "statesFilter": {
+            "sysinfo": [],
+            "clients": [
+                "clients.client.name",
+                "clients.client.hostname",
+                "clients.client.ip",
+                "clients.client.mac",
+                "clients.client.is_online",
+                "clients.client.is_wired",
+                "clients.client.is_guest",
+                "clients.client.essid",
+                "clients.client.network",
+                "clients.client.last_seen",
+                "clients.client.uptime",
+                "clients.client.signal",
+                "clients.client.satisfaction",
+                "clients.client.blocked",
+                "clients.client.reconnect"
+            ],
+            "devices": [
+                "devices.device.name",
+                "devices.device.model",
+                "devices.device.ip",
+                "devices.device.mac",
+                "devices.device.state",
+                "devices.device.version",
+                "devices.device.upgradable",
+                "devices.device.uptime",
+                "devices.device.num_sta",
+                "devices.device.satisfaction",
+                "devices.device.general_temperature",
+                "devices.device.overheating",
+                "devices.device.led_override",
+                "devices.device.restart",
+                "devices.device.statistics.cpu",
+                "devices.device.statistics.mem",
+                "devices.device.wan1.ip",
+                "devices.device.wan1.ipv6",
+                "devices.device.wan1.up",
+                "devices.device.wan1.port",
+                "devices.device.wan1.interface",
+                "devices.device.wan1.speed",
+                "devices.device.wan1.latency",
+                "devices.device.wan1.availability",
+                "devices.device.wan2.ip",
+                "devices.device.wan2.ipv6",
+                "devices.device.wan2.up",
+                "devices.device.wan2.port",
+                "devices.device.wan2.interface",
+                "devices.device.wan2.speed",
+                "devices.device.wan2.latency",
+                "devices.device.wan2.availability",
+                "devices.device.ports.port.name",
+                "devices.device.ports.port.enable",
+                "devices.device.ports.port.speed",
+                "devices.device.ports.port.poe_power",
+                "devices.device.ports.port.poe_enabled",
+                "devices.device.ports.port.poe_cycle"
+            ],
+            "wlans": [],
+            "networks": [],
+            "health": [],
+            "vouchers": [],
+            "dpi": [],
+            "wan": []
+        },
+        "clientsIsOnlineOffset": 30,
+        "createVouchersNumber": 1,
+        "createVouchersDuration": 60,
+        "createVouchersQuota": 1,
+        "createVouchersUploadLimit": null,
+        "createVouchersDownloadLimit": null,
+        "createVouchersByteQuota": null,
+        "createVouchersNote": "",
+        "ignoreSSLErrors": true
     },
-    "desc": {
-      "en": "Communicates with a UniFi-Controller",
-      "de": "Kommuniziert mit einem UniFi-Controller",
-      "ru": "Общается с UniFi-контроллером",
-      "pt": "Comunica-se com um controlador UniFi",
-      "nl": "Communiceert met een UniFi-controller",
-      "fr": "Communique avec un contrôleur UniFi",
-      "it": "Comunica con un controller UniFi",
-      "es": "Se comunica con un controlador UniFi",
-      "pl": "Komunikuje się z kontrolerem UniFi",
-      "zh-cn": "与UniFi控制器通信",
-      "uk": "Зв'язується з UniFi-контролером"
-    },
-    "authors": [
-      "braindead1 <os.braindead1@gmail.com>",
-      "Jens Maus <mail@jens-maus.de>",
-      "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
+    "protectedNative": [
+        "controllerPassword",
+        "apiKey"
     ],
-    "keywords": [
-      "unifi",
-      "wifi",
-      "network"
+    "encryptedNative": [
+        "controllerPassword",
+        "apiKey"
     ],
-    "licenseInformation": {
-      "license": "MIT",
-      "type": "free"
-    },
-    "platform": "Javascript/Node.js",
-    "icon": "unifi.svg",
-    "enabled": false,
-    "plugins": {
-      "sentry": {
-        "dsn": "https://19160d9f5a71442098ebaa42ef3284c7@sentry.iobroker.net/59"
-      }
-    },
-    "localLinks": {
-      "_default": {
-        "link": "https://%controllerIp%:%controllerPort%"
-      }
-    },
-    "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.unifi/master/admin/unifi.svg",
-    "readme": "https://github.com/iobroker-community-adapters/ioBroker.unifi/blob/master/README.md",
-    "loglevel": "info",
-    "tier": 2,
-    "mode": "daemon",
-    "type": "network",
-    "compact": true,
-    "nogit": true,
-    "supportCustoms": false,
-    "connectionType": "local",
-    "dataSource": "poll",
-    "dependencies": [
-      {
-        "js-controller": ">=6.0.11"
-      }
-    ],
-    "globalDependencies": [
-      {
-        "admin": ">=7.7.22"
-      }
-    ],
-    "adminUI": {
-      "config": "json"
-    }
-  },
-  "native": {
-    "controllerIp": "",
-    "controllerPort": "",
-    "authMode": "credentials",
-    "controllerUsername": "",
-    "controllerPassword": "",
-    "apiKey": "",
-    "updateInterval": 60,
-    "updateClients": true,
-    "blacklistClients": false,
-    "updateDevices": true,
-    "updateHealth": true,
-    "updateNetworks": true,
-    "updateSysinfo": true,
-    "updateVouchers": true,
-    "updateVouchersNoUsed": false,
-    "updateWlans": true,
-    "updateAlarms": false,
-    "updateAlarmsNoArchived": false,
-    "updateDpi": false,
-    "updateGatewayTraffic": false,
-    "gatewayTrafficMaxDays": 7,
-    "updateWan": false,
-    "objectsFilter": {
-      "clients": [],
-      "devices": [],
-      "wlans": [],
-      "networks": [],
-      "health": []
-    },
-    "statesFilter": {
-      "sysinfo": [],
-      "clients": [
-        "clients.client.name",
-        "clients.client.hostname",
-        "clients.client.ip",
-        "clients.client.mac",
-        "clients.client.is_online",
-        "clients.client.is_wired",
-        "clients.client.is_guest",
-        "clients.client.essid",
-        "clients.client.network",
-        "clients.client.last_seen",
-        "clients.client.uptime",
-        "clients.client.signal",
-        "clients.client.satisfaction",
-        "clients.client.blocked",
-        "clients.client.reconnect"
-      ],
-      "devices": [
-        "devices.device.name",
-        "devices.device.model",
-        "devices.device.ip",
-        "devices.device.mac",
-        "devices.device.state",
-        "devices.device.version",
-        "devices.device.upgradable",
-        "devices.device.uptime",
-        "devices.device.num_sta",
-        "devices.device.satisfaction",
-        "devices.device.general_temperature",
-        "devices.device.overheating",
-        "devices.device.led_override",
-        "devices.device.restart",
-        "devices.device.system-stats.cpu",
-        "devices.device.system-stats.mem",
-        "devices.device.wan1.ip",
-        "devices.device.wan1.ipv6",
-        "devices.device.wan1.up",
-        "devices.device.wan1.port",
-        "devices.device.wan1.interface",
-        "devices.device.wan1.speed",
-        "devices.device.wan1.latency",
-        "devices.device.wan1.availability",
-        "devices.device.wan2.ip",
-        "devices.device.wan2.ipv6",
-        "devices.device.wan2.up",
-        "devices.device.wan2.port",
-        "devices.device.wan2.interface",
-        "devices.device.wan2.speed",
-        "devices.device.wan2.latency",
-        "devices.device.wan2.availability",
-        "devices.device.port_table.port.name",
-        "devices.device.port_table.port.enable",
-        "devices.device.port_table.port.speed",
-        "devices.device.port_table.port.poe_power",
-        "devices.device.port_table.port.port_poe_enabled",
-        "devices.device.port_table.port.port_poe_cycle"
-      ],
-      "wlans": [],
-      "networks": [],
-      "health": [],
-      "vouchers": [],
-      "alarms": [],
-      "dpi": [],
-      "gateway_traffic": [],
-      "wan": []
-    },
-    "clientsIsOnlineOffset": 30,
-    "createVouchersNumber": 1,
-    "createVouchersDuration": 60,
-    "createVouchersQuota": 1,
-    "createVouchersUploadLimit": null,
-    "createVouchersDownloadLimit": null,
-    "createVouchersByteQuota": null,
-    "createVouchersNote": "",
-    "ignoreSSLErrors": true
-  },
-  "protectedNative": [
-    "controllerPassword",
-    "apiKey"
-  ],
-  "encryptedNative": [
-    "controllerPassword",
-    "apiKey"
-  ],
-  "objects": [],
-  "instanceObjects": [
-    {
-      "_id": "info",
-      "type": "channel",
-      "common": {
-        "name": "Information"
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.connection",
-      "type": "state",
-      "common": {
-        "role": "indicator.connected",
-        "name": "Connected to UniFi controller",
-        "type": "boolean",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastRefreshAttempt",
-      "type": "state",
-      "common": {
-        "name": "Last refresh attempt",
-        "type": "number",
-        "role": "value.time",
-        "read": true,
-        "write": false,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastSuccessfulRefresh",
-      "type": "state",
-      "common": {
-        "name": "Last successful refresh",
-        "type": "number",
-        "role": "value.time",
-        "read": true,
-        "write": false,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.lastError",
-      "type": "state",
-      "common": {
-        "name": "Last refresh error",
-        "type": "string",
-        "role": "text",
-        "read": true,
-        "write": false,
-        "def": ""
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.consecutiveErrors",
-      "type": "state",
-      "common": {
-        "name": "Consecutive refresh errors",
-        "type": "number",
-        "role": "value",
-        "read": true,
-        "write": false,
-        "def": 0
-      },
-      "native": {}
-    },
-    {
-      "_id": "info.refreshInProgress",
-      "type": "state",
-      "common": {
-        "name": "Refresh in progress",
-        "type": "boolean",
-        "role": "indicator.working",
-        "read": true,
-        "write": false,
-        "def": false
-      },
-      "native": {}
-    },
-    {
-      "_id": "trigger_update",
-      "type": "state",
-      "common": {
-        "name": "Manually trigger an update",
-        "type": "boolean",
-        "role": "button",
-        "read": false,
-        "write": true,
-        "def": false
-      },
-      "native": {}
-    }
-  ]
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Connected to UniFi controller",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastRefreshAttempt",
+            "type": "state",
+            "common": {
+                "name": "Last refresh attempt",
+                "type": "number",
+                "role": "value.time",
+                "read": true,
+                "write": false,
+                "def": 0
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastSuccessfulRefresh",
+            "type": "state",
+            "common": {
+                "name": "Last successful refresh",
+                "type": "number",
+                "role": "value.time",
+                "read": true,
+                "write": false,
+                "def": 0
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.lastError",
+            "type": "state",
+            "common": {
+                "name": "Last refresh error",
+                "type": "string",
+                "role": "text",
+                "read": true,
+                "write": false,
+                "def": ""
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.consecutiveErrors",
+            "type": "state",
+            "common": {
+                "name": "Consecutive refresh errors",
+                "type": "number",
+                "role": "value",
+                "read": true,
+                "write": false,
+                "def": 0
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.refreshInProgress",
+            "type": "state",
+            "common": {
+                "name": "Refresh in progress",
+                "type": "boolean",
+                "role": "indicator.working",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        },
+        {
+            "_id": "trigger_update",
+            "type": "state",
+            "common": {
+                "name": "Manually trigger an update",
+                "type": "boolean",
+                "role": "button",
+                "read": false,
+                "write": true,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
 }

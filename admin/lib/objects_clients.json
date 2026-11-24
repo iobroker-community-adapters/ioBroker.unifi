@@ -174,8 +174,8 @@
                                 "type": "state",
                                 "common": {
                                     "name": "First seen",
-                                    "type": "string",
-                                    "role": "date",
+                                    "type": "number",
+                                    "role": "value.time",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -185,7 +185,7 @@
                                 },
                                 "logic": {
                                     "value": {
-                                        "secondsToDateTime": [
+                                        "secondsToMs": [
                                             {
                                                 "var": "first_seen"
                                             }
@@ -247,84 +247,6 @@
                                     "value": "is_guest"
                                 }
                             },
-                            "clients.client.is_guest_by_uap": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by UAP",
-                                    "type": "boolean",
-                                    "role": "indicator",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.is_guest_by_uap"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_uap"
-                                            },
-                                            "is_guest_by_uap",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_uap"
-                                }
-                            },
-                            "clients.client.is_guest_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by UGW",
-                                    "type": "boolean",
-                                    "role": "indicator",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.is_guest_by_ugw"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_ugw"
-                                            },
-                                            "is_guest_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_ugw"
-                                }
-                            },
-                            "clients.client.is_guest_by_usw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Is guest by USW",
-                                    "type": "boolean",
-                                    "role": "indicator",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.is_guest_by_usw"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_is_guest_by_usw"
-                                            },
-                                            "is_guest_by_usw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_is_guest_by_usw"
-                                }
-                            },
                             "clients.client.is_online": {
                                 "_id": "is_online",
                                 "type": "state",
@@ -365,8 +287,8 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Last seen",
-                                    "type": "string",
-                                    "role": "date",
+                                    "type": "number",
+                                    "role": "value.time",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -376,7 +298,7 @@
                                 },
                                 "logic": {
                                     "value": {
-                                        "secondsToDateTime": [
+                                        "secondsToMs": [
                                             {
                                                 "var": "last_seen"
                                             }
@@ -388,8 +310,8 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Last seen by UAP",
-                                    "type": "string",
-                                    "role": "date",
+                                    "type": "number",
+                                    "role": "value.time",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -408,41 +330,9 @@
                                         ]
                                     },
                                     "value": {
-                                        "secondsToDateTime": [
+                                        "secondsToMs": [
                                             {
                                                 "var": "_last_seen_by_uap"
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            "clients.client.last_seen_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Last seen by UGW",
-                                    "type": "string",
-                                    "role": "date",
-                                    "read": true,
-                                    "write": false,
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.last_seen_by_ugw"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_last_seen_by_ugw"
-                                            },
-                                            "last_seen_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": {
-                                        "secondsToDateTime": [
-                                            {
-                                                "var": "_last_seen_by_ugw"
                                             }
                                         ]
                                     }
@@ -452,8 +342,8 @@
                                 "type": "state",
                                 "common": {
                                     "name": "Last seen by USW",
-                                    "type": "string",
-                                    "role": "date",
+                                    "type": "number",
+                                    "role": "value.time",
                                     "read": true,
                                     "write": false,
                                     "desc": ""
@@ -472,7 +362,7 @@
                                         ]
                                     },
                                     "value": {
-                                        "secondsToDateTime": [
+                                        "secondsToMs": [
                                             {
                                                 "var": "_last_seen_by_usw"
                                             }
@@ -774,87 +664,6 @@
                                 },
                                 "logic": {
                                     "value": "uptime"
-                                }
-                            },
-                            "clients.client.uptime_by_uap": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by UAP",
-                                    "type": "number",
-                                    "role": "value.interval",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.uptime_by_uap"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_uap"
-                                            },
-                                            "uptime_by_uap",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_uap"
-                                }
-                            },
-                            "clients.client.uptime_by_ugw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by UGW",
-                                    "type": "number",
-                                    "role": "value.interval",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.uptime_by_ugw"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_ugw"
-                                            },
-                                            "uptime_by_ugw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_ugw"
-                                }
-                            },
-                            "clients.client.uptime_by_usw": {
-                                "type": "state",
-                                "common": {
-                                    "name": "Uptime by USW",
-                                    "type": "number",
-                                    "role": "value.interval",
-                                    "read": true,
-                                    "write": false,
-                                    "unit": "s",
-                                    "desc": ""
-                                },
-                                "native": {
-                                    "object_id": "clients.client.uptime_by_usw"
-                                },
-                                "logic": {
-                                    "_id": {
-                                        "ifNotNull": [
-                                            {
-                                                "var": "_uptime_by_usw"
-                                            },
-                                            "uptime_by_usw",
-                                            null
-                                        ]
-                                    },
-                                    "value": "_uptime_by_usw"
                                 }
                             },
                             "clients.client.wired-rx_bytes": {

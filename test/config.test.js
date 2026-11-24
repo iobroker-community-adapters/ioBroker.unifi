@@ -120,15 +120,42 @@ describe('states filter', () => {
     });
 
     it('adds the channels above the selected states', () => {
-        const filter = adapter.normalizeStatesFilter({ devices: ['devices.device.port_table.port.poe_power'] });
+        const filter = adapter.normalizeStatesFilter({ devices: ['devices.device.ports.port.poe_power'] });
 
         assertSameMembers(filter.devices, [
             'devices',
             'devices.device',
-            'devices.device.port_table',
-            'devices.device.port_table.port',
-            'devices.device.port_table.port.poe_power',
+            'devices.device.ports',
+            'devices.device.ports.port',
+            'devices.device.ports.port.poe_power',
         ]);
+    });
+
+    it('moves the selection of version 2 to the paths of version 3', () => {
+        const filter = adapter.normalizeStatesFilter({
+            clients: ['clients.client.is_guest_by_uap', 'clients.client.name'],
+            devices: [
+                'devices.device.port_table.port.port_poe_enabled',
+                'devices.device.port_overrides.port.speed',
+                'devices.device.system-stats.cpu',
+                'devices.device.sys_stats.loadavg_5',
+                'devices.device.radio_table_stats.stat.channel',
+                'devices.device.last_uplink.remote_port',
+            ],
+        });
+
+        assertSameMembers(filter.clients, ['clients', 'clients.client', 'clients.client.name']);
+        for (const id of [
+            'devices.device.ports.port.poe_enabled',
+            'devices.device.ports.port.settings.speed',
+            'devices.device.statistics.cpu',
+            'devices.device.statistics.loadavg_5',
+            'devices.device.radios.stat.channel',
+            'devices.device.uplink.remote_port',
+        ]) {
+            assert.ok(filter.devices.includes(id), id);
+        }
+        assert.ok(!filter.devices.some(id => /port_table|port_overrides|sys_stats|system-stats|radio_table|last_uplink/.test(id)));
     });
 
     it('adds the states that a selected state depends on', () => {
@@ -139,10 +166,9 @@ describe('states filter', () => {
     });
 
     it('adds all states of a required channel', () => {
-        const filter = adapter.normalizeStatesFilter({ devices: ['devices.device.port_table.port.port_poe_enabled'] });
+        const filter = adapter.normalizeStatesFilter({ devices: ['devices.device.ports.port.poe_enabled'] });
 
-        assert.ok(filter.devices.includes('devices.device.port_table.port.port_poe'));
-        assert.ok(filter.devices.includes('devices.device.port_overrides.port.poe_mode'));
+        assert.ok(filter.devices.includes('devices.device.ports.port.poe'));
     });
 
     it('reads filters stored by the old admin page, including their channels', () => {

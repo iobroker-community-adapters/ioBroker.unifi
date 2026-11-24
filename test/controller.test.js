@@ -53,7 +53,6 @@ describe('adapter with a UniFi OS controller', function () {
             updateNetworks: false,
             updateHealth: false,
             updateVouchers: false,
-            updateAlarms: false,
             updateWan: false,
             ...config,
         });
@@ -90,7 +89,8 @@ describe('adapter with a UniFi OS controller', function () {
         assert.strictEqual(adapter.val(`${client}.ip`), '192.168.1.10');
         assert.strictEqual(adapter.val(`${client}.channel`), 36);
         assert.strictEqual(adapter.val(`${client}.is_wired`), false);
-        assert.match(adapter.val(`${client}.last_seen`), /^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d$/);
+        assert.strictEqual(adapter.val(`${client}.last_seen`), now * 1000);
+        assert.strictEqual(adapter.objects.get(`unifi.0.${client}.last_seen`).common.role, 'value.time');
         assert.strictEqual(adapter.val(`${client}.is_online`), true);
         assert.strictEqual(adapter.objects.has('unifi.0.default.clients.aa:bb:cc:dd:ee:02'), false);
 
@@ -191,12 +191,12 @@ describe('adapter with a UniFi OS controller', function () {
 
         const [request] = controller.requestsTo('v2/aggregated-dashboard');
         assert.strictEqual(request.query, 'historySeconds=180000');
-        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan').common.name, 'Internet 1');
-        assert.strictEqual(adapter.val('default.wan.wan.isp_name'), 'Deutsche Telekom AG');
-        assert.strictEqual(adapter.val('default.wan.wan.up'), true);
-        assert.strictEqual(adapter.val('default.wan.wan.capacity_download'), 642);
-        assert.strictEqual(typeof adapter.val('default.wan.wan.today_rx_bytes'), 'number');
-        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan.speedtest_time').common.role, 'value.time');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan1').common.name, 'Internet 1');
+        assert.strictEqual(adapter.val('default.wan.wan1.isp_name'), 'Deutsche Telekom AG');
+        assert.strictEqual(adapter.val('default.wan.wan1.up'), true);
+        assert.strictEqual(adapter.val('default.wan.wan1.capacity_download'), 642);
+        assert.strictEqual(typeof adapter.val('default.wan.wan1.today_rx_bytes'), 'number');
+        assert.strictEqual(adapter.objects.get('unifi.0.default.wan.wan1.speedtest_time').common.role, 'value.time');
         assertNoErrors(adapter);
     });
 
@@ -210,28 +210,6 @@ describe('adapter with a UniFi OS controller', function () {
         sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no WAN dashboard \(404\)/)));
         assert.strictEqual(adapter.val('info.lastError'), '');
         assertNoErrors(adapter);
-    });
-
-    it('warns once and skips the empty gateway statistics (UniFi Network 11)', async () => {
-        controller.responses['stat/report/daily.gw'] = [];
-        await startAdapter({ updateGatewayTraffic: true });
-
-        await adapter.updateUnifiData(true);
-        await adapter.updateUnifiData(true);
-
-        assert.strictEqual(controller.requestsTo('stat/report/daily.gw').length, 1);
-        sinon.assert.calledOnce(adapter.log.warn.withArgs(sinon.match(/no gateway statistics.*Switch on "Update WAN statistics"/)));
-        assertNoErrors(adapter);
-    });
-
-    it('only informs about the empty gateway statistics if the WAN statistics are on', async () => {
-        controller.responses['stat/report/daily.gw'] = [];
-        await startAdapter({ updateGatewayTraffic: true, updateWan: true });
-
-        await adapter.updateUnifiData(true);
-
-        sinon.assert.notCalled(adapter.log.warn.withArgs(sinon.match(/no gateway statistics/)));
-        sinon.assert.calledOnce(adapter.log.info.withArgs(sinon.match(/no gateway statistics.*Switch off "Update Gateway Traffic"/)));
     });
 
     it('creates vouchers with the configured settings', async () => {
